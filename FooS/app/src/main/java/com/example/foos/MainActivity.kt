@@ -3,6 +3,7 @@ package com.example.foos
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -46,11 +48,11 @@ class MainActivity : ComponentActivity() {
                                     BottomNavigationItem(
                                         icon = {
                                             Icon(
-                                                Icons.Filled.Favorite,
+                                                painter = painterResource(id = screen.iconId),
                                                 contentDescription = null
                                             )
                                         },
-                                        label = { Text(stringResource(id = screen.resourceId)) },
+                                        label = { Text(stringResource(id = screen.stringId)) },
                                         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                                         onClick = {
                                             navController.navigate(screen.route) {
@@ -82,9 +84,9 @@ class MainActivity : ComponentActivity() {
 
 }
 
-sealed class Screen(val route: String, @StringRes val resourceId: Int) {
-    object Home : Screen("home", R.string.home)
-    object Map : Screen("map", R.string.map)
+sealed class Screen(val route: String, @StringRes val stringId: Int, @DrawableRes val iconId: Int) {
+    object Home : Screen("home", R.string.home, R.drawable.ic_home)
+    object Map : Screen("map", R.string.map, R.drawable.ic_map)
 }
 
 @Composable
