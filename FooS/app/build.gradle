@@ -4,6 +4,8 @@ plugins {
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
+apply plugin: 'com.google.gms.google-services'  // Google Services plugin
+
 android {
     compileSdk 32
 
@@ -74,4 +76,17 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     implementation "androidx.compose.runtime:runtime:$compose_version"
     implementation "androidx.compose.compiler:compiler:$compose_version"
+
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:30.3.0')
+
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+
+    // Declare the dependency for the Firebase SDK for Google Analytics
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    // Declare the dependencies for any other desired Firebase products
+    // For example, declare the dependencies for Firebase Authentication and Cloud Firestore
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
 }
