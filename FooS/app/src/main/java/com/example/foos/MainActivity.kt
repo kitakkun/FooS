@@ -3,6 +3,7 @@ package com.example.foos
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.WallpaperColors.fromBitmap
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.location.Location
 import android.os.Bundle
@@ -15,7 +16,10 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -32,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -48,14 +53,60 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory.fromBitmap
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.google.maps.android.compose.*
 import com.google.maps.android.ui.IconGenerator
+import io.grpc.inprocess.AnonymousInProcessSocketAddress
 
 
 class MainActivity : ComponentActivity() {
 
+    private lateinit var auth: FirebaseAuth
+    private val ANONYMOUS = "匿名"
+
+    private fun getPhotoUrl() : String? {
+        val user = auth.currentUser
+        return user?.photoUrl?.toString()
+    }
+
+    private fun getUserName(): String? {
+        val user = auth.currentUser
+        return if (user != null) {
+            user.displayName
+        } else ANONYMOUS
+    }
+
+    private fun checkSignInState() {
+        if (auth.currentUser == null) {
+            startActivity(Intent(this, SignInActivity::class.java))
+            finish()
+            return
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        checkSignInState()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        auth = Firebase.auth
+        checkSignInState()
+        // When running in debug mode, connect to the Firebase Emulator Suite.
+        // "10.0.2.2" is a special IP address which allows the Android Emulator
+        // to connect to "localhost" on the host computer. The port values (9xxx)
+        // must match the values defined in the firebase.json file.
+        if (BuildConfig.DEBUG) {
+            Firebase.database.useEmulator("10.0.2.2", 9000)
+            Firebase.auth.useEmulator("10.0.2.2", 9099)
+            Firebase.storage.useEmulator("10.0.2.2", 9199)
+        }
 
 
         setContent {
@@ -127,9 +178,10 @@ fun App() {
 
 @Composable
 fun Home(navController: NavController) {
-    Column() {
-        repeat(5) {
-            Post()
+    val postList = Posts.getPosts()
+    LazyColumn {
+        items(postList) { post ->
+            Post(username = post.username, content = post.content, location = post.location)
         }
     }
 }
@@ -186,8 +238,9 @@ fun ReactionRow(
     
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.End
     ) {
+        FavoriteButton()
         FavoriteButton()
     }
     
@@ -195,7 +248,14 @@ fun ReactionRow(
 
 @Composable
 fun FavoriteButton() {
-    Image(painter = painterResource(R.drawable.ic_favorite_border), contentDescription = null)
+    var liked by remember { mutableStateOf(false) }
+    Image(
+        painter = painterResource(if (liked) R.drawable.ic_favorite else R.drawable.ic_favorite_border),
+        contentDescription = null,
+        modifier = Modifier.clickable {
+            liked = !liked
+        }
+    )
 }
 
 

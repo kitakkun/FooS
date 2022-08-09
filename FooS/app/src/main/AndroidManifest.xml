@@ -17,6 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FooS"
         tools:targetApi="31">
+        <activity
+            android:name=".SignInActivity"
+            android:exported="false"
+            android:label="@string/title_activity_sign_in"
+            android:theme="@style/Theme.FooS" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
