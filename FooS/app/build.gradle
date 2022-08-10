@@ -29,11 +29,14 @@ android {
         }
     }
     compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
     buildFeatures {
         compose true
@@ -93,4 +96,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
 
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+    // Also declare the dependency for the Google Play services library and specify its version
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
+
+    // image cropper
+    implementation 'com.github.CanHub:Android-Image-Cropper:4.1.0'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+
+    // async image loading
+    implementation 'io.coil-kt:coil-compose:2.1.0'
+
 }

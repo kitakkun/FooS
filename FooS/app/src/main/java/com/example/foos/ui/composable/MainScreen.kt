@@ -3,14 +3,13 @@ package com.example.foos.ui.composable
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -20,7 +19,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.foos.FirebaseMediator
 import com.example.foos.R
+import com.example.foos.ui.theme.FooSTheme
+import com.google.firebase.ktx.Firebase
 
 
 sealed class Screen(val route: String, @StringRes val stringId: Int, @DrawableRes val iconId: Int) {
@@ -33,36 +35,49 @@ sealed class Screen(val route: String, @StringRes val stringId: Int, @DrawableRe
 @Preview
 @Composable
 fun MainScreen() {
+
+    // 認証済みか確認し、未認証であれば認証を行う
+    FirebaseMediator.checkSignInState(LocalContext.current)
     val navController = rememberNavController()
+
+    FooSTheme {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            backgroundColor = MaterialTheme.colors.background,
+            bottomBar = { ScreenBottomNavBar(navController) }
+        ) { innerPadding -> ScreenNavHost(navController, innerPadding) }
+    }
+}
+
+@Composable
+fun ScreenBottomNavBar(
+    navController: NavHostController
+) {
     val items = listOf(
         Screen.Home,
         Screen.Map,
         Screen.Reaction,
         Screen.Setting
     )
-    Scaffold(
-        bottomBar = {
-            BottomNavigation {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
-                items.forEach { screen ->
-                    BottomNavigationItem(
-                        icon = { Icon(painterResource(screen.iconId), null) },
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+    BottomNavigation {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navBackStackEntry?.destination
+        items.forEach { screen ->
+            BottomNavigationItem(
+                icon = { Icon(painterResource(screen.iconId), null) },
+                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                onClick = {
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
                         }
-                    )
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
-            }
+            )
         }
-    ) { innerPadding -> ScreenNavHost(navController, innerPadding) }
+    }
 }
 
 @Composable
