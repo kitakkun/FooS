@@ -44,6 +44,9 @@ import com.example.foos.FirebaseMediator
 import com.example.foos.R
 import com.example.foos.ui.composable.component.*
 import com.example.foos.ui.theme.Yellow
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import java.io.File
@@ -62,12 +65,16 @@ fun SettingContent() {
         if (result.isSuccessful) {
             val uriContent = result.uriContent
 
-            val ref = Firebase.storage.reference.child("images/profile/user.png")
+            val ref = Firebase.storage.reference.child("images/profile/"+ Firebase.auth.uid + ".png")
             uriContent?.let {
                 val uploadTask = ref.putFile(uriContent)
                 uploadTask.addOnFailureListener {
                     Log.d("MAIN_ACTIVITY", "UPLOAD FAILED")
                 }.addOnSuccessListener {
+                    ref.downloadUrl.addOnSuccessListener {
+                        val refLink = Firebase.firestore
+                            .document("userinfo/userprofile").set(it.toString() )
+                    }
                     Log.d("MAIN_ACTIVITY", "SUCCESS")
                 }
             }
