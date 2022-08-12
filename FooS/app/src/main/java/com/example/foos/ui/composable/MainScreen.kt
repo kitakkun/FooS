@@ -21,6 +21,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.foos.FirebaseMediator
 import com.example.foos.R
+import com.example.foos.data.posts.PostsRepository
+import com.example.foos.ui.home.HomeViewModel
 import com.example.foos.ui.theme.FooSTheme
 
 
@@ -29,6 +31,7 @@ sealed class Screen(val route: String, @StringRes val stringId: Int, @DrawableRe
     object Map : Screen("maps", R.string.map, R.drawable.ic_pin_drop)
     object Reaction : Screen("reactions", R.string.reaction, R.drawable.ic_favorite)
     object Setting : Screen("settings", R.string.setting, R.drawable.ic_settings)
+    object Post : Screen("post", R.string.post, R.drawable.ic_post_add)
 }
 
 @Preview
@@ -43,7 +46,7 @@ fun MainScreen() {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             backgroundColor = MaterialTheme.colors.background,
-            bottomBar = { ScreenBottomNavBar(navController) }
+            bottomBar = { ScreenBottomNavBar(navController, ) }
         ) { innerPadding -> ScreenNavHost(navController, innerPadding) }
     }
 }
@@ -93,6 +96,7 @@ fun ScreenNavHost(
         composable(Screen.Map.route) { MapContent(navController) }
         composable(Screen.Reaction.route) { ReactionContent() }
         composable(Screen.Setting.route) { SettingContent() }
+        composable(Screen.Post.route) { PostContent() }
     }
 }
 

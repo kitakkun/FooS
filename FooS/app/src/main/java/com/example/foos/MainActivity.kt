@@ -5,8 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.canhub.cropper.CropImageContract
 import com.example.foos.ui.composable.MainScreen
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val cropImage = registerForActivityResult(CropImageContract()) { result ->

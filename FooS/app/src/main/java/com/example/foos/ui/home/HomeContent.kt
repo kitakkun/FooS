@@ -6,26 +6,60 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.foos.Posts
 import com.example.foos.R
+import com.example.foos.model.Post
 import com.example.foos.ui.composable.component.UserIcon
+import com.example.foos.ui.home.HomeViewModel
+
+data class HomeUiState(
+    val isLoading: Boolean,
+    val posts: List<Post>
+)
 
 @Composable
 fun HomeContent(navController: NavController) {
+
+    val homeViewModel: HomeViewModel = hiltViewModel()
+    val homeUiState = homeViewModel.homeUiState
+
     val postList = Posts.getPosts()
-    LazyColumn {
-        items(postList) { post ->
-            Post(username = post.username, content = post.content, location = post.location)
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        items(homeUiState.value.posts) { post ->
+            Post(username = post.username, content = post.content)
+        }
+    }
+    NewPostButton(onClick = { navController.navigate(Screen.Post.route) })
+}
+
+@Preview
+@Composable
+fun NewPostButton(onClick: () -> Unit = {}) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.End,
+        verticalArrangement = Arrangement.Bottom
+    ) {
+        FloatingActionButton(
+            onClick = { onClick.invoke() },
+            modifier = Modifier.padding(32.dp)
+        ) {
+            Icon(Icons.Filled.Add, contentDescription = "", tint = MaterialTheme.colors.onSecondary)
         }
     }
 }
