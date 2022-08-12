@@ -13,7 +13,8 @@ import com.google.firebase.storage.ktx.storage
 
 object FirebaseMediator {
     private var auth: FirebaseAuth = Firebase.auth
-    private var db: FirebaseDatabase = Firebase.database("https://foos-bdebd-default-rtdb.asia-southeast1.firebasedatabase.app")
+    private var db: FirebaseDatabase =
+        Firebase.database("https://foos-bdebd-default-rtdb.asia-southeast1.firebasedatabase.app")
     private var storage: FirebaseStorage = Firebase.storage
 
     fun checkSignInState(context: Context) {

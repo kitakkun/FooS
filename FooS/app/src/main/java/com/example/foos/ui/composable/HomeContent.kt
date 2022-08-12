@@ -62,7 +62,8 @@ fun Post(
     }
 }
 
-@Composable fun ReactionRow(
+@Composable
+fun ReactionRow(
     modifier: Modifier = Modifier
 ) {
     Row(

@@ -34,8 +34,12 @@ fun MapContent(navController: NavController) {
         rememberPermissionState(permission = Manifest.permission.ACCESS_FINE_LOCATION)
 
     when (locationPermissionState.status) {
-        PermissionStatus.Granted -> { Map() }
-        else -> { MapDeniedView(locationPermissionState) }
+        PermissionStatus.Granted -> {
+            Map()
+        }
+        else -> {
+            MapDeniedView(locationPermissionState)
+        }
     }
 }
 

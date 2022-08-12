@@ -31,7 +31,8 @@ class SignInActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth
     private val signIn: ActivityResultLauncher<Intent> = registerForActivityResult(
-        FirebaseAuthUIActivityResultContract(), this::OnSignInResult)
+        FirebaseAuthUIActivityResultContract(), this::OnSignInResult
+    )
 
     private fun OnSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         if (result.resultCode == RESULT_OK) {
@@ -62,10 +63,12 @@ class SignInActivity : ComponentActivity() {
                 .createSignInIntentBuilder()
                 .setLogo(R.mipmap.ic_launcher)
                 .setTheme(R.style.Theme_FooS)
-                .setAvailableProviders(listOf(
-                    AuthUI.IdpConfig.EmailBuilder().build(),
-                    AuthUI.IdpConfig.GoogleBuilder().build(),
-                ))
+                .setAvailableProviders(
+                    listOf(
+                        AuthUI.IdpConfig.EmailBuilder().build(),
+                        AuthUI.IdpConfig.GoogleBuilder().build(),
+                    )
+                )
                 .build()
             signIn.launch(signInIntent)
         } else {

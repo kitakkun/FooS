@@ -12,7 +12,7 @@ class PostsViewModel : ViewModel() {
         }
     }
 
-    fun getPosts() : LiveData<List<Post>> {
+    fun getPosts(): LiveData<List<Post>> {
         return posts
     }
 

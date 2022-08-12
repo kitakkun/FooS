@@ -22,7 +22,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.foos.FirebaseMediator
 import com.example.foos.R
 import com.example.foos.ui.theme.FooSTheme
-import com.google.firebase.ktx.Firebase
 
 
 sealed class Screen(val route: String, @StringRes val stringId: Int, @DrawableRes val iconId: Int) {

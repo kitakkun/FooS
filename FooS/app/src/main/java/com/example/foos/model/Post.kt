@@ -1,6 +1,5 @@
 package com.example.foos.model
 
-import androidx.compose.ui.graphics.painter.Painter
 import com.google.android.gms.maps.model.LatLng
 
 data class Post(
