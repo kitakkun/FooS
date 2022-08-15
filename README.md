@@ -47,12 +47,12 @@
 
 ```kotlin
 data class Post(
-  val string postId;  // 投稿ID
-  val string userid;   // ユーザーID
-  val string content; // 投稿内容（テキスト）
-  val List<string> attachedImages;  // 添付画像のパス
-  val longitude;  // 該当の店舗の緯度
-  val latitude;   // 経度
+  val postId: String,  // 投稿ID
+  val userid: String,   // ユーザーID
+  val content: String, // 投稿内容（テキスト）
+  val attachedImages: List<String>,  // 添付画像のパス
+  val longitude: Double,  // 該当の店舗の緯度
+  val latitude: Double   // 経度
 )
 ```
 
@@ -62,11 +62,44 @@ data class Post(
 
 ```kotlin
 data class UserData(
-  val string userid; // ユーザーID
-  val string displayName; // 表示名（ニックネーム）
-  val string profileImage;  // プロフィール画像のFirebase Storage内のパス
+  val userid: String, // ユーザーID
+  val displayName: String, // 表示名（ニックネーム）
+  val profileImage: String,  // プロフィール画像のFirebase Storage内のパス
 )
 ```
 
+### UIレイヤの設計
+
+ホーム画面（タイムライン）のUI状態は以下のように定義される。
+
+```kotlin
+data class HomeUiState(
+  val posts: List<PostItemUiState>,
+)
+
+data class PostItemUiState(
+  val userName: String,
+  val userId: String,
+  val content: String,
+  val attachedImages: List<String>,
+)
+```
+
+### データレイヤの設計
+
+`PostsRepository`クラスは、以下の役割を担う。
+
+- 投稿データをアプリの他の部分に公開する。
+- 投稿データの登録・変更・削除を一元管理する。
+
+`UsersRepository`クラスは、以下の役割を担う。
+
+- ユーザー情報をアプリの他の部分に公開する
+- ユーザー情報の登録・変更・削除を一元管理する。
+
+### ドメインレイヤの設計
+
+今回、ユーザー情報にも投稿内容のIDを持たせることとしたため、投稿が発生した際はユーザー情報の更新も必要となる。
+このような複雑なビジネスロジックをカプセル化するため、ドメインレイヤを定義する。（詳細は検討中）
 
 
