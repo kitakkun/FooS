@@ -1,4 +1,4 @@
-package com.example.foos.ui.composable.component
+package com.example.foos.ui.component
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

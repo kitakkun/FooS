@@ -1,4 +1,4 @@
-package com.example.foos.ui.composable
+package com.example.foos.ui.setting
 
 import android.app.Activity
 import android.graphics.Bitmap
@@ -29,10 +29,10 @@ import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.example.foos.FirebaseMediator
 import com.example.foos.R
-import com.example.foos.ui.composable.component.AsyncUserIcon
-import com.example.foos.ui.composable.component.ConfirmAlertDialog
-import com.example.foos.ui.composable.component.MenuItem
-import com.example.foos.ui.composable.component.MenuItemsRow
+import com.example.foos.ui.component.AsyncUserIcon
+import com.example.foos.ui.component.ConfirmAlertDialog
+import com.example.foos.ui.component.MenuItem
+import com.example.foos.ui.component.MenuItemsRow
 import com.example.foos.ui.theme.Yellow
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -41,7 +41,7 @@ import com.google.firebase.storage.ktx.storage
 
 @Preview(showBackground = true)
 @Composable
-fun SettingContent() {
+fun SettingScreen() {
     val context = LocalContext.current
     val cropImage = rememberLauncherForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) onCropImageSuccessful(result)

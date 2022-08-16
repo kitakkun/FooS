@@ -1,4 +1,4 @@
-package com.example.foos.ui.composable
+package com.example.foos.ui
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -21,8 +24,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.foos.FirebaseMediator
 import com.example.foos.R
-import com.example.foos.data.posts.PostsRepository
+import com.example.foos.ui.home.HomeScreen
 import com.example.foos.ui.home.HomeViewModel
+import com.example.foos.ui.map.MapScreen
+import com.example.foos.ui.post.PostScreen
+import com.example.foos.ui.post.PostViewModel
+import com.example.foos.ui.reaction.ReactionScreen
+import com.example.foos.ui.setting.SettingScreen
 import com.example.foos.ui.theme.FooSTheme
 
 
@@ -41,12 +49,20 @@ fun MainScreen() {
     // 認証済みか確認し、未認証であれば認証を行う
     FirebaseMediator.checkSignInState(LocalContext.current)
     val navController = rememberNavController()
-
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+    val bottomBarState = rememberSaveable {
+        mutableStateOf(true)
+    }
+    when (currentDestination?.route) {
+        Screen.Post.route -> bottomBarState.value = false
+        else -> bottomBarState.value = true
+    }
     FooSTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             backgroundColor = MaterialTheme.colors.background,
-            bottomBar = { ScreenBottomNavBar(navController, ) }
+            bottomBar = { if (bottomBarState.value) ScreenBottomNavBar(navController) }
         ) { innerPadding -> ScreenNavHost(navController, innerPadding) }
     }
 }
@@ -92,11 +108,17 @@ fun ScreenNavHost(
         startDestination = Screen.Home.route,
         Modifier.padding(innerPadding)
     ) {
-        composable(Screen.Home.route) { HomeContent(navController) }
-        composable(Screen.Map.route) { MapContent(navController) }
-        composable(Screen.Reaction.route) { ReactionContent() }
-        composable(Screen.Setting.route) { SettingContent() }
-        composable(Screen.Post.route) { PostContent() }
+        composable(Screen.Home.route) {
+            val vm: HomeViewModel = hiltViewModel()
+            HomeScreen(vm, navController)
+        }
+        composable(Screen.Map.route) { MapScreen(navController) }
+        composable(Screen.Reaction.route) { ReactionScreen() }
+        composable(Screen.Setting.route) { SettingScreen() }
+        composable(Screen.Post.route) {
+            val vm: PostViewModel = hiltViewModel()
+            PostScreen(vm, navController)
+        }
     }
 }
 

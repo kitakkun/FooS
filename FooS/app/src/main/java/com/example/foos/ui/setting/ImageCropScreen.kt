@@ -1,4 +1,4 @@
-package com.example.foos.ui.composable
+package com.example.foos.ui.setting
 
 import androidx.compose.runtime.Composable
 

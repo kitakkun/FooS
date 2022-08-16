@@ -1,4 +1,4 @@
-package com.example.foos.ui.composable
+package com.example.foos.ui.map
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -28,7 +28,7 @@ import com.google.maps.android.ui.IconGenerator
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun MapContent(navController: NavController) {
+fun MapScreen(navController: NavController) {
 
     val locationPermissionState =
         rememberPermissionState(permission = Manifest.permission.ACCESS_FINE_LOCATION)

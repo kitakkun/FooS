@@ -111,4 +111,13 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:2.42"
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
+    // swipeRefresh
+    implementation "com.google.accompanist:accompanist-swiperefresh:0.25.0"
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4"
+
+    implementation "com.google.accompanist:accompanist-insets:0.25.0"
+    // If using insets-ui
+    implementation "com.google.accompanist:accompanist-insets-ui:0.25.0"
+
 }
