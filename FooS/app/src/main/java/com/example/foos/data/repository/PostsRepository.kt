@@ -1,7 +1,8 @@
 package com.example.foos.data.repository
 
-import android.util.Log
-import com.example.foos.data.repository.model.PostData
+import com.example.foos.data.repository.PostsRepository.allPosts
+import com.example.foos.data.repository.PostsRepository.latestPostId
+import com.example.foos.data.repository.model.PostContentData
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +16,7 @@ object PostsRepository {
 
     var latestPostId: String = ""
 
-    val allPosts: MutableStateFlow<List<PostData>> = MutableStateFlow(listOf())
+    val allPosts: MutableStateFlow<List<PostContentData>> = MutableStateFlow(listOf())
 
     suspend fun fetchInitialPosts() {
         withContext(Dispatchers.IO) {
@@ -24,12 +25,12 @@ object PostsRepository {
         }
     }
 
-    suspend fun fetchNewerPosts() : List<PostData> {
+    suspend fun fetchNewerPosts() : List<PostContentData> {
         val response = Firebase.firestore.collection("posts")
             .limit(MAX_LOAD_COUNT)
 //            .whereGreaterThan("postId", latestPostId)
             .get().await()
-        return response.toObjects(PostData::class.java)
+        return response.toObjects(PostContentData::class.java)
     }
 
     suspend fun fetchOlderPosts() {
@@ -39,7 +40,7 @@ object PostsRepository {
                 .whereLessThan("postId", latestPostId)
                 .get()
                 .addOnSuccessListener {
-                    val objects = it.toObjects(PostData::class.java)
+                    val objects = it.toObjects(PostContentData::class.java)
                     allPosts.value = objects
                 }
         }

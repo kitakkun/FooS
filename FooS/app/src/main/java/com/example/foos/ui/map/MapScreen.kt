@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.location.Location
 import android.util.Log
-import android.widget.TextView
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -19,23 +18,42 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
-import com.google.maps.android.ui.IconGenerator
 
-
+/**
+ * Map画面のコンポーザブル
+    ManifestにPermissionを定義しても警告が出続けるため、MissingPermissionを無視
+    参考 -> https://stackoverflow.com/questions/45279370/android-studio-complains-about-missing-permission-check-for-fingerprint-sensor
+ */
 @OptIn(ExperimentalPermissionsApi::class)
+@SuppressLint("MissingPermission")
 @Composable
 fun MapScreen(navController: NavController) {
 
     val locationPermissionState =
         rememberPermissionState(permission = Manifest.permission.ACCESS_FINE_LOCATION)
 
+    var latLng by remember { mutableStateOf(LatLng(1.35, 103.87)) }
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(latLng, 20f)
+    }
+
+
     when (locationPermissionState.status) {
         PermissionStatus.Granted -> {
-            Map()
+            val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
+                LocalContext.current
+            )
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location? ->
+                location?.let {
+                    Log.d("LOCATION", location.toString())
+                    latLng = LatLng(it.latitude, it.longitude)
+                    cameraPositionState.position = CameraPosition.fromLatLngZoom(latLng, 20f)
+                }
+            }
+            Map(cameraPositionState)
         }
         else -> {
             MapDeniedView(locationPermissionState)
@@ -43,34 +61,12 @@ fun MapScreen(navController: NavController) {
     }
 }
 
-@SuppressLint("MissingPermission")
 @Composable
-fun Map() {
-    val properties by remember {
-        mutableStateOf(
-            MapProperties(isMyLocationEnabled = true)
-        )
-    }
-    val uiSettings by remember {
-        mutableStateOf(MapUiSettings(myLocationButtonEnabled = true))
-    }
-
-    var latLng by remember { mutableStateOf(LatLng(1.35, 103.87)) }
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(latLng, 20f)
-    }
-
-    val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
-        LocalContext.current
-    )
-
-    fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location? ->
-        location?.let {
-            Log.d("LOCATION", location.toString())
-            latLng = LatLng(it.latitude, it.longitude)
-            cameraPositionState.position = CameraPosition.fromLatLngZoom(latLng, 20f)
-        }
-    }
+fun Map(
+    cameraPositionState: CameraPositionState
+) {
+    val properties by remember { mutableStateOf(MapProperties(isMyLocationEnabled = true) ) }
+    val uiSettings by remember { mutableStateOf(MapUiSettings(myLocationButtonEnabled = true)) }
 
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
@@ -78,17 +74,16 @@ fun Map() {
         properties = properties,
         uiSettings = uiSettings,
     ) {
-        val iconGenerator = IconGenerator(LocalContext.current)
-        iconGenerator.setBackground(null)
-        val textView = TextView(LocalContext.current)
-        textView.text = "Hello"
-        iconGenerator.setContentView(textView)
-
-        Marker(
-            state = MarkerState(position = latLng),
-            icon = BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon())
-        )
-
+//        val iconGenerator = IconGenerator(LocalContext.current)
+//        iconGenerator.setBackground(null)
+//        val textView = TextView(LocalContext.current)
+//        textView.text = "Hello"
+//        iconGenerator.setContentView(textView)
+//
+//        Marker(
+//            state = MarkerState(position = latLng),
+//            icon = BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon())
+//        )
 
     }
 }

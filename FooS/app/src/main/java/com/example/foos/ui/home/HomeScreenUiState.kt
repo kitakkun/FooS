@@ -1,6 +1,8 @@
 package com.example.foos.ui.home
 
-data class HomeUiState(
+import androidx.compose.runtime.Stable
+
+data class HomeScreenUiState(
     val posts: List<PostItemUiState>,
     val isRefreshing: Boolean,
 )

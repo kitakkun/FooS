@@ -1,6 +1,6 @@
 package com.example.foos.ui.post
 
-data class PostUiState(
+data class PostScreenUiState(
     var content: String,
     val attachedImages: List<String>,
 )

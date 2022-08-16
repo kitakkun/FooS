@@ -8,21 +8,20 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.foos.R
 import com.example.foos.ui.Screen
-import com.example.foos.ui.component.Post
+import com.example.foos.ui.component.PostItem
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
+/**
+ * ホーム画面のコンポーザブル
+ */
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel, navController: NavController) {
 
-    val homeUiState = homeViewModel.homeUiState.collectAsState()
+    val homeUiState = homeViewModel.homeScreenUiState.collectAsState()
 
     SwipeRefresh(state = rememberSwipeRefreshState(
         isRefreshing = homeUiState.value.isRefreshing),
@@ -43,7 +42,7 @@ fun PostItemList(
         modifier = Modifier.fillMaxSize(),
     ) {
         items(postItems) { post ->
-            Post(post)
+            PostItem(post)
         }
     }
 }
