@@ -25,7 +25,7 @@ fun HomeScreen(homeViewModel: HomeViewModel, navController: NavController) {
     val homeUiState = homeViewModel.homeUiState.collectAsState()
 
     SwipeRefresh(state = rememberSwipeRefreshState(
-        isRefreshing = homeViewModel.isRefreshing.value),
+        isRefreshing = homeUiState.value.isRefreshing),
         onRefresh = {
             homeViewModel.fetchNewerPosts()
         }

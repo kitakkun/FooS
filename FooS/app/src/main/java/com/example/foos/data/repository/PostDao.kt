@@ -1,6 +1,6 @@
 package com.example.foos.data.repository
 
-import com.example.foos.model.PostData
+import com.example.foos.data.repository.model.PostData
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await

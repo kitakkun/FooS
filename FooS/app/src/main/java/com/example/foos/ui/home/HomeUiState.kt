@@ -1,7 +1,8 @@
 package com.example.foos.ui.home
 
 data class HomeUiState(
-    val posts: List<PostItemUiState>
+    val posts: List<PostItemUiState>,
+    val isRefreshing: Boolean,
 )
 
 data class PostItemUiState(

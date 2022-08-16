@@ -1,16 +1,23 @@
 package com.example.foos.data.repository
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.withContext
+import android.util.Log
+import com.example.foos.data.repository.model.CombinedPostData
 import javax.inject.Inject
 
 class CombinedPostsRepository @Inject constructor(
-    val postsRepository: PostsRepository,
-    val usersRepository: UsersRepository,
+    private val postsRepository: PostsRepository,
+    private val usersRepository: UsersRepository,
 ) {
 
-    suspend fun fetchPosts() {
-        postsRepository.fetchInitialPosts()
+    suspend fun fetchPosts(): List<CombinedPostData> {
+        val combinedPosts = postsRepository.fetchNewerPosts().map { post ->
+            val user = usersRepository.fetchUser(post.userId)
+            Log.d("TAG", (user != null).toString())
+            user?.let {
+                CombinedPostData(it, post)
+            }
+        }
+        return combinedPosts.filterNotNull()
     }
 
 }
