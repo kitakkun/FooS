@@ -1,6 +1,6 @@
-package com.example.foos.data.repository.model
+package com.example.foos.data.model
 
-data class UserData(
+data class User(
     val userId: String,         // ユーザーID
     val username: String,       // ユーザー名
     val profileImage: String,   // プロフィール画像のURL

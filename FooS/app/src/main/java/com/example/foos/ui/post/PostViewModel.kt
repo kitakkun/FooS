@@ -10,22 +10,19 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.FileUtils.getRealPath
-import com.example.foos.data.repository.PostDao
-import com.example.foos.data.repository.model.PostContentData
-import com.firebase.ui.auth.AuthUI
+import com.example.foos.data.repository.PostsRepository
+import com.example.foos.data.model.Post
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
-    private val dao: PostDao,
+    private val postContentsRepository: PostsRepository,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -93,13 +90,12 @@ class PostViewModel @Inject constructor(
     }
 
     fun post() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val postContentData = PostContentData(
-                    "", Firebase.auth.uid.toString(), _postUiState.value.content,
-                    _postUiState.value.attachedImages, null, null)
-                dao.insert(postContentData)
-            }
+        viewModelScope.launch (Dispatchers.IO) {
+            val postData = Post(
+                "", Firebase.auth.uid.toString(), _postUiState.value.content,
+                _postUiState.value.attachedImages, null, null, java.util.Date()
+            )
+            postContentsRepository.createPost(postData)
         }
     }
 }

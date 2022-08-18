@@ -11,7 +11,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.Screen
-import com.example.foos.ui.component.PostItem
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
@@ -19,17 +18,17 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
  * ホーム画面のコンポーザブル
  */
 @Composable
-fun HomeScreen(homeViewModel: HomeViewModel, navController: NavController) {
+fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
 
-    val homeUiState = homeViewModel.homeScreenUiState.collectAsState()
+    val uiState = viewModel.uiState.collectAsState()
 
     SwipeRefresh(state = rememberSwipeRefreshState(
-        isRefreshing = homeUiState.value.isRefreshing),
+        isRefreshing = uiState.value.isRefreshing),
         onRefresh = {
-            homeViewModel.fetchNewerPosts()
+            viewModel.fetchNewerPosts()
         }
     ) {
-        PostItemList(homeUiState.value.posts)
+        PostItemList(uiState.value.posts)
     }
     RoundIconActionButton(onClick = { navController.navigate(Screen.Post.route) })
 }

@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
@@ -38,13 +39,20 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.tasks.await
 
-@Preview(showBackground = true)
 @Composable
-fun SettingScreen() {
+fun SettingScreen(viewModel: SettingViewModel) {
+
+    val uiState = viewModel.uiState.collectAsState()
+    viewModel.fetchUserData()
+
     val context = LocalContext.current
     val cropImage = rememberLauncherForActivityResult(CropImageContract()) { result ->
-        if (result.isSuccessful) onCropImageSuccessful(result)
+        if (result.isSuccessful) {
+            viewModel.fetchUserData()
+            viewModel.onCropImageSuccessful(result)
+        }
         else onCropImageFail(result)
     }
 
@@ -54,6 +62,7 @@ fun SettingScreen() {
     ) {
         Spacer(Modifier.height(80.dp))
         ClickableUserIcon(
+            imageUri = uiState.value.profileImage,
             onClick = {
                 cropImage.launch(
                     options {
@@ -69,9 +78,8 @@ fun SettingScreen() {
             iconScale = 2f
         )
         Spacer(Modifier.height(32.dp))
-        Firebase.auth.currentUser?.displayName?.let { Text(it, fontSize = 18.sp) }
+        Text(uiState.value.username, fontSize = 18.sp)
         Spacer(Modifier.height(60.dp))
-
         var logOutRequest by remember { mutableStateOf(false) }
 
         val settingMenus = listOf(
@@ -100,24 +108,16 @@ fun SettingScreen() {
 
 
 @OptIn(ExperimentalComposeUiApi::class)
-@Preview(showBackground = true)
 @Composable
 fun ClickableUserIcon(
+    imageUri: String,
     onClick: () -> Unit = {},
     iconScale: Float = 1f,
     modifier: Modifier = Modifier
 ) {
-    var url by remember { mutableStateOf("") }
     Box(modifier = modifier) {
-        if (url == "") {
-            val ref =
-                Firebase.firestore.collection("userinfo").document(Firebase.auth.uid.toString())
-            ref.get().addOnSuccessListener {
-                url = it.get("profileImagePath").toString()
-            }
-        }
         AsyncUserIcon(
-            url = url,
+            url = imageUri,
             modifier = Modifier
                 .width(70.dp)
                 .height(70.dp)

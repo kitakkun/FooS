@@ -36,7 +36,6 @@ import com.google.accompanist.permissions.rememberPermissionState
 /**
  * 投稿画面のコンポーザブル
  */
-@RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PostScreen(viewModel: PostViewModel, navController: NavController) {

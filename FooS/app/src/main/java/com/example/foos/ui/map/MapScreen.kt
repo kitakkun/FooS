@@ -30,7 +30,7 @@ import com.google.maps.android.compose.*
 @OptIn(ExperimentalPermissionsApi::class)
 @SuppressLint("MissingPermission")
 @Composable
-fun MapScreen(navController: NavController) {
+fun MapScreen(viewModel: MapViewModel, navController: NavController) {
 
     val locationPermissionState =
         rememberPermissionState(permission = Manifest.permission.ACCESS_FINE_LOCATION)

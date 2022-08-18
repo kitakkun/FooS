@@ -27,10 +27,13 @@ import com.example.foos.R
 import com.example.foos.ui.home.HomeScreen
 import com.example.foos.ui.home.HomeViewModel
 import com.example.foos.ui.map.MapScreen
+import com.example.foos.ui.map.MapViewModel
 import com.example.foos.ui.post.PostScreen
 import com.example.foos.ui.post.PostViewModel
 import com.example.foos.ui.reaction.ReactionScreen
+import com.example.foos.ui.reaction.ReactionViewModel
 import com.example.foos.ui.setting.SettingScreen
+import com.example.foos.ui.setting.SettingViewModel
 import com.example.foos.ui.theme.FooSTheme
 
 
@@ -112,9 +115,18 @@ fun ScreenNavHost(
             val vm: HomeViewModel = hiltViewModel()
             HomeScreen(vm, navController)
         }
-        composable(Screen.Map.route) { MapScreen(navController) }
-        composable(Screen.Reaction.route) { ReactionScreen() }
-        composable(Screen.Setting.route) { SettingScreen() }
+        composable(Screen.Map.route) {
+            val vm: MapViewModel = hiltViewModel()
+            MapScreen(vm, navController)
+        }
+        composable(Screen.Reaction.route) {
+            val vm: ReactionViewModel = hiltViewModel()
+            ReactionScreen(vm, navController)
+        }
+        composable(Screen.Setting.route) {
+            val vm: SettingViewModel = hiltViewModel()
+            SettingScreen(vm)
+        }
         composable(Screen.Post.route) {
             val vm: PostViewModel = hiltViewModel()
             PostScreen(vm, navController)
