@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">FooS</string>
+    <string name="home">HOME</string>
+    <string name="map">MAP</string>
+    <string name="title_activity_sign_in">SignInActivity</string>
+    <string name="reaction">REACTIONS</string>
+    <string name="setting">SETTINGS</string>
+    <string name="post">POST</string>
+    <string name="account_settings">Account Settings</string>
+    <string name="privacy_settings">Privacy Settings</string>
+    <string name="log_out">Log out</string>
+    <string name="log_out_confirm_title">You are about to log out</string>
+    <string name="log_out_confirm_message">Are you sure?</string>
+    <string name="reaction_message">%1$s reacted with %2$s</string>
 </resources>
