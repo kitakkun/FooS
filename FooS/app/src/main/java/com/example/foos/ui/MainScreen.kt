@@ -18,14 +18,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.foos.FirebaseMediator
+import com.example.foos.PostItem
 import com.example.foos.R
+import com.example.foos.data.model.PostWithUser
 import com.example.foos.ui.home.HomeScreen
 import com.example.foos.ui.home.HomeViewModel
+import com.example.foos.ui.home.PostDetailScreen
+import com.example.foos.ui.home.PostDetailViewModel
 import com.example.foos.ui.map.MapScreen
 import com.example.foos.ui.map.MapViewModel
 import com.example.foos.ui.post.PostScreen
@@ -35,6 +41,7 @@ import com.example.foos.ui.reaction.ReactionViewModel
 import com.example.foos.ui.setting.SettingScreen
 import com.example.foos.ui.setting.SettingViewModel
 import com.example.foos.ui.theme.FooSTheme
+import kotlin.reflect.typeOf
 
 
 sealed class Screen(val route: String, @StringRes val stringId: Int, @DrawableRes val iconId: Int) {
@@ -43,6 +50,10 @@ sealed class Screen(val route: String, @StringRes val stringId: Int, @DrawableRe
     object Reaction : Screen("reactions", R.string.reaction, R.drawable.ic_favorite)
     object Setting : Screen("settings", R.string.setting, R.drawable.ic_settings)
     object Post : Screen("post", R.string.post, R.drawable.ic_post_add)
+}
+
+sealed class Page(val route: String) {
+    object PostDetail : Page("post_detail")
 }
 
 @Preview
@@ -130,6 +141,12 @@ fun ScreenNavHost(
         composable(Screen.Post.route) {
             val vm: PostViewModel = hiltViewModel()
             PostScreen(vm, navController)
+        }
+        composable(Page.PostDetail.route, listOf(navArgument("postId") { type = NavType.StringType })){
+            val postId = it.arguments?.get("postId").toString()
+            val vm: PostDetailViewModel = hiltViewModel()
+            vm.setPostId(postId)
+            PostDetailScreen(vm, navController)
         }
     }
 }

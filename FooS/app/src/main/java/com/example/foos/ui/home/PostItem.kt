@@ -1,5 +1,6 @@
 package com.example.foos.ui.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -29,12 +30,13 @@ import com.example.foos.ui.component.AsyncUserIcon
 @Composable
 fun PostItem(
     postItemUiState: PostItemUiState = PostItemUiState.Default,
+    onPostItemClick: (PostItemUiState) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
-        PostContentRow(postItemUiState)
+        PostContentRow(postItemUiState, onPostItemClick)
         ReactionRow(modifier = Modifier.fillMaxWidth())
     }
 }
@@ -42,7 +44,8 @@ fun PostItem(
 @Preview
 @Composable
 fun PostContentRow(
-    postItemUiState: PostItemUiState = PostItemUiState.Default
+    postItemUiState: PostItemUiState = PostItemUiState.Default,
+    onPostItemClick: (PostItemUiState) -> Unit = {}
 ) {
     Row {
         AsyncUserIcon(url = postItemUiState.userIcon)
@@ -65,8 +68,9 @@ fun PostContentRow(
             }
             Text(
                 text = postItemUiState.content,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Justify
+                modifier = Modifier.fillMaxWidth()
+                    .clickable { onPostItemClick.invoke(postItemUiState) },
+                textAlign = TextAlign.Justify,
             )
             Spacer(Modifier.height(16.dp))
             PostImagesRow(postItemUiState.attachedImages)

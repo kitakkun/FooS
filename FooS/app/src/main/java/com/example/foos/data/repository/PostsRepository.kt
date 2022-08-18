@@ -19,6 +19,11 @@ object PostsRepository {
 
     val allPosts: MutableStateFlow<List<Post>> = MutableStateFlow(listOf())
 
+    suspend fun fetchPost(postId: String) : Post? {
+        val ref = FirestoreDao.createDocumentReference("posts", postId)
+        return ref.get().await().toObject(Post::class.java)
+    }
+
     suspend fun createPost(postData: Post) {
         val docRef = FirestoreDao.createDocumentReference(FirestoreDao.COLLECTION_POSTS)
         val imageUrls = mutableListOf<String>()

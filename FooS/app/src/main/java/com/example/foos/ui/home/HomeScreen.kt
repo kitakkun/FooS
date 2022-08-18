@@ -35,7 +35,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
 
 @Composable
 fun PostItemList(
-    postItems: List<PostItemUiState>
+    postItems: List<PostItemUiState>,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),

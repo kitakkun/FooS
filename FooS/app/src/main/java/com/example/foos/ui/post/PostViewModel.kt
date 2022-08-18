@@ -9,6 +9,7 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.foos.FileUtils.getRealPath
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.model.Post
@@ -18,21 +19,22 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
-    private val postContentsRepository: PostsRepository,
+    private val postsRepository: PostsRepository,
     application: Application
 ) : AndroidViewModel(application) {
 
-    private var _postUiState = MutableStateFlow(PostScreenUiState("", listOf()))
-    val postUiState: StateFlow<PostScreenUiState> get() = _postUiState.asStateFlow()
+    private var _uiState = MutableStateFlow(PostScreenUiState("", listOf(), false))
+    val postUiState: StateFlow<PostScreenUiState> get() = _uiState.asStateFlow()
 
     fun setImages(context: Context, imageUris: List<Uri>) {
         Log.d("IMAGE_URI", imageUris[0].toString())
         Log.d("IMAGE_URI", getRealPath(context, imageUris[0]) ?: "NULL")
-        _postUiState.update { it.copy(attachedImages = (
+        _uiState.update { it.copy(attachedImages = (
                 it.attachedImages + imageUris.map { uri -> "file://" + getRealPath(context, uri) }).filterNotNull().distinct()) }
 //        _postUiState.update { it.copy(attachedImages = (
 //                it.attachedImages + imageUris.map { uri -> uri.toString() }).distinct()) }
@@ -86,16 +88,21 @@ class PostViewModel @Inject constructor(
     }
 
     fun onTextFieldUpdated(text: String) {
-        _postUiState.update { it.copy(content = text) }
+        _uiState.update { it.copy(content = text) }
     }
 
-    fun post() {
+    fun post(navController: NavController) {
         viewModelScope.launch (Dispatchers.IO) {
-            val postData = Post(
-                "", Firebase.auth.uid.toString(), _postUiState.value.content,
-                _postUiState.value.attachedImages, null, null, java.util.Date()
+            _uiState.update { it.copy(posting = true) }
+            val post = Post(
+                "", Firebase.auth.uid.toString(), _uiState.value.content,
+                _uiState.value.attachedImages, null, null, java.util.Date()
             )
-            postContentsRepository.createPost(postData)
+            postsRepository.createPost(post)
+            withContext(Dispatchers.Main) {
+                navController.navigateUp()
+            }
+            _uiState.update { it.copy(posting = false) }
         }
     }
 }
