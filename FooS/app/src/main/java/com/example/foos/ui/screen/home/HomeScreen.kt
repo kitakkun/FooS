@@ -12,6 +12,7 @@ import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.screen.Screen
 import com.example.foos.ui.component.RoundIconActionButton
+import com.example.foos.ui.screen.Page
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
@@ -32,7 +33,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
     ) {
         PostItemList(uiState.value.posts, onContentClick={ postId -> viewModel.onContentClick(postId) }, onPostImageClick = { uris -> viewModel.onPostImageClick(uris) })
     }
-    RoundIconActionButton(onClick = { navController.navigate(Screen.Post.route) })
+    RoundIconActionButton(onClick = { navController.navigate(Page.Post.route) })
 }
 
 @Composable

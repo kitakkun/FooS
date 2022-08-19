@@ -21,7 +21,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
 import com.example.foos.FirebaseMediator
 import com.example.foos.R
-import com.example.foos.nav_graph.args.imageUris
 import com.example.foos.ui.navargs.Post
 import com.example.foos.ui.navargs.PostType
 import com.example.foos.ui.screen.home.HomeScreen
@@ -45,12 +44,12 @@ sealed class Screen(val route: String, @StringRes val stringId: Int, @DrawableRe
     object Map : Screen("maps", R.string.map, R.drawable.ic_pin_drop)
     object Reaction : Screen("reactions", R.string.reaction, R.drawable.ic_favorite)
     object Setting : Screen("settings", R.string.setting, R.drawable.ic_settings)
-    object Post : Screen("post", R.string.post, R.drawable.ic_post_add)
 }
 
 sealed class Page(val route: String) {
     object PostDetail : Page("post_detail")
     object ImageDetail : Page("image_detail")
+    object Post : Page("post")
 }
 
 @Preview
@@ -62,34 +61,22 @@ fun MainScreen() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    val bottomBarState = rememberSaveable {
+
+    val showBottomBar = rememberSaveable {
         mutableStateOf(true)
     }
-    when (currentDestination?.route) {
-        Screen.Post.route -> bottomBarState.value = false
-        else -> bottomBarState.value = true
+
+    showBottomBar.value = when (currentDestination?.route) {
+        Page.Post.route -> false
+        Page.PostDetail.route -> false
+        else -> true
     }
-//
-//    navController.apply {
-//        graph = createGraph(
-//            startDestination = nav_graph.dest.home.toString(),
-//            route = nav_graph.id.toString()
-//        ) {
-//            composable(nav_graph.dest.home.toString()) {
-//                argument(nav_graph.args.imageUris) {
-//                    type = NavType.StringArrayType
-//                    defaultValue = arrayOf("")
-//                    nullable = false
-//                }
-//            }
-//        }
-//    }
 
     FooSTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             backgroundColor = MaterialTheme.colors.background,
-            bottomBar = { if (bottomBarState.value) ScreenBottomNavBar(navController) }
+            bottomBar = { if (showBottomBar.value) ScreenBottomNavBar(navController) }
         ) { innerPadding -> ScreenNavHost(navController, innerPadding) }
     }
 }
@@ -151,7 +138,7 @@ fun ScreenNavHost(
             val vm: SettingViewModel = hiltViewModel()
             SettingScreen(vm)
         }
-        composable(Screen.Post.route) {
+        composable(Page.Post.route) {
             val vm: PostViewModel = hiltViewModel()
             PostScreen(vm, navController)
         }

@@ -9,7 +9,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.foos.nav_graph.args.imageUris
 import com.example.foos.ui.navargs.Post
 
 /**
