@@ -1,4 +1,4 @@
-package com.example.foos.ui.home
+package com.example.foos.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

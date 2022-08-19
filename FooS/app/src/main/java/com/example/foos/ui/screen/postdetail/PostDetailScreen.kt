@@ -1,4 +1,4 @@
-package com.example.foos.ui.home
+package com.example.foos.ui.screen.postdetail
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

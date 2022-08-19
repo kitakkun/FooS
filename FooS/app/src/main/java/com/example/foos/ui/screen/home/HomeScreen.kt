@@ -1,4 +1,4 @@
-package com.example.foos.ui.home
+package com.example.foos.ui.screen.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -10,25 +10,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.example.foos.R
-import com.example.foos.ui.Screen
+import com.example.foos.ui.screen.Screen
+import com.example.foos.ui.component.RoundIconActionButton
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 /**
  * ホーム画面のコンポーザブル
+ * ユーザーの投稿をリストで閲覧できます。
  */
 @Composable
 fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
 
     val uiState = viewModel.uiState.collectAsState()
 
+    viewModel.setNavController(navController)
+
     SwipeRefresh(state = rememberSwipeRefreshState(
         isRefreshing = uiState.value.isRefreshing),
-        onRefresh = {
-            viewModel.fetchNewerPosts()
-        }
+        onRefresh = { viewModel.fetchNewPosts() }
     ) {
-        PostItemList(uiState.value.posts)
+        PostItemList(uiState.value.posts, onContentClick={ postId -> viewModel.onContentClick(postId) }, onPostImageClick = { uris -> viewModel.onPostImageClick(uris) })
     }
     RoundIconActionButton(onClick = { navController.navigate(Screen.Post.route) })
 }
@@ -36,12 +38,14 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
 @Composable
 fun PostItemList(
     postItems: List<PostItemUiState>,
+    onContentClick: (String) -> Unit = {},
+    onPostImageClick: (List<String>) -> Unit = {}
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
     ) {
         items(postItems) { post ->
-            PostItem(post)
+            PostItem(post, onContentClick, onPostImageClick)
         }
     }
 }

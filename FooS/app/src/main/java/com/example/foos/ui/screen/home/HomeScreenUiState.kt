@@ -1,6 +1,4 @@
-package com.example.foos.ui.home
-
-import androidx.compose.runtime.Stable
+package com.example.foos.ui.screen.home
 
 data class HomeScreenUiState(
     val posts: List<PostItemUiState>,
@@ -8,6 +6,7 @@ data class HomeScreenUiState(
 )
 
 data class PostItemUiState(
+    val postId: String,
     val userId: String,
     val username: String,
     val userIcon: String,
@@ -16,6 +15,7 @@ data class PostItemUiState(
 ) {
     companion object {
         val Default = PostItemUiState(
+            "postId",
             "userId",
             "username",
             "",

@@ -1,4 +1,4 @@
-package com.example.foos.ui.setting
+package com.example.foos.ui.screen.setting
 
 data class SettingUiState(
     val username: String,

@@ -14,12 +14,12 @@ import java.io.File
 object FirebaseStorage {
 
     /**
-     * 指定のリソースをアップロードします
+     * 指定のリソースを作成（アップロード）します
      * @param remotePath クラウドストレージ上のパス
      * @param localPath アップロードするファイルのパス
      * @return アップロードしたリソースのクラウド上のパス
      */
-    suspend fun upload(remotePath: String, localPath: String) : Uri {
+    suspend fun create(remotePath: String, localPath: String) : Uri {
         val file = Uri.fromFile(File(localPath))
         val ref = Firebase.storage.reference.child(remotePath)
         ref.putFile(file).await()

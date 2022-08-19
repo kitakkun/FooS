@@ -1,4 +1,4 @@
-package com.example.foos.ui.reaction
+package com.example.foos.ui.screen.reaction
 
 data class ReactionScreenUiState(
     val reactions: List<ReactionItemUiState>

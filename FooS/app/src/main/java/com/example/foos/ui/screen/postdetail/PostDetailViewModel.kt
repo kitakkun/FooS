@@ -1,9 +1,10 @@
-package com.example.foos.ui.home
+package com.example.foos.ui.screen.postdetail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.domain.GetPostWithUserByPostIdUseCase
 import com.example.foos.data.model.PostWithUser
+import com.example.foos.ui.screen.home.PostItemUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,6 +31,7 @@ class PostDetailViewModel @Inject constructor(
                 _uiState.update { state ->
                     state.copy(
                         postItemUiState = PostItemUiState(
+                            postId = it.post.postId,
                             userId = it.user.userId,
                             username = it.user.username,
                             userIcon = it.user.profileImage,

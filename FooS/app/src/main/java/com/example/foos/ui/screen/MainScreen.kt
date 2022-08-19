@@ -1,4 +1,4 @@
-package com.example.foos.ui
+package com.example.foos.ui.screen
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -15,33 +15,29 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.*
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import androidx.navigation.compose.*
 import com.example.foos.FirebaseMediator
-import com.example.foos.PostItem
 import com.example.foos.R
-import com.example.foos.data.model.PostWithUser
-import com.example.foos.ui.home.HomeScreen
-import com.example.foos.ui.home.HomeViewModel
-import com.example.foos.ui.home.PostDetailScreen
-import com.example.foos.ui.home.PostDetailViewModel
-import com.example.foos.ui.map.MapScreen
-import com.example.foos.ui.map.MapViewModel
-import com.example.foos.ui.post.PostScreen
-import com.example.foos.ui.post.PostViewModel
-import com.example.foos.ui.reaction.ReactionScreen
-import com.example.foos.ui.reaction.ReactionViewModel
-import com.example.foos.ui.setting.SettingScreen
-import com.example.foos.ui.setting.SettingViewModel
+import com.example.foos.nav_graph.args.imageUris
+import com.example.foos.ui.navargs.Post
+import com.example.foos.ui.navargs.PostType
+import com.example.foos.ui.screen.home.HomeScreen
+import com.example.foos.ui.screen.home.HomeViewModel
+import com.example.foos.ui.screen.postdetail.PostDetailScreen
+import com.example.foos.ui.screen.postdetail.PostDetailViewModel
+import com.example.foos.ui.screen.imagedetail.ImageDetailScreen
+import com.example.foos.ui.screen.map.MapScreen
+import com.example.foos.ui.screen.map.MapViewModel
+import com.example.foos.ui.screen.post.PostScreen
+import com.example.foos.ui.screen.post.PostViewModel
+import com.example.foos.ui.screen.reaction.ReactionScreen
+import com.example.foos.ui.screen.reaction.ReactionViewModel
+import com.example.foos.ui.screen.setting.SettingScreen
+import com.example.foos.ui.screen.setting.SettingViewModel
 import com.example.foos.ui.theme.FooSTheme
-import kotlin.reflect.typeOf
 
 
 sealed class Screen(val route: String, @StringRes val stringId: Int, @DrawableRes val iconId: Int) {
@@ -54,6 +50,7 @@ sealed class Screen(val route: String, @StringRes val stringId: Int, @DrawableRe
 
 sealed class Page(val route: String) {
     object PostDetail : Page("post_detail")
+    object ImageDetail : Page("image_detail")
 }
 
 @Preview
@@ -72,6 +69,22 @@ fun MainScreen() {
         Screen.Post.route -> bottomBarState.value = false
         else -> bottomBarState.value = true
     }
+//
+//    navController.apply {
+//        graph = createGraph(
+//            startDestination = nav_graph.dest.home.toString(),
+//            route = nav_graph.id.toString()
+//        ) {
+//            composable(nav_graph.dest.home.toString()) {
+//                argument(nav_graph.args.imageUris) {
+//                    type = NavType.StringArrayType
+//                    defaultValue = arrayOf("")
+//                    nullable = false
+//                }
+//            }
+//        }
+//    }
+
     FooSTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -142,11 +155,20 @@ fun ScreenNavHost(
             val vm: PostViewModel = hiltViewModel()
             PostScreen(vm, navController)
         }
-        composable(Page.PostDetail.route, listOf(navArgument("postId") { type = NavType.StringType })){
-            val postId = it.arguments?.get("postId").toString()
+        composable("${Page.PostDetail.route}/{postId}", listOf(navArgument("postId") { type = NavType.StringType })){
+            val postId = it.arguments?.getString("postId")
             val vm: PostDetailViewModel = hiltViewModel()
-            vm.setPostId(postId)
+            postId?.let {
+                vm.setPostId(postId)
+            }
             PostDetailScreen(vm, navController)
+        }
+        composable("${Page.ImageDetail.route}/{post}", listOf(
+            navArgument("post") { type = PostType }
+        )
+        ) {
+            val post = it.arguments?.getParcelable<Post>("post")
+            ImageDetailScreen(navController = navController, post = post)
         }
     }
 }

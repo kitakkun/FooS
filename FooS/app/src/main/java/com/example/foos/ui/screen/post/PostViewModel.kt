@@ -1,4 +1,4 @@
-package com.example.foos.ui.post
+package com.example.foos.ui.screen.post
 
 import android.app.Application
 import android.content.ContentResolver

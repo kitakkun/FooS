@@ -32,7 +32,7 @@ object PostsRepository {
             val file = Uri.fromFile(File(postData.attachedImages[i].removePrefix("file://")))
             val remotePath = "images/posts/${docRef.id}/${file.lastPathSegment}"
             val localPath = file.path.toString()
-            val downloadLink = FirebaseStorage.upload(remotePath, localPath)
+            val downloadLink = FirebaseStorage.create(remotePath, localPath)
             imageUrls.add(downloadLink.toString())
         }
         val updates = hashMapOf<String, Any>(

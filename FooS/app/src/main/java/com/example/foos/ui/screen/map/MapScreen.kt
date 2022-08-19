@@ -1,4 +1,4 @@
-package com.example.foos.ui.map
+package com.example.foos.ui.screen.map
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -23,9 +23,11 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 
 /**
- * Map画面のコンポーザブル
-    ManifestにPermissionを定義しても警告が出続けるため、MissingPermissionを無視
-    参考 -> https://stackoverflow.com/questions/45279370/android-studio-complains-about-missing-permission-check-for-fingerprint-sensor
+ * グルメマップ画面のコンポーザブル
+ * マップ上に口コミを吹き出しで表示します
+ *
+ *  ManifestにPermissionを定義しても警告が出続けるため、MissingPermissionを無視
+ *  参考 -> https://stackoverflow.com/questions/45279370/android-studio-complains-about-missing-permission-check-for-fingerprint-sensor
  */
 @OptIn(ExperimentalPermissionsApi::class)
 @SuppressLint("MissingPermission")
