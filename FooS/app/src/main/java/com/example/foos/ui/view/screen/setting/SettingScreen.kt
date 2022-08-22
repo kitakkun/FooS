@@ -27,7 +27,7 @@ import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.example.foos.FirebaseMediator
 import com.example.foos.R
-import com.example.foos.ui.state.MenuItemUiState
+import com.example.foos.ui.state.component.MenuItemUiState
 import com.example.foos.ui.theme.Yellow
 import com.example.foos.ui.view.component.ConfirmAlertDialog
 import com.example.foos.ui.view.component.MenuItemList

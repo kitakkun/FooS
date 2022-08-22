@@ -3,6 +3,7 @@ package com.example.foos.ui.view.screen.reaction
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.foos.ui.state.screen.reaction.ReactionScreenUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

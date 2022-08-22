@@ -1,4 +1,4 @@
-package com.example.foos.ui.view.screen.postdetail
+package com.example.foos.ui.state.screen.postdetail
 
 import com.example.foos.ui.state.screen.home.PostItemUiState
 

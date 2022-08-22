@@ -1,4 +1,4 @@
-package com.example.foos.ui.view.screen.post
+package com.example.foos.ui.state.screen.post
 
 data class PostScreenUiState(
     var content: String,

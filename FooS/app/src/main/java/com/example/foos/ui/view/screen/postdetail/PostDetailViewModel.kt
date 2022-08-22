@@ -2,6 +2,7 @@ package com.example.foos.ui.view.screen.postdetail
 
 import androidx.lifecycle.ViewModel
 import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.state.screen.postdetail.PostDetailScreenUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

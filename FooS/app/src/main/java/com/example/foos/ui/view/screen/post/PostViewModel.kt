@@ -13,6 +13,7 @@ import androidx.navigation.NavController
 import com.example.foos.FileUtils.getRealPath
 import com.example.foos.data.model.Post
 import com.example.foos.data.repository.PostsRepository
+import com.example.foos.ui.state.screen.post.PostScreenUiState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
