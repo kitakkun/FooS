@@ -2,7 +2,9 @@ package com.example.foos.ui.screen.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
@@ -10,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.example.foos.R
-import com.example.foos.ui.screen.Screen
 import com.example.foos.ui.component.RoundIconActionButton
 import com.example.foos.ui.screen.Page
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -28,10 +29,14 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
     viewModel.setNavController(navController)
 
     SwipeRefresh(state = rememberSwipeRefreshState(
-        isRefreshing = uiState.value.isRefreshing),
+        isRefreshing = uiState.value.isRefreshing
+    ),
         onRefresh = { viewModel.fetchNewPosts() }
     ) {
-        PostItemList(uiState.value.posts, onContentClick={ postId -> viewModel.onContentClick(postId) }, onPostImageClick = { uris -> viewModel.onPostImageClick(uris) })
+        PostItemList(
+            uiState.value.posts,
+            onContentClick = { postId -> viewModel.onContentClick(postId) },
+            onPostImageClick = { uris -> viewModel.onPostImageClick(uris) })
     }
     RoundIconActionButton(onClick = { navController.navigate(Page.Post.route) })
 }

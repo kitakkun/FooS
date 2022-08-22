@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.navigation.NavType
 import com.google.gson.Gson
 
-public val PostType : NavType<Post> = object: NavType<Post>(isNullableAllowed = false) {
+public val PostType: NavType<Post> = object : NavType<Post>(isNullableAllowed = false) {
     override fun get(bundle: Bundle, key: String): Post? {
         return bundle.getParcelable(key)
     }

@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ReactionViewModel @Inject constructor(): ViewModel() {
+class ReactionViewModel @Inject constructor() : ViewModel() {
 
     private var _uiState = mutableStateOf(ReactionScreenUiState(listOf()))
     val uiState: State<ReactionScreenUiState> get() = _uiState

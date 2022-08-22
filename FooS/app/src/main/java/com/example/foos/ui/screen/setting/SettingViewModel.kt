@@ -37,16 +37,18 @@ class SettingViewModel @Inject constructor(
     }
 
     fun onCropImageSuccessful(result: CropImageView.CropResult) {
-        viewModelScope.launch (Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             result.uriContent?.let {
-                val ref = Firebase.storage.reference.child("images/profile/" + Firebase.auth.uid + ".png")
+                val ref =
+                    Firebase.storage.reference.child("images/profile/" + Firebase.auth.uid + ".png")
                 val uploadTask = ref.putFile(it)
                 uploadTask.addOnFailureListener {
                     /*TODO: Error handling*/
                 }.addOnSuccessListener {
                     ref.downloadUrl.addOnSuccessListener {
                         val map = mapOf("profileImage" to it.toString())
-                        Firebase.firestore.collection("users").document(Firebase.auth.uid.toString()).update(map)
+                        Firebase.firestore.collection("users")
+                            .document(Firebase.auth.uid.toString()).update(map)
                         fetchUserData()
                     }
                 }

@@ -1,8 +1,8 @@
 package com.example.foos.data.domain
 
+import com.example.foos.data.model.PostWithUser
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.UsersRepository
-import com.example.foos.data.model.PostWithUser
 import javax.inject.Inject
 
 class GetLatestPostsWithUserUseCase @Inject constructor(

@@ -5,5 +5,5 @@ data class User(
     val username: String,       // ユーザー名
     val profileImage: String,   // プロフィール画像のURL
 ) {
-    constructor(): this("", "", "")
+    constructor() : this("", "", "")
 }

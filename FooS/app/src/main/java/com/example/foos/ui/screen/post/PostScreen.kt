@@ -11,7 +11,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,13 +44,15 @@ fun PostScreen(viewModel: PostViewModel, navController: NavController) {
     val context = LocalContext.current
 
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetMultipleContents())
+        contract = ActivityResultContracts.GetMultipleContents()
+    )
     {
         viewModel.setImages(context, it)
     }
 
     val filePermissionState = rememberPermissionState(
-        permission = Manifest.permission.READ_EXTERNAL_STORAGE)
+        permission = Manifest.permission.READ_EXTERNAL_STORAGE
+    )
 
     if (uiState.posting) {
         // 画面を暗くして無反応にし、処理中であることを示すインディケータを表示
@@ -129,8 +133,9 @@ fun AttachedImagesRow(
     ) {
         items(attachedImages) {
             Box(contentAlignment = Alignment.TopEnd) {
-                AsyncImage(model = ImageRequest.Builder(LocalContext.current)
-                    .data(it).build(), contentDescription = null,
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(it).build(), contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .width(100.dp)

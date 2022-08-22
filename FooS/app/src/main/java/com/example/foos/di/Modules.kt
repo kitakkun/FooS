@@ -14,10 +14,13 @@ import javax.inject.Singleton
 object Modules {
     @Provides
     @Singleton
-    fun providePostsRepository() : PostsRepository = PostsRepository
+    fun providePostsRepository(): PostsRepository = PostsRepository
+
     @Provides
     @Singleton
-    fun provideUsersRepository() : UsersRepository = UsersRepository
+    fun provideUsersRepository(): UsersRepository = UsersRepository
+
     @Provides
-    fun provideCompletePostsRepository() : GetLatestPostsWithUserUseCase = GetLatestPostsWithUserUseCase(PostsRepository, UsersRepository)
+    fun provideCompletePostsRepository(): GetLatestPostsWithUserUseCase =
+        GetLatestPostsWithUserUseCase(PostsRepository, UsersRepository)
 }

@@ -49,8 +49,7 @@ fun SettingScreen(viewModel: SettingViewModel) {
         if (result.isSuccessful) {
             viewModel.fetchUserData()
             viewModel.onCropImageSuccessful(result)
-        }
-        else onCropImageFail(result)
+        } else onCropImageFail(result)
     }
 
     Column(

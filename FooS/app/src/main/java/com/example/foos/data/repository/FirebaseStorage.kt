@@ -3,9 +3,7 @@ package com.example.foos.data.repository
 import android.net.Uri
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.io.File
 
 /**
@@ -19,7 +17,7 @@ object FirebaseStorage {
      * @param localPath アップロードするファイルのパス
      * @return アップロードしたリソースのクラウド上のパス
      */
-    suspend fun create(remotePath: String, localPath: String) : Uri {
+    suspend fun create(remotePath: String, localPath: String): Uri {
         val file = Uri.fromFile(File(localPath))
         val ref = Firebase.storage.reference.child(remotePath)
         ref.putFile(file).await()

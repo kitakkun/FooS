@@ -25,7 +25,7 @@ fun ReactionScreen(viewModel: ReactionViewModel, navController: NavController) {
 
     val uiState = viewModel.uiState
 
-    LazyColumn ()
+    LazyColumn()
     {
         items(uiState.value.reactions) {
             ReactionItem(it)

@@ -2,7 +2,7 @@ package com.example.foos.data.model
 
 import java.util.*
 
-data class Post (
+data class Post(
     val postId: String,                 // 投稿ID
     val userId: String,                 // ユーザーID
     val content: String,                // 本文
@@ -11,5 +11,5 @@ data class Post (
     val latitude: Double?,              // 経度
     val createdAt: Date,           // 投稿日時
 ) {
-    constructor(): this("","","", listOf(), null, null, Date())
+    constructor() : this("", "", "", listOf(), null, null, Date())
 }

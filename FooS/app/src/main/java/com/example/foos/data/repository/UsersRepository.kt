@@ -7,7 +7,7 @@ import kotlinx.coroutines.tasks.await
 
 object UsersRepository {
 
-    suspend fun fetchUser(userId: String) : User? {
+    suspend fun fetchUser(userId: String): User? {
         val userData = Firebase.firestore.collection("users")
             .whereEqualTo("userId", userId)
             .get().await().toObjects(User::class.java)

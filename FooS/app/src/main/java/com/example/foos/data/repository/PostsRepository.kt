@@ -19,7 +19,7 @@ object PostsRepository {
 
     val allPosts: MutableStateFlow<List<Post>> = MutableStateFlow(listOf())
 
-    suspend fun fetchPost(postId: String) : Post? {
+    suspend fun fetchPost(postId: String): Post? {
         val ref = FirestoreDao.createDocumentReference("posts", postId)
         return ref.get().await().toObject(Post::class.java)
     }
@@ -53,7 +53,7 @@ object PostsRepository {
         }
     }
 
-    suspend fun fetchNewerPosts() : List<Post> {
+    suspend fun fetchNewerPosts(): List<Post> {
         val response = Firebase.firestore.collection("posts")
             .limit(MAX_LOAD_COUNT)
 //            .whereGreaterThan("postId", latestPostId)

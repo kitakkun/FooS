@@ -67,7 +67,7 @@ fun MapScreen(viewModel: MapViewModel, navController: NavController) {
 fun Map(
     cameraPositionState: CameraPositionState
 ) {
-    val properties by remember { mutableStateOf(MapProperties(isMyLocationEnabled = true) ) }
+    val properties by remember { mutableStateOf(MapProperties(isMyLocationEnabled = true)) }
     val uiSettings by remember { mutableStateOf(MapUiSettings(myLocationButtonEnabled = true)) }
 
     GoogleMap(

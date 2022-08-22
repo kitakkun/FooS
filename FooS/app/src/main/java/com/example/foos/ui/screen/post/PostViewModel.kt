@@ -11,13 +11,16 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.foos.FileUtils.getRealPath
-import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.model.Post
+import com.example.foos.data.repository.PostsRepository
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -34,8 +37,16 @@ class PostViewModel @Inject constructor(
     fun setImages(context: Context, imageUris: List<Uri>) {
         Log.d("IMAGE_URI", imageUris[0].toString())
         Log.d("IMAGE_URI", getRealPath(context, imageUris[0]) ?: "NULL")
-        _uiState.update { it.copy(attachedImages = (
-                it.attachedImages + imageUris.map { uri -> "file://" + getRealPath(context, uri) }).filterNotNull().distinct()) }
+        _uiState.update {
+            it.copy(attachedImages = (
+                    it.attachedImages + imageUris.map { uri ->
+                        "file://" + getRealPath(
+                            context,
+                            uri
+                        )
+                    }).filterNotNull().distinct()
+            )
+        }
 //        _postUiState.update { it.copy(attachedImages = (
 //                it.attachedImages + imageUris.map { uri -> uri.toString() }).distinct()) }
     }
@@ -76,7 +87,8 @@ class PostViewModel @Inject constructor(
             path = uri.path
         } else if ("content" == scheme) {
             val contentResolver = context.contentResolver
-            val cursor = contentResolver.query(uri, arrayOf(MediaStore.MediaColumns.DATA), null, null, null)
+            val cursor =
+                contentResolver.query(uri, arrayOf(MediaStore.MediaColumns.DATA), null, null, null)
             if (cursor != null) {
                 cursor.moveToFirst()
                 path = cursor.getString(0)
@@ -92,7 +104,7 @@ class PostViewModel @Inject constructor(
     }
 
     fun post(navController: NavController) {
-        viewModelScope.launch (Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             _uiState.update { it.copy(posting = true) }
             val post = Post(
                 "", Firebase.auth.uid.toString(), _uiState.value.content,

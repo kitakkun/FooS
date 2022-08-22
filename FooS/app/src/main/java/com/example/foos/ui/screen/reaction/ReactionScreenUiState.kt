@@ -11,6 +11,11 @@ data class ReactionItemUiState(
     val postContent: String,    // リアクションされた投稿の内容
 ) {
     companion object {
-        val Default = ReactionItemUiState("username", "https://cdn-icons-png.flaticon.com/512/1006/1006771.png", "❤️", "post content...")
+        val Default = ReactionItemUiState(
+            "username",
+            "https://cdn-icons-png.flaticon.com/512/1006/1006771.png",
+            "❤️",
+            "post content..."
+        )
     }
 }
