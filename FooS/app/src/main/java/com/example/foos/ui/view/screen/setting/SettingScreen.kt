@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -28,11 +27,11 @@ import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.example.foos.FirebaseMediator
 import com.example.foos.R
+import com.example.foos.ui.state.MenuItemUiState
+import com.example.foos.ui.theme.Yellow
 import com.example.foos.ui.view.component.ConfirmAlertDialog
 import com.example.foos.ui.view.component.MenuItemList
 import com.example.foos.ui.view.component.UserIcon
-import com.example.foos.ui.state.MenuItemUiState
-import com.example.foos.ui.theme.Yellow
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase

@@ -18,7 +18,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -26,9 +25,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.foos.FirebaseMediator
 import com.example.foos.R
-import com.example.foos.ui.navargs.Post
+import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
+import com.example.foos.ui.navargs.PostItemUiStateWithImageUrlType
 import com.example.foos.ui.navargs.PostType
 import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.screen.home.HomeScreen
 import com.example.foos.ui.view.screen.home.HomeViewModel
 import com.example.foos.ui.view.screen.imagedetail.ImageDetailScreen
@@ -42,7 +43,6 @@ import com.example.foos.ui.view.screen.reaction.ReactionScreen
 import com.example.foos.ui.view.screen.reaction.ReactionViewModel
 import com.example.foos.ui.view.screen.setting.SettingScreen
 import com.example.foos.ui.view.screen.setting.SettingViewModel
-import com.example.foos.ui.theme.FooSTheme
 
 
 sealed class Screen(val route: String, @StringRes val stringId: Int, @DrawableRes val iconId: Int) {
@@ -159,12 +159,15 @@ fun ScreenNavHost(
                 PostDetailScreen(vm, navController)
             }
         }
-        composable("${Page.ImageDetail.route}/{post}", listOf(
-            navArgument("post") { type = PostType }
+        composable("${Page.ImageDetail.route}/{uiStateWithImageUrl}", listOf(
+            navArgument("uiStateWithImageUrl") { type = PostItemUiStateWithImageUrlType }
         )
         ) {
-            val post = it.arguments?.getParcelable<Post>("post")
-            ImageDetailScreen(navController = navController, post = post)
+            val uiStateWithImageUrl =
+                it.arguments?.getParcelable<PostItemUiStateWithImageUrl>("uiStateWithImageUrl")
+            uiStateWithImageUrl?.let {
+                ImageDetailScreen(navController = navController, post = it)
+            }
         }
     }
 }

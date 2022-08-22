@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.example.foos.R
+import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.view.component.RoundIconActionButton
 import com.example.foos.ui.view.screen.Page
-import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 

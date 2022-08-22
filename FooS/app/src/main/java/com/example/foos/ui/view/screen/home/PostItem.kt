@@ -21,8 +21,8 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.foos.R
-import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.view.component.UserIcon
 
 /**
  * タイムラインに表示する投稿アイテム一つに対応するコンポーザブル

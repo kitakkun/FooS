@@ -9,18 +9,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.foos.ui.navargs.Post
+import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
 
 /**
  * 画像を全画面プレビューするスクリーン
  * 投稿内容の画像をタップした時などに遷移
  */
 @Composable
-fun ImageDetailScreen(navController: NavHostController, post: Post?) {
+fun ImageDetailScreen(navController: NavHostController, post: PostItemUiStateWithImageUrl?) {
     post?.let {
         LazyRow()
         {
-            items(post.imageUris) {
+            items(post.uiState.attachedImages) {
                 FullSizeImage(url = it)
             }
         }

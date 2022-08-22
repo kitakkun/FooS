@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import com.example.foos.Posts
 import com.example.foos.data.domain.GetLatestPostsWithUserUseCase
 import com.example.foos.data.domain.GetOlderPostsWithUserUseCase
+import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
 import com.example.foos.ui.state.screen.home.HomeScreenUiState
 import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.view.screen.Page
@@ -61,9 +62,9 @@ class HomeViewModel @Inject constructor(
      * @param clickedImageUrl クリックされた画像のURL
      */
     fun onImageClick(uiState: PostItemUiState, clickedImageUrl: String) {
-//        val post = Post(imageUris)
-//        val data = Uri.encode(Gson().toJson(post))
-//        navController.navigate("${Page.ImageDetail.route}/$data")
+        val uiStateWithImageUrl = PostItemUiStateWithImageUrl(uiState, clickedImageUrl)
+        val data = Uri.encode(Gson().toJson(uiStateWithImageUrl))
+        navController.navigate("${Page.ImageDetail.route}/$data")
     }
 
     fun fetchNewPosts() {
