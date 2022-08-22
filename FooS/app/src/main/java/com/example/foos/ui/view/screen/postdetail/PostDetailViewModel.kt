@@ -15,34 +15,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostDetailViewModel @Inject constructor(
-    private val getPostWithUserByPostIdUseCase: GetPostWithUserByPostIdUseCase
 ) : ViewModel() {
-
-    private lateinit var postId: String
-    private var postWithUser: PostWithUser? = null
 
     private var _uiState = MutableStateFlow(PostDetailScreenUiState(PostItemUiState.Default))
     val uiState: StateFlow<PostDetailScreenUiState> get() = _uiState
 
-    fun setPostId(postId: String) {
-        this.postId = postId
-        viewModelScope.launch(Dispatchers.IO) {
-            getPostWithUserByPostIdUseCase(postId)?.let {
-                _uiState.update { state ->
-                    state.copy(
-                        postItemUiState = PostItemUiState(
-                            postId = it.post.postId,
-                            userId = it.user.userId,
-                            username = it.user.username,
-                            userIcon = it.user.profileImage,
-                            content = it.post.content,
-                            attachedImages = it.post.attachedImages,
-                        )
-                    )
-                }
-            }
-        }
+    fun setPostUiState(uiState: PostItemUiState) {
+        this._uiState.update { it.copy(postItemUiState = uiState) }
     }
-
 
 }

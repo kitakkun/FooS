@@ -28,6 +28,7 @@ import com.example.foos.FirebaseMediator
 import com.example.foos.R
 import com.example.foos.ui.navargs.Post
 import com.example.foos.ui.navargs.PostType
+import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.view.screen.home.HomeScreen
 import com.example.foos.ui.view.screen.home.HomeViewModel
 import com.example.foos.ui.view.screen.imagedetail.ImageDetailScreen
@@ -148,15 +149,15 @@ fun ScreenNavHost(
             PostScreen(vm, navController)
         }
         composable(
-            "${Page.PostDetail.route}/{postId}",
-            listOf(navArgument("postId") { type = NavType.StringType })
+            "${Page.PostDetail.route}/{uiState}",
+            listOf(navArgument("uiState") { type = PostType })
         ) {
-            val postId = it.arguments?.getString("postId")
+            val uiState = it.arguments?.getParcelable<PostItemUiState>("uiState")
             val vm: PostDetailViewModel = hiltViewModel()
-            postId?.let {
-                vm.setPostId(postId)
+            uiState?.let {
+                vm.setPostUiState(it)
+                PostDetailScreen(vm, navController)
             }
-            PostDetailScreen(vm, navController)
         }
         composable("${Page.ImageDetail.route}/{post}", listOf(
             navArgument("post") { type = PostType }

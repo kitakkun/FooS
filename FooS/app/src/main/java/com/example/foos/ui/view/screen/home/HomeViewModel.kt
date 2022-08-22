@@ -1,5 +1,6 @@
 package com.example.foos.ui.view.screen.home
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -8,6 +9,8 @@ import com.example.foos.data.domain.GetLatestPostsWithUserUseCase
 import com.example.foos.data.domain.GetOlderPostsWithUserUseCase
 import com.example.foos.ui.state.screen.home.HomeScreenUiState
 import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.view.screen.Page
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,7 +51,8 @@ class HomeViewModel @Inject constructor(
      * @param uiState クリックされた投稿のUI状態
      */
     fun onContentClick(uiState: PostItemUiState) {
-//        navController.navigate("${Page.PostDetail.route}/$postId")
+        val data = Uri.encode(Gson().toJson(uiState))
+        navController.navigate("${Page.PostDetail.route}/$data")
     }
 
     /**
