@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
-import com.example.foos.FirebaseMediator
+import com.example.foos.FirebaseAuthManager
 import com.example.foos.R
 import com.example.foos.ui.state.component.MenuItemUiState
 import com.example.foos.ui.theme.Yellow
@@ -91,7 +91,7 @@ fun SettingScreen(viewModel: SettingViewModel) {
                 title = stringResource(id = R.string.log_out_confirm_title),
                 message = stringResource(id = R.string.log_out_confirm_message),
                 onConfirmed = {
-                    FirebaseMediator.logOut()
+                    FirebaseAuthManager.logOut()
                     (context as? Activity)?.recreate()
                 },
                 onDismissed = {

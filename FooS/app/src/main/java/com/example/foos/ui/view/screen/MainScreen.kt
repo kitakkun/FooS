@@ -23,7 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.foos.FirebaseMediator
+import com.example.foos.FirebaseAuthManager
 import com.example.foos.R
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrlType
@@ -71,7 +71,7 @@ sealed class Page(val route: String, val routeWithParam: String = "") {
 fun MainScreen() {
 
     // 認証済みか確認し、未認証であれば認証を行う
-    FirebaseMediator.checkSignInState(LocalContext.current)
+    FirebaseAuthManager.checkSignInState(LocalContext.current)
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
