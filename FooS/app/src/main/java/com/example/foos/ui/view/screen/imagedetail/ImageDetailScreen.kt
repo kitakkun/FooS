@@ -41,24 +41,28 @@ fun ImageDetailScreen(navController: NavHostController, post: PostItemUiStateWit
     }
 }
 
+/**
+ * フルスクリーン画像
+ * @param url 画像のパス
+ * @param modifier モディファイア
+ */
 @Composable
 fun FullSizeImage(
     url: String,
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(url)
+                .crossfade(true)
                 .placeholder(R.drawable.ic_no_image)
                 .build(),
             contentDescription = null,
-            modifier = modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         )
     }
 }
