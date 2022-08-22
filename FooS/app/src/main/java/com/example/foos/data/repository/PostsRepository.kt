@@ -19,7 +19,7 @@ object PostsRepository {
 
     val allPosts: MutableStateFlow<List<Post>> = MutableStateFlow(listOf())
 
-    suspend fun fetchPost(postId: String) : Post? {
+    suspend fun fetchPost(postId: String): Post? {
         val ref = FirestoreDao.createDocumentReference("posts", postId)
         return ref.get().await().toObject(Post::class.java)
     }
@@ -32,7 +32,7 @@ object PostsRepository {
             val file = Uri.fromFile(File(postData.attachedImages[i].removePrefix("file://")))
             val remotePath = "images/posts/${docRef.id}/${file.lastPathSegment}"
             val localPath = file.path.toString()
-            val downloadLink = FirebaseStorage.upload(remotePath, localPath)
+            val downloadLink = FirebaseStorage.create(remotePath, localPath)
             imageUrls.add(downloadLink.toString())
         }
         val updates = hashMapOf<String, Any>(
@@ -53,7 +53,7 @@ object PostsRepository {
         }
     }
 
-    suspend fun fetchNewerPosts() : List<Post> {
+    suspend fun fetchNewerPosts(): List<Post> {
         val response = Firebase.firestore.collection("posts")
             .limit(MAX_LOAD_COUNT)
 //            .whereGreaterThan("postId", latestPostId)
