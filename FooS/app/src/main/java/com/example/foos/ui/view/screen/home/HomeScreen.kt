@@ -45,7 +45,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
             }
         )
     }
-    RoundIconActionButton(onClick = { navController.navigate(Page.Post.route) })
+    RoundIconActionButton(onClick = { navController.navigate(Page.PostCreate.route) })
 }
 
 /**

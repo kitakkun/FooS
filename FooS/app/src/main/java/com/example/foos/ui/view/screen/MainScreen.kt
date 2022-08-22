@@ -44,7 +44,9 @@ import com.example.foos.ui.view.screen.reaction.ReactionViewModel
 import com.example.foos.ui.view.screen.setting.SettingScreen
 import com.example.foos.ui.view.screen.setting.SettingViewModel
 
-
+/**
+ * メインメニューのスクリーン
+ */
 sealed class Screen(val route: String, @StringRes val stringId: Int, @DrawableRes val iconId: Int) {
     object Home : Screen("home", R.string.home, R.drawable.ic_home)
     object Map : Screen("maps", R.string.map, R.drawable.ic_pin_drop)
@@ -52,12 +54,18 @@ sealed class Screen(val route: String, @StringRes val stringId: Int, @DrawableRe
     object Setting : Screen("settings", R.string.setting, R.drawable.ic_settings)
 }
 
+/**
+ * サブスクリーン（メインメニューのスクリーンから呼ばれる）
+ */
 sealed class Page(val route: String) {
     object PostDetail : Page("post_detail")
     object ImageDetail : Page("image_detail")
-    object Post : Page("post")
+    object PostCreate : Page("post-create")
 }
 
+/**
+ * メイン画面のコンポーザブル（アプリ全体のエントリポイント）
+ */
 @Preview
 @Composable
 fun MainScreen() {
@@ -73,7 +81,7 @@ fun MainScreen() {
     }
 
     showBottomBar.value = when (currentDestination?.route) {
-        Page.Post.route -> false
+        Page.PostCreate.route -> false
         Page.PostDetail.route -> false
         else -> true
     }
@@ -87,6 +95,9 @@ fun MainScreen() {
     }
 }
 
+/**
+ * 画面下部のナビゲーションバー
+ */
 @Composable
 fun ScreenBottomNavBar(
     navController: NavHostController
@@ -118,6 +129,9 @@ fun ScreenBottomNavBar(
     }
 }
 
+/**
+ * 画面下部ナビゲーションのNavHost
+ */
 @Composable
 fun ScreenNavHost(
     navController: NavHostController,
@@ -144,7 +158,7 @@ fun ScreenNavHost(
             val vm: SettingViewModel = hiltViewModel()
             SettingScreen(vm)
         }
-        composable(Page.Post.route) {
+        composable(Page.PostCreate.route) {
             val vm: PostViewModel = hiltViewModel()
             PostScreen(vm, navController)
         }
