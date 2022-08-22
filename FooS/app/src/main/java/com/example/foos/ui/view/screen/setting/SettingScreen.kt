@@ -79,11 +79,11 @@ fun SettingScreen(viewModel: SettingViewModel) {
         var logOutRequest by remember { mutableStateOf(false) }
 
         val settingMenus = listOf(
-            MenuItemUiState(R.string.account_settings, R.drawable.ic_account_circle),
-            MenuItemUiState(R.string.privacy_settings, R.drawable.ic_privacy_tip),
+            MenuItemUiState(R.drawable.ic_account_circle, R.string.account_settings),
+            MenuItemUiState(R.drawable.ic_privacy_tip, R.string.privacy_settings),
             MenuItemUiState(
-                R.string.log_out,
                 R.drawable.ic_log_out,
+                R.string.log_out,
                 onClick = { logOutRequest = true }),
         )
 
@@ -105,8 +105,6 @@ fun SettingScreen(viewModel: SettingViewModel) {
     }
 }
 
-
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ClickableUserIcon(
     imageUri: String,
