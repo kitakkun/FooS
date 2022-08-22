@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.example.foos.Posts
 import com.example.foos.data.domain.GetLatestPostsWithUserUseCase
 import com.example.foos.data.domain.GetOlderPostsWithUserUseCase
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
@@ -30,7 +29,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     // HomeScreenのUI状態
-    private var _uiState = MutableStateFlow(HomeScreenUiState(Posts.getPosts(), false))
+    private var _uiState = MutableStateFlow(HomeScreenUiState(listOf(), false))
     val uiState: StateFlow<HomeScreenUiState> get() = _uiState
 
     private lateinit var navController: NavController
