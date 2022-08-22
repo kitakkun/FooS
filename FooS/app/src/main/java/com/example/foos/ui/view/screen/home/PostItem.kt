@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -112,7 +113,7 @@ fun UserIdentityRow(
 @Composable
 fun AttachedImagesRow(
     uiState: PostItemUiState,
-    onClick: (PostItemUiState, String) -> Unit = { _, _ -> }
+    onClick: (PostItemUiState, String) -> Unit = { _, _ -> },
 ) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
