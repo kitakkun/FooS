@@ -1,4 +1,4 @@
-package com.example.foos
+package com.example.foos.util
 
 import android.annotation.SuppressLint
 import android.content.ContentUris

@@ -6,7 +6,7 @@ import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.example.foos.FileUtils.getRealPath
+import com.example.foos.util.FileUtils.getRealPath
 import com.example.foos.data.model.Post
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.ui.state.screen.post.PostScreenUiState
