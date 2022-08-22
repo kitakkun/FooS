@@ -1,12 +1,8 @@
 package com.example.foos.ui.view.screen.post
 
 import android.app.Application
-import android.content.ContentResolver
 import android.content.Context
-import android.database.Cursor
 import android.net.Uri
-import android.provider.MediaStore
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -36,69 +32,13 @@ class PostViewModel @Inject constructor(
     val postUiState: StateFlow<PostScreenUiState> get() = _uiState.asStateFlow()
 
     fun setImages(context: Context, imageUris: List<Uri>) {
-        Log.d("IMAGE_URI", imageUris[0].toString())
-        Log.d("IMAGE_URI", getRealPath(context, imageUris[0]) ?: "NULL")
         _uiState.update {
             it.copy(
-                attachedImages = (
-                        it.attachedImages + imageUris.map { uri ->
-                            "file://" + getRealPath(
-                                context,
-                                uri
-                            )
-                        }).filterNotNull().distinct()
+                attachedImages = (it.attachedImages + imageUris.map { uri ->
+                    "file://" + getRealPath(context, uri)
+                }).distinct()
             )
         }
-//        _postUiState.update { it.copy(attachedImages = (
-//                it.attachedImages + imageUris.map { uri -> uri.toString() }).distinct()) }
-    }
-
-    /**
-     * URIからファイルPATHを取得する.
-     * @param uri URI
-     * @return ファイルPATH
-     */
-    private fun getPath(uri: Uri): String {
-        var path = uri.toString()
-        if (path.matches(Regex("^file:.*"))) {
-            return path.replaceFirst("file://".toRegex(), "")
-        } else if (!path.matches(Regex("^content:.*"))) {
-            return path
-        }
-        val context: Context = getApplication() as Context
-        val contentResolver: ContentResolver = context.contentResolver
-        val columns = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor: Cursor? = contentResolver.query(uri, columns, null, null, null)
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                path = cursor.getString(0)
-            }
-            cursor.close()
-        }
-        return path
-    }
-
-    fun convertUriToFile(context: Context, uri: Uri?): String? {
-        if (uri == null) {
-            return null
-        }
-        val scheme = uri.scheme
-        var path: String? = null
-        if ("file" == scheme) {
-            path = uri.path
-        } else if ("content" == scheme) {
-            val contentResolver = context.contentResolver
-            val cursor =
-                contentResolver.query(uri, arrayOf(MediaStore.MediaColumns.DATA), null, null, null)
-            if (cursor != null) {
-                cursor.moveToFirst()
-                path = cursor.getString(0)
-                cursor.close()
-            }
-        }
-        return path
-//        return if (null == path) null else File(path)
     }
 
     fun onTextFieldUpdated(text: String) {
