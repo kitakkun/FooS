@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.domain.GetPostWithUserByPostIdUseCase
 import com.example.foos.data.model.PostWithUser
-import com.example.foos.ui.screen.home.PostItemUiState
+import com.example.foos.ui.state.screen.home.PostItemUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,6 +1,5 @@
 package com.example.foos.ui.component
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,45 +13,52 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.foos.R
+import com.example.foos.ui.state.MenuItemUiState
 
-// メニューアイテム
+/**
+ * メニューリスト
+ * @param headerText メニューの見出し
+ * @param menuItemUiStates 各メニューアイテムのUI状態
+ */
 @Composable
-fun MenuItemsRow(
+fun MenuItemList(
     @StringRes headerText: Int?,
-    menuItems: List<MenuItem>,
+    menuItemUiStates: List<MenuItemUiState>,
 ) {
-    headerText?.let {
-        Text(stringResource(id = it))
-    }
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(vertical = 8.dp)
-    ) {
-        items(menuItems) {
-            MenuItemRow(it)
+    Column {
+        headerText?.let { Text(stringResource(it)) }
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(vertical = 8.dp)
+        ) {
+            items(menuItemUiStates) {
+                MenuItem(it)
+            }
         }
     }
 }
 
-@Preview
+/**
+ * メニューアイテム
+ * @param uiState UI状態
+ * @param modifier モディファイア
+ */
 @Composable
-fun MenuItemRow(
-    menuItem: MenuItem = MenuItem(R.string.account_settings, R.drawable.ic_account_circle),
+fun MenuItem(
+    uiState: MenuItemUiState,
     modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .clickable { menuItem.onClick.invoke() }
+            .clickable { uiState.onClick.invoke() }
             .fillMaxWidth()
             .padding(16.dp)
     ) {
         // アイコン
-        menuItem.icon?.let {
+        uiState.icon?.let {
             Icon(
                 painter = painterResource(id = it),
                 contentDescription = null,
@@ -61,13 +67,6 @@ fun MenuItemRow(
             Spacer(Modifier.width(16.dp))
         }
         // メニューテキスト
-        Text(stringResource(id = menuItem.menuText), fontSize = 18.sp)
+        Text(stringResource(id = uiState.text), fontSize = 18.sp)
     }
 }
-
-// メニューアイテム
-data class MenuItem(
-    @StringRes val menuText: Int,   // メニューテキスト
-    @DrawableRes val icon: Int?,    // メニューアイコン
-    val onClick: () -> Unit = {}    // クリックイベント時の処理
-)

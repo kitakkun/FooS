@@ -28,10 +28,10 @@ import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.example.foos.FirebaseMediator
 import com.example.foos.R
-import com.example.foos.ui.component.AsyncUserIcon
 import com.example.foos.ui.component.ConfirmAlertDialog
-import com.example.foos.ui.component.MenuItem
-import com.example.foos.ui.component.MenuItemsRow
+import com.example.foos.ui.component.MenuItemList
+import com.example.foos.ui.component.UserIcon
+import com.example.foos.ui.state.MenuItemUiState
 import com.example.foos.ui.theme.Yellow
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -79,9 +79,12 @@ fun SettingScreen(viewModel: SettingViewModel) {
         var logOutRequest by remember { mutableStateOf(false) }
 
         val settingMenus = listOf(
-            MenuItem(R.string.account_settings, R.drawable.ic_account_circle),
-            MenuItem(R.string.privacy_settings, R.drawable.ic_privacy_tip),
-            MenuItem(R.string.log_out, R.drawable.ic_log_out, onClick = { logOutRequest = true }),
+            MenuItemUiState(R.string.account_settings, R.drawable.ic_account_circle),
+            MenuItemUiState(R.string.privacy_settings, R.drawable.ic_privacy_tip),
+            MenuItemUiState(
+                R.string.log_out,
+                R.drawable.ic_log_out,
+                onClick = { logOutRequest = true }),
         )
 
         if (logOutRequest) {
@@ -98,7 +101,7 @@ fun SettingScreen(viewModel: SettingViewModel) {
             )
         }
 
-        MenuItemsRow(null, settingMenus)
+        MenuItemList(null, settingMenus)
     }
 }
 
@@ -112,7 +115,7 @@ fun ClickableUserIcon(
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
-        AsyncUserIcon(
+        UserIcon(
             url = imageUri,
             modifier = Modifier
                 .width(70.dp)

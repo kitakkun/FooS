@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foos.R
-import com.example.foos.ui.component.AsyncUserIcon
+import com.example.foos.ui.component.UserIcon
 
 @Composable
 fun ReactionScreen(viewModel: ReactionViewModel, navController: NavController) {
@@ -40,7 +40,7 @@ fun ReactionItem(
     uiState: ReactionItemUiState = ReactionItemUiState.Default
 ) {
     Row() {
-        AsyncUserIcon(url = uiState.userIcon)
+        UserIcon(url = uiState.userIcon)
         Spacer(modifier = Modifier.width(16.dp))
         Column() {
             val text = stringResource(R.string.reaction_message, uiState.username, uiState.reaction)

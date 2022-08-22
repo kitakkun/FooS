@@ -1,5 +1,6 @@
 package com.example.foos.ui.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -15,15 +16,20 @@ import com.example.foos.R
 
 /**
  * ユーザーアイコン
+ * @param url アイコン画像のURL
+ * @param modifier モディファイア
+ * @param onClick クリック時の処理
  */
 @Composable
-fun AsyncUserIcon(
+fun UserIcon(
     url: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
 ) {
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
-            .data(url).crossfade(true)
+            .data(url)
+            .crossfade(true)
             .placeholder(R.drawable.ic_account_circle)
             .build(),
         contentScale = ContentScale.Crop,
@@ -32,5 +38,6 @@ fun AsyncUserIcon(
             .clip(CircleShape)
             .width(50.dp)
             .height(50.dp)
+            .clickable { onClick.invoke() }
     )
 }

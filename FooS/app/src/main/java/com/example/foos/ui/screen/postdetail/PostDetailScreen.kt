@@ -6,7 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavController
-import com.example.foos.ui.component.AsyncUserIcon
+import com.example.foos.ui.component.UserIcon
 
 @Composable
 fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavController) {
@@ -16,7 +16,7 @@ fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavControlle
 
     Column {
         Row {
-            AsyncUserIcon(url = postItemUiState.userIcon)
+            UserIcon(url = postItemUiState.userIcon)
             Text(postItemUiState.content)
         }
     }

@@ -14,12 +14,14 @@ import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.component.RoundIconActionButton
 import com.example.foos.ui.screen.Page
+import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 /**
- * ホーム画面のコンポーザブル
- * ユーザーの投稿をリストで閲覧できます。
+ * ホーム画面のコンポーザブル。ユーザーの投稿をリストで表示。
+ * @param viewModel スクリーンに対応するViewModel
+ * @param navController 画面遷移用のNavController
  */
 @Composable
 fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
@@ -28,34 +30,50 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
 
     viewModel.setNavController(navController)
 
-    SwipeRefresh(state = rememberSwipeRefreshState(
-        isRefreshing = uiState.value.isRefreshing
-    ),
+    SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = uiState.value.isRefreshing),
         onRefresh = { viewModel.fetchNewPosts() }
     ) {
         PostItemList(
-            uiState.value.posts,
-            onContentClick = { postId -> viewModel.onContentClick(postId) },
-            onPostImageClick = { uris -> viewModel.onPostImageClick(uris) })
+            uiStates = uiState.value.posts,
+            onUserIconClick = { userId -> viewModel.onUserIconClick(userId) },
+            onContentClick = { uiState -> viewModel.onContentClick(uiState) },
+            onImageClick = { uiState, clickedImageUrl ->
+                viewModel.onImageClick(
+                    uiState,
+                    clickedImageUrl
+                )
+            }
+        )
     }
     RoundIconActionButton(onClick = { navController.navigate(Page.Post.route) })
 }
 
+/**
+ * 投稿のリスト
+ * @param uiStates 各投稿のUI状態
+ * @param onUserIconClick ユーザアイコンクリック時の挙動
+ * @param onContentClick コンテンツクリック時の挙動
+ * @param onImageClick 添付画像クリック時の挙動
+ */
 @Composable
 fun PostItemList(
-    postItems: List<PostItemUiState>,
-    onContentClick: (String) -> Unit = {},
-    onPostImageClick: (List<String>) -> Unit = {}
+    uiStates: List<PostItemUiState>,
+    onUserIconClick: (userId: String) -> Unit = { },
+    onContentClick: (uiState: PostItemUiState) -> Unit = { },
+    onImageClick: (uiState: PostItemUiState, clickedImageUrl: String) -> Unit = { _, _ -> },
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
     ) {
-        items(postItems) { post ->
-            PostItem(post, onContentClick, onPostImageClick)
+        items(uiStates) { post ->
+            PostItem(post, onUserIconClick, onContentClick, onImageClick)
         }
     }
 }
 
+/**
+ * リアクションボタンの行
+ */
 @Composable
 fun ReactionRow(
     modifier: Modifier = Modifier
@@ -70,6 +88,9 @@ fun ReactionRow(
 
 }
 
+/**
+ * いいねボタン
+ */
 @Composable
 fun FavoriteButton() {
     var liked by remember { mutableStateOf(false) }

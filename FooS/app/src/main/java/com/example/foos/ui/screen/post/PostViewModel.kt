@@ -38,13 +38,14 @@ class PostViewModel @Inject constructor(
         Log.d("IMAGE_URI", imageUris[0].toString())
         Log.d("IMAGE_URI", getRealPath(context, imageUris[0]) ?: "NULL")
         _uiState.update {
-            it.copy(attachedImages = (
-                    it.attachedImages + imageUris.map { uri ->
-                        "file://" + getRealPath(
-                            context,
-                            uri
-                        )
-                    }).filterNotNull().distinct()
+            it.copy(
+                attachedImages = (
+                        it.attachedImages + imageUris.map { uri ->
+                            "file://" + getRealPath(
+                                context,
+                                uri
+                            )
+                        }).filterNotNull().distinct()
             )
         }
 //        _postUiState.update { it.copy(attachedImages = (

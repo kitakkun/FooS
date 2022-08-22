@@ -1,6 +1,6 @@
 package com.example.foos
 
-import com.example.foos.ui.screen.home.PostItemUiState
+import com.example.foos.ui.state.screen.home.PostItemUiState
 
 object Posts {
     fun getPosts(): List<PostItemUiState> {

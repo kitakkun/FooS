@@ -1,15 +1,13 @@
 package com.example.foos.ui.screen.home
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.foos.Posts
 import com.example.foos.data.domain.GetLatestPostsWithUserUseCase
 import com.example.foos.data.domain.GetOlderPostsWithUserUseCase
-import com.example.foos.ui.navargs.Post
-import com.example.foos.ui.screen.Page
-import com.google.gson.Gson
+import com.example.foos.ui.state.screen.home.HomeScreenUiState
+import com.example.foos.ui.state.screen.home.PostItemUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,10 +35,31 @@ class HomeViewModel @Inject constructor(
         this.navController = navController
     }
 
-    fun onPostImageClick(imageUris: List<String>) {
-        val post = Post(imageUris)
-        val data = Uri.encode(Gson().toJson(post))
-        navController.navigate("${Page.ImageDetail.route}/$data")
+    /**
+     * ユーザアイコンのクリックイベント
+     * @param userId クリックされたユーザのID
+     */
+    fun onUserIconClick(userId: String) {
+
+    }
+
+    /**
+     * 投稿コンテンツクリック時のイベント
+     * @param uiState クリックされた投稿のUI状態
+     */
+    fun onContentClick(uiState: PostItemUiState) {
+//        navController.navigate("${Page.PostDetail.route}/$postId")
+    }
+
+    /**
+     * 投稿コンテンツの画像クリック時のイベント
+     * @param uiState クリックされた画像を持つ投稿のUI状態
+     * @param clickedImageUrl クリックされた画像のURL
+     */
+    fun onImageClick(uiState: PostItemUiState, clickedImageUrl: String) {
+//        val post = Post(imageUris)
+//        val data = Uri.encode(Gson().toJson(post))
+//        navController.navigate("${Page.ImageDetail.route}/$data")
     }
 
     fun fetchNewPosts() {
@@ -69,10 +88,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
 //            postsRepository.fetchOlderPosts()
         }
-    }
-
-    fun onContentClick(postId: String) {
-        navController.navigate("${Page.PostDetail.route}/$postId")
     }
 
 

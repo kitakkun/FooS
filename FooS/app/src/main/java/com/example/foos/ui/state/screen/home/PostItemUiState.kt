@@ -1,10 +1,14 @@
-package com.example.foos.ui.screen.home
+package com.example.foos.ui.state.screen.home
 
-data class HomeScreenUiState(
-    val posts: List<PostItemUiState>,
-    val isRefreshing: Boolean,
-)
-
+/**
+ * 投稿内容のUI状態
+ * @param postId 投稿ID
+ * @param userId ユーザID
+ * @param username ユーザ名
+ * @param userIcon ユーザアイコン
+ * @param content 投稿の本文
+ * @param attachedImages 添付画像のリスト
+ */
 data class PostItemUiState(
     val postId: String,
     val userId: String,
