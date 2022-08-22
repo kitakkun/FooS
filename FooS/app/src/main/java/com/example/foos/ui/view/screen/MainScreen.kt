@@ -1,5 +1,6 @@
 package com.example.foos.ui.view.screen
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
@@ -57,10 +58,10 @@ sealed class Screen(val route: String, @StringRes val stringId: Int, @DrawableRe
 /**
  * サブスクリーン（メインメニューのスクリーンから呼ばれる）
  */
-sealed class Page(val route: String) {
-    object PostDetail : Page("post_detail")
-    object ImageDetail : Page("image_detail")
-    object PostCreate : Page("post-create")
+sealed class Page(val route: String, val routeWithParam: String = "") {
+    object PostDetail : Page("post_detail", "post_detail/{uiState}")
+    object ImageDetail : Page("image_detail", "image_detail/{uiStateWithImageUrl}")
+    object PostCreate : Page("post_create")
 }
 
 /**
@@ -82,7 +83,8 @@ fun MainScreen() {
 
     showBottomBar.value = when (currentDestination?.route) {
         Page.PostCreate.route -> false
-        Page.PostDetail.route -> false
+        Page.PostDetail.routeWithParam -> false
+        Page.ImageDetail.routeWithParam -> false
         else -> true
     }
 
@@ -163,7 +165,7 @@ fun ScreenNavHost(
             PostScreen(vm, navController)
         }
         composable(
-            "${Page.PostDetail.route}/{uiState}",
+            Page.PostDetail.routeWithParam,
             listOf(navArgument("uiState") { type = PostType })
         ) {
             val uiState = it.arguments?.getParcelable<PostItemUiState>("uiState")
@@ -173,7 +175,7 @@ fun ScreenNavHost(
                 PostDetailScreen(vm, navController)
             }
         }
-        composable("${Page.ImageDetail.route}/{uiStateWithImageUrl}", listOf(
+        composable(Page.ImageDetail.routeWithParam, listOf(
             navArgument("uiStateWithImageUrl") { type = PostItemUiStateWithImageUrlType }
         )
         ) {
