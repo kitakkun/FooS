@@ -11,7 +11,7 @@ import java.util.*
  * @param reaction リアクションの絵文字
  * @param createdAt リアクションが作成された日時
  */
-data class Reaction(
+data class DatabaseReaction(
     val reactionId: String,
     val postId: String,
     val userId: String,

@@ -1,14 +1,11 @@
 package com.example.foos.data.repository
 
 import android.net.Uri
-import com.example.foos.data.model.Post
+import com.example.foos.data.model.DatabasePost
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.io.File
 
 /**
@@ -22,19 +19,19 @@ object PostsRepository {
     /**
      * 投稿を取得します
      */
-    suspend fun fetchPost(postId: String): Post? {
+    suspend fun fetchPost(postId: String): DatabasePost? {
         val document = Firebase.firestore.document(postId)
-        return document.get().await().toObject(Post::class.java)
+        return document.get().await().toObject(DatabasePost::class.java)
     }
 
     /**
      * 投稿を作成します
      */
-    suspend fun create(post: Post) {
+    suspend fun create(databasePost: DatabasePost) {
         val document = Firebase.firestore.collection(COLLECTION).document()
         val imageDownloadLinks = mutableListOf<String>()
         // アップロードしてダウンロードリンクを取得
-        post.attachedImages.forEach {
+        databasePost.attachedImages.forEach {
             val file = Uri.fromFile(File(it.removePrefix("file://")))
             val downloadUrl = FirebaseStorage.create(
                 "images/posts/${document.id}/${file.lastPathSegment}",
@@ -42,7 +39,7 @@ object PostsRepository {
             )
             imageDownloadLinks.add(downloadUrl.toString())
         }
-        document.set(post.copy(postId = document.id, attachedImages = imageDownloadLinks))
+        document.set(databasePost.copy(postId = document.id, attachedImages = imageDownloadLinks))
         document.update("createdAt", FieldValue.serverTimestamp()).await()
     }
 
@@ -56,11 +53,11 @@ object PostsRepository {
     /**
      * 最新の投稿を取得します
      */
-    suspend fun fetchNewerPosts(): List<Post> {
+    suspend fun fetchNewerPosts(): List<DatabasePost> {
         val response = Firebase.firestore.collection("posts")
             .limit(MAX_LOAD_COUNT)
             .get().await()
-        return response.toObjects(Post::class.java)
+        return response.toObjects(DatabasePost::class.java)
     }
 
 }

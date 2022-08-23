@@ -1,6 +1,6 @@
 package com.example.foos.data.repository
 
-import com.example.foos.data.model.Reaction
+import com.example.foos.data.model.DatabaseReaction
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -18,10 +18,10 @@ object ReactionsRepository {
      * @param postId 投稿ID
      * @return 指定した投稿に紐づくリアクションのリスト
      */
-    suspend fun fetchReactionsByPostId(postId: String): List<Reaction> {
+    suspend fun fetchReactionsByPostId(postId: String): List<DatabaseReaction> {
         return Firebase.firestore.collection(COLLECTION)
             .whereArrayContains("postId", postId)
-            .get().await().toObjects(Reaction::class.java).toList()
+            .get().await().toObjects(DatabaseReaction::class.java).toList()
     }
 
     /**
@@ -29,19 +29,19 @@ object ReactionsRepository {
      * @param userId ユーザID
      * @return 指定したユーザに紐づくリアクションのリスト
      */
-    suspend fun fetchReactionsByUserId(userId: String): List<Reaction> {
+    suspend fun fetchReactionsByUserId(userId: String): List<DatabaseReaction> {
         return Firebase.firestore.collection(COLLECTION)
             .whereArrayContains("userId", userId)
-            .get().await().toObjects(Reaction::class.java).toList()
+            .get().await().toObjects(DatabaseReaction::class.java).toList()
     }
 
     /**
      * リアクションを作成します
-     * @param reaction 登録するリアクションデータ
+     * @param databaseReaction 登録するリアクションデータ
      */
-    suspend fun create(reaction: Reaction) {
+    suspend fun create(databaseReaction: DatabaseReaction) {
         val document = Firebase.firestore.collection(COLLECTION).document()
-        document.set(reaction).await()
+        document.set(databaseReaction).await()
         val updateData = hashMapOf<String, Any>(
             "createdAt" to FieldValue.serverTimestamp(),
             "reactionId" to document.id

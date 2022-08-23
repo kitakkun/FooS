@@ -13,7 +13,7 @@ import java.util.*
  * @param latitude 緯度
  * @param createdAt 投稿日時（サーバーのタイムスタンプ）
  */
-data class Post(
+data class DatabasePost(
     val postId: String,
     val userId: String,
     val content: String,
