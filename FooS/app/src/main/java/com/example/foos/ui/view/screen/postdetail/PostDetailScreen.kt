@@ -1,10 +1,6 @@
 package com.example.foos.ui.view.screen.postdetail
 
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -27,7 +23,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.emoji2.text.EmojiCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -84,7 +79,7 @@ fun UserIdentityColumn(
 ) {
     Column() {
         Text(text = username, fontWeight = FontWeight.Bold)
-        Text(text = userId, fontWeight = FontWeight.Light)
+        Text(text = userId, fontWeight = FontWeight.Light, fontSize = 12.sp)
     }
 }
 
@@ -106,7 +101,7 @@ fun LocationMap(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(10))
-                .height(200.dp),
+                .height(300.dp),
             cameraPositionState = cameraPositionState,
             onMapClick = {
 
@@ -153,7 +148,7 @@ fun AttachedImagesDisplay(
 
 @Composable
 fun ReactionButton(
-    
+
 ) {
     var expanded by remember { mutableStateOf(false) }
     IconButton(onClick = { expanded = !expanded }) {
@@ -178,10 +173,18 @@ fun ReactionDropdown(
             modifier = Modifier.width(dropdownWidth)
         ) {
             DropdownMenuItem(onClick = {}) {
-                Text(text = stringResource(id = R.string.emoji_like), fontSize = 30.sp, textAlign = TextAlign.Center)
+                Text(
+                    text = stringResource(id = R.string.emoji_like),
+                    fontSize = 30.sp,
+                    textAlign = TextAlign.Center
+                )
             }
             DropdownMenuItem(onClick = {}) {
-                Text(text = stringResource(id = R.string.emoji_yummy), fontSize = 30.sp, textAlign = TextAlign.Center)
+                Text(
+                    text = stringResource(id = R.string.emoji_yummy),
+                    fontSize = 30.sp,
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
