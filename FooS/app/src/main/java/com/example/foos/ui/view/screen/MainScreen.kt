@@ -1,7 +1,9 @@
 package com.example.foos.ui.view.screen
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.compiler.plugins.kotlin.EmptyFunctionMetrics.composable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -27,7 +29,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.foos.FirebaseAuthManager
 import com.example.foos.R
-import com.example.foos.data.repository.UsersRepository
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrlType
 import com.example.foos.ui.navargs.PostType
@@ -48,9 +49,8 @@ import com.example.foos.ui.view.screen.setting.SettingScreen
 import com.example.foos.ui.view.screen.setting.SettingViewModel
 import com.example.foos.ui.view.screen.userprofile.UserProfileScreen
 import com.example.foos.ui.view.screen.userprofile.UserProfileViewModel
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 /**
  * メインメニューのスクリーン
@@ -174,11 +174,12 @@ fun ScreenNavHost(
         }
         composable(
             Page.UserProfile.routeWithParam,
-            listOf(navArgument("userId") { type = NavType.StringType})
+            listOf(navArgument("userId") { type = NavType.StringType })
         ) {
             val userId = it.arguments?.getString("userId")
             userId?.let {
                 val vm: UserProfileViewModel = hiltViewModel()
+                vm.setUserId(userId)
                 UserProfileScreen(vm, navController)
             }
         }

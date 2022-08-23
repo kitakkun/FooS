@@ -1,8 +1,10 @@
 package com.example.foos.di
 
 import com.example.foos.data.domain.GetLatestPostsWithUserUseCase
+import com.example.foos.data.domain.GetUserInfoUseCase
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.PostsRepository
+import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.data.repository.UsersRepository
 import dagger.Module
 import dagger.Provides
@@ -24,6 +26,10 @@ object Modules {
     @Provides
     @Singleton
     fun provideUsersRepository(): UsersRepository = UsersRepository
+
+    @Provides
+    @Singleton
+    fun provideReactionsRepository(): ReactionsRepository = ReactionsRepository
 
     @Provides
     fun provideCompletePostsRepository(): GetLatestPostsWithUserUseCase =
