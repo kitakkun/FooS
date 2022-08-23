@@ -11,67 +11,56 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.io.File
 
+/**
+ * 投稿内容のデータを管理するリポジトリ
+ */
 object PostsRepository {
 
     private const val MAX_LOAD_COUNT: Long = 10
+    private const val COLLECTION = "posts"
 
-    var latestPostId: String = ""
-
-    val allPosts: MutableStateFlow<List<Post>> = MutableStateFlow(listOf())
-
+    /**
+     * 投稿を取得します
+     */
     suspend fun fetchPost(postId: String): Post? {
-        val ref = FirestoreDao.createDocumentReference("posts", postId)
-        return ref.get().await().toObject(Post::class.java)
+        val document = Firebase.firestore.document(postId)
+        return document.get().await().toObject(Post::class.java)
     }
 
-    suspend fun createPost(postData: Post) {
-        val docRef = FirestoreDao.createDocumentReference(FirestoreDao.COLLECTION_POSTS)
-        val imageUrls = mutableListOf<String>()
+    /**
+     * 投稿を作成します
+     */
+    suspend fun create(post: Post) {
+        val document = Firebase.firestore.collection(COLLECTION).document()
+        val imageDownloadLinks = mutableListOf<String>()
         // アップロードしてダウンロードリンクを取得
-        for (i in postData.attachedImages.indices) {
-            val file = Uri.fromFile(File(postData.attachedImages[i].removePrefix("file://")))
-            val remotePath = "images/posts/${docRef.id}/${file.lastPathSegment}"
-            val localPath = file.path.toString()
-            val downloadLink = FirebaseStorage.create(remotePath, localPath)
-            imageUrls.add(downloadLink.toString())
+        post.attachedImages.forEach {
+            val file = Uri.fromFile(File(it.removePrefix("file://")))
+            val downloadUrl = FirebaseStorage.create(
+                "images/posts/${document.id}/${file.lastPathSegment}",
+                file.path.toString()
+            )
+            imageDownloadLinks.add(downloadUrl.toString())
         }
-        val updates = hashMapOf<String, Any>(
-            "createdAt" to FieldValue.serverTimestamp()
-        )
-        docRef.set(postData.copy(postId = docRef.id, attachedImages = imageUrls)).await()
-        docRef.update(updates).await()
+        document.set(post.copy(postId = document.id, attachedImages = imageDownloadLinks))
+        document.update("createdAt", FieldValue.serverTimestamp()).await()
     }
 
+    /**
+     * 投稿を削除します
+     */
     suspend fun deletePost(postId: String) {
         FirestoreDao.delete("posts", postId)
     }
 
-    suspend fun fetchInitialPosts() {
-        withContext(Dispatchers.IO) {
-            Firebase.firestore.collection("posts")
-                .orderBy("createdAt")
-        }
-    }
-
+    /**
+     * 最新の投稿を取得します
+     */
     suspend fun fetchNewerPosts(): List<Post> {
         val response = Firebase.firestore.collection("posts")
             .limit(MAX_LOAD_COUNT)
-//            .whereGreaterThan("postId", latestPostId)
             .get().await()
         return response.toObjects(Post::class.java)
-    }
-
-    suspend fun fetchOlderPosts() {
-        withContext(Dispatchers.IO) {
-            Firebase.firestore.collection("posts")
-                .limit(MAX_LOAD_COUNT)
-                .whereLessThan("postId", latestPostId)
-                .get()
-                .addOnSuccessListener {
-                    val objects = it.toObjects(Post::class.java)
-                    allPosts.value = objects
-                }
-        }
     }
 
 }

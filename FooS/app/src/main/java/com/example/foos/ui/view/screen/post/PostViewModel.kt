@@ -52,7 +52,7 @@ class PostViewModel @Inject constructor(
                 "", Firebase.auth.uid.toString(), _uiState.value.content,
                 _uiState.value.attachedImages, null, null, java.util.Date()
             )
-            postsRepository.createPost(post)
+            postsRepository.create(post)
             withContext(Dispatchers.Main) {
                 navController.navigateUp()
             }
