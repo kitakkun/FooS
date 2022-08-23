@@ -20,4 +20,25 @@ class PostDetailViewModel @Inject constructor(
         this._uiState.update { it.copy(postItemUiState = uiState) }
     }
 
+    /**
+     * ユーザー情報がクリックされたときの処理
+     */
+    fun onUserInfoClicked() {
+        /* TODO: ユーザプロフィールへ遷移 */
+    }
+
+    /**
+     * Google Mapsがクリックされたときの処理
+     */
+    fun onGoogleMapsClicked() {
+        /* TODO: マップを開く */
+    }
+
+    /**
+     * リアクションボタンが押されたときの処理
+     */
+    fun onReactionButtonClicked() {
+        /* TODO: リアクションの追加・削除処理 */
+    }
+
 }

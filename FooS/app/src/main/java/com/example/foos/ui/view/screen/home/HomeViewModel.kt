@@ -77,6 +77,8 @@ class HomeViewModel @Inject constructor(
                     userIcon = it.user.profileImage,
                     content = it.post.content,
                     attachedImages = it.post.attachedImages,
+                    latitude = it.post.latitude,
+                    longitude = it.post.longitude,
                 )
             }
             _uiState.update {

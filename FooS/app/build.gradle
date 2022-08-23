@@ -130,4 +130,7 @@ dependencies {
     // Snap LazyRow
     implementation "dev.chrisbanes.snapper:snapper:0.2.2"
 
+    // emoji support
+    implementation 'androidx.emoji2:emoji2-bundled:1.2.0'
+
 }

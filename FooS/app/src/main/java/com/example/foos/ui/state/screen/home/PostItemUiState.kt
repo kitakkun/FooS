@@ -11,6 +11,8 @@ import kotlinx.parcelize.Parcelize
  * @param userIcon ユーザアイコン
  * @param content 投稿の本文
  * @param attachedImages 添付画像のリスト
+ * @param latitude 緯度
+ * @param longitude 経度
  */
 @Parcelize
 data class PostItemUiState(
@@ -20,6 +22,8 @@ data class PostItemUiState(
     val userIcon: String,
     val content: String,
     val attachedImages: List<String>,
+    val latitude: Double?,
+    val longitude: Double?,
 ) : Parcelable {
     companion object {
         val Default = PostItemUiState(
@@ -29,6 +33,8 @@ data class PostItemUiState(
             "",
             "content",
             listOf("test"),
+            null,
+            null,
         )
     }
 }
