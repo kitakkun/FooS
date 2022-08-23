@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,10 +20,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.imageLoader
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.foos.R
 import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.view.component.PreloadAsyncImage
 import com.example.foos.ui.view.component.UserIcon
 
 /**
@@ -118,7 +121,8 @@ fun AttachedImagesRow(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(uiState.attachedImages) { image ->
-            AsyncImage(
+            PreloadAsyncImage(
+                url = image,
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(image).crossfade(true)
                     .memoryCachePolicy(CachePolicy.ENABLED)
@@ -129,7 +133,6 @@ fun AttachedImagesRow(
                     .clickable { onClick.invoke(uiState, image) }
                     .size(120.dp)
                     .clip(RoundedCornerShape(10)),
-
                 contentScale = ContentScale.Crop,
             )
         }
