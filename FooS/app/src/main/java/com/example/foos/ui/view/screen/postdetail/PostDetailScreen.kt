@@ -57,9 +57,12 @@ fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavControlle
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            UserIcon(url = postItemUiState.userIcon)
+            UserIcon(url = postItemUiState.userIcon, onClick = { viewModel.onUserInfoClicked() })
             Spacer(Modifier.width(24.dp))
-            UserIdentityColumn(username = postItemUiState.username, userId = postItemUiState.userId)
+            UserIdentityColumn(
+                username = postItemUiState.username,
+                userId = postItemUiState.userId,
+                onClick = { viewModel.onUserInfoClicked() })
             Spacer(Modifier.weight(1f))
             ReactionButton()
         }
@@ -68,7 +71,10 @@ fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavControlle
         Spacer(Modifier.height(24.dp))
         AttachedImagesDisplay(urls = postItemUiState.attachedImages)
         Spacer(Modifier.height(24.dp))
-        LocationMap(postItemUiState.latitude, postItemUiState.longitude)
+        LocationMap(
+            postItemUiState.latitude,
+            postItemUiState.longitude,
+            onClick = { viewModel.onGoogleMapsClicked() })
     }
 }
 
@@ -76,6 +82,7 @@ fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavControlle
 fun UserIdentityColumn(
     username: String,
     userId: String,
+    onClick: () -> Unit = {},
 ) {
     Column() {
         Text(text = username, fontWeight = FontWeight.Bold)
@@ -87,6 +94,7 @@ fun UserIdentityColumn(
 fun LocationMap(
     latitude: Double?,
     longitude: Double?,
+    onClick: () -> Unit = {},
 ) {
     if (longitude != null && latitude != null) {
         val properties by remember { mutableStateOf(MapProperties()) }
@@ -104,7 +112,7 @@ fun LocationMap(
                 .height(300.dp),
             cameraPositionState = cameraPositionState,
             onMapClick = {
-
+                onClick.invoke()
             },
             properties = properties,
             uiSettings = uiSettings,
@@ -148,7 +156,6 @@ fun AttachedImagesDisplay(
 
 @Composable
 fun ReactionButton(
-
 ) {
     var expanded by remember { mutableStateOf(false) }
     IconButton(onClick = { expanded = !expanded }) {
