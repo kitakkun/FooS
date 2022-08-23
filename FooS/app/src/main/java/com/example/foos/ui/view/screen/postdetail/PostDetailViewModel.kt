@@ -1,16 +1,25 @@
 package com.example.foos.ui.view.screen.postdetail
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.foos.data.model.Reaction
+import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.state.screen.postdetail.PostDetailScreenUiState
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class PostDetailViewModel @Inject constructor(
+    private val reactionsRepository: ReactionsRepository
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(PostDetailScreenUiState(PostItemUiState.Default))
@@ -37,8 +46,17 @@ class PostDetailViewModel @Inject constructor(
     /**
      * リアクションボタンが押されたときの処理
      */
-    fun onReactionButtonClicked() {
-        /* TODO: リアクションの追加・削除処理 */
+    fun onReactionButtonClicked(reactionString: String) {
+        val reaction = Reaction(
+            reactionId = "",
+            userId = Firebase.auth.uid.toString(),
+            postId = uiState.value.postItemUiState.postId,
+            reaction = reactionString,
+            createdAt = Date()
+        )
+        viewModelScope.launch(Dispatchers.IO) {
+            reactionsRepository.create(reaction)
+        }
     }
 
 }

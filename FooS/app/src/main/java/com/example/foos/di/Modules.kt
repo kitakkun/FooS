@@ -5,6 +5,7 @@ import com.example.foos.data.domain.GetLatestPostsWithUserUseCase
 import com.example.foos.data.domain.GetReactionsByUserIdUseCase
 import com.example.foos.data.domain.GetUserInfoUseCase
 import com.example.foos.data.repository.FollowRepository
+import com.example.foos.data.model.Reaction
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.data.repository.UsersRepository
