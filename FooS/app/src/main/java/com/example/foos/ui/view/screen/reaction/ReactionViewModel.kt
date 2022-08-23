@@ -7,7 +7,6 @@ import com.example.foos.data.domain.GetReactionsByUserIdUseCase
 import com.example.foos.ui.state.screen.reaction.ReactionScreenUiState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -16,10 +15,18 @@ class ReactionViewModel @Inject constructor(
     private val getReactionsByUserIdUseCase: GetReactionsByUserIdUseCase,
 ) : ViewModel() {
 
-    private var _uiState = mutableStateOf(ReactionScreenUiState(listOf()))
+    private var _uiState = mutableStateOf(ReactionScreenUiState(listOf(), false))
     val uiState: State<ReactionScreenUiState> get() = _uiState
 
     suspend fun fetchReactions() {
         getReactionsByUserIdUseCase.invoke(Firebase.auth.uid.toString())
+    }
+
+    fun onUserIconClick(userId: String) {
+
+    }
+
+    fun onContentClick() {
+
     }
 }

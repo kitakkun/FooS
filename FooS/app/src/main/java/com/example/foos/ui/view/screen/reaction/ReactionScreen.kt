@@ -20,19 +20,40 @@ import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.state.screen.reaction.ReactionItemUiState
 import com.example.foos.ui.view.component.UserIcon
+import com.example.foos.ui.view.screen.home.PostItemList
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun ReactionScreen(viewModel: ReactionViewModel, navController: NavController) {
 
     val uiState = viewModel.uiState
 
+    SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = uiState.value.isRefreshing),
+        onRefresh = { viewModel.fetchNewReactions() }
+    ) {
+        ReactionItemList(
+            uiStates = uiState.value.reactions,
+            onUserIconClick = { userId -> viewModel.onUserIconClick(userId) },
+            onContentClick = { viewModel.onContentClick() },
+        )
+    }
+
+}
+
+@Composable
+fun ReactionItemList(
+    uiStates: List<ReactionItemUiState>,
+    onUserIconClick: (String) -> Unit = {},
+    onContentClick: () -> Unit = {},
+) {
     LazyColumn()
     {
-        items(uiState.value.reactions) {
+        items(uiStates) {
             ReactionItem(it)
         }
     }
-
 }
 
 @Preview
