@@ -50,7 +50,7 @@ object PostsRepository {
      * 投稿を削除します
      */
     suspend fun deletePost(postId: String) {
-        FirestoreDao.delete("posts", postId)
+        Firebase.firestore.collection(COLLECTION).document(postId).delete()
     }
 
     /**
