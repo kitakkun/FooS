@@ -1,7 +1,9 @@
 package com.example.foos.ui.view.screen
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.compiler.plugins.kotlin.EmptyFunctionMetrics.composable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -9,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -18,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -43,6 +47,10 @@ import com.example.foos.ui.view.screen.reaction.ReactionScreen
 import com.example.foos.ui.view.screen.reaction.ReactionViewModel
 import com.example.foos.ui.view.screen.setting.SettingScreen
 import com.example.foos.ui.view.screen.setting.SettingViewModel
+import com.example.foos.ui.view.screen.userprofile.UserProfileScreen
+import com.example.foos.ui.view.screen.userprofile.UserProfileViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * メインメニューのスクリーン
@@ -61,6 +69,7 @@ sealed class Page(val route: String, val routeWithParam: String = "") {
     object PostDetail : Page("post_detail", "post_detail/{uiState}")
     object ImageDetail : Page("image_detail", "image_detail/{uiStateWithImageUrl}")
     object PostCreate : Page("post_create")
+    object UserProfile : Page("user_profile", "user_profile/{userId}")
 }
 
 /**
@@ -162,6 +171,17 @@ fun ScreenNavHost(
         composable(Page.PostCreate.route) {
             val vm: PostViewModel = hiltViewModel()
             PostScreen(vm, navController)
+        }
+        composable(
+            Page.UserProfile.routeWithParam,
+            listOf(navArgument("userId") { type = NavType.StringType })
+        ) {
+            val userId = it.arguments?.getString("userId")
+            userId?.let {
+                val vm: UserProfileViewModel = hiltViewModel()
+                vm.setUserId(userId)
+                UserProfileScreen(vm, navController)
+            }
         }
         composable(
             Page.PostDetail.routeWithParam,
