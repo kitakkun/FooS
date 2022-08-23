@@ -1,5 +1,6 @@
 package com.example.foos.data.model
 
+import com.google.firebase.firestore.ServerTimestamp
 import java.util.*
 
 /**
@@ -15,5 +16,6 @@ data class Reaction(
     val postId: String,
     val userId: String,
     val reaction: String,
-    val createdAt: Date,
+    @ServerTimestamp
+    val createdAt: Date? = null,
 )

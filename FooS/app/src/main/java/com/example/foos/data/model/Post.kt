@@ -1,15 +1,27 @@
 package com.example.foos.data.model
 
+import com.google.firebase.firestore.ServerTimestamp
 import java.util.*
 
+/**
+ * データベース上での投稿データ表現
+ * @param postId 投稿のID
+ * @param userId 投稿したユーザのID
+ * @param content 投稿のテキスト本文
+ * @param attachedImages 添付画像のURL
+ * @param longitude 経度
+ * @param latitude 緯度
+ * @param createdAt 投稿日時（サーバーのタイムスタンプ）
+ */
 data class Post(
-    val postId: String,                 // 投稿ID
-    val userId: String,                 // ユーザーID
-    val content: String,                // 本文
-    val attachedImages: List<String>,   // 画像のURL
-    val longitude: Double?,             // 緯度
-    val latitude: Double?,              // 経度
-    val createdAt: Date,           // 投稿日時
+    val postId: String,
+    val userId: String,
+    val content: String,
+    val attachedImages: List<String>,
+    val longitude: Double?,
+    val latitude: Double?,
+    @ServerTimestamp
+    val createdAt: Date? = null,
 ) {
     constructor() : this("", "", "", listOf(), null, null, Date())
 }
