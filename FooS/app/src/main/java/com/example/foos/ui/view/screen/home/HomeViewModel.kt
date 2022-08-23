@@ -71,14 +71,14 @@ class HomeViewModel @Inject constructor(
             _uiState.update { it.copy(isRefreshing = true) }
             val posts = getLatestPostsWithUserUseCase().map {
                 PostItemUiState(
-                    postId = it.post.postId,
-                    userId = it.user.userId,
-                    username = it.user.username,
-                    userIcon = it.user.profileImage,
-                    content = it.post.content,
-                    attachedImages = it.post.attachedImages,
-                    latitude = it.post.latitude,
-                    longitude = it.post.longitude,
+                    postId = it.databasePost.postId,
+                    userId = it.databaseUser.userId,
+                    username = it.databaseUser.username,
+                    userIcon = it.databaseUser.profileImage,
+                    content = it.databasePost.content,
+                    attachedImages = it.databasePost.attachedImages,
+                    latitude = it.databasePost.latitude,
+                    longitude = it.databasePost.longitude,
                 )
             }
             _uiState.update {

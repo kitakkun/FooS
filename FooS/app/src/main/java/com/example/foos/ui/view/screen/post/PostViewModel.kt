@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.foos.util.FileUtils.getRealPath
-import com.example.foos.data.model.Post
+import com.example.foos.data.model.DatabasePost
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.ui.state.screen.post.PostScreenUiState
 import com.google.firebase.auth.ktx.auth
@@ -48,11 +48,11 @@ class PostViewModel @Inject constructor(
     fun post(navController: NavController) {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.update { it.copy(posting = true) }
-            val post = Post(
+            val databasePost = DatabasePost(
                 "", Firebase.auth.uid.toString(), _uiState.value.content,
                 _uiState.value.attachedImages, null, null, java.util.Date()
             )
-            postsRepository.createPost(post)
+            postsRepository.create(databasePost)
             withContext(Dispatchers.Main) {
                 navController.navigateUp()
             }

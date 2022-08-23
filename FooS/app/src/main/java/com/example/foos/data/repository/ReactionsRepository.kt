@@ -1,6 +1,6 @@
 package com.example.foos.data.repository
 
-import com.example.foos.data.model.Reaction
+import com.example.foos.data.model.DatabaseReaction
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -11,15 +11,17 @@ import kotlinx.coroutines.tasks.await
  */
 object ReactionsRepository {
 
+    private const val COLLECTION = "reactions"
+
     /**
      * 投稿に対応するリアクションデータを取得します
      * @param postId 投稿ID
      * @return 指定した投稿に紐づくリアクションのリスト
      */
-    suspend fun fetchReactionsByPostId(postId: String): List<Reaction> {
-        return Firebase.firestore.collection(FirestoreDao.COLLECTION_REACTIONS)
+    suspend fun fetchReactionsByPostId(postId: String): List<DatabaseReaction> {
+        return Firebase.firestore.collection(COLLECTION)
             .whereArrayContains("postId", postId)
-            .get().await().toObjects(Reaction::class.java).toList()
+            .get().await().toObjects(DatabaseReaction::class.java).toList()
     }
 
     /**
@@ -27,24 +29,24 @@ object ReactionsRepository {
      * @param userId ユーザID
      * @return 指定したユーザに紐づくリアクションのリスト
      */
-    suspend fun fetchReactionsByUserId(userId: String): List<Reaction> {
-        return Firebase.firestore.collection(FirestoreDao.COLLECTION_REACTIONS)
+    suspend fun fetchReactionsByUserId(userId: String): List<DatabaseReaction> {
+        return Firebase.firestore.collection(COLLECTION)
             .whereArrayContains("userId", userId)
-            .get().await().toObjects(Reaction::class.java).toList()
+            .get().await().toObjects(DatabaseReaction::class.java).toList()
     }
 
     /**
      * リアクションを作成します
-     * @param reaction 登録するリアクションデータ
+     * @param databaseReaction 登録するリアクションデータ
      */
-    suspend fun create(reaction: Reaction) {
-        val docRef = FirestoreDao.createDocumentReference(FirestoreDao.COLLECTION_REACTIONS)
-        docRef.set(reaction).await()
+    suspend fun create(databaseReaction: DatabaseReaction) {
+        val document = Firebase.firestore.collection(COLLECTION).document()
+        document.set(databaseReaction).await()
         val updateData = hashMapOf<String, Any>(
             "createdAt" to FieldValue.serverTimestamp(),
-            "reactionId" to docRef.id
+            "reactionId" to document.id
         )
-        docRef.update(updateData).await()
+        document.update(updateData).await()
     }
 
     /**
@@ -52,6 +54,6 @@ object ReactionsRepository {
      * @param reactionId 削除するリアクションのID
      */
     suspend fun delete(reactionId: String) {
-        FirestoreDao.delete(FirestoreDao.COLLECTION_REACTIONS, reactionId)
+        Firebase.firestore.collection(COLLECTION).document(reactionId).delete()
     }
 }

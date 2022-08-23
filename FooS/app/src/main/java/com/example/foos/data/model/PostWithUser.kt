@@ -1,6 +1,6 @@
 package com.example.foos.data.model
 
 data class PostWithUser(
-    val user: User,
-    val post: Post,
+    val databaseUser: DatabaseUser,
+    val databasePost: DatabasePost,
 )

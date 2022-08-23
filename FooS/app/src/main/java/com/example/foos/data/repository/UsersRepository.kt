@@ -1,21 +1,47 @@
 package com.example.foos.data.repository
 
-import com.example.foos.data.model.User
+import com.example.foos.data.model.DatabaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 
+/**
+ * ユーザ情報を管理するリポジトリ
+ */
 object UsersRepository {
 
-    suspend fun fetchUser(userId: String): User? {
-        val userData = Firebase.firestore.collection("users")
+    private const val COLLECTION = "users"
+
+    /**
+     * ユーザ情報を取得します
+     */
+    suspend fun fetchUser(userId: String): DatabaseUser? {
+        val databaseUserData = Firebase.firestore.collection(COLLECTION)
             .whereEqualTo("userId", userId)
-            .get().await().toObjects(User::class.java)
-        return if (userData.size > 0) {
-            userData[0]
+            .get().await().toObjects(DatabaseUser::class.java)
+        return if (databaseUserData.size > 0) {
+            databaseUserData[0]
         } else {
             null
         }
     }
 
+    /**
+     * ユーザ情報を更新します
+     */
+    suspend fun update(databaseUser: DatabaseUser) {
+        val document = Firebase.firestore.document(databaseUser.userId)
+        val updates = hashMapOf<String, Any>(
+            "username" to databaseUser.username,
+            "profileImage" to databaseUser.profileImage
+        )
+        document.update(updates).await()
+    }
+
+    /**
+     * ユーザを削除します
+     */
+    suspend fun delete(userId: String) {
+        Firebase.firestore.document(userId).delete()
+    }
 }

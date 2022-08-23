@@ -1,5 +1,6 @@
 package com.example.foos.data.model
 
+import com.google.firebase.firestore.ServerTimestamp
 import java.util.*
 
 /**
@@ -10,10 +11,11 @@ import java.util.*
  * @param reaction リアクションの絵文字
  * @param createdAt リアクションが作成された日時
  */
-data class Reaction(
+data class DatabaseReaction(
     val reactionId: String,
     val postId: String,
     val userId: String,
     val reaction: String,
-    val createdAt: Date,
+    @ServerTimestamp
+    val createdAt: Date? = null,
 )
