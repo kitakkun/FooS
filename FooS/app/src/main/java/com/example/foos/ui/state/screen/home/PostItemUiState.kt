@@ -2,6 +2,7 @@ package com.example.foos.ui.state.screen.home
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import java.util.*
 
 /**
  * 投稿内容のUI状態
@@ -13,6 +14,7 @@ import kotlinx.parcelize.Parcelize
  * @param attachedImages 添付画像のリスト
  * @param latitude 緯度
  * @param longitude 経度
+ * @param createdAt 投稿日時
  */
 @Parcelize
 data class PostItemUiState(
@@ -24,6 +26,7 @@ data class PostItemUiState(
     val attachedImages: List<String>,
     val latitude: Double? = null,
     val longitude: Double? = null,
+    val createdAt: Date? = null,
 ) : Parcelable {
     companion object {
         val Default = PostItemUiState(

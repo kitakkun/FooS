@@ -1,17 +1,15 @@
 package com.example.foos.ui.view.screen.home
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.*
+import androidx.compose.material.Divider
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.foos.R
 import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.view.component.RoundIconActionButton
 import com.example.foos.ui.view.screen.Page
@@ -67,40 +65,7 @@ fun PostItemList(
     ) {
         items(uiStates) { post ->
             PostItem(post, onUserIconClick, onContentClick, onImageClick)
+            Divider(thickness = 1.dp, color = Color.LightGray)
         }
     }
 }
-
-/**
- * リアクションボタンの行
- */
-@Composable
-fun ReactionRow(
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.End
-    ) {
-        FavoriteButton()
-        FavoriteButton()
-    }
-
-}
-
-/**
- * いいねボタン
- */
-@Composable
-fun FavoriteButton() {
-    var liked by remember { mutableStateOf(false) }
-    Image(
-        painter = painterResource(if (liked) R.drawable.ic_favorite else R.drawable.ic_favorite_border),
-        contentDescription = null,
-        modifier = Modifier.clickable {
-            liked = !liked
-        }
-    )
-}
-
-

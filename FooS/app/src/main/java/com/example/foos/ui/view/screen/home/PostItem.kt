@@ -16,13 +16,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.foos.R
+import com.example.foos.ui.constants.FONT_SIZE_USERID
+import com.example.foos.ui.constants.FONT_SIZE_USERNAME
+import com.example.foos.ui.constants.PADDING_MEDIUM
 import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.view.component.UserIcon
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import java.util.*
 
 /**
  * タイムラインに表示する投稿アイテム一つに対応するコンポーザブル
@@ -38,40 +45,15 @@ fun PostItem(
     onContentClick: (PostItemUiState) -> Unit = { },
     onImageClick: (PostItemUiState, String) -> Unit = { _, _ -> },
 ) {
-    Column(
-        modifier = Modifier.padding(16.dp)
-    ) {
-        PostItemContent(
-            uiState,
-            onUserIconClick,
-            onContentClick,
-            onImageClick
-        )
-    }
-}
-
-/**
- * 投稿内容の部分
- * @param uiState UI状態
- * @param onContentClick コンテンツクリック時の挙動
- * @param onImageClick 画像クリック時の挙動
- */
-@Composable
-fun PostItemContent(
-    uiState: PostItemUiState,
-    onUserIconClick: (userId: String) -> Unit = { },
-    onContentClick: (PostItemUiState) -> Unit = { },
-    onImageClick: (PostItemUiState, String) -> Unit = { _, _ -> },
-) {
     Row(
-        modifier = Modifier.clickable {
-            onContentClick.invoke(uiState)
-        }
+        modifier = Modifier
+            .clickable { onContentClick.invoke(uiState) }
+            .padding(PADDING_MEDIUM)
     ) {
         UserIcon(url = uiState.userIcon, onClick = { onUserIconClick.invoke(uiState.userId) })
         Spacer(modifier = Modifier.width(20.dp))
         Column {
-            UserIdentityRow(uiState.username, uiState.userId)
+            UserIdentityRow(uiState.username, uiState.userId, createdAt = uiState.createdAt)
             Text(
                 text = uiState.content,
                 modifier = Modifier
@@ -88,24 +70,74 @@ fun PostItemContent(
  * ユーザ情報の行アイテム
  * @param username ユーザ名
  * @param userId ユーザID
+ * @param createdAt 投稿の作成日時
  */
 @Composable
 fun UserIdentityRow(
     username: String,
     userId: String,
+    createdAt: Date?,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = username, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+        Text(text = username, fontSize = FONT_SIZE_USERNAME, fontWeight = FontWeight.Bold)
         Spacer(Modifier.width(16.dp))
-        Text(text = "@${userId}", maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "@${userId}",
+                fontSize = FONT_SIZE_USERID,
+                modifier = Modifier.weight(1f, fill = false),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            PostTime(createdAt = createdAt)
+        }
+    }
+}
+
+/**
+ * 投稿時間の表示
+ * @param createdAt 投稿の作成日時
+ */
+@Composable
+fun PostTime(
+    createdAt: Date?
+) {
+    createdAt?.let {
+        val createdAtDateTime =
+            createdAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+        val nowDateTime = LocalDateTime.now()
+        val daysDiff = ChronoUnit.DAYS.between(createdAtDateTime, nowDateTime)
+        val hoursDiff = ChronoUnit.HOURS.between(createdAtDateTime, nowDateTime)
+        val minutesDiff = ChronoUnit.MINUTES.between(createdAtDateTime, nowDateTime)
+        val secondsDiff = ChronoUnit.SECONDS.between(createdAtDateTime, nowDateTime)
+        val text: String = if (daysDiff >= 7) {
+            // ex) 9 Jan
+            createdAtDateTime.format(DateTimeFormatter.ofPattern("d MMM"))
+        } else if (daysDiff >= 1) {
+            // ex) 5d
+            "${daysDiff}d"
+        } else if (hoursDiff >= 1) {
+            // ex) 7h
+            "${hoursDiff}h"
+        } else if (minutesDiff >= 1) {
+            // ex) 10m
+            "${minutesDiff}m"
+        } else {
+            // ex) 40s
+            "${secondsDiff}s"
+        }
+        Text("・${text}")
     }
 }
 
 /**
  * 添付画像の水平方向リスト
- * @param images 添付画像のURL
+ * @param uiState 投稿アイテムのUI状態
  * @param onClick 各画像クリック時の挙動
  */
 @Composable
