@@ -1,8 +1,6 @@
 package com.example.foos.ui.view.screen.userprofile
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -19,15 +17,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.view.component.UserIcon
-import com.example.foos.ui.view.screen.home.PostItem
+import com.example.foos.ui.view.screen.home.PostItemList
 
 @Composable
 fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavController) {
 
     val uiState = viewModel.uiState.collectAsState()
 
-    LazyColumn {
-        item {
+    PostItemList(
+        uiStates = uiState.value.posts,
+        headerContent = {
             UserProfile(
                 uiState.value.username,
                 uiState.value.userId,
@@ -36,11 +35,8 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                 10,
                 10
             )
-        }
-        items(uiState.value.posts) {
-            PostItem(uiState = it)
-        }
-    }
+        },
+    )
 }
 
 

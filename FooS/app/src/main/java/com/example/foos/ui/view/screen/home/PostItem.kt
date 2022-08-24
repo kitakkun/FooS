@@ -2,14 +2,17 @@ package com.example.foos.ui.view.screen.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -30,6 +33,35 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
+
+
+/**
+ * 投稿のリスト
+ * @param uiStates 各投稿のUI状態
+ * @param onUserIconClick ユーザアイコンクリック時の挙動
+ * @param onContentClick コンテンツクリック時の挙動
+ * @param onImageClick 添付画像クリック時の挙動
+ */
+@Composable
+fun PostItemList(
+    uiStates: List<PostItemUiState>,
+    onUserIconClick: (userId: String) -> Unit = { },
+    onContentClick: (uiState: PostItemUiState) -> Unit = { },
+    onImageClick: (uiState: PostItemUiState, clickedImageUrl: String) -> Unit = { _, _ -> },
+    headerContent: @Composable() () -> Unit = {},
+) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        item {
+            headerContent()
+        }
+        items(uiStates) { post ->
+            PostItem(post, onUserIconClick, onContentClick, onImageClick)
+            Divider(thickness = 1.dp, color = Color.LightGray)
+        }
+    }
+}
 
 /**
  * タイムラインに表示する投稿アイテム一つに対応するコンポーザブル
