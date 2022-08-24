@@ -26,10 +26,6 @@ object Modules {
     fun provideFollowRepository(): FollowRepository = FollowRepository
 
     @Provides
-    @Singleton
-    fun provideReactionsRepository(): ReactionsRepository = ReactionsRepository
-
-    @Provides
     fun provideGetReactionsByUserIdUseCase(): GetReactionsByUserIdUseCase =
         GetReactionsByUserIdUseCase(UsersRepository, PostsRepository, ReactionsRepository)
 
