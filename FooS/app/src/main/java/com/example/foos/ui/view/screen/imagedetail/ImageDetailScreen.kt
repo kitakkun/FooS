@@ -1,7 +1,6 @@
 package com.example.foos.ui.view.screen.imagedetail
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyRow
@@ -62,7 +61,7 @@ fun FullSizeImage(
                 .placeholder(R.drawable.ic_no_image)
                 .build(),
             contentDescription = null,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

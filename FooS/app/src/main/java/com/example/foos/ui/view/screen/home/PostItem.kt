@@ -15,7 +15,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -129,7 +128,6 @@ fun AttachedImagesRow(
                     .clickable { onClick.invoke(uiState, image) }
                     .size(120.dp)
                     .clip(RoundedCornerShape(10)),
-
                 contentScale = ContentScale.Crop,
             )
         }

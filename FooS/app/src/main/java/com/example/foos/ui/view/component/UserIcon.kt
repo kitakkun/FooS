@@ -1,5 +1,6 @@
 package com.example.foos.ui.view.component
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -11,6 +12,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import coil.Coil
+import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -28,8 +31,7 @@ fun UserIcon(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
-    PreloadAsyncImage(
-        url = url,
+    AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
             .data(url)
             .crossfade(true)
