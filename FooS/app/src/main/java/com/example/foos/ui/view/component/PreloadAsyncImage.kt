@@ -1,23 +1,22 @@
 package com.example.foos.ui.view.component
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.imageLoader
-import coil.request.CachePolicy
 import coil.request.ImageRequest
-import coil.size.ViewSizeResolver
-import com.example.foos.R
 
+/**
+ * プリロードを行う非同期読み込み画像
+ * @param url 読み込む画像のURL
+ * @param model AsyncImageのmodel
+ * @param modifier 適用するモディファイア
+ * @param contentScale AsyncImageのcontentScale
+ * @param contentDescription AsyncImageのcontentDescription
+ */
 @Composable
 fun PreloadAsyncImage(
     url: String,
