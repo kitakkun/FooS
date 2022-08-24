@@ -21,6 +21,7 @@ import java.io.*
 object PostsRepository {
 
     private const val MAX_LOAD_COUNT: Long = 10
+    private const val MAX_UPLOAD_IMAGE_SIZE = 1024
     private const val COLLECTION = "posts"
 
     /**
@@ -41,7 +42,7 @@ object PostsRepository {
         var i = 1
         databasePost.attachedImages.forEach {
             val bitmap = BitmapFactory.decodeFile(it.removePrefix("file://"))
-            val resized = ImageConverter.resize(bitmap, 1080, true)
+            val resized = ImageConverter.resize(bitmap, MAX_UPLOAD_IMAGE_SIZE, true)
             val compressedFilePath = "${context.cacheDir}/image$i.jpeg"
             try {
                 val outStream = FileOutputStream(compressedFilePath)
