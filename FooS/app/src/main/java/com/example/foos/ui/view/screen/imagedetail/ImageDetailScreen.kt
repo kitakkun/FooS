@@ -1,7 +1,6 @@
 package com.example.foos.ui.view.screen.imagedetail
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyRow
@@ -16,7 +15,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.foos.R
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
-import com.example.foos.ui.view.component.PreloadAsyncImage
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 
@@ -56,8 +54,7 @@ fun FullSizeImage(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        PreloadAsyncImage(
-            url = url,
+        AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(url)
                 .crossfade(true)

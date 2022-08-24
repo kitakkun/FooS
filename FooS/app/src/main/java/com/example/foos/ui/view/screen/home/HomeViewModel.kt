@@ -1,9 +1,12 @@
 package com.example.foos.ui.view.screen.home
 
+import android.app.Application
 import android.net.Uri
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import coil.ImageLoader
+import coil.request.ImageRequest
 import com.example.foos.data.domain.GetLatestPostsWithUserUseCase
 import com.example.foos.data.domain.GetOlderPostsWithUserUseCase
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
@@ -26,7 +29,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getLatestPostsWithUserUseCase: GetLatestPostsWithUserUseCase,
     private val getOlderPostsWithUserUseCase: GetOlderPostsWithUserUseCase,
-) : ViewModel() {
+    application: Application,
+) : AndroidViewModel(application) {
 
     // HomeScreenのUI状態
     private var _uiState = MutableStateFlow(HomeScreenUiState(listOf(), false))
@@ -69,7 +73,8 @@ class HomeViewModel @Inject constructor(
     fun fetchNewPosts() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.update { it.copy(isRefreshing = true) }
-            val posts = getLatestPostsWithUserUseCase().map {
+            val postsWithUser = getLatestPostsWithUserUseCase()
+            val posts = postsWithUser.map {
                 PostItemUiState(
                     postId = it.databasePost.postId,
                     userId = it.databaseUser.userId,
