@@ -18,4 +18,6 @@ data class DatabaseReaction(
     val reaction: String,
     @ServerTimestamp
     val createdAt: Date? = null,
-)
+) {
+    constructor(): this("", "", "", "", null)
+}

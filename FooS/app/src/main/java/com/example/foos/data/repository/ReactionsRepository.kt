@@ -20,7 +20,7 @@ object ReactionsRepository {
      */
     suspend fun fetchReactionsByPostId(postId: String): List<DatabaseReaction> {
         return Firebase.firestore.collection(COLLECTION)
-            .whereArrayContains("postId", postId)
+            .whereEqualTo("postId", postId)
             .get().await().toObjects(DatabaseReaction::class.java).toList()
     }
 
@@ -31,7 +31,7 @@ object ReactionsRepository {
      */
     suspend fun fetchReactionsByUserId(userId: String): List<DatabaseReaction> {
         return Firebase.firestore.collection(COLLECTION)
-            .whereArrayContains("userId", userId)
+            .whereEqualTo("userId", userId)
             .get().await().toObjects(DatabaseReaction::class.java).toList()
     }
 
@@ -42,7 +42,7 @@ object ReactionsRepository {
     suspend fun create(databaseReaction: DatabaseReaction) {
         val document = Firebase.firestore.collection(COLLECTION).document()
         document.set(databaseReaction).await()
-        val updateData = hashMapOf<String, Any>(
+        val updateData = hashMapOf(
             "createdAt" to FieldValue.serverTimestamp(),
             "reactionId" to document.id
         )

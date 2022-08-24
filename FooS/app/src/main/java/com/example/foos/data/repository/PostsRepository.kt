@@ -20,7 +20,7 @@ object PostsRepository {
      * 投稿を取得します
      */
     suspend fun fetchPost(postId: String): DatabasePost? {
-        val document = Firebase.firestore.document(postId)
+        val document = Firebase.firestore.collection(COLLECTION).document(postId)
         return document.get().await().toObject(DatabasePost::class.java)
     }
 

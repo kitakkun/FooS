@@ -1,30 +1,49 @@
 package com.example.foos.data.domain
 
+import android.util.Log
+import com.example.foos.data.model.DatabasePost
+import com.example.foos.data.model.DatabaseUser
 import com.example.foos.data.model.Reaction
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.data.repository.UsersRepository
+import kotlinx.coroutines.*
 import javax.inject.Inject
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * 該当のユーザに関連するリアクションを取得
  */
-class GetReactionsByUserIdUseCase @Inject constructor(
+class GetReactionsByUserIdUseCase constructor(
     private val usersRepository: UsersRepository,
     private val postsRepository: PostsRepository,
     private val reactionsRepository: ReactionsRepository,
 ) {
 
     suspend operator fun invoke(userId: String) : List<Reaction> {
-        val reactions = reactionsRepository.fetchReactionsByUserId(userId).map { reaction ->
-            val post = postsRepository.fetchPost(reaction.postId)
-            val user = usersRepository.fetchUser(reaction.userId)
-            if (post != null && user != null) {
-                Reaction(post = post, user = user, reaction = reaction)
-            } else {
-                null
+        val postJobs = mutableListOf<Job>()
+        val userJobs = mutableListOf<Job>()
+        val reactions = reactionsRepository.fetchReactionsByUserId(userId)
+        val posts = mutableMapOf<String, DatabasePost?>()
+        val users = mutableMapOf<String, DatabaseUser?>()
+        coroutineScope {
+            reactions.forEach {
+                postJobs.add (async { posts.put(it.reactionId, postsRepository.fetchPost(it.postId)) })
+                userJobs.add (async { users.put(it.reactionId, usersRepository.fetchUser(it.userId)) })
             }
         }
-        return reactions.filterNotNull()
+        postJobs.joinAll()
+        userJobs.joinAll()
+        return reactions.map {
+            val reactionId = it.reactionId
+            val post = posts.get(reactionId)
+            val user = users.get(reactionId)
+            Log.d("NULLCHECK", post?.content.toString())
+            if (post == null || user == null) {
+                null
+            } else {
+                Reaction(reaction = it, post = post, user = user)
+            }
+        }.filterNotNull()
     }
 }
