@@ -43,7 +43,7 @@ class HomeViewModel @Inject constructor(
      * @param userId クリックされたユーザのID
      */
     fun onUserIconClick(userId: String) {
-
+        navController.navigate("${Page.UserProfile.route}/$userId")
     }
 
     /**

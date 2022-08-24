@@ -16,31 +16,25 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import com.example.foos.R
 
-/**
- * ユーザーアイコン
- * @param url アイコン画像のURL
- * @param modifier モディファイア
- * @param onClick クリック時の処理
- */
 @Composable
-fun UserIcon(
+fun PreloadAsyncImage(
     url: String,
+    model: ImageRequest,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
+    contentScale: ContentScale = ContentScale.Crop,
+    contentDescription: String? = null,
 ) {
-    PreloadAsyncImage(
-        url = url,
-        model = ImageRequest.Builder(LocalContext.current)
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        val request = ImageRequest.Builder(context)
             .data(url)
-            .crossfade(true)
-            .placeholder(R.drawable.ic_account_circle)
-            .build(),
-        contentScale = ContentScale.Crop,
-        contentDescription = null,
+            .build()
+        context.imageLoader.enqueue(request)
+    }
+    AsyncImage(
+        model = model,
+        contentScale = contentScale,
+        contentDescription = contentDescription,
         modifier = modifier
-            .clip(CircleShape)
-            .width(50.dp)
-            .height(50.dp)
-            .clickable { onClick.invoke() }
     )
 }

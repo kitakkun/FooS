@@ -22,8 +22,8 @@ data class PostItemUiState(
     val userIcon: String,
     val content: String,
     val attachedImages: List<String>,
-    val latitude: Double?,
-    val longitude: Double?,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
 ) : Parcelable {
     companion object {
         val Default = PostItemUiState(

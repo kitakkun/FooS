@@ -48,7 +48,6 @@ fun PostItem(
             onContentClick,
             onImageClick
         )
-        ReactionRow(modifier = Modifier.fillMaxWidth())
     }
 }
 

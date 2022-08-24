@@ -17,6 +17,16 @@ object PostsRepository {
     private const val COLLECTION = "posts"
 
     /**
+     * 投稿をユーザーIDを指定して取得します
+     */
+    suspend fun fetchPostsByUserId(userId: String): List<DatabasePost> {
+        return Firebase.firestore.collection(COLLECTION)
+            .whereEqualTo("userId", userId)
+            .orderBy("createdAt")
+            .get().await().toObjects(DatabasePost::class.java)
+    }
+
+    /**
      * 投稿を取得します
      */
     suspend fun fetchPost(postId: String): DatabasePost? {

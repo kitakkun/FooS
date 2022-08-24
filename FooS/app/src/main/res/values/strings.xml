@@ -15,4 +15,6 @@
     <string name="emoji_like">&#10084;</string>
     <string name="emoji_fire">&#128293;</string>
     <string name="emoji_yummy">&#128523;</string>
+    <string name="following">Following</string>
+    <string name="followers">Followers</string>
 </resources>
