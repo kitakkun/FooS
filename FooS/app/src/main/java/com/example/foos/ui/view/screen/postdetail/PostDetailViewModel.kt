@@ -2,7 +2,7 @@ package com.example.foos.ui.view.screen.postdetail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foos.data.model.Reaction
+import com.example.foos.data.model.DatabaseReaction
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.state.screen.postdetail.PostDetailScreenUiState
@@ -47,12 +47,12 @@ class PostDetailViewModel @Inject constructor(
      * リアクションボタンが押されたときの処理
      */
     fun onReactionButtonClicked(reactionString: String) {
-        val reaction = Reaction(
+        val reaction = DatabaseReaction(
             reactionId = "",
-            userId = Firebase.auth.uid.toString(),
+            from = Firebase.auth.uid.toString(),
+            to = uiState.value.postItemUiState.userId,
             postId = uiState.value.postItemUiState.postId,
             reaction = reactionString,
-            createdAt = Date()
         )
         viewModelScope.launch(Dispatchers.IO) {
             reactionsRepository.create(reaction)
