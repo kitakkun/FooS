@@ -61,7 +61,8 @@ class HomeViewModel @Inject constructor(
      * @param clickedImageUrl クリックされた画像のURL
      */
     fun onImageClick(uiState: PostItemUiState, clickedImageUrl: String) {
-        val uiStateWithImageUrl = PostItemUiStateWithImageUrl(uiState, clickedImageUrl)
+        val uiStateWithImageUrl =
+            PostItemUiStateWithImageUrl(uiState, uiState.attachedImages.indexOf(clickedImageUrl))
         val data = Uri.encode(Gson().toJson(uiStateWithImageUrl))
         navController.navigate("${Page.ImageDetail.route}/$data")
     }
