@@ -1,6 +1,8 @@
 package com.example.foos.di
 
+import com.example.foos.data.domain.ConvertReactionToUiState
 import com.example.foos.data.domain.GetLatestPostsWithUserUseCase
+import com.example.foos.data.domain.GetReactionsByUserIdUseCase
 import com.example.foos.data.domain.GetUserInfoUseCase
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.PostsRepository
@@ -22,6 +24,17 @@ object Modules {
     @Provides
     @Singleton
     fun provideFollowRepository(): FollowRepository = FollowRepository
+
+    @Provides
+    @Singleton
+    fun provideReactionsRepository(): ReactionsRepository = ReactionsRepository
+
+    @Provides
+    fun provideGetReactionsByUserIdUseCase(): GetReactionsByUserIdUseCase =
+        GetReactionsByUserIdUseCase(UsersRepository, PostsRepository, ReactionsRepository)
+
+    @Provides
+    fun provideConvertReactionToUiState(): ConvertReactionToUiState = ConvertReactionToUiState()
 
     @Provides
     @Singleton

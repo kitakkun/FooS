@@ -1,7 +1,8 @@
 package com.example.foos.ui.state.screen.reaction
 
 data class ReactionScreenUiState(
-    val reactions: List<ReactionItemUiState>
+    val reactions: List<ReactionItemUiState>,
+    val isRefreshing: Boolean,
 )
 
 data class ReactionItemUiState(
