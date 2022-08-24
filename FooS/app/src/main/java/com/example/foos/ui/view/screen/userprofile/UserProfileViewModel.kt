@@ -66,6 +66,7 @@ class UserProfileViewModel @Inject constructor(
                     userIcon = it.user.profileImage,
                     content = it.post.content,
                     attachedImages = it.post.attachedImages,
+                    createdAt = it.post.createdAt
                 )
             }
             _uiState.update { it.copy(posts = posts) }
