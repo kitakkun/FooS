@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,7 +27,11 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
 
     val uiState = viewModel.uiState.collectAsState()
 
-    viewModel.setNavController(navController)
+    LaunchedEffect(Unit) {
+        viewModel.navEvent.collect {
+            navController.navigate(it)
+        }
+    }
 
     SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = uiState.value.isRefreshing),
         onRefresh = { viewModel.fetchNewPosts() }

@@ -3,7 +3,6 @@ package com.example.foos.ui.view.screen.home
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
 import com.example.foos.data.domain.GetLatestPostsWithUserUseCase
 import com.example.foos.data.domain.GetOlderPostsWithUserUseCase
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
@@ -13,9 +12,7 @@ import com.example.foos.ui.view.screen.Page
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,18 +29,17 @@ class HomeViewModel @Inject constructor(
     private var _uiState = MutableStateFlow(HomeScreenUiState(listOf(), false))
     val uiState: StateFlow<HomeScreenUiState> get() = _uiState
 
-    private lateinit var navController: NavController
-
-    fun setNavController(navController: NavController) {
-        this.navController = navController
-    }
+    private val _navEvent = MutableSharedFlow<String>()
+    val navEvent: SharedFlow<String> get() = _navEvent
 
     /**
      * ユーザアイコンのクリックイベント
      * @param userId クリックされたユーザのID
      */
     fun onUserIconClick(userId: String) {
-        navController.navigate("${Page.UserProfile.route}/$userId")
+        viewModelScope.launch {
+            _navEvent.emit("${Page.UserProfile.route}/$userId")
+        }
     }
 
     /**
@@ -51,8 +47,10 @@ class HomeViewModel @Inject constructor(
      * @param uiState クリックされた投稿のUI状態
      */
     fun onContentClick(uiState: PostItemUiState) {
-        val data = Uri.encode(Gson().toJson(uiState))
-        navController.navigate("${Page.PostDetail.route}/$data")
+        viewModelScope.launch {
+            val data = Uri.encode(Gson().toJson(uiState))
+            _navEvent.emit("${Page.PostDetail.route}/$data")
+        }
     }
 
     /**
@@ -61,10 +59,15 @@ class HomeViewModel @Inject constructor(
      * @param clickedImageUrl クリックされた画像のURL
      */
     fun onImageClick(uiState: PostItemUiState, clickedImageUrl: String) {
-        val uiStateWithImageUrl =
-            PostItemUiStateWithImageUrl(uiState, uiState.attachedImages.indexOf(clickedImageUrl))
-        val data = Uri.encode(Gson().toJson(uiStateWithImageUrl))
-        navController.navigate("${Page.ImageDetail.route}/$data")
+        viewModelScope.launch {
+            val uiStateWithImageUrl =
+                PostItemUiStateWithImageUrl(
+                    uiState,
+                    uiState.attachedImages.indexOf(clickedImageUrl)
+                )
+            val data = Uri.encode(Gson().toJson(uiStateWithImageUrl))
+            _navEvent.emit("${Page.ImageDetail.route}/$data")
+        }
     }
 
     fun fetchNewPosts() {
