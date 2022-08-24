@@ -8,8 +8,6 @@ import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.data.repository.UsersRepository
 import kotlinx.coroutines.*
-import javax.inject.Inject
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * 該当のユーザに関連するリアクションを取得
@@ -23,13 +21,13 @@ class GetReactionsByUserIdUseCase constructor(
     suspend operator fun invoke(userId: String) : List<Reaction> {
         val postJobs = mutableListOf<Job>()
         val userJobs = mutableListOf<Job>()
-        val reactions = reactionsRepository.fetchReactionsByUserId(userId)
+        val reactions = reactionsRepository.fetchReactionsByUserId(userId, true)
         val posts = mutableMapOf<String, DatabasePost?>()
         val users = mutableMapOf<String, DatabaseUser?>()
         coroutineScope {
             reactions.forEach {
                 postJobs.add (async { posts.put(it.reactionId, postsRepository.fetchPost(it.postId)) })
-                userJobs.add (async { users.put(it.reactionId, usersRepository.fetchUser(it.userId)) })
+                userJobs.add (async { users.put(it.reactionId, usersRepository.fetchUser(it.from)) })
             }
         }
         postJobs.joinAll()
@@ -38,7 +36,6 @@ class GetReactionsByUserIdUseCase constructor(
             val reactionId = it.reactionId
             val post = posts.get(reactionId)
             val user = users.get(reactionId)
-            Log.d("NULLCHECK", post?.content.toString())
             if (post == null || user == null) {
                 null
             } else {

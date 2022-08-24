@@ -7,17 +7,19 @@ import java.util.*
  * リアクションのデータ
  * @param reactionId リアクションID
  * @param postId 投稿ID
- * @param userId リアクションしたユーザID
+ * @param from リアクションしたユーザID
+ * @param to リアクションされたユーザID
  * @param reaction リアクションの絵文字
  * @param createdAt リアクションが作成された日時
  */
 data class DatabaseReaction(
     val reactionId: String,
     val postId: String,
-    val userId: String,
+    val from: String,
+    val to: String,
     val reaction: String,
     @ServerTimestamp
     val createdAt: Date? = null,
 ) {
-    constructor(): this("", "", "", "", null)
+    constructor(): this("", "", "", "", "", null)
 }

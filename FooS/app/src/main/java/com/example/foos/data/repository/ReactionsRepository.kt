@@ -25,13 +25,15 @@ object ReactionsRepository {
     }
 
     /**
-     * 特定ユーザが行ったリアクションデータを取得します
+     * 特定ユーザに関連するリアクションデータを取得します
      * @param userId ユーザID
+     * @param received 受け取ったものを選ぶかどうか
      * @return 指定したユーザに紐づくリアクションのリスト
      */
-    suspend fun fetchReactionsByUserId(userId: String): List<DatabaseReaction> {
+    suspend fun fetchReactionsByUserId(userId: String, received: Boolean = true): List<DatabaseReaction> {
+        val field = if (received) "to" else "from"
         return Firebase.firestore.collection(COLLECTION)
-            .whereEqualTo("userId", userId)
+            .whereEqualTo(field, userId)
             .get().await().toObjects(DatabaseReaction::class.java).toList()
     }
 
