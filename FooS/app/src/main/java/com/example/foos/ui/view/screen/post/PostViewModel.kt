@@ -3,6 +3,7 @@ package com.example.foos.ui.view.screen.post
 import android.app.Application
 import android.content.Context
 import android.net.Uri
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -52,7 +53,7 @@ class PostViewModel @Inject constructor(
                 "", Firebase.auth.uid.toString(), _uiState.value.content,
                 _uiState.value.attachedImages, null, null, java.util.Date()
             )
-            postsRepository.create(databasePost)
+            postsRepository.create(databasePost, getApplication())
             withContext(Dispatchers.Main) {
                 navController.navigateUp()
             }
