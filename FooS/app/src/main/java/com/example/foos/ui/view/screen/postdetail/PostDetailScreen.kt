@@ -64,7 +64,7 @@ fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavControlle
                 userId = postItemUiState.userId,
                 onClick = { viewModel.onUserInfoClicked() })
             Spacer(Modifier.weight(1f))
-            ReactionButton()
+            ReactionButton(onReactionClicked = { reaction -> viewModel.onReactionButtonClicked(reaction)})
         }
         Spacer(Modifier.height(24.dp))
         Text(postItemUiState.content)
@@ -154,22 +154,39 @@ fun AttachedImagesDisplay(
     }
 }
 
+/**
+ * リアクション追加用ボタン
+ * @param onReactionClicked リアクション追加時の挙動
+ */
 @Composable
 fun ReactionButton(
+    onReactionClicked: (String) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
     IconButton(onClick = { expanded = !expanded }) {
         Icon(painterResource(R.drawable.ic_add_reaction), null)
-        ReactionDropdown(expanded = expanded, onDismissRequest = { expanded = false })
+        ReactionDropdown(expanded = expanded, onDismissRequest = { expanded = false }, onReactionClicked = onReactionClicked)
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
+/**
+ * Reactionを行うためのドロップダウン
+ * @param expanded ドロップダウンを開くかどうか
+ * @param onDismissRequest ドロップダウンメニューの範囲外をタップしたときの挙動
+ * @param onReactionClicked リアクションが行われた際の挙動
+ */
 @Composable
 fun ReactionDropdown(
     expanded: Boolean,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    onReactionClicked: (String) -> Unit,
 ) {
+    val reactions = listOf(
+        stringResource(id = R.string.emoji_like),
+        stringResource(id = R.string.emoji_yummy),
+        stringResource(id = R.string.emoji_fire),
+    )
+
     val dropdownWidth = with(LocalDensity.current) {
         60.sp.toDp()
     }
@@ -179,19 +196,14 @@ fun ReactionDropdown(
             onDismissRequest = onDismissRequest,
             modifier = Modifier.width(dropdownWidth)
         ) {
-            DropdownMenuItem(onClick = {}) {
-                Text(
-                    text = stringResource(id = R.string.emoji_like),
-                    fontSize = 30.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
-            DropdownMenuItem(onClick = {}) {
-                Text(
-                    text = stringResource(id = R.string.emoji_yummy),
-                    fontSize = 30.sp,
-                    textAlign = TextAlign.Center
-                )
+            reactions.forEach {
+                DropdownMenuItem(onClick = {onReactionClicked.invoke(it)}) {
+                    Text(
+                        text = it,
+                        fontSize = 30.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
     }
