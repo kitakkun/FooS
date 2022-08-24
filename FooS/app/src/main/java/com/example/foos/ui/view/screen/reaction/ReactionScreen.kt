@@ -47,7 +47,8 @@ fun ReactionItemList(
     onContentClick: () -> Unit = {},
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     )
     {
         items(uiStates) {
@@ -61,7 +62,9 @@ fun ReactionItemList(
 fun ReactionItem(
     uiState: ReactionItemUiState = ReactionItemUiState.Default
 ) {
-    Row() {
+    Row(
+        modifier = Modifier.padding(16.dp)
+    ) {
         UserIcon(url = uiState.userIcon)
         Spacer(modifier = Modifier.width(16.dp))
         Column() {
