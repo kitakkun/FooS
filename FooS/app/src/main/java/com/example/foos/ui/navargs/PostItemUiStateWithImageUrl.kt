@@ -12,5 +12,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class PostItemUiStateWithImageUrl(
     val uiState: PostItemUiState,
-    val index: String,
+    val index: Int,
 ) : Parcelable

@@ -5,8 +5,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -17,6 +18,7 @@ import com.example.foos.R
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
+import kotlinx.coroutines.launch
 
 /**
  * 画像を全画面プレビューするスクリーン
@@ -24,18 +26,27 @@ import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
  */
 @OptIn(ExperimentalSnapperApi::class)
 @Composable
-fun ImageDetailScreen(navController: NavHostController, post: PostItemUiStateWithImageUrl?) {
-    post?.let {
-        val lazyListState = rememberLazyListState()
-        LazyRow(
-            state = lazyListState,
-            flingBehavior = rememberSnapperFlingBehavior(lazyListState),
-            modifier = Modifier.fillMaxSize()
-        )
-        {
-            items(post.uiState.attachedImages) {
-                FullSizeImage(url = it, modifier = Modifier.fillParentMaxSize())
+fun ImageDetailScreen(navController: NavHostController, post: PostItemUiStateWithImageUrl) {
+    val lazyListState = rememberLazyListState()
+    var showedFirstTime by remember { mutableStateOf(true) }
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        if (showedFirstTime) {
+            coroutineScope.launch {
+                lazyListState.scrollToItem(post.index)
+                showedFirstTime = false
             }
+        }
+    }
+    LazyRow(
+        state = lazyListState,
+        flingBehavior = rememberSnapperFlingBehavior(lazyListState),
+        modifier = Modifier.fillMaxSize(),
+    )
+    {
+        items(post.uiState.attachedImages) {
+            FullSizeImage(url = it, modifier = Modifier.fillParentMaxSize())
         }
     }
 }
