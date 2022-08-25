@@ -1,6 +1,7 @@
 package com.example.foos.ui.view.screen.home
 
 import android.net.Uri
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.domain.GetLatestPostsWithUserUseCase

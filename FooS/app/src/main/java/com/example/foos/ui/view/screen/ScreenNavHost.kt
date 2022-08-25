@@ -36,6 +36,7 @@ import com.example.foos.ui.view.screen.userprofile.UserProfileViewModel
 @Composable
 fun ScreenNavHost(
     navController: NavHostController,
+    screenViewModel: ScreenViewModel,
     innerPadding: PaddingValues
 ) {
     NavHost(
@@ -45,7 +46,7 @@ fun ScreenNavHost(
     ) {
         composable(Screen.Home.route) {
             val vm: HomeViewModel = hiltViewModel()
-            HomeScreen(vm, navController)
+            HomeScreen(vm, navController, screenViewModel)
         }
         composable(Screen.Map.route) {
             val vm: MapViewModel = hiltViewModel()
