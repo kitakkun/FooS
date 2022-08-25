@@ -3,7 +3,8 @@ package com.example.foos.ui.view.screen.home
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foos.data.domain.GetLatestPostsWithUserUseCase
+import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
+import com.example.foos.data.domain.GetPostsWithUserUseCase
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
 import com.example.foos.ui.state.screen.home.HomeScreenUiState
 import com.example.foos.ui.state.screen.home.PostItemUiState
@@ -20,7 +21,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getLatestPostsWithUserUseCase: GetLatestPostsWithUserUseCase,
+    private val getPostsWithUserUseCase: GetPostsWithUserUseCase,
+    private val convertPostWithUserToUiStateUseCase: ConvertPostWithUserToUiStateUseCase
 ) : ViewModel() {
 
     // HomeScreenのUI状態
@@ -29,34 +31,6 @@ class HomeViewModel @Inject constructor(
 
     private val _navEvent = MutableSharedFlow<String>()
     val navEvent: SharedFlow<String> get() = _navEvent
-
-    fun onAppearLastItem(count: Int) {
-        val lastItemCreatedAt = uiState.value.posts.last().createdAt
-        viewModelScope.launch {
-            lastItemCreatedAt?.let {
-                val postsWithUser = getLatestPostsWithUserUseCase.invoke(it)
-                val posts = postsWithUser.map {
-                    PostItemUiState(
-                        postId = it.databasePost.postId,
-                        userId = it.databaseUser.userId,
-                        username = it.databaseUser.username,
-                        userIcon = it.databaseUser.profileImage,
-                        content = it.databasePost.content,
-                        attachedImages = it.databasePost.attachedImages,
-                        latitude = it.databasePost.latitude,
-                        longitude = it.databasePost.longitude,
-                        createdAt = it.databasePost.createdAt,
-                    )
-                }
-                _uiState.update {
-                    it.copy(
-                        posts = (it.posts + posts).distinct(),
-                    )
-                }
-            }
-        }
-    }
-
 
     /**
      * ユーザアイコンのクリックイベント
@@ -96,35 +70,46 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun fetchNewPosts() {
+    /**
+     * 新しい投稿をフェッチします（リフレッシュ）
+     */
+    fun onRefresh() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.update { it.copy(isRefreshing = true) }
-            val postsWithUser = getLatestPostsWithUserUseCase()
-            val posts = postsWithUser.map {
-                PostItemUiState(
-                    postId = it.databasePost.postId,
-                    userId = it.databaseUser.userId,
-                    username = it.databaseUser.username,
-                    userIcon = it.databaseUser.profileImage,
-                    content = it.databasePost.content,
-                    attachedImages = it.databasePost.attachedImages,
-                    latitude = it.databasePost.latitude,
-                    longitude = it.databasePost.longitude,
-                    createdAt = it.databasePost.createdAt,
-                )
+            val posts = getPostsWithUserUseCase().map { postWithUser ->
+                convertPostWithUserToUiStateUseCase(postWithUser)
             }
-            _uiState.update {
-                it.copy(
-                    posts = (posts + it.posts).distinct(),
-                    isRefreshing = false
-                )
-            }
+            _uiState.update { it.copy(posts = posts, isRefreshing = false) }
         }
     }
 
+    /**
+     * 新しい投稿をフェッチします（サイレント）
+     */
+    fun fetchNewerPosts() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val posts = getPostsWithUserUseCase().map { postWithUser ->
+                convertPostWithUserToUiStateUseCase(postWithUser)
+            }
+            _uiState.update { it.copy(posts = (posts + it.posts).distinct()) }
+        }
+    }
+
+    /**
+     * 古い投稿をフェッチします
+     */
     fun fetchOlderPosts() {
         viewModelScope.launch {
-//            postsRepository.fetchOlderPosts()
+            val oldestPost = uiState.value.posts.last()
+            val oldestDate = oldestPost.createdAt
+            oldestDate?.let {
+                val posts = getPostsWithUserUseCase(it).map { postWithUser ->
+                    convertPostWithUserToUiStateUseCase(postWithUser)
+                }
+                _uiState.update { state ->
+                    state.copy(posts = (state.posts + posts).distinct())
+                }
+            }
         }
     }
 

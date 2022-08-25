@@ -1,11 +1,10 @@
 package com.example.foos.di
 
-import com.example.foos.data.domain.ConvertReactionToUiState
-import com.example.foos.data.domain.GetLatestPostsWithUserUseCase
+import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
+import com.example.foos.data.domain.ConvertReactionToUiStateUseCase
+import com.example.foos.data.domain.GetPostsWithUserUseCase
 import com.example.foos.data.domain.GetReactionsByUserIdUseCase
-import com.example.foos.data.domain.GetUserInfoUseCase
 import com.example.foos.data.repository.FollowRepository
-import com.example.foos.data.model.Reaction
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.data.repository.UsersRepository
@@ -31,7 +30,10 @@ object Modules {
         GetReactionsByUserIdUseCase(UsersRepository, PostsRepository, ReactionsRepository)
 
     @Provides
-    fun provideConvertReactionToUiState(): ConvertReactionToUiState = ConvertReactionToUiState()
+    fun provideConvertReactionToUiStateUseCase(): ConvertReactionToUiStateUseCase = ConvertReactionToUiStateUseCase()
+
+    @Provides
+    fun provideConvertPostWithUserToUiStateUseCase(): ConvertPostWithUserToUiStateUseCase = ConvertPostWithUserToUiStateUseCase()
 
     @Provides
     @Singleton
@@ -42,6 +44,6 @@ object Modules {
     fun provideReactionsRepository(): ReactionsRepository = ReactionsRepository
 
     @Provides
-    fun provideCompletePostsRepository(): GetLatestPostsWithUserUseCase =
-        GetLatestPostsWithUserUseCase(PostsRepository, UsersRepository)
+    fun provideCompletePostsRepository(): GetPostsWithUserUseCase =
+        GetPostsWithUserUseCase(PostsRepository, UsersRepository)
 }

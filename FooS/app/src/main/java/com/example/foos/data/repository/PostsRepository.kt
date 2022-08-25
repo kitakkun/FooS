@@ -22,7 +22,7 @@ import java.util.*
  */
 object PostsRepository {
 
-    private const val DEFAULT_LOAD_LIMIT: Long = 10
+    private const val DEFAULT_LOAD_LIMIT: Long = 30
     private const val MAX_UPLOAD_IMAGE_SIZE = 1024
     private const val COLLECTION = "posts"
 

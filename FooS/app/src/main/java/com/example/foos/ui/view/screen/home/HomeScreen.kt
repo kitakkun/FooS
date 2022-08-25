@@ -1,7 +1,5 @@
 package com.example.foos.ui.view.screen.home
 
-import android.util.Log
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.navigation.NavController
 import com.example.foos.ui.view.component.RoundIconActionButton
@@ -10,7 +8,6 @@ import com.example.foos.ui.view.screen.Screen
 import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import kotlinx.coroutines.flow.filter
 
 /**
  * ホーム画面のコンポーザブル。ユーザーの投稿をリストで表示。
@@ -28,7 +25,7 @@ fun HomeScreen(
 
     // 起動時初回フェッチ
     LaunchedEffect(Unit) {
-        viewModel.fetchNewPosts()
+        viewModel.fetchNewerPosts()
     }
 
     // ナビゲーションイベントの処理
@@ -48,7 +45,7 @@ fun HomeScreen(
     }
 
     SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = uiState.value.isRefreshing),
-        onRefresh = { viewModel.fetchNewPosts() }
+        onRefresh = { viewModel.onRefresh() }
     ) {
         PostItemList(
             uiStates = uiState.value.posts,
@@ -60,7 +57,7 @@ fun HomeScreen(
                     clickedImageUrl
                 )
             },
-            onAppearLastItem = { count -> viewModel.onAppearLastItem(count) }
+            onAppearLastItem = { viewModel.fetchOlderPosts() }
         )
     }
     RoundIconActionButton(onClick = { navController.navigate(Page.PostCreate.route) })

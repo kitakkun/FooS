@@ -6,7 +6,7 @@ import com.example.foos.data.repository.UsersRepository
 import java.util.*
 import javax.inject.Inject
 
-class GetLatestPostsWithUserUseCase @Inject constructor(
+class GetPostsWithUserUseCase @Inject constructor(
     private val postsRepository: PostsRepository,
     private val usersRepository: UsersRepository,
 ) {
