@@ -9,6 +9,7 @@ import coil.decode.BitmapFactoryDecoder
 import com.example.foos.data.model.DatabasePost
 import com.example.foos.util.ImageConverter
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -20,7 +21,7 @@ import java.io.*
  */
 object PostsRepository {
 
-    private const val MAX_LOAD_COUNT: Long = 10
+    private const val MAX_LOAD_COUNT: Long = 30
     private const val MAX_UPLOAD_IMAGE_SIZE = 1024
     private const val COLLECTION = "posts"
 
@@ -30,7 +31,8 @@ object PostsRepository {
     suspend fun fetchPostsByUserId(userId: String): List<DatabasePost> {
         return Firebase.firestore.collection(COLLECTION)
             .whereEqualTo("userId", userId)
-            .orderBy("createdAt")
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(MAX_LOAD_COUNT)
             .get().await().toObjects(DatabasePost::class.java)
     }
 
@@ -85,6 +87,7 @@ object PostsRepository {
      */
     suspend fun fetchNewerPosts(): List<DatabasePost> {
         val response = Firebase.firestore.collection("posts")
+            .orderBy("createdAt", Query.Direction.DESCENDING)
             .limit(MAX_LOAD_COUNT)
             .get().await()
         return response.toObjects(DatabasePost::class.java)
