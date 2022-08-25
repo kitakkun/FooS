@@ -155,7 +155,7 @@ object PostsRepository {
         val response = Firebase.firestore.collection(COLLECTION)
             .whereLessThanOrEqualTo("createdAt", from)
             .orderBy("createdAt", Query.Direction.DESCENDING)
-            .limit(MAX_LOAD_COUNT)
+            .limit(DEFAULT_LOAD_LIMIT)
             .get().await()
         return response.toObjects(DatabasePost::class.java)
     }

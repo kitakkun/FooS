@@ -1,11 +1,9 @@
 package com.example.foos.ui.view.screen.home
 
 import android.net.Uri
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.domain.GetLatestPostsWithUserUseCase
-import com.example.foos.data.domain.GetOlderPostsWithUserUseCase
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
 import com.example.foos.ui.state.screen.home.HomeScreenUiState
 import com.example.foos.ui.state.screen.home.PostItemUiState
@@ -23,7 +21,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getLatestPostsWithUserUseCase: GetLatestPostsWithUserUseCase,
-    private val getOlderPostsWithUserUseCase: GetOlderPostsWithUserUseCase,
 ) : ViewModel() {
 
     // HomeScreenのUI状態
