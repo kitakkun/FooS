@@ -1,13 +1,17 @@
 package com.example.foos.ui.view.screen.home
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavController
 import com.example.foos.ui.view.component.RoundIconActionButton
 import com.example.foos.ui.view.screen.Page
+import com.example.foos.ui.view.screen.Screen
+import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.flow.collect
 
 /**
  * ホーム画面のコンポーザブル。ユーザーの投稿をリストで表示。
@@ -15,13 +19,23 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
  * @param navController 画面遷移用のNavController
  */
 @Composable
-fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
+fun HomeScreen(viewModel: HomeViewModel, navController: NavController, screenViewModel: ScreenViewModel) {
 
     val uiState = viewModel.uiState.collectAsState()
 
+    // ナビゲーションイベントの処理
     LaunchedEffect(Unit) {
         viewModel.navEvent.collect {
             navController.navigate(it)
+        }
+    }
+
+    // Bottomナビゲーションのイベントを受け取る
+    LaunchedEffect(Unit) {
+        screenViewModel.navRoute.collect {
+            if (it == Screen.Home.route) {
+                // TODO: scroll to top
+            }
         }
     }
 

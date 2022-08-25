@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -13,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -22,6 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.foos.FirebaseAuthManager
 import com.example.foos.R
 import com.example.foos.ui.theme.FooSTheme
+import kotlinx.coroutines.flow.onEach
 
 /**
  * メインメニューのスクリーン
@@ -54,12 +57,26 @@ fun MainScreen() {
     FirebaseAuthManager.checkSignInState(LocalContext.current)
     val navController = rememberNavController()
 
+    val screenViewModel: ScreenViewModel = hiltViewModel()
+
+    LaunchedEffect(Unit) {
+        screenViewModel.navRoute.collect {
+            navController.navigate(it) {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+        }
+    }
+
     FooSTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             backgroundColor = MaterialTheme.colors.background,
-            bottomBar = { ScreenBottomNavBar(navController) }
-        ) { innerPadding -> ScreenNavHost(navController, innerPadding) }
+            bottomBar = { ScreenBottomNavBar(navController, onClick={ screen -> screenViewModel.navigate(screen.route) }) }
+        ) { innerPadding -> ScreenNavHost(navController, screenViewModel, innerPadding) }
     }
 }
 
@@ -68,7 +85,8 @@ fun MainScreen() {
  */
 @Composable
 fun ScreenBottomNavBar(
-    navController: NavHostController
+    navController: NavHostController,
+    onClick: (Screen) -> Unit
 ) {
     val screens = listOf(
         Screen.Home,
@@ -83,6 +101,7 @@ fun ScreenBottomNavBar(
             screens.forEach { screen ->
                 MyBottomNavigationItem(
                     screen = screen,
+                    onClick = onClick,
                     currentDestination = currentDestination,
                     navController = navController,
                 )
@@ -99,18 +118,11 @@ fun RowScope.MyBottomNavigationItem(
     screen: Screen,
     currentDestination: NavDestination?,
     navController: NavHostController,
+    onClick: (Screen) -> Unit,
 ) {
     BottomNavigationItem(
         icon = { Icon(painterResource(screen.iconId), null) },
         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-        onClick = {
-            navController.navigate(screen.route) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-        }
+        onClick = { onClick.invoke(screen) }
     )
 }
