@@ -16,9 +16,8 @@ class ScreenViewModel @Inject constructor(): ViewModel() {
     val navRoute = _navRoute.asSharedFlow()
 
     fun navigate(route: String) {
-        val result = _navRoute.tryEmit(route)
-        Log.d("RESULT", result.toString())
         viewModelScope.launch {
+            _navRoute.emit(route)
         }
     }
 }
