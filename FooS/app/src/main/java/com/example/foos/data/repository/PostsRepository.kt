@@ -14,6 +14,7 @@ import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.*
 import java.util.*
 
 /**
@@ -150,8 +151,21 @@ object PostsRepository {
     /**
      * 最新の投稿を取得します
      */
-    suspend fun fetchNewerPosts(): List<DatabasePost> {
-        val response = Firebase.firestore.collection("posts")
+    suspend fun fetchNewerPosts(from: Date): List<DatabasePost> {
+        val response = Firebase.firestore.collection(COLLECTION)
+            .whereLessThanOrEqualTo("createdAt", from)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(MAX_LOAD_COUNT)
+            .get().await()
+        return response.toObjects(DatabasePost::class.java)
+    }
+
+    /**
+     * 古い投稿を取得します
+     */
+    suspend fun fetchOlderPosts(from: Date) : List<DatabasePost> {
+        val response = Firebase.firestore.collection(COLLECTION)
+            .whereLessThanOrEqualTo("createdAt", from)
             .orderBy("createdAt", Query.Direction.DESCENDING)
             .limit(DEFAULT_LOAD_LIMIT)
             .get().await()

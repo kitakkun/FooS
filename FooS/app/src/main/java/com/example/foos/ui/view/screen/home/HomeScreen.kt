@@ -1,9 +1,8 @@
 package com.example.foos.ui.view.screen.home
 
 import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.*
 import androidx.navigation.NavController
 import com.example.foos.ui.view.component.RoundIconActionButton
 import com.example.foos.ui.view.screen.Page
@@ -11,7 +10,7 @@ import com.example.foos.ui.view.screen.Screen
 import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 
 /**
  * ホーム画面のコンポーザブル。ユーザーの投稿をリストで表示。
@@ -19,9 +18,18 @@ import kotlinx.coroutines.flow.collect
  * @param navController 画面遷移用のNavController
  */
 @Composable
-fun HomeScreen(viewModel: HomeViewModel, navController: NavController, screenViewModel: ScreenViewModel) {
+fun HomeScreen(
+    viewModel: HomeViewModel,
+    navController: NavController,
+    screenViewModel: ScreenViewModel
+) {
 
     val uiState = viewModel.uiState.collectAsState()
+
+    // 起動時初回フェッチ
+    LaunchedEffect(Unit) {
+        viewModel.fetchNewPosts()
+    }
 
     // ナビゲーションイベントの処理
     LaunchedEffect(Unit) {
@@ -51,7 +59,8 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController, screenVie
                     uiState,
                     clickedImageUrl
                 )
-            }
+            },
+            onAppearLastItem = { count -> viewModel.onAppearLastItem(count) }
         )
     }
     RoundIconActionButton(onClick = { navController.navigate(Page.PostCreate.route) })

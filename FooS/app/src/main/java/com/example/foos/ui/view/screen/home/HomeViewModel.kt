@@ -33,6 +33,34 @@ class HomeViewModel @Inject constructor(
     private val _navEvent = MutableSharedFlow<String>()
     val navEvent: SharedFlow<String> get() = _navEvent
 
+    fun onAppearLastItem(count: Int) {
+        val lastItemCreatedAt = uiState.value.posts.last().createdAt
+        viewModelScope.launch {
+            lastItemCreatedAt?.let {
+                val postsWithUser = getLatestPostsWithUserUseCase.invoke(it)
+                val posts = postsWithUser.map {
+                    PostItemUiState(
+                        postId = it.databasePost.postId,
+                        userId = it.databaseUser.userId,
+                        username = it.databaseUser.username,
+                        userIcon = it.databaseUser.profileImage,
+                        content = it.databasePost.content,
+                        attachedImages = it.databasePost.attachedImages,
+                        latitude = it.databasePost.latitude,
+                        longitude = it.databasePost.longitude,
+                        createdAt = it.databasePost.createdAt,
+                    )
+                }
+                _uiState.update {
+                    it.copy(
+                        posts = (it.posts + posts).distinct(),
+                    )
+                }
+            }
+        }
+    }
+
+
     /**
      * ユーザアイコンのクリックイベント
      * @param userId クリックされたユーザのID
