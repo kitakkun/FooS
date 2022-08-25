@@ -5,12 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.domain.GetPostsByUserIdUseCase
 import com.example.foos.data.domain.GetUserInfoUseCase
-import com.example.foos.data.model.Post
 import com.example.foos.data.repository.UsersRepository
 import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.state.screen.userprofile.UserProfileScreenUiState
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,7 +38,7 @@ class UserProfileViewModel @Inject constructor(
 
     suspend fun fetchUserInfo(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val user = usersRepository.fetchUser(userId)
+            val user = usersRepository.fetchByUserId(userId)
             user?.let {
                 _uiState.update {
                     it.copy(
@@ -56,8 +53,6 @@ class UserProfileViewModel @Inject constructor(
 
     suspend fun fetchUserPosts(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            Log.d("FETCHLOG", "Instance is $this")
-            Log.d("FETCHLOG", "fetching started")
             val posts = getPostsByUserIdUseCase(userId).map {
                 PostItemUiState(
                     postId = it.post.postId,

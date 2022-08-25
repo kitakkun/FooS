@@ -4,42 +4,107 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import androidx.compose.ui.platform.LocalContext
-import coil.decode.BitmapFactoryDecoder
 import com.example.foos.data.model.DatabasePost
 import com.example.foos.util.ImageConverter
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
-import java.io.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.*
 
 /**
  * 投稿内容のデータを管理するリポジトリ
  */
 object PostsRepository {
 
-    private const val MAX_LOAD_COUNT: Long = 30
+    private const val DEFAULT_LOAD_LIMIT: Long = 10
     private const val MAX_UPLOAD_IMAGE_SIZE = 1024
     private const val COLLECTION = "posts"
 
     /**
-     * 投稿をユーザーIDを指定して取得します
+     * ユーザーIDと日時を指定して投稿を取得します
+     * @param userId ユーザID
+     * @param start 開始の日時 ex) 2022/01/01
+     * @param end 終了の日時   ex) 2022/01/06
+     * @param count 取得するデータ数
      */
-    suspend fun fetchPostsByUserId(userId: String): List<DatabasePost> {
-        return Firebase.firestore.collection(COLLECTION)
-            .whereEqualTo("userId", userId)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-            .limit(MAX_LOAD_COUNT)
-            .get().await().toObjects(DatabasePost::class.java)
+    suspend fun fetchByUserIdWithDate(
+        userId: String,
+        start: Date? = null,
+        end: Date? = null,
+        count: Long = DEFAULT_LOAD_LIMIT,
+    ): List<DatabasePost> {
+        val collection = Firebase.firestore.collection(COLLECTION)
+        var query = collection.whereEqualTo("userId", userId)
+        start?.let { query = query.whereGreaterThanOrEqualTo("createdAt", start) }
+        end?.let { query = query.whereGreaterThanOrEqualTo("createdAt", end) }
+        query = query.orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(count)
+        return query.get().await().toObjects(DatabasePost::class.java)
     }
+
+    /**
+     * ユーザーID(複数)と日時を指定して投稿を取得します
+     * @param userIds ユーザID
+     * @param start 開始の日時 ex) 2022/01/01
+     * @param end 終了の日時   ex) 2022/01/06
+     * @param count 取得するデータ数
+     */
+    suspend fun fetchByUserIdsWithDate(
+        userIds: List<String>,
+        start: Date? = null,
+        end: Date? = null,
+        count: Long = DEFAULT_LOAD_LIMIT,
+    ): List<DatabasePost> {
+        val collection = Firebase.firestore.collection(COLLECTION)
+        var query = collection.whereIn("userId", userIds)
+        start?.let { query = query.whereGreaterThanOrEqualTo("createdAt", start) }
+        end?.let { query = query.whereGreaterThanOrEqualTo("createdAt", end) }
+        query = query.orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(count)
+        return query.get().await().toObjects(DatabasePost::class.java)
+    }
+
+    /**
+     * 指定ユーザの最新の投稿を取得します
+     * @param userId ユーザID
+     * @param count 取得するデータ数
+     */
+    suspend fun fetchByUserId(
+        userId: String,
+        count: Long = DEFAULT_LOAD_LIMIT
+    ): List<DatabasePost> {
+        val collection = Firebase.firestore.collection(COLLECTION)
+        var query = collection.whereEqualTo("userId", userId)
+        query = query.orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(count)
+        return query.get().await().toObjects(DatabasePost::class.java)
+    }
+
+    /**
+     * 指定ユーザ（複数）の最新の投稿を取得します
+     * @param userIds ユーザIDのリスト
+     * @param count 取得するデータ数
+     */
+     suspend fun fetchByUserIds(
+        userIds: List<String>,
+        count: Long = DEFAULT_LOAD_LIMIT
+     ): List<DatabasePost> {
+         val collection = Firebase.firestore.collection(COLLECTION)
+         var query = collection.whereIn("userId", userIds)
+         query = query.orderBy("createdAt", Query.Direction.DESCENDING)
+             .limit(count)
+         return query.get().await().toObjects(DatabasePost::class.java)
+     }
 
     /**
      * 投稿を取得します
      */
-    suspend fun fetchPost(postId: String): DatabasePost? {
+    suspend fun fetchByPostId(postId: String): DatabasePost? {
         val document = Firebase.firestore.collection(COLLECTION).document(postId)
         return document.get().await().toObject(DatabasePost::class.java)
     }
@@ -88,7 +153,7 @@ object PostsRepository {
     suspend fun fetchNewerPosts(): List<DatabasePost> {
         val response = Firebase.firestore.collection("posts")
             .orderBy("createdAt", Query.Direction.DESCENDING)
-            .limit(MAX_LOAD_COUNT)
+            .limit(DEFAULT_LOAD_LIMIT)
             .get().await()
         return response.toObjects(DatabasePost::class.java)
     }

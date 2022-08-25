@@ -12,7 +12,7 @@ class GetOlderPostsWithUserUseCase @Inject constructor(
 
     suspend operator fun invoke(): List<PostWithUser> {
         val postsWithUsers = postsRepository.fetchNewerPosts().map { post ->
-            val user = usersRepository.fetchUser(post.userId)
+            val user = usersRepository.fetchByUserId(post.userId)
             user?.let {
                 PostWithUser(it, post)
             }
