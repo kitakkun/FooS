@@ -13,7 +13,7 @@ class GetPostWithUserByPostIdUseCase @Inject constructor(
     suspend operator fun invoke(postId: String): PostWithUser? {
         val post = postsRepository.fetchByPostId(postId)
         post?.let {
-            val user = usersRepository.fetchUser(post.userId)
+            val user = usersRepository.fetchByUserId(post.userId)
             user?.let {
                 return PostWithUser(it, post)
             }

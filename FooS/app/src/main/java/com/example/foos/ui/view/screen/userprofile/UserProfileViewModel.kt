@@ -38,7 +38,7 @@ class UserProfileViewModel @Inject constructor(
 
     suspend fun fetchUserInfo(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val user = usersRepository.fetchUser(userId)
+            val user = usersRepository.fetchByUserId(userId)
             user?.let {
                 _uiState.update {
                     it.copy(

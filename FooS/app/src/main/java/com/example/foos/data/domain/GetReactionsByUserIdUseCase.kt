@@ -26,7 +26,7 @@ class GetReactionsByUserIdUseCase constructor(
         coroutineScope {
             reactions.forEach {
                 postJobs.add (async { posts.put(it.reactionId, postsRepository.fetchByPostId(it.postId)) })
-                userJobs.add (async { users.put(it.reactionId, usersRepository.fetchUser(it.from)) })
+                userJobs.add (async { users.put(it.reactionId, usersRepository.fetchByUserId(it.from)) })
             }
         }
         postJobs.joinAll()

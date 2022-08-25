@@ -48,6 +48,28 @@ object PostsRepository {
     }
 
     /**
+     * ユーザーID(複数)と日時を指定して投稿を取得します
+     * @param userIds ユーザID
+     * @param start 開始の日時 ex) 2022/01/01
+     * @param end 終了の日時   ex) 2022/01/06
+     * @param count 取得するデータ数
+     */
+    suspend fun fetchByUserIdsWithDate(
+        userIds: List<String>,
+        start: Date? = null,
+        end: Date? = null,
+        count: Long = DEFAULT_LOAD_LIMIT,
+    ): List<DatabasePost> {
+        val collection = Firebase.firestore.collection(COLLECTION)
+        var query = collection.whereIn("userId", userIds)
+        start?.let { query = query.whereGreaterThanOrEqualTo("createdAt", start) }
+        end?.let { query = query.whereGreaterThanOrEqualTo("createdAt", end) }
+        query = query.orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(count)
+        return query.get().await().toObjects(DatabasePost::class.java)
+    }
+
+    /**
      * 指定ユーザの最新の投稿を取得します
      * @param userId ユーザID
      * @param count 取得するデータ数
@@ -62,6 +84,22 @@ object PostsRepository {
             .limit(count)
         return query.get().await().toObjects(DatabasePost::class.java)
     }
+
+    /**
+     * 指定ユーザ（複数）の最新の投稿を取得します
+     * @param userIds ユーザIDのリスト
+     * @param count 取得するデータ数
+     */
+     suspend fun fetchByUserIds(
+        userIds: List<String>,
+        count: Long = DEFAULT_LOAD_LIMIT
+     ): List<DatabasePost> {
+         val collection = Firebase.firestore.collection(COLLECTION)
+         var query = collection.whereIn("userId", userIds)
+         query = query.orderBy("createdAt", Query.Direction.DESCENDING)
+             .limit(count)
+         return query.get().await().toObjects(DatabasePost::class.java)
+     }
 
     /**
      * 投稿を取得します
