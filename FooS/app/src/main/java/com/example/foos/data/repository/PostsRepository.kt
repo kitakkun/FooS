@@ -21,7 +21,7 @@ import java.util.*
  */
 object PostsRepository {
 
-    private const val MAX_LOAD_COUNT: Long = 10
+    private const val DEFAULT_LOAD_LIMIT: Long = 10
     private const val MAX_UPLOAD_IMAGE_SIZE = 1024
     private const val COLLECTION = "posts"
 
@@ -36,7 +36,7 @@ object PostsRepository {
         userId: String,
         start: Date? = null,
         end: Date? = null,
-        count: Long = MAX_LOAD_COUNT,
+        count: Long = DEFAULT_LOAD_LIMIT,
     ): List<DatabasePost> {
         val collection = Firebase.firestore.collection(COLLECTION)
         var query = collection.whereEqualTo("userId", userId)
@@ -54,7 +54,7 @@ object PostsRepository {
      */
     suspend fun fetchByUserId(
         userId: String,
-        count: Long = MAX_LOAD_COUNT
+        count: Long = DEFAULT_LOAD_LIMIT
     ): List<DatabasePost> {
         val collection = Firebase.firestore.collection(COLLECTION)
         var query = collection.whereEqualTo("userId", userId)
@@ -115,7 +115,7 @@ object PostsRepository {
     suspend fun fetchNewerPosts(): List<DatabasePost> {
         val response = Firebase.firestore.collection("posts")
             .orderBy("createdAt", Query.Direction.DESCENDING)
-            .limit(MAX_LOAD_COUNT)
+            .limit(DEFAULT_LOAD_LIMIT)
             .get().await()
         return response.toObjects(DatabasePost::class.java)
     }
