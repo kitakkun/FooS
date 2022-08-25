@@ -53,25 +53,12 @@ fun MainScreen() {
     // 認証済みか確認し、未認証であれば認証を行う
     FirebaseAuthManager.checkSignInState(LocalContext.current)
     val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-
-    val showBottomBar = rememberSaveable {
-        mutableStateOf(true)
-    }
-
-    showBottomBar.value = when (currentDestination?.route) {
-        Page.PostCreate.route -> false
-        Page.PostDetail.routeWithParam -> false
-        Page.ImageDetail.routeWithParam -> false
-        else -> true
-    }
 
     FooSTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             backgroundColor = MaterialTheme.colors.background,
-            bottomBar = { if (showBottomBar.value) ScreenBottomNavBar(navController) }
+            bottomBar = { ScreenBottomNavBar(navController) }
         ) { innerPadding -> ScreenNavHost(navController, innerPadding) }
     }
 }
@@ -91,13 +78,15 @@ fun ScreenBottomNavBar(
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    BottomNavigation {
-        screens.forEach { screen ->
-            MyBottomNavigationItem(
-                screen = screen,
-                currentDestination = currentDestination,
-                navController = navController,
-            )
+    if (screens.map { it.route }.contains(currentDestination?.route)) {
+        BottomNavigation {
+            screens.forEach { screen ->
+                MyBottomNavigationItem(
+                    screen = screen,
+                    currentDestination = currentDestination,
+                    navController = navController,
+                )
+            }
         }
     }
 }
