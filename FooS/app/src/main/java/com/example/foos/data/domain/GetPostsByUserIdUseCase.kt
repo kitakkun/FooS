@@ -15,7 +15,7 @@ class GetPostsByUserIdUseCase @Inject constructor(
     suspend operator fun invoke(userId: String): List<Post> {
         val user = usersRepository.fetchUser(userId)
         user?.let {
-            val posts = postsRepository.fetchPostsByUserId(userId).map {
+            val posts = postsRepository.fetchByUserId(userId).map {
 //                val reactions = reactionsRepository.fetchReactionsByPostId(it.postId)
                 Post(post = it, user = user, reaction = listOf())
             }

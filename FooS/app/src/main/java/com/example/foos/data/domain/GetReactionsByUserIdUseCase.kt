@@ -1,6 +1,5 @@
 package com.example.foos.data.domain
 
-import android.util.Log
 import com.example.foos.data.model.DatabasePost
 import com.example.foos.data.model.DatabaseUser
 import com.example.foos.data.model.Reaction
@@ -26,7 +25,7 @@ class GetReactionsByUserIdUseCase constructor(
         val users = mutableMapOf<String, DatabaseUser?>()
         coroutineScope {
             reactions.forEach {
-                postJobs.add (async { posts.put(it.reactionId, postsRepository.fetchPost(it.postId)) })
+                postJobs.add (async { posts.put(it.reactionId, postsRepository.fetchByPostId(it.postId)) })
                 userJobs.add (async { users.put(it.reactionId, usersRepository.fetchUser(it.from)) })
             }
         }
