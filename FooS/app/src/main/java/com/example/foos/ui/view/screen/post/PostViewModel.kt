@@ -15,6 +15,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,7 +30,7 @@ class PostViewModel @Inject constructor(
     application: Application
 ) : AndroidViewModel(application) {
 
-    private var _uiState = MutableStateFlow(PostScreenUiState("", listOf(), false))
+    private var _uiState = MutableStateFlow(PostScreenUiState("", listOf()))
     val postUiState: StateFlow<PostScreenUiState> get() = _uiState.asStateFlow()
 
     fun setImages(context: Context, imageUris: List<Uri>) {
@@ -47,17 +48,13 @@ class PostViewModel @Inject constructor(
     }
 
     fun post(navController: NavController) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _uiState.update { it.copy(posting = true) }
+        MainScope().launch(Dispatchers.IO) {
             val databasePost = DatabasePost(
                 "", Firebase.auth.uid.toString(), _uiState.value.content,
                 _uiState.value.attachedImages, null, null, java.util.Date()
             )
             postsRepository.create(databasePost, getApplication())
-            withContext(Dispatchers.Main) {
-                navController.navigateUp()
-            }
-            _uiState.update { it.copy(posting = false) }
         }
+        navController.navigateUp()
     }
 }
