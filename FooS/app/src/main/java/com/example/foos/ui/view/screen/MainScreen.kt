@@ -5,6 +5,8 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -72,6 +74,9 @@ fun MainScreen() {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             backgroundColor = MaterialTheme.colors.background,
+            topBar = {
+                ScreenTopBar(navController)
+            },
             bottomBar = {
                 ScreenBottomNavBar(
                     navController,
@@ -126,4 +131,31 @@ fun RowScope.MyBottomNavigationItem(
         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
         onClick = { onClick.invoke(screen) }
     )
+}
+
+/**
+ * 画面トップナビゲーションバー
+ */
+@Composable
+fun ScreenTopBar(
+    navController: NavHostController,
+) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+    val pages = listOf(
+        Page.ImageDetail,
+        Page.UserProfile,
+        Page.PostDetail,
+    )
+    if (pages.map { it.routeWithParam }.contains(currentDestination?.route)) {
+        TopAppBar(
+            title = {},
+            navigationIcon = {
+                IconButton(onClick = { navController.navigateUp() }) {
+                    Icon(Icons.Default.ArrowBack, contentDescription = null)
+                }
+            },
+            actions = {},
+        )
+    }
 }
