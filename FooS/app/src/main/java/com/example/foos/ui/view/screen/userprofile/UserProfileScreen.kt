@@ -26,6 +26,8 @@ import com.example.foos.ui.state.screen.userprofile.UserProfileScreenUiState
 import com.example.foos.ui.view.component.Tabs
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.screen.home.PostItemList
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Composable
 fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavController) {
@@ -114,6 +116,7 @@ fun UserProfile(
     followeeNum: Int,
     following: Boolean,
     onFollowButtonClick: () -> Unit = {},
+    onEditButtonClick: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier.padding(16.dp)
@@ -123,9 +126,15 @@ fun UserProfile(
         ) {
             UserIcon(url = profileImage, modifier = Modifier.size(70.dp))
             Spacer(Modifier.weight(1f))
-            Button(onClick = onFollowButtonClick, shape = RoundedCornerShape(50)) {
-                if (following) Text(text = "Following")
-                else Text(text = "Follow")
+            if (userId == Firebase.auth.uid) {
+                Button(onClick = onEditButtonClick, shape = RoundedCornerShape(50)) {
+                    Text(text = "Edit profile")
+                }
+            } else {
+                Button(onClick = onFollowButtonClick, shape = RoundedCornerShape(50)) {
+                    if (following) Text(text = "Following")
+                    else Text(text = "Follow")
+                }
             }
         }
         Spacer(Modifier.height(16.dp))

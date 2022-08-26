@@ -1,6 +1,7 @@
 package com.example.foos.data.repository
 
 import com.example.foos.data.model.DatabaseFollow
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -35,6 +36,7 @@ object FollowRepository {
      * フォロー関係を作成
      */
     suspend fun create(follower: String, followee: String) {
+        if (followee == Firebase.auth.uid) { return }
         val entry = DatabaseFollow(follower = follower, followee = followee)
         val document = Firebase.firestore.collection(COLLECTION).document()
         document.set(entry).await()
