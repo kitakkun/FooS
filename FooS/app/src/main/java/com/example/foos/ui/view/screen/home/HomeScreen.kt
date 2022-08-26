@@ -1,5 +1,6 @@
 package com.example.foos.ui.view.screen.home
 
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.navigation.NavController
 import com.example.foos.ui.view.component.RoundIconActionButton
@@ -22,6 +23,7 @@ fun HomeScreen(
 ) {
 
     val uiState = viewModel.uiState.collectAsState()
+    val listState = rememberLazyListState()
 
     // 起動時初回フェッチ
     LaunchedEffect(Unit) {
@@ -39,7 +41,7 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         screenViewModel.navRoute.collect {
             if (it == Screen.Home.route) {
-                // TODO: scroll to top
+                listState.animateScrollToItem(0, 0)
             }
         }
     }
@@ -48,6 +50,7 @@ fun HomeScreen(
         onRefresh = { viewModel.onRefresh() }
     ) {
         PostItemList(
+            listState = listState,
             uiStates = uiState.value.posts,
             onUserIconClick = { userId -> viewModel.onUserIconClick(userId) },
             onContentClick = { uiState -> viewModel.onContentClick(uiState) },

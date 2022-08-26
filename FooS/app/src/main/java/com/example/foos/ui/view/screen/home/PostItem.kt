@@ -43,6 +43,7 @@ import java.util.*
  */
 @Composable
 fun PostItemList(
+    listState: LazyListState = rememberLazyListState(),
     uiStates: List<PostItemUiState>,
     onUserIconClick: (userId: String) -> Unit = { },
     onContentClick: (uiState: PostItemUiState) -> Unit = { },
@@ -50,12 +51,10 @@ fun PostItemList(
     headerContent: @Composable() () -> Unit = {},
     onAppearLastItem: (Int) -> Unit = {},
 ) {
-    val lazyListState = rememberLazyListState().apply {
-        OnAppearLastItem(onAppearLastItem = onAppearLastItem)
-    }
+    listState.OnAppearLastItem(onAppearLastItem = onAppearLastItem)
 
     LazyColumn(
-        state = lazyListState,
+        state = listState,
         modifier = Modifier.fillMaxSize(),
     ) {
         item {
