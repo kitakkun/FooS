@@ -39,6 +39,14 @@ class UserProfileViewModel @Inject constructor(
     private var _navigateRouteFlow = MutableSharedFlow<String>()
     val navigateRouteFlow: SharedFlow<String> get() = _navigateRouteFlow
 
+    private var _scrollUpEvent = MutableSharedFlow<Boolean>()
+    val scrollUpEvent = _scrollUpEvent.asSharedFlow()
+
+    fun onUserIconClick() {
+        viewModelScope.launch {
+            _scrollUpEvent.emit(true)
+        }
+    }
 
     /**
      * 投稿コンテンツクリック時のイベント

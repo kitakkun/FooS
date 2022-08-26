@@ -1,6 +1,7 @@
 package com.example.foos.ui.view.screen.userprofile
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,11 +20,13 @@ import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.screen.home.PostItemList
+import kotlinx.coroutines.coroutineScope
 
 @Composable
 fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavController) {
 
     val uiState = viewModel.uiState.collectAsState()
+    val listState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
         viewModel.navigateRouteFlow.collect {
@@ -31,7 +34,14 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
         }
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.scrollUpEvent.collect {
+            if (it) listState.animateScrollToItem(0, 0)
+        }
+    }
+
     PostItemList(
+        listState = listState,
         uiStates = uiState.value.posts,
         headerContent = {
             UserProfile(
@@ -43,7 +53,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                 10
             )
         },
-        onUserIconClick = { },
+        onUserIconClick = { viewModel.onUserIconClick() },
         onContentClick = { uiState -> viewModel.onContentClick(uiState) },
         onImageClick = { uiState, clickedImageUrl ->
             viewModel.onImageClick(
@@ -51,7 +61,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                 clickedImageUrl
             )
         },
-        onAppearLastItem = {viewModel.fetchOlderPosts()}
+        onAppearLastItem = { viewModel.fetchOlderPosts() }
     )
 }
 
