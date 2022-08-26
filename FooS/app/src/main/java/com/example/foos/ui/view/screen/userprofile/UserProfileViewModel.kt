@@ -9,6 +9,7 @@ import com.example.foos.data.domain.GetPostsByUserIdUseCase
 import com.example.foos.data.domain.GetUserInfoUseCase
 import com.example.foos.data.model.Post
 import com.example.foos.data.repository.UsersRepository
+import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
 import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.state.screen.userprofile.UserProfileScreenUiState
 import com.example.foos.ui.view.screen.Page
@@ -36,6 +37,32 @@ class UserProfileViewModel @Inject constructor(
 
     private var _navigateRouteFlow = MutableSharedFlow<String>()
     val navigateRouteFlow: SharedFlow<String> get() = _navigateRouteFlow
+
+
+    /**
+     * 投稿コンテンツクリック時のイベント
+     * @param uiState クリックされた投稿のUI状態
+     */
+    fun onContentClick(uiState: PostItemUiState) {
+        val data = Uri.encode(Gson().toJson(uiState))
+        viewModelScope.launch {
+            _navigateRouteFlow.emit("${Page.PostDetail.route}/$data")
+        }
+    }
+
+    /**
+     * 投稿コンテンツの画像クリック時のイベント
+     * @param uiState クリックされた画像を持つ投稿のUI状態
+     * @param clickedImageUrl クリックされた画像のURL
+     */
+    fun onImageClick(uiState: PostItemUiState, clickedImageUrl: String) {
+        val uiStateWithImageUrl =
+            PostItemUiStateWithImageUrl(uiState, uiState.attachedImages.indexOf(clickedImageUrl))
+        val data = Uri.encode(Gson().toJson(uiStateWithImageUrl))
+        viewModelScope.launch {
+            _navigateRouteFlow.emit("${Page.ImageDetail.route}/$data")
+        }
+    }
 
     fun setUserId(userId: String) {
         viewModelScope.launch {
@@ -75,16 +102,6 @@ class UserProfileViewModel @Inject constructor(
             }
             _uiState.update { it.copy(posts = posts) }
             Log.d("FETCHLOG", "fetching finished")
-        }
-    }
-
-    /**
-     * 投稿内容がクリックされたときの挙動
-     */
-    fun onContentClicked(uiState: PostItemUiState) {
-        val data = Uri.encode(Gson().toJson(uiState))
-        viewModelScope.launch {
-            _navigateRouteFlow.emit("${Page.PostDetail.route}/$data")
         }
     }
 }

@@ -7,7 +7,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,7 +20,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.view.component.UserIcon
-import com.example.foos.ui.view.screen.Page
 import com.example.foos.ui.view.screen.home.PostItem
 
 @Composable
@@ -50,7 +48,16 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
         items(uiState.value.posts) {
             PostItem(
                 uiState = it,
-                onContentClick = { uiState -> viewModel.onContentClicked(uiState) })
+                onUserIconClick = { },
+                onContentClick = { uiState -> viewModel.onContentClick(uiState) },
+                onImageClick = { uiState, clickedImageUrl ->
+                    viewModel.onImageClick(
+                        uiState,
+                        clickedImageUrl
+                    )
+                }
+            )
+
         }
     }
 }
