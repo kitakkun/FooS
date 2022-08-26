@@ -3,54 +3,30 @@ package com.example.foos.ui.view.screen
 import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.compiler.plugins.kotlin.EmptyFunctionMetrics.composable
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.foos.FirebaseAuthManager
 import com.example.foos.R
-import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
-import com.example.foos.ui.navargs.PostItemUiStateWithImageUrlType
-import com.example.foos.ui.navargs.PostType
-import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.theme.FooSTheme
-import com.example.foos.ui.view.screen.home.HomeScreen
-import com.example.foos.ui.view.screen.home.HomeViewModel
-import com.example.foos.ui.view.screen.imagedetail.ImageDetailScreen
-import com.example.foos.ui.view.screen.map.MapScreen
-import com.example.foos.ui.view.screen.map.MapViewModel
-import com.example.foos.ui.view.screen.post.PostScreen
-import com.example.foos.ui.view.screen.post.PostViewModel
-import com.example.foos.ui.view.screen.postdetail.PostDetailScreen
-import com.example.foos.ui.view.screen.postdetail.PostDetailViewModel
-import com.example.foos.ui.view.screen.reaction.ReactionScreen
-import com.example.foos.ui.view.screen.reaction.ReactionViewModel
-import com.example.foos.ui.view.screen.setting.SettingScreen
-import com.example.foos.ui.view.screen.setting.SettingViewModel
-import com.example.foos.ui.view.screen.userprofile.UserProfileScreen
-import com.example.foos.ui.view.screen.userprofile.UserProfileViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.google.firebase.firestore.FieldValue
+import kotlinx.coroutines.flow.onEach
 
 /**
  * メインメニューのスクリーン
@@ -82,26 +58,27 @@ fun MainScreen() {
     // 認証済みか確認し、未認証であれば認証を行う
     FirebaseAuthManager.checkSignInState(LocalContext.current)
     val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
 
-    val showBottomBar = rememberSaveable {
-        mutableStateOf(true)
-    }
+    val screenViewModel: ScreenViewModel = hiltViewModel()
 
-    showBottomBar.value = when (currentDestination?.route) {
-        Page.PostCreate.route -> false
-        Page.PostDetail.routeWithParam -> false
-        Page.ImageDetail.routeWithParam -> false
-        else -> true
+    LaunchedEffect(Unit) {
+        screenViewModel.navRoute.collect {
+            navController.navigate(it) {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+        }
     }
 
     FooSTheme {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             backgroundColor = MaterialTheme.colors.background,
-            bottomBar = { if (showBottomBar.value) ScreenBottomNavBar(navController) }
-        ) { innerPadding -> ScreenNavHost(navController, innerPadding) }
+            bottomBar = { ScreenBottomNavBar(navController, onClick={ screen -> screenViewModel.navigate(screen.route) }) }
+        ) { innerPadding -> ScreenNavHost(navController, screenViewModel, innerPadding) }
     }
 }
 
@@ -110,105 +87,44 @@ fun MainScreen() {
  */
 @Composable
 fun ScreenBottomNavBar(
-    navController: NavHostController
+    navController: NavHostController,
+    onClick: (Screen) -> Unit
 ) {
-    val items = listOf(
+    val screens = listOf(
         Screen.Home,
         Screen.Map,
         Screen.Reaction,
         Screen.Setting
     )
-    BottomNavigation {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentDestination = navBackStackEntry?.destination
-        items.forEach { screen ->
-            BottomNavigationItem(
-                icon = { Icon(painterResource(screen.iconId), null) },
-                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                onClick = {
-                    navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            )
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+    if (screens.map { it.route }.contains(currentDestination?.route)) {
+        BottomNavigation {
+            screens.forEach { screen ->
+                MyBottomNavigationItem(
+                    screen = screen,
+                    onClick = onClick,
+                    currentDestination = currentDestination,
+                    navController = navController,
+                )
+            }
         }
     }
 }
 
 /**
- * 画面下部ナビゲーションのNavHost
+ * 画面下部ナビゲーションバーの項目
  */
 @Composable
-fun ScreenNavHost(
+fun RowScope.MyBottomNavigationItem(
+    screen: Screen,
+    currentDestination: NavDestination?,
     navController: NavHostController,
-    innerPadding: PaddingValues
+    onClick: (Screen) -> Unit,
 ) {
-    NavHost(
-        navController,
-        startDestination = Screen.Home.route,
-        Modifier.padding(innerPadding)
-    ) {
-        composable(Screen.Home.route) {
-            val vm: HomeViewModel = hiltViewModel()
-            HomeScreen(vm, navController)
-        }
-        composable(Screen.Map.route) {
-            val vm: MapViewModel = hiltViewModel()
-            MapScreen(vm, navController)
-        }
-        composable(Screen.Reaction.route) {
-            val vm: ReactionViewModel = hiltViewModel()
-            ReactionScreen(vm, navController)
-        }
-        composable(Screen.Setting.route) {
-            val vm: SettingViewModel = hiltViewModel()
-            SettingScreen(vm)
-        }
-        composable(Page.PostCreate.route) {
-            val vm: PostViewModel = hiltViewModel()
-            PostScreen(vm, navController)
-        }
-        composable(
-            Page.UserProfile.routeWithParam,
-            listOf(navArgument("userId") { type = NavType.StringType })
-        ) {
-            val userId = it.arguments?.getString("userId")
-            userId?.let {
-                val vm: UserProfileViewModel = hiltViewModel()
-                vm.setUserId(userId)
-                UserProfileScreen(vm, navController)
-            }
-        }
-        composable(
-            Page.PostDetail.routeWithParam,
-            listOf(navArgument("uiState") { type = PostType })
-        ) {
-            val uiState = it.arguments?.getParcelable<PostItemUiState>("uiState")
-            val vm: PostDetailViewModel = hiltViewModel()
-            uiState?.let {
-                vm.setPostUiState(it)
-                PostDetailScreen(vm, navController)
-            }
-        }
-        composable(Page.ImageDetail.routeWithParam, listOf(
-            navArgument("uiStateWithImageUrl") { type = PostItemUiStateWithImageUrlType }
-        )
-        ) {
-            val uiStateWithImageUrl =
-                it.arguments?.getParcelable<PostItemUiStateWithImageUrl>("uiStateWithImageUrl")
-            uiStateWithImageUrl?.let {
-                ImageDetailScreen(navController = navController, post = it)
-            }
-        }
-    }
+    BottomNavigationItem(
+        icon = { Icon(painterResource(screen.iconId), null) },
+        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+        onClick = { onClick.invoke(screen) }
+    )
 }
-
-
-
-
-
-

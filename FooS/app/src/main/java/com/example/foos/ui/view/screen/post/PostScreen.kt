@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -40,6 +41,13 @@ import com.google.accompanist.permissions.rememberPermissionState
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PostScreen(viewModel: PostViewModel, navController: NavController) {
+
+    LaunchedEffect(Unit) {
+        viewModel.navUpEvent.collect {
+            navController.navigateUp()
+        }
+    }
+
     val uiState by viewModel.postUiState.collectAsState()
 
     val context = LocalContext.current
@@ -55,43 +63,25 @@ fun PostScreen(viewModel: PostViewModel, navController: NavController) {
         permission = Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
-    if (uiState.posting) {
-        // 画面を暗くして無反応にし、処理中であることを示すインディケータを表示
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .pointerInput(Unit) { },
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text("Posting...")
-            CircularProgressIndicator()
-        }
-    } else {
-
-        PostUI(
-            onCanceled = { navController.navigateUp() },
-            onSent = {
-                viewModel.post(navController)
-            },
-            onAddImagesBtnClicked = {
-                if (filePermissionState.status == PermissionStatus.Granted) {
-                    launcher.launch("image/*")
-                } else {
-                    filePermissionState.launchPermissionRequest()
-                    launcher.launch("image/*")
-                }
-            },
-            uiState = uiState,
-            onTextUpdate = { viewModel.onTextFieldUpdated(it) },
-        )
-    }
+    PostUI(
+        onCanceled = { navController.navigateUp() },
+        onSent = { viewModel.post() },
+        onAddImagesBtnClicked = {
+            if (filePermissionState.status == PermissionStatus.Granted) {
+                launcher.launch("image/*")
+            } else {
+                filePermissionState.launchPermissionRequest()
+                launcher.launch("image/*")
+            }
+        },
+        uiState = uiState,
+        onTextUpdate = { viewModel.onTextFieldUpdated(it) },
+    )
 }
 
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun PostUI(
-    uiState: PostScreenUiState = PostScreenUiState("", listOf(), false),
+    uiState: PostScreenUiState,
     onCanceled: () -> Unit = {},
     onSent: () -> Unit = {},
     onAddImagesBtnClicked: () -> Unit = {},

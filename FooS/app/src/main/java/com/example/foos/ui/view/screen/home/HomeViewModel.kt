@@ -3,9 +3,8 @@ package com.example.foos.ui.view.screen.home
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
-import com.example.foos.data.domain.GetLatestPostsWithUserUseCase
-import com.example.foos.data.domain.GetOlderPostsWithUserUseCase
+import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
+import com.example.foos.data.domain.GetPostsWithUserUseCase
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
 import com.example.foos.ui.state.screen.home.HomeScreenUiState
 import com.example.foos.ui.state.screen.home.PostItemUiState
@@ -13,9 +12,7 @@ import com.example.foos.ui.view.screen.Page
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,26 +21,25 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getLatestPostsWithUserUseCase: GetLatestPostsWithUserUseCase,
-    private val getOlderPostsWithUserUseCase: GetOlderPostsWithUserUseCase,
+    private val getPostsWithUserUseCase: GetPostsWithUserUseCase,
+    private val convertPostWithUserToUiStateUseCase: ConvertPostWithUserToUiStateUseCase
 ) : ViewModel() {
 
     // HomeScreenのUI状態
     private var _uiState = MutableStateFlow(HomeScreenUiState(listOf(), false))
     val uiState: StateFlow<HomeScreenUiState> get() = _uiState
 
-    private lateinit var navController: NavController
-
-    fun setNavController(navController: NavController) {
-        this.navController = navController
-    }
+    private val _navEvent = MutableSharedFlow<String>()
+    val navEvent: SharedFlow<String> get() = _navEvent
 
     /**
      * ユーザアイコンのクリックイベント
      * @param userId クリックされたユーザのID
      */
     fun onUserIconClick(userId: String) {
-        navController.navigate("${Page.UserProfile.route}/$userId")
+        viewModelScope.launch {
+            _navEvent.emit("${Page.UserProfile.route}/$userId")
+        }
     }
 
     /**
@@ -51,8 +47,10 @@ class HomeViewModel @Inject constructor(
      * @param uiState クリックされた投稿のUI状態
      */
     fun onContentClick(uiState: PostItemUiState) {
-        val data = Uri.encode(Gson().toJson(uiState))
-        navController.navigate("${Page.PostDetail.route}/$data")
+        viewModelScope.launch {
+            val data = Uri.encode(Gson().toJson(uiState))
+            _navEvent.emit("${Page.PostDetail.route}/$data")
+        }
     }
 
     /**
@@ -61,41 +59,57 @@ class HomeViewModel @Inject constructor(
      * @param clickedImageUrl クリックされた画像のURL
      */
     fun onImageClick(uiState: PostItemUiState, clickedImageUrl: String) {
-        val uiStateWithImageUrl =
-            PostItemUiStateWithImageUrl(uiState, uiState.attachedImages.indexOf(clickedImageUrl))
-        val data = Uri.encode(Gson().toJson(uiStateWithImageUrl))
-        navController.navigate("${Page.ImageDetail.route}/$data")
-    }
-
-    fun fetchNewPosts() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _uiState.update { it.copy(isRefreshing = true) }
-            val postsWithUser = getLatestPostsWithUserUseCase()
-            val posts = postsWithUser.map {
-                PostItemUiState(
-                    postId = it.databasePost.postId,
-                    userId = it.databaseUser.userId,
-                    username = it.databaseUser.username,
-                    userIcon = it.databaseUser.profileImage,
-                    content = it.databasePost.content,
-                    attachedImages = it.databasePost.attachedImages,
-                    latitude = it.databasePost.latitude,
-                    longitude = it.databasePost.longitude,
-                    createdAt = it.databasePost.createdAt,
+        viewModelScope.launch {
+            val uiStateWithImageUrl =
+                PostItemUiStateWithImageUrl(
+                    uiState,
+                    uiState.attachedImages.indexOf(clickedImageUrl)
                 )
-            }
-            _uiState.update {
-                it.copy(
-                    posts = (posts + it.posts).distinct(),
-                    isRefreshing = false
-                )
-            }
+            val data = Uri.encode(Gson().toJson(uiStateWithImageUrl))
+            _navEvent.emit("${Page.ImageDetail.route}/$data")
         }
     }
 
+    /**
+     * 新しい投稿をフェッチします（リフレッシュ）
+     */
+    fun onRefresh() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _uiState.update { it.copy(isRefreshing = true) }
+            val posts = getPostsWithUserUseCase().map { postWithUser ->
+                convertPostWithUserToUiStateUseCase(postWithUser)
+            }
+            _uiState.update { it.copy(posts = posts, isRefreshing = false) }
+        }
+    }
+
+    /**
+     * 新しい投稿をフェッチします（サイレント）
+     */
+    fun fetchNewerPosts() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val posts = getPostsWithUserUseCase().map { postWithUser ->
+                convertPostWithUserToUiStateUseCase(postWithUser)
+            }
+            _uiState.update { it.copy(posts = (posts + it.posts).distinct()) }
+        }
+    }
+
+    /**
+     * 古い投稿をフェッチします
+     */
     fun fetchOlderPosts() {
         viewModelScope.launch {
-//            postsRepository.fetchOlderPosts()
+            val oldestPost = uiState.value.posts.last()
+            val oldestDate = oldestPost.createdAt
+            oldestDate?.let {
+                val posts = getPostsWithUserUseCase(it).map { postWithUser ->
+                    convertPostWithUserToUiStateUseCase(postWithUser)
+                }
+                _uiState.update { state ->
+                    state.copy(posts = (state.posts + posts).distinct())
+                }
+            }
         }
     }
 
