@@ -1,9 +1,6 @@
 package com.example.foos.di
 
-import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
-import com.example.foos.data.domain.ConvertReactionToUiStateUseCase
-import com.example.foos.data.domain.GetPostsWithUserUseCase
-import com.example.foos.data.domain.GetReactionsByUserIdUseCase
+import com.example.foos.data.domain.*
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.ReactionsRepository
@@ -30,10 +27,16 @@ object Modules {
         GetReactionsByUserIdUseCase(UsersRepository, PostsRepository, ReactionsRepository)
 
     @Provides
-    fun provideConvertReactionToUiStateUseCase(): ConvertReactionToUiStateUseCase = ConvertReactionToUiStateUseCase()
+    fun provideGetPostsWithUserByUserIdWithDateUseCase(): GetPostsWithUserByUserIdWithDateUseCase =
+        GetPostsWithUserByUserIdWithDateUseCase(PostsRepository, UsersRepository)
 
     @Provides
-    fun provideConvertPostWithUserToUiStateUseCase(): ConvertPostWithUserToUiStateUseCase = ConvertPostWithUserToUiStateUseCase()
+    fun provideConvertReactionToUiStateUseCase(): ConvertReactionToUiStateUseCase =
+        ConvertReactionToUiStateUseCase()
+
+    @Provides
+    fun provideConvertPostWithUserToUiStateUseCase(): ConvertPostWithUserToUiStateUseCase =
+        ConvertPostWithUserToUiStateUseCase()
 
     @Provides
     @Singleton

@@ -22,7 +22,7 @@ import java.util.*
  */
 object PostsRepository {
 
-    private const val DEFAULT_LOAD_LIMIT: Long = 30
+    private const val DEFAULT_LOAD_LIMIT: Long = 15
     private const val MAX_UPLOAD_IMAGE_SIZE = 1024
     private const val COLLECTION = "posts"
 
@@ -42,7 +42,7 @@ object PostsRepository {
         val collection = Firebase.firestore.collection(COLLECTION)
         var query = collection.whereEqualTo("userId", userId)
         start?.let { query = query.whereGreaterThanOrEqualTo("createdAt", start) }
-        end?.let { query = query.whereGreaterThanOrEqualTo("createdAt", end) }
+        end?.let { query = query.whereLessThanOrEqualTo("createdAt", end) }
         query = query.orderBy("createdAt", Query.Direction.DESCENDING)
             .limit(count)
         return query.get().await().toObjects(DatabasePost::class.java)
