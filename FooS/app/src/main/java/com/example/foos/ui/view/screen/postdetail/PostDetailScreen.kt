@@ -1,6 +1,5 @@
 package com.example.foos.ui.view.screen.postdetail
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -64,7 +63,11 @@ fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavControlle
                 userId = postItemUiState.userId,
                 onClick = { viewModel.onUserInfoClicked() })
             Spacer(Modifier.weight(1f))
-            ReactionButton(onReactionClicked = { reaction -> viewModel.onReactionButtonClicked(reaction)})
+            ReactionButton(onReactionClicked = { reaction ->
+                viewModel.onReactionButtonClicked(
+                    reaction
+                )
+            })
         }
         Spacer(Modifier.height(24.dp))
         Text(postItemUiState.content)
@@ -165,7 +168,11 @@ fun ReactionButton(
     var expanded by remember { mutableStateOf(false) }
     IconButton(onClick = { expanded = !expanded }) {
         Icon(painterResource(R.drawable.ic_add_reaction), null)
-        ReactionDropdown(expanded = expanded, onDismissRequest = { expanded = false }, onReactionClicked = onReactionClicked)
+        ReactionDropdown(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            onReactionClicked = onReactionClicked
+        )
     }
 }
 
@@ -197,7 +204,7 @@ fun ReactionDropdown(
             modifier = Modifier.width(dropdownWidth)
         ) {
             reactions.forEach {
-                DropdownMenuItem(onClick = {onReactionClicked.invoke(it)}) {
+                DropdownMenuItem(onClick = { onReactionClicked.invoke(it) }) {
                     Text(
                         text = it,
                         fontSize = 30.sp,

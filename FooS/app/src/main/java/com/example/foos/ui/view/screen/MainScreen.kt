@@ -1,6 +1,5 @@
 package com.example.foos.ui.view.screen
 
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.RowScope
@@ -9,8 +8,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -25,8 +22,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.foos.FirebaseAuthManager
 import com.example.foos.R
 import com.example.foos.ui.theme.FooSTheme
-import com.google.firebase.firestore.FieldValue
-import kotlinx.coroutines.flow.onEach
 
 /**
  * メインメニューのスクリーン
@@ -77,7 +72,11 @@ fun MainScreen() {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             backgroundColor = MaterialTheme.colors.background,
-            bottomBar = { ScreenBottomNavBar(navController, onClick={ screen -> screenViewModel.navigate(screen.route) }) }
+            bottomBar = {
+                ScreenBottomNavBar(
+                    navController,
+                    onClick = { screen -> screenViewModel.navigate(screen.route) })
+            }
         ) { innerPadding -> ScreenNavHost(navController, screenViewModel, innerPadding) }
     }
 }

@@ -30,7 +30,10 @@ object ReactionsRepository {
      * @param received 受け取ったものを選ぶかどうか
      * @return 指定したユーザに紐づくリアクションのリスト
      */
-    suspend fun fetchReactionsByUserId(userId: String, received: Boolean = true): List<DatabaseReaction> {
+    suspend fun fetchReactionsByUserId(
+        userId: String,
+        received: Boolean = true
+    ): List<DatabaseReaction> {
         val field = if (received) "to" else "from"
         return Firebase.firestore.collection(COLLECTION)
             .whereEqualTo(field, userId)

@@ -4,8 +4,6 @@ import com.example.foos.data.model.PostWithUser
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.UsersRepository
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import java.util.*
 import javax.inject.Inject
 
@@ -18,7 +16,11 @@ class GetPostsWithUserByUserIdWithDateUseCase @Inject constructor(
     private val usersRepository: UsersRepository,
 ) {
 
-    suspend operator fun invoke(userId: String, start: Date? = null, end: Date? = null) : List<PostWithUser> {
+    suspend operator fun invoke(
+        userId: String,
+        start: Date? = null,
+        end: Date? = null
+    ): List<PostWithUser> {
         val jobs = mutableListOf<Job>()
         val user = usersRepository.fetchByUserId(userId = userId) ?: return listOf()
         val posts = postsRepository.fetchByUserIdWithDate(userId = userId, start = start, end = end)

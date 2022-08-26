@@ -1,6 +1,5 @@
 package com.example.foos.ui.state.screen.userprofile
 
-import androidx.compose.runtime.Composable
 import com.example.foos.ui.state.screen.home.PostItemUiState
 
 /**

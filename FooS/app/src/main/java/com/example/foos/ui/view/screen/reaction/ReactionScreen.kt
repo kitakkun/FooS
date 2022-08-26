@@ -18,9 +18,7 @@ import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.state.screen.reaction.ReactionItemUiState
 import com.example.foos.ui.view.component.UserIcon
-import com.example.foos.ui.view.screen.home.PostItemList
 import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable

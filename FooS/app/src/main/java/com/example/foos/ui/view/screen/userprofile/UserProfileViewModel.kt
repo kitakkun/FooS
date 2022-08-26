@@ -1,22 +1,16 @@
 package com.example.foos.ui.view.screen.userprofile
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
-import com.example.foos.data.domain.GetPostsByUserIdUseCase
-import com.example.foos.data.domain.GetUserInfoUseCase
-import com.example.foos.data.model.Post
-import com.example.foos.data.domain.*
+import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
+import com.example.foos.data.domain.GetPostsWithUserByUserIdWithDateUseCase
 import com.example.foos.data.repository.UsersRepository
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
 import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.state.screen.userprofile.UserProfileScreenUiState
 import com.example.foos.ui.view.screen.Page
 import com.google.gson.Gson
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -112,7 +106,11 @@ class UserProfileViewModel @Inject constructor(
             val oldestPost = uiState.value.posts.last()
             val oldestDate = oldestPost.createdAt
             oldestDate?.let {
-                val posts = getPostsWithUserByUserIdWithDateUseCase(uiState.value.userId, null, oldestDate).map {
+                val posts = getPostsWithUserByUserIdWithDateUseCase(
+                    uiState.value.userId,
+                    null,
+                    oldestDate
+                ).map {
                     convertPostWithUserToUiStateUseCase(it)
                 }
                 _uiState.update { state ->

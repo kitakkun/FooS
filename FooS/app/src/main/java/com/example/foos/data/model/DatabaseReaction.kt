@@ -21,5 +21,5 @@ data class DatabaseReaction(
     @ServerTimestamp
     val createdAt: Date? = null,
 ) {
-    constructor(): this("", "", "", "", "", null)
+    constructor() : this("", "", "", "", "", null)
 }

@@ -6,7 +6,10 @@ import com.example.foos.data.model.Reaction
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.data.repository.UsersRepository
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.joinAll
 
 /**
  * 該当のユーザに関連するリアクションを取得
@@ -17,7 +20,7 @@ class GetReactionsByUserIdUseCase constructor(
     private val reactionsRepository: ReactionsRepository,
 ) {
 
-    suspend operator fun invoke(userId: String) : List<Reaction> {
+    suspend operator fun invoke(userId: String): List<Reaction> {
         val postJobs = mutableListOf<Job>()
         val userJobs = mutableListOf<Job>()
         val reactions = reactionsRepository.fetchReactionsByUserId(userId, true)
@@ -25,8 +28,18 @@ class GetReactionsByUserIdUseCase constructor(
         val users = mutableMapOf<String, DatabaseUser?>()
         coroutineScope {
             reactions.forEach {
-                postJobs.add (async { posts.put(it.reactionId, postsRepository.fetchByPostId(it.postId)) })
-                userJobs.add (async { users.put(it.reactionId, usersRepository.fetchByUserId(it.from)) })
+                postJobs.add(async {
+                    posts.put(
+                        it.reactionId,
+                        postsRepository.fetchByPostId(it.postId)
+                    )
+                })
+                userJobs.add(async {
+                    users.put(
+                        it.reactionId,
+                        usersRepository.fetchByUserId(it.from)
+                    )
+                })
             }
         }
         postJobs.joinAll()

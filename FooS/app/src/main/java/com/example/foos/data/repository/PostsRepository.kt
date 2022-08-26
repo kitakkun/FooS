@@ -14,7 +14,6 @@ import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.*
 import java.util.*
 
 /**
@@ -91,16 +90,16 @@ object PostsRepository {
      * @param userIds ユーザIDのリスト
      * @param count 取得するデータ数
      */
-     suspend fun fetchByUserIds(
+    suspend fun fetchByUserIds(
         userIds: List<String>,
         count: Long = DEFAULT_LOAD_LIMIT
-     ): List<DatabasePost> {
-         val collection = Firebase.firestore.collection(COLLECTION)
-         var query = collection.whereIn("userId", userIds)
-         query = query.orderBy("createdAt", Query.Direction.DESCENDING)
-             .limit(count)
-         return query.get().await().toObjects(DatabasePost::class.java)
-     }
+    ): List<DatabasePost> {
+        val collection = Firebase.firestore.collection(COLLECTION)
+        var query = collection.whereIn("userId", userIds)
+        query = query.orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(count)
+        return query.get().await().toObjects(DatabasePost::class.java)
+    }
 
     /**
      * 投稿を取得します
@@ -163,7 +162,7 @@ object PostsRepository {
     /**
      * 古い投稿を取得します
      */
-    suspend fun fetchOlderPosts(from: Date) : List<DatabasePost> {
+    suspend fun fetchOlderPosts(from: Date): List<DatabasePost> {
         val response = Firebase.firestore.collection(COLLECTION)
             .whereLessThanOrEqualTo("createdAt", from)
             .orderBy("createdAt", Query.Direction.DESCENDING)

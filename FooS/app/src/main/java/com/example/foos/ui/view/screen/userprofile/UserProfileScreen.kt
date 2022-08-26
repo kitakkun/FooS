@@ -20,7 +20,6 @@ import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.screen.home.PostItemList
-import kotlinx.coroutines.coroutineScope
 
 @Composable
 fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavController) {

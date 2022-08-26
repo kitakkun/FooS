@@ -1,7 +1,6 @@
 package com.example.foos.data.domain
 
 import com.example.foos.data.model.DatabasePost
-import com.example.foos.data.model.Reaction
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.data.repository.UsersRepository

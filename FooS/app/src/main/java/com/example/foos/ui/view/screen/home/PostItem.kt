@@ -72,7 +72,7 @@ fun LazyListState.OnAppearLastItem(onAppearLastItem: (Int) -> Unit) {
     val isReachedToListEnd by remember {
         derivedStateOf {
             layoutInfo.visibleItemsInfo.size < layoutInfo.totalItemsCount &&
-            layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
+                    layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
         }
     }
 

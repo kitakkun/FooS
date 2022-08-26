@@ -1,7 +1,9 @@
 package com.example.foos.ui.view.screen.home
 
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavController
 import com.example.foos.ui.view.component.RoundIconActionButton
 import com.example.foos.ui.view.screen.Page
