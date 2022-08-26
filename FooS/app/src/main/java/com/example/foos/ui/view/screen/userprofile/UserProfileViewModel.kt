@@ -1,15 +1,19 @@
 package com.example.foos.ui.view.screen.userprofile
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
 import com.example.foos.data.domain.GetPostsWithUserByUserIdWithDateUseCase
+import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.UsersRepository
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
 import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.state.screen.userprofile.UserProfileScreenUiState
 import com.example.foos.ui.view.screen.Page
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserProfileViewModel @Inject constructor(
     private val usersRepository: UsersRepository,
+    private val followRepository: FollowRepository,
     private val getPostsWithUserByUserIdWithDateUseCase: GetPostsWithUserByUserIdWithDateUseCase,
     private val convertPostWithUserToUiStateUseCase: ConvertPostWithUserToUiStateUseCase,
 ) : ViewModel() {
@@ -35,6 +40,26 @@ class UserProfileViewModel @Inject constructor(
 
     private var _scrollUpEvent = MutableSharedFlow<Boolean>()
     val scrollUpEvent = _scrollUpEvent.asSharedFlow()
+
+    fun onFollowButtonClick() {
+        val following = uiState.value.following
+        viewModelScope.launch(Dispatchers.IO) {
+            Firebase.auth.uid?.let {
+                Log.d("DEBUGGER", "CREATE")
+                if (!following) followRepository.create(it, uiState.value.userId)
+                else followRepository.delete(it, uiState.value.userId)
+                val followee = followRepository.fetchFollowees(it)
+                val follower = followRepository.fetchFollowers(it)
+                _uiState.update {
+                    it.copy (
+                        followerCount = follower.size,
+                        followeeCount = followee.size,
+                        following = !following
+                    )
+                }
+            }
+        }
+    }
 
     fun onUserIconClick() {
         viewModelScope.launch {
@@ -74,8 +99,10 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-    suspend fun fetchUserInfo(userId: String) {
+    private suspend fun fetchUserInfo(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            val followers = followRepository.fetchFollowers(userId)
+            val followees = followRepository.fetchFollowees(userId)
             val user = usersRepository.fetchByUserId(userId)
             user?.let {
                 _uiState.update {
@@ -83,13 +110,17 @@ class UserProfileViewModel @Inject constructor(
                         userId = user.userId,
                         userIcon = user.profileImage,
                         username = user.username,
+                        followeeCount = followees.size,
+                        followerCount = followers.size,
+                        following = followers.map { followInfo -> followInfo.follower }
+                            .contains(Firebase.auth.uid.toString())
                     )
                 }
             }
         }
     }
 
-    suspend fun fetchPosts(userId: String) {
+    private suspend fun fetchPosts(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val posts = getPostsWithUserByUserIdWithDateUseCase(userId).map {
                 convertPostWithUserToUiStateUseCase(it)
