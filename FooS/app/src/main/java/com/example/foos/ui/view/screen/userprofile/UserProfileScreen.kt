@@ -1,7 +1,10 @@
 package com.example.foos.ui.view.screen.userprofile
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,8 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foos.R
+import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.state.screen.userprofile.UserProfileScreenUiState
+import com.example.foos.ui.view.component.Tabs
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.screen.home.PostItemList
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Composable
 fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavController) {
@@ -39,28 +47,60 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
         }
     }
 
+    Column() {
+        UserProfile(
+            username = uiState.value.username,
+            userId = uiState.value.userId,
+            bio = "",
+            profileImage = uiState.value.userIcon,
+            followerNum = uiState.value.followerCount,
+            followeeNum = uiState.value.followeeCount,
+            onFollowButtonClick = {viewModel.onFollowButtonClick()},
+            following = uiState.value.following,
+        )
+        Tabs(
+            titles = listOf(
+                { Text(stringResource(id = R.string.tab_posts)) },
+                { Text(stringResource(id = R.string.tab_reactions)) },
+            ),
+            contents = listOf(
+                {
+                    TabPosts(listState = listState,
+                        uiState = uiState.value,
+                        onUserIconClick = { viewModel.onUserIconClick() },
+                        onContentClick = { uiState -> viewModel.onContentClick(uiState) },
+                        onImageClick = { uiState, clickedImageUrl ->
+                            viewModel.onImageClick(
+                                uiState,
+                                clickedImageUrl
+                            )
+                        },
+                        onAppearLastItem = { viewModel.fetchOlderPosts() }
+                    )
+                },
+                { Text("hello") }
+            ),
+        )
+    }
+}
+
+@Composable
+fun TabPosts(
+    listState: LazyListState,
+    uiState: UserProfileScreenUiState,
+    onUserIconClick: () -> Unit,
+    onContentClick: (PostItemUiState) -> Unit,
+    onImageClick: (PostItemUiState, String) -> Unit,
+    onAppearLastItem: () -> Unit,
+) {
+
     PostItemList(
         listState = listState,
-        uiStates = uiState.value.posts,
-        headerContent = {
-            UserProfile(
-                uiState.value.username,
-                uiState.value.userId,
-                "",
-                uiState.value.userIcon,
-                10,
-                10
-            )
-        },
-        onUserIconClick = { viewModel.onUserIconClick() },
-        onContentClick = { uiState -> viewModel.onContentClick(uiState) },
-        onImageClick = { uiState, clickedImageUrl ->
-            viewModel.onImageClick(
-                uiState,
-                clickedImageUrl
-            )
-        },
-        onAppearLastItem = { viewModel.fetchOlderPosts() }
+        uiStates = uiState.posts,
+        onUserIconClick = { onUserIconClick.invoke() },
+        onContentClick = onContentClick,
+        onImageClick = onImageClick,
+        onAppearLastItem = { onAppearLastItem.invoke() },
     )
 }
 
@@ -77,6 +117,9 @@ fun UserProfile(
     profileImage: String,
     followerNum: Int,
     followeeNum: Int,
+    following: Boolean,
+    onFollowButtonClick: () -> Unit = {},
+    onEditButtonClick: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier.padding(16.dp)
@@ -85,12 +128,22 @@ fun UserProfile(
             verticalAlignment = Alignment.CenterVertically
         ) {
             UserIcon(url = profileImage, modifier = Modifier.size(70.dp))
-            Spacer(Modifier.width(16.dp))
-            Column() {
-                Text(username, fontWeight = FontWeight.Bold, fontSize = 15.sp)
-                Text(userId, fontWeight = FontWeight.Light, fontSize = 12.sp)
+            Spacer(Modifier.weight(1f))
+            if (userId == Firebase.auth.uid) {
+                Button(onClick = onEditButtonClick, shape = RoundedCornerShape(50)) {
+                    Text(text = stringResource(id = R.string.edit_profile))
+                }
+            } else {
+                Button(onClick = onFollowButtonClick, shape = RoundedCornerShape(50)) {
+                    if (following) Text(text = stringResource(id = R.string.following))
+                    else Text(text = stringResource(id = R.string.followers))
+                }
             }
         }
+        Spacer(Modifier.height(16.dp))
+        Text(username, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+        Text(userId, fontWeight = FontWeight.Light, fontSize = 12.sp)
+        Spacer(Modifier.height(16.dp))
         Biography(bio = bio)
         FollowInfo(followerNum = followerNum, followeeNum = followeeNum)
     }
@@ -144,5 +197,5 @@ fun FollowInfo(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun UserProfilePreview() {
-    UserProfile("username", "userId", "users biography...", "", 120, 50)
+    UserProfile("username", "userId", "users biography...", "", 120, 50, false)
 }

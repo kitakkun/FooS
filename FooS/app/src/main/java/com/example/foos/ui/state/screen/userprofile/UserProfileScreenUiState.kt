@@ -14,10 +14,18 @@ data class UserProfileScreenUiState(
     val username: String,
     val userIcon: String,
     val posts: List<PostItemUiState>,
+    val followerCount: Int,
+    val followeeCount: Int,
+    val following: Boolean = false,
 ) {
     companion object {
         val Default = UserProfileScreenUiState(
-            "userId", "username", "", listOf()
+            userId = "userId",
+            username = "username",
+            userIcon = "",
+            posts = listOf(),
+            followerCount = 0,
+            followeeCount = 0,
         )
     }
 }

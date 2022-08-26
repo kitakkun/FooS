@@ -14,4 +14,8 @@ data class DatabaseFollow(
     val followee: String,
     @ServerTimestamp
     val createdAt: Date? = null,
-)
+) {
+    constructor() : this(
+        follower = "", followee = ""
+    )
+}
