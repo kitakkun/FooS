@@ -4,7 +4,9 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
+import com.example.foos.ui.view.component.RoundButtonRow
 import com.example.foos.ui.view.component.RoundIconActionButton
 import com.example.foos.ui.view.screen.Page
 import com.example.foos.ui.view.screen.Screen
@@ -52,6 +54,7 @@ fun HomeScreen(
         onRefresh = { viewModel.onRefresh() }
     ) {
         PostItemList(
+            header = {RoundButtonRow(titles = listOf("Nearby", "Following", "Trending"), defaultColor = Color.LightGray, selectedColor = Color.Green)},
             listState = listState,
             uiStates = uiState.value.posts,
             onUserIconClick = { userId -> viewModel.onUserIconClick(userId) },

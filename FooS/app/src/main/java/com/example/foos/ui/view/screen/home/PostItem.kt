@@ -45,6 +45,7 @@ import java.util.*
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PostItemList(
+    header: @Composable() () -> Unit = {},
     listState: LazyListState = rememberLazyListState(),
     uiStates: List<PostItemUiState>,
     onUserIconClick: (userId: String) -> Unit = { },
@@ -58,6 +59,9 @@ fun PostItemList(
         state = listState,
         modifier = Modifier.fillMaxSize(),
     ) {
+        item {
+            header()
+        }
         items(uiStates) { post ->
             PostItem(post, onUserIconClick, onContentClick, onImageClick)
             Divider(thickness = 1.dp, color = Color.LightGray)
