@@ -59,7 +59,10 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
             following = uiState.value.following,
         )
         Tabs(
-            titles = listOf({ Text("Posts") }, { Text("Reactions") }),
+            titles = listOf(
+                { Text(stringResource(id = R.string.tab_posts)) },
+                { Text(stringResource(id = R.string.tab_reactions)) },
+            ),
             contents = listOf(
                 {
                     TabPosts(listState = listState,
@@ -128,12 +131,12 @@ fun UserProfile(
             Spacer(Modifier.weight(1f))
             if (userId == Firebase.auth.uid) {
                 Button(onClick = onEditButtonClick, shape = RoundedCornerShape(50)) {
-                    Text(text = "Edit profile")
+                    Text(text = stringResource(id = R.string.edit_profile))
                 }
             } else {
                 Button(onClick = onFollowButtonClick, shape = RoundedCornerShape(50)) {
-                    if (following) Text(text = "Following")
-                    else Text(text = "Follow")
+                    if (following) Text(text = stringResource(id = R.string.following))
+                    else Text(text = stringResource(id = R.string.followers))
                 }
             }
         }

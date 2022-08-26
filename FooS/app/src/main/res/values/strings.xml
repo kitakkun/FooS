@@ -17,4 +17,8 @@
     <string name="emoji_yummy">&#128523;</string>
     <string name="following">Following</string>
     <string name="followers">Followers</string>
+    <string name="follow">Follow</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="tab_posts">Posts</string>
+    <string name="tab_reactions">Reactions</string>
 </resources>
