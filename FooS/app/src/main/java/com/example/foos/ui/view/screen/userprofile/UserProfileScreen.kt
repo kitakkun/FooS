@@ -36,6 +36,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                 10
             )
         },
+        onAppearLastItem = {viewModel.fetchOlderPosts()}
     )
 }
 

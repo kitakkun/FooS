@@ -2,13 +2,11 @@ package com.example.foos.ui.view.screen.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +26,7 @@ import com.example.foos.ui.constants.FONT_SIZE_USERNAME
 import com.example.foos.ui.constants.PADDING_MEDIUM
 import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.view.component.UserIcon
+import kotlinx.coroutines.flow.filter
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -49,8 +48,14 @@ fun PostItemList(
     onContentClick: (uiState: PostItemUiState) -> Unit = { },
     onImageClick: (uiState: PostItemUiState, clickedImageUrl: String) -> Unit = { _, _ -> },
     headerContent: @Composable() () -> Unit = {},
+    onAppearLastItem: (Int) -> Unit = {},
 ) {
+    val lazyListState = rememberLazyListState().apply {
+        OnAppearLastItem(onAppearLastItem = onAppearLastItem)
+    }
+
     LazyColumn(
+        state = lazyListState,
         modifier = Modifier.fillMaxSize(),
     ) {
         item {
@@ -62,6 +67,25 @@ fun PostItemList(
         }
     }
 }
+
+@Composable
+fun LazyListState.OnAppearLastItem(onAppearLastItem: (Int) -> Unit) {
+    val isReachedToListEnd by remember {
+        derivedStateOf {
+            layoutInfo.visibleItemsInfo.size < layoutInfo.totalItemsCount &&
+            layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        snapshotFlow { isReachedToListEnd }
+            .filter { it }
+            .collect {
+                onAppearLastItem(layoutInfo.totalItemsCount)
+            }
+    }
+}
+
 
 /**
  * タイムラインに表示する投稿アイテム一つに対応するコンポーザブル

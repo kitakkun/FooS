@@ -3,7 +3,7 @@ package com.example.foos.data.domain
 import com.example.foos.data.model.Reaction
 import com.example.foos.ui.state.screen.reaction.ReactionItemUiState
 
-class ConvertReactionToUiState {
+class ConvertReactionToUiStateUseCase {
 
     operator fun invoke(reaction: Reaction): ReactionItemUiState =
         ReactionItemUiState(

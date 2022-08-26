@@ -1,5 +1,6 @@
 package com.example.foos.ui.view.screen
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.RowScope
@@ -24,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.foos.FirebaseAuthManager
 import com.example.foos.R
 import com.example.foos.ui.theme.FooSTheme
+import com.google.firebase.firestore.FieldValue
 import kotlinx.coroutines.flow.onEach
 
 /**

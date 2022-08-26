@@ -3,8 +3,7 @@ package com.example.foos.ui.view.screen.userprofile
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foos.data.domain.GetPostsByUserIdUseCase
-import com.example.foos.data.domain.GetUserInfoUseCase
+import com.example.foos.data.domain.*
 import com.example.foos.data.repository.UsersRepository
 import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.state.screen.userprofile.UserProfileScreenUiState
@@ -22,8 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class UserProfileViewModel @Inject constructor(
     private val usersRepository: UsersRepository,
-    private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val getPostsByUserIdUseCase: GetPostsByUserIdUseCase,
+    private val getPostsWithUserByUserIdWithDateUseCase: GetPostsWithUserByUserIdWithDateUseCase,
+    private val convertPostWithUserToUiStateUseCase: ConvertPostWithUserToUiStateUseCase,
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(UserProfileScreenUiState.Default)
@@ -31,7 +30,7 @@ class UserProfileViewModel @Inject constructor(
 
     fun setUserId(userId: String) {
         viewModelScope.launch {
-            fetchUserPosts(userId)
+            fetchPosts(userId)
             fetchUserInfo(userId)
         }
     }
@@ -51,21 +50,30 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-    suspend fun fetchUserPosts(userId: String) {
+    suspend fun fetchPosts(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val posts = getPostsByUserIdUseCase(userId).map {
-                PostItemUiState(
-                    postId = it.post.postId,
-                    userId = it.user.userId,
-                    username = it.user.username,
-                    userIcon = it.user.profileImage,
-                    content = it.post.content,
-                    attachedImages = it.post.attachedImages,
-                    createdAt = it.post.createdAt
-                )
+            val posts = getPostsWithUserByUserIdWithDateUseCase(userId).map {
+                convertPostWithUserToUiStateUseCase(it)
             }
             _uiState.update { it.copy(posts = posts) }
-            Log.d("FETCHLOG", "fetching finished")
+        }
+    }
+
+    /**
+     * 古い投稿をフェッチします
+     */
+    fun fetchOlderPosts() {
+        viewModelScope.launch {
+            val oldestPost = uiState.value.posts.last()
+            val oldestDate = oldestPost.createdAt
+            oldestDate?.let {
+                val posts = getPostsWithUserByUserIdWithDateUseCase(uiState.value.userId, null, oldestDate).map {
+                    convertPostWithUserToUiStateUseCase(it)
+                }
+                _uiState.update { state ->
+                    state.copy(posts = (state.posts + posts).distinct())
+                }
+            }
         }
     }
 

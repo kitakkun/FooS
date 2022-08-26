@@ -1,10 +1,8 @@
 package com.example.foos.ui.view.screen.reaction
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foos.data.domain.ConvertReactionToUiState
+import com.example.foos.data.domain.ConvertReactionToUiStateUseCase
 import com.example.foos.data.domain.GetReactionsByUserIdUseCase
 import com.example.foos.ui.state.screen.reaction.ReactionScreenUiState
 import com.google.firebase.auth.ktx.auth
@@ -19,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReactionViewModel @Inject constructor(
     private val getReactionsByUserIdUseCase: GetReactionsByUserIdUseCase,
-    private val convertReactionToUiState: ConvertReactionToUiState,
+    private val convertReactionToUiStateUseCase: ConvertReactionToUiStateUseCase,
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(ReactionScreenUiState(listOf(), false))
@@ -30,7 +28,7 @@ class ReactionViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(isRefreshing = true)
             _uiState.value = _uiState.value.copy(
                 reactions = getReactionsByUserIdUseCase.invoke(Firebase.auth.uid.toString())
-                    .map { convertReactionToUiState.invoke(it) })
+                    .map { convertReactionToUiStateUseCase.invoke(it) })
             _uiState.value = _uiState.value.copy(isRefreshing = false)
         }
     }
