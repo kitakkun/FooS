@@ -1,5 +1,6 @@
 package com.example.foos.ui.view.screen.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
@@ -41,6 +42,7 @@ import java.util.*
  * @param onContentClick コンテンツクリック時の挙動
  * @param onImageClick 添付画像クリック時の挙動
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PostItemList(
     listState: LazyListState = rememberLazyListState(),
@@ -48,7 +50,6 @@ fun PostItemList(
     onUserIconClick: (userId: String) -> Unit = { },
     onContentClick: (uiState: PostItemUiState) -> Unit = { },
     onImageClick: (uiState: PostItemUiState, clickedImageUrl: String) -> Unit = { _, _ -> },
-    headerContent: @Composable() () -> Unit = {},
     onAppearLastItem: (Int) -> Unit = {},
 ) {
     listState.OnAppearLastItem(onAppearLastItem = onAppearLastItem)
@@ -57,9 +58,6 @@ fun PostItemList(
         state = listState,
         modifier = Modifier.fillMaxSize(),
     ) {
-        item {
-            headerContent()
-        }
         items(uiStates) { post ->
             PostItem(post, onUserIconClick, onContentClick, onImageClick)
             Divider(thickness = 1.dp, color = Color.LightGray)

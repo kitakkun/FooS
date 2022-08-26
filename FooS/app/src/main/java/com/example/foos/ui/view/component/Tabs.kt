@@ -1,28 +1,24 @@
 package com.example.foos.ui.view.component
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
-import androidx.compose.runtime.*
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 
 @Composable
 fun Tabs(
-    titles: List<@Composable() () -> Unit>,
-    contents: List<@Composable() () -> Unit>
+    titles: List<String>,
+    tabIndex: Int,
+    onClick: (Int, String) -> Unit,
 ) {
-    if (titles.size != contents.size) { return }
-    var tabIndex by remember { mutableStateOf(0) }
-    Column() {
-        TabRow(selectedTabIndex = tabIndex) {
-            titles.forEachIndexed { index, title ->
-                Tab(
-                    selected = tabIndex == index,
-                    onClick = { tabIndex = index },
-                    text = { title() }
-                )
-            }
+    TabRow(selectedTabIndex = tabIndex) {
+        titles.forEachIndexed { index, title ->
+            Tab(
+                selected = tabIndex == index,
+                onClick = { onClick(index, title) },
+                text = { Text(title) }
+            )
         }
-        contents[tabIndex]()
     }
 
 }
