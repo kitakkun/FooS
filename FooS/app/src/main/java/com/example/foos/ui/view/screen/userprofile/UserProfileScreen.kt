@@ -9,10 +9,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -27,10 +30,16 @@ import com.example.foos.ui.view.component.Tabs
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.screen.home.OnAppearLastItem
 import com.example.foos.ui.view.screen.home.PostItem
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(
+    ExperimentalFoundationApi::class, ExperimentalPagerApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavController) {
 
@@ -54,7 +63,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
     var selectedTab by remember { mutableStateOf(0) }
 
     val header: @Composable() () -> Unit = {
-        UserProfile(
+        UserProfileView(
             username = uiState.value.username,
             userId = uiState.value.userId,
             bio = "",
@@ -79,22 +88,51 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
         )
     }
 
-    LazyColumn(
-        state = listState,
+    var tabIndex by remember {
+        mutableStateOf(0)
+    }
+    val pagerState = rememberPagerState()
+
+    val titles =
+        listOf(stringResource(id = R.string.tab_posts), stringResource(id = R.string.tab_reactions))
+
+    Column(
     ) {
-        item { header() }
-        stickyHeader { stickyHeader() }
-        if (selectedTab == 0) {
-            items(uiState.value.posts) {
-                PostItem(
-                    uiState = it,
-                    onImageClick = { state, url -> viewModel.onImageClick(state, url) },
-                    onContentClick = { state -> viewModel.onContentClick(state) },
-                    onUserIconClick = { viewModel.onUserIconClick() },
-                )
-                Divider(thickness = 1.dp, color = Color.LightGray)
+        header()
+        stickyHeader()
+        HorizontalPager(
+            count = titles.size,
+            state = pagerState
+        ) { tabIndex ->
+            when (tabIndex) {
+                0 -> LazyColumn(
+                    state = listState,
+                ) {
+                    items(uiState.value.posts) {
+                        PostItem(
+                            uiState = it,
+                            onImageClick = { state, url -> viewModel.onImageClick(state, url) },
+                            onContentClick = { state -> viewModel.onContentClick(state) },
+                            onUserIconClick = { viewModel.onUserIconClick() },
+                        )
+                        Divider(thickness = 1.dp, color = Color.LightGray)
+                    }
+                }
+                1 -> LazyColumn(
+                ) {
+                    items(uiState.value.posts) {
+                        PostItem(
+                            uiState = it,
+                            onImageClick = { state, url -> viewModel.onImageClick(state, url) },
+                            onContentClick = { state -> viewModel.onContentClick(state) },
+                            onUserIconClick = { viewModel.onUserIconClick() },
+                        )
+                        Divider(thickness = 1.dp, color = Color.LightGray)
+                    }
+                }
             }
         }
+
     }
 }
 
@@ -103,7 +141,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
  * 名前、プロフ画像、ID
  */
 @Composable
-fun UserProfile(
+fun UserProfileView(
     username: String,
     userId: String,
     bio: String,
@@ -190,5 +228,5 @@ fun FollowInfo(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun UserProfilePreview() {
-    UserProfile("username", "userId", "users biography...", "", 120, 50, false)
+    UserProfileView("username", "userId", "users biography...", "", 120, 50, false)
 }

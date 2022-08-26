@@ -1,5 +1,6 @@
 package com.example.foos.ui.view.component
 
+import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text

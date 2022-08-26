@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.foos"
@@ -132,5 +132,12 @@ dependencies {
 
     // emoji support
     implementation 'androidx.emoji2:emoji2-bundled:1.2.0'
+
+    // horizontal pager
+    implementation "com.google.accompanist:accompanist-pager:0.25.0"
+    implementation "com.google.accompanist:accompanist-pager-indicators:0.25.0"
+
+    implementation "androidx.compose.material3:material3:1.0.0-beta01"
+    implementation "androidx.compose.material3:material3-window-size-class:1.0.0-beta01"
 
 }
