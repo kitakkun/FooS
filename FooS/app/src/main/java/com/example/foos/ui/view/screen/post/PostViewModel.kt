@@ -10,13 +10,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.foos.data.model.DatabasePost
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.ui.state.screen.post.PostScreenUiState
+import com.example.foos.ui.view.screen.Page
 import com.example.foos.util.FileUtils.getRealPath
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,11 +29,14 @@ class PostViewModel @Inject constructor(
     application: Application
 ) : AndroidViewModel(application) {
 
-    private var _uiState = mutableStateOf(PostScreenUiState("", listOf()))
-    val uiState:State<PostScreenUiState> = _uiState
+    private var _uiState = mutableStateOf(PostScreenUiState("", listOf(), null))
+    val uiState: State<PostScreenUiState> = _uiState
 
     private var _navUpEvent = MutableSharedFlow<Boolean>()
     val navUpEvent = _navUpEvent.asSharedFlow()
+
+    private var _navEvent = MutableSharedFlow<String>()
+    val navEvent = _navEvent.asSharedFlow()
 
     fun setImages(context: Context, imageUris: List<Uri>) {
         _uiState.value = _uiState.value.copy(
@@ -40,8 +46,21 @@ class PostViewModel @Inject constructor(
         )
     }
 
+    fun registerLocation(location: LatLng) {
+        _uiState.value = uiState.value.copy(location = location)
+    }
+
     fun onTextFieldUpdated(text: String) {
-        _uiState.value = _uiState.value.copy(content = text)
+        _uiState.value = uiState.value.copy(content = text)
+    }
+
+    /**
+     * 位置情報の指定を行う
+     */
+    fun navigateToLocationSelect() {
+        viewModelScope.launch {
+            _navEvent.emit(Page.LocationSelect.route)
+        }
     }
 
     /**
@@ -50,8 +69,12 @@ class PostViewModel @Inject constructor(
     fun post() {
         MainScope().launch(Dispatchers.IO) {
             val databasePost = DatabasePost(
-                "", Firebase.auth.uid.toString(), uiState.value.content,
-                uiState.value.attachedImages, null, null, java.util.Date()
+                postId = "",
+                userId = Firebase.auth.uid.toString(),
+                content = uiState.value.content,
+                attachedImages = uiState.value.attachedImages,
+                longitude = uiState.value.location?.longitude,
+                latitude = uiState.value.location?.latitude,
             )
             postsRepository.create(databasePost, getApplication())
         }

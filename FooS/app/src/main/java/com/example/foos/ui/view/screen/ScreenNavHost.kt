@@ -19,6 +19,8 @@ import com.example.foos.ui.view.screen.followlist.FollowListViewModel
 import com.example.foos.ui.view.screen.home.HomeScreen
 import com.example.foos.ui.view.screen.home.HomeViewModel
 import com.example.foos.ui.view.screen.imagedetail.ImageDetailScreen
+import com.example.foos.ui.view.screen.locationselect.LocationSelectScreen
+import com.example.foos.ui.view.screen.locationselect.LocationSelectViewModel
 import com.example.foos.ui.view.screen.map.MapScreen
 import com.example.foos.ui.view.screen.map.MapViewModel
 import com.example.foos.ui.view.screen.post.PostScreen
@@ -65,6 +67,10 @@ fun ScreenNavHost(
         composable(Page.PostCreate.route) {
             val vm: PostViewModel = hiltViewModel()
             PostScreen(vm, navController)
+        }
+        composable(Page.LocationSelect.route) {
+            val vm: LocationSelectViewModel = hiltViewModel()
+            LocationSelectScreen(vm, navController)
         }
         composable(
             Page.UserProfile.routeWithParam,

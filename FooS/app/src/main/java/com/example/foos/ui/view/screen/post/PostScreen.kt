@@ -32,6 +32,7 @@ import com.example.foos.ui.state.screen.post.PostScreenUiState
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.maps.model.LatLng
 
 /**
  * 投稿画面のコンポーザブル
@@ -40,6 +41,19 @@ import com.google.accompanist.permissions.rememberPermissionState
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PostScreen(viewModel: PostViewModel, navController: NavController) {
+
+    val location =
+        navController.currentBackStackEntry?.savedStateHandle?.getLiveData<LatLng>("location")
+
+    location?.value?.let {
+        viewModel.registerLocation(it)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.navEvent.collect {
+            navController.navigate(it)
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.navUpEvent.collect {
@@ -73,6 +87,7 @@ fun PostScreen(viewModel: PostViewModel, navController: NavController) {
                 launcher.launch("image/*")
             }
         },
+        onLocationAddButtonClicked = { viewModel.navigateToLocationSelect() },
         uiState = uiState,
         onTextUpdate = { viewModel.onTextFieldUpdated(it) },
     )
@@ -84,6 +99,7 @@ fun PostUI(
     onCanceled: () -> Unit = {},
     onSent: () -> Unit = {},
     onAddImagesBtnClicked: () -> Unit = {},
+    onLocationAddButtonClicked: () -> Unit = {},
     onTextUpdate: (String) -> Unit = {},
 ) {
     Column {
@@ -108,7 +124,8 @@ fun PostUI(
         )
         AttachedImagesRow(attachedImages = uiState.attachedImages)
         ToolBar(
-            onAddImagesBtnClicked = onAddImagesBtnClicked
+            onAddImagesBtnClicked = onAddImagesBtnClicked,
+            onLocationAddButtonClicked = onLocationAddButtonClicked,
         )
     }
 }
@@ -166,7 +183,8 @@ fun PostUITopRow(
 @Preview
 @Composable
 fun ToolBar(
-    onAddImagesBtnClicked: () -> Unit = {}
+    onAddImagesBtnClicked: () -> Unit = {},
+    onLocationAddButtonClicked: () -> Unit = {},
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
@@ -180,7 +198,7 @@ fun ToolBar(
             )
         }
         IconButton(
-            onClick = { /*TODO*/ }
+            onClick = onLocationAddButtonClicked
         ) {
             Icon(
                 painterResource(R.drawable.ic_pin_drop),
