@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.foos.R
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
+import com.example.foos.ui.view.component.FollowButton
 import com.example.foos.ui.view.component.RoundButton
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.VerticalUserIdentityText
@@ -79,13 +80,7 @@ fun UserItem(
                     Text(text = uiState.bio)
                 }
             }
-            RoundButton(onClick = { /*TODO*/ }) {
-                if (uiState.following) {
-                    Text(text = stringResource(id = R.string.following))
-                } else {
-                    Text(text = stringResource(id = R.string.follow))
-                }
-            }
+            FollowButton(onClick = { /*TODO*/ }, following = uiState.following)
         }
     }
 }

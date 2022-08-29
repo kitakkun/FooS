@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foos.R
+import com.example.foos.ui.view.component.FollowButton
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.VerticalUserIdentityText
 import com.example.foos.ui.view.screen.home.OnAppearLastItem
@@ -197,10 +198,7 @@ fun UserProfileView(
                     Text(text = stringResource(id = R.string.edit_profile))
                 }
             } else {
-                Button(onClick = onFollowButtonClick, shape = RoundedCornerShape(50)) {
-                    if (following) Text(text = stringResource(id = R.string.following))
-                    else Text(text = stringResource(id = R.string.follow))
-                }
+                FollowButton(onClick = onFollowButtonClick, following = following)
             }
         }
         Spacer(Modifier.height(16.dp))
