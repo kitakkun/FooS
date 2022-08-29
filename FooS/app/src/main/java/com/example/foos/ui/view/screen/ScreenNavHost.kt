@@ -11,6 +11,8 @@ import androidx.navigation.compose.composable
 import com.example.foos.ui.navigation.Screen
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.navigation.navargs.StringList
+import com.example.foos.ui.view.screen.editprofile.EditProfileScreen
+import com.example.foos.ui.view.screen.editprofile.EditProfileViewModel
 import com.example.foos.ui.view.screen.followlist.FollowListScreen
 import com.example.foos.ui.view.screen.followlist.FollowListViewModel
 import com.example.foos.ui.view.screen.home.HomeScreen
@@ -74,6 +76,10 @@ fun ScreenNavHost(
         composable(SubScreen.PostCreate.LocationConfirm.route) {
             val vm: LocationConfirmViewModel = hiltViewModel()
             LocationConfirmScreen(vm, navController, screenViewModel)
+        }
+        composable(SubScreen.EditProfile.route) {
+            val vm: EditProfileViewModel = hiltViewModel()
+            EditProfileScreen(vm)
         }
         composable(
             SubScreen.UserProfile.routeWithParam,

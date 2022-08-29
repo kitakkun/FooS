@@ -65,6 +65,15 @@ class UserProfileViewModel @Inject constructor(
     }
 
     /**
+     * プロフィール編集画面へ遷移します
+     */
+    fun navigateToEditProfile() {
+        viewModelScope.launch {
+            _navEvent.emit(SubScreen.EditProfile.route)
+        }
+    }
+
+    /**
      * フォロワーリストのページへ遷移します
      */
     fun navigateToFollowerList(userId: String) {

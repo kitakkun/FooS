@@ -30,4 +30,6 @@
     <string name="follows_you">follows you</string>
     <string name="message_successfully_signed_in">Successfully signed in.</string>
     <string name="message_sign_in_error">There was an error signing in.</string>
+    <string name="name">Name</string>
+    <string name="bio">Bio</string>
 </resources>

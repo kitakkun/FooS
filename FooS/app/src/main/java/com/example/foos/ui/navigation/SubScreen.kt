@@ -91,5 +91,10 @@ sealed class SubScreen(
         )
     )
 
-
+    /**
+     * プロフィール編集画面
+     */
+    object EditProfile : SubScreen(
+        route = "edit_profile"
+    )
 }
