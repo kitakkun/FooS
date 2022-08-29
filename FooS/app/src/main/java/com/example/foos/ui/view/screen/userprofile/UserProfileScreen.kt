@@ -29,6 +29,7 @@ import com.example.foos.R
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.screen.home.OnAppearLastItem
 import com.example.foos.ui.view.screen.home.PostItem
+import com.example.foos.ui.view.screen.home.PostItemList
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -134,42 +135,26 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                                     )
                                 }
                             }
-                        })
+                        }),
+                    verticalAlignment = Alignment.Top
                 ) { page: Int ->
                     when (page) {
-                        0 -> LazyColumn(
-                            state = listState,
-                        ) {
-                            items(uiState.value.posts) {
-                                PostItem(
-                                    uiState = it,
-                                    onImageClick = { state, url ->
-                                        viewModel.onImageClick(
-                                            state,
-                                            url
-                                        )
-                                    },
-                                    onContentClick = { state -> viewModel.onContentClick(state) },
-                                    onUserIconClick = { viewModel.onUserIconClick() },
+                        0 -> PostItemList(
+                            uiStates = uiState.value.posts,
+                            onImageClick = { state, url ->
+                                viewModel.onImageClick(
+                                    state,
+                                    url
                                 )
-                                Divider(thickness = 1.dp, color = Color.LightGray)
-                            }
-                        }
+                            },
+                            onContentClick = { state -> viewModel.onContentClick(state) },
+                            onUserIconClick = { viewModel.onUserIconClick() },
+                            onAppearLastItem = { viewModel.fetchOlderPosts() },
+                        )
                         1 -> LazyColumn(
                         ) {
-                            items(uiState.value.posts) {
-                                PostItem(
-                                    uiState = it,
-                                    onImageClick = { state, url ->
-                                        viewModel.onImageClick(
-                                            state,
-                                            url
-                                        )
-                                    },
-                                    onContentClick = { state -> viewModel.onContentClick(state) },
-                                    onUserIconClick = { viewModel.onUserIconClick() },
-                                )
-                                Divider(thickness = 1.dp, color = Color.LightGray)
+                            item {
+                                Text(text = "Reaction Items will come here.")
                             }
                         }
                     }
