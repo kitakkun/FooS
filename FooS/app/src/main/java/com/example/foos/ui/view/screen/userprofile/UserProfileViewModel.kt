@@ -1,7 +1,6 @@
 package com.example.foos.ui.view.screen.userprofile
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
@@ -35,12 +34,16 @@ class UserProfileViewModel @Inject constructor(
     private var _uiState = MutableStateFlow(UserProfileScreenUiState.Default)
     val uiState: StateFlow<UserProfileScreenUiState> get() = _uiState
 
-    private var _navigateRouteFlow = MutableSharedFlow<String>()
-    val navigateRouteFlow: SharedFlow<String> get() = _navigateRouteFlow
+    // ナビゲーションイベント
+    private var _navEvent = MutableSharedFlow<String>()
+    val navEvent: SharedFlow<String> get() = _navEvent
 
     private var _scrollUpEvent = MutableSharedFlow<Boolean>()
     val scrollUpEvent = _scrollUpEvent.asSharedFlow()
 
+    /**
+     * フォローボタンクリック時の挙動
+     */
     fun onFollowButtonClick() {
         val following = uiState.value.following
         viewModelScope.launch(Dispatchers.IO) {
@@ -60,15 +63,21 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
+    /**
+     * フォロワーリストのページへ遷移します
+     */
     fun navigateToFollowerList(userId: String) {
         viewModelScope.launch {
-            _navigateRouteFlow.emit("${Page.FollowList.route}/$userId/${false}")
+            _navEvent.emit("${Page.FollowList.route}/$userId/${false}")
         }
     }
 
+    /**
+     * フォロイーリストのページへ遷移します
+     */
     fun navigateToFolloweeList(userId: String) {
         viewModelScope.launch {
-            _navigateRouteFlow.emit("${Page.FollowList.route}/$userId/${true}")
+            _navEvent.emit("${Page.FollowList.route}/$userId/${true}")
         }
     }
 
@@ -85,7 +94,7 @@ class UserProfileViewModel @Inject constructor(
     fun onContentClick(uiState: PostItemUiState) {
         val data = Uri.encode(Gson().toJson(uiState))
         viewModelScope.launch {
-            _navigateRouteFlow.emit("${Page.PostDetail.route}/$data")
+            _navEvent.emit("${Page.PostDetail.route}/$data")
         }
     }
 
@@ -99,7 +108,7 @@ class UserProfileViewModel @Inject constructor(
             PostItemUiStateWithImageUrl(uiState, uiState.attachedImages.indexOf(clickedImageUrl))
         val data = Uri.encode(Gson().toJson(uiStateWithImageUrl))
         viewModelScope.launch {
-            _navigateRouteFlow.emit("${Page.ImageDetail.route}/$data")
+            _navEvent.emit("${Page.ImageDetail.route}/$data")
         }
     }
 

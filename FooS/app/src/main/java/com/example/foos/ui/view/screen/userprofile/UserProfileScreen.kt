@@ -50,7 +50,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
     listState.OnAppearLastItem(onAppearLastItem = { viewModel.fetchOlderPosts() })
 
     LaunchedEffect(Unit) {
-        viewModel.navigateRouteFlow.collect {
+        viewModel.navEvent.collect {
             navController.navigate(it)
         }
     }
