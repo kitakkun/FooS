@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.view.component.UserIcon
+import com.example.foos.ui.view.component.VerticalUserIdentityText
 import com.example.foos.ui.view.screen.home.OnAppearLastItem
 import com.example.foos.ui.view.screen.home.PostItemList
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -203,17 +204,7 @@ fun UserProfileView(
             }
         }
         Spacer(Modifier.height(16.dp))
-        Text(
-            username,
-            fontWeight = FontWeight.Bold,
-            fontSize = 15.sp,
-        )
-        Text(
-            userId,
-            fontWeight = FontWeight.Light,
-            fontSize = 12.sp,
-
-            )
+        VerticalUserIdentityText(username = username, userId = userId)
         Spacer(Modifier.height(16.dp))
         Biography(bio = bio)
         FollowInfo(

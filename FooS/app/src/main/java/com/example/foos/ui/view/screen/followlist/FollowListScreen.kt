@@ -18,6 +18,7 @@ import com.example.foos.R
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
 import com.example.foos.ui.view.component.RoundButton
 import com.example.foos.ui.view.component.UserIcon
+import com.example.foos.ui.view.component.VerticalUserIdentityText
 
 @Composable
 fun FollowListScreen(viewModel: FollowListViewModel, userId: String) {
@@ -59,16 +60,20 @@ fun UserItem(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row {
+            Row(
+                modifier = Modifier.weight(1f)
+            ) {
                 UserIcon(url = uiState.profileImage)
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
                     Row {
-                        Column() {
-                            Text(text = uiState.username, fontWeight = FontWeight.Bold)
-                            Text(text = "@${uiState.userId}", fontWeight = FontWeight.Light)
-                        }
+                        VerticalUserIdentityText(
+                            username = uiState.username,
+                            userId = uiState.userId,
+                            after = {
 
+                            }
+                        )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(text = uiState.bio)
