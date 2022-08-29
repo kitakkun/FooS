@@ -121,7 +121,6 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                     state = pagerState,
                     count = tabList.size,
                     modifier = Modifier
-                        .fillMaxHeight()
                         .nestedScroll(remember {
                             object : NestedScrollConnection {
                                 override fun onPreScroll(
