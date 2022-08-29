@@ -41,6 +41,7 @@ sealed class Page(val route: String, val routeWithParam: String = "") {
     object ImageDetail : Page("image_detail", "image_detail/{uiStateWithImageUrl}")
     object PostCreate : Page("post_create")
     object UserProfile : Page("user_profile", "user_profile/{userId}")
+    object FollowList: Page("follow_list", "follow_list/{userId}")
 }
 
 /**

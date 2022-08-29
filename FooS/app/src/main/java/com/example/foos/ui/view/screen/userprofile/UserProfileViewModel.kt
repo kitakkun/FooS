@@ -60,6 +60,12 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
+    fun navigateToFollowerList(userId: String) {
+        viewModelScope.launch {
+            _navigateRouteFlow.emit("${Page.FollowList.route}/$userId")
+        }
+    }
+
     fun onUserIconClick() {
         viewModelScope.launch {
             _scrollUpEvent.emit(true)

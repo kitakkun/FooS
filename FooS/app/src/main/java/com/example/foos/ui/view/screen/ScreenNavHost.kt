@@ -14,6 +14,8 @@ import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrlType
 import com.example.foos.ui.navargs.PostType
 import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.view.screen.followlist.FollowListScreen
+import com.example.foos.ui.view.screen.followlist.FollowListViewModel
 import com.example.foos.ui.view.screen.home.HomeScreen
 import com.example.foos.ui.view.screen.home.HomeViewModel
 import com.example.foos.ui.view.screen.imagedetail.ImageDetailScreen
@@ -94,6 +96,16 @@ fun ScreenNavHost(
                 it.arguments?.getParcelable<PostItemUiStateWithImageUrl>("uiStateWithImageUrl")
             uiStateWithImageUrl?.let {
                 ImageDetailScreen(navController = navController, post = it)
+            }
+        }
+        composable(Page.FollowList.routeWithParam, listOf(
+            navArgument("userId") { type = NavType.StringType }
+        )
+        ) {
+            val userId = it.arguments?.getString("userId")
+            userId?.let {
+                val vm: FollowListViewModel = hiltViewModel()
+                FollowListScreen(viewModel = vm, userId = userId)
             }
         }
     }

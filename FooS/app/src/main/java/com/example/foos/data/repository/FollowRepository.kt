@@ -3,6 +3,7 @@ package com.example.foos.data.repository
 import com.example.foos.data.model.DatabaseFollow
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
@@ -20,6 +21,7 @@ object FollowRepository {
     suspend fun fetchFollowers(userId: String): List<DatabaseFollow> {
         return Firebase.firestore.collection(COLLECTION)
             .whereEqualTo("followee", userId)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
             .get().await().toObjects(DatabaseFollow::class.java).toList()
     }
 
@@ -29,6 +31,7 @@ object FollowRepository {
     suspend fun fetchFollowees(userId: String): List<DatabaseFollow> {
         return Firebase.firestore.collection(COLLECTION)
             .whereEqualTo("follower", userId)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
             .get().await().toObjects(DatabaseFollow::class.java).toList()
     }
 
