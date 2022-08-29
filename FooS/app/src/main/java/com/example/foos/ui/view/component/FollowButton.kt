@@ -13,7 +13,7 @@ fun FollowButton(
     val text =
         if (following) stringResource(id = R.string.following)
         else stringResource(id = R.string.follow)
-    RoundButton(onClick = onClick) {
+    RoundButton(onClick = onClick, outlined = following) {
         Text(text = text)
     }
 
