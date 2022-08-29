@@ -37,6 +37,8 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import moe.tlaster.nestedscrollview.VerticalNestedScrollView
+import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
 
 @OptIn(
     ExperimentalPagerApi::class,
@@ -61,33 +63,25 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
         }
     }
 
+    val nestedScrollViewState = rememberNestedScrollViewState()
     // this layout produce buggy scroll if we don't use jetpack compose alpha02 or above.
     // nestedScroll's bug exists until alpha01.
-    BoxWithConstraints {
-        val screenHeight = maxHeight
-        val scrollState = rememberScrollState()
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(state = scrollState)
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                UserProfileView(
-                    username = uiState.value.username,
-                    userId = uiState.value.userId,
-                    bio = "",
-                    profileImage = uiState.value.userIcon,
-                    followerNum = uiState.value.followerCount,
-                    followeeNum = uiState.value.followeeCount,
-                    onFollowButtonClick = { viewModel.onFollowButtonClick() },
-                    following = uiState.value.following,
-                )
-            }
-
-            Column(modifier = Modifier.height(screenHeight)) {
+    VerticalNestedScrollView(
+        state = nestedScrollViewState,
+        header = {
+            UserProfileView(
+                username = uiState.value.username,
+                userId = uiState.value.userId,
+                bio = "",
+                profileImage = uiState.value.userIcon,
+                followerNum = uiState.value.followerCount,
+                followeeNum = uiState.value.followeeCount,
+                onFollowButtonClick = { viewModel.onFollowButtonClick() },
+                following = uiState.value.following,
+            )
+        },
+        content = {
+            Column {
                 val tabList = listOf(
                     stringResource(id = R.string.tab_posts),
                     stringResource(id = R.string.tab_reactions)
@@ -121,21 +115,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                 HorizontalPager(
                     state = pagerState,
                     count = tabList.size,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .nestedScroll(remember {
-                            object : NestedScrollConnection {
-                                override fun onPreScroll(
-                                    available: Offset,
-                                    source: NestedScrollSource
-                                ): Offset {
-                                    return if (available.y > 0) Offset.Zero else Offset(
-                                        x = 0f,
-                                        y = -scrollState.dispatchRawDelta(-available.y)
-                                    )
-                                }
-                            }
-                        }),
+                    modifier = Modifier.fillMaxHeight(),
                     verticalAlignment = Alignment.Top
                 ) { page: Int ->
                     when (page) {
@@ -161,7 +141,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                 }
             }
         }
-    }
+    )
 }
 
 /**
