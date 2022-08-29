@@ -1,20 +1,20 @@
 package com.example.foos.ui.view.screen.userprofile
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -26,19 +26,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foos.R
-import com.example.foos.ui.view.component.Tabs
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.screen.home.OnAppearLastItem
 import com.example.foos.ui.view.screen.home.PostItem
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 
 @OptIn(
-    ExperimentalFoundationApi::class, ExperimentalPagerApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalPagerApi::class,
 )
 @Composable
 fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavController) {
@@ -60,79 +60,122 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
         }
     }
 
-    var selectedTab by remember { mutableStateOf(0) }
-
-    val header: @Composable() () -> Unit = {
-        UserProfileView(
-            username = uiState.value.username,
-            userId = uiState.value.userId,
-            bio = "",
-            profileImage = uiState.value.userIcon,
-            followerNum = uiState.value.followerCount,
-            followeeNum = uiState.value.followeeCount,
-            onFollowButtonClick = { viewModel.onFollowButtonClick() },
-            following = uiState.value.following,
-        )
-    }
-
-    val stickyHeader: @Composable() () -> Unit = {
-        Tabs(
-            titles = listOf(
-                stringResource(id = R.string.tab_posts),
-                stringResource(id = R.string.tab_reactions)
-            ),
-            tabIndex = selectedTab,
-            onClick = { index, title ->
-                selectedTab = index
+    // this layout produce buggy scroll if we don't use jetpack compose alpha02 or above.
+    // nestedScroll's bug exists until alpha01.
+    BoxWithConstraints {
+        val screenHeight = maxHeight
+        val scrollState = rememberScrollState()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(state = scrollState)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                UserProfileView(
+                    username = uiState.value.username,
+                    userId = uiState.value.userId,
+                    bio = "",
+                    profileImage = uiState.value.userIcon,
+                    followerNum = uiState.value.followerCount,
+                    followeeNum = uiState.value.followeeCount,
+                    onFollowButtonClick = { viewModel.onFollowButtonClick() },
+                    following = uiState.value.following,
+                )
             }
-        )
-    }
 
-    var tabIndex by remember {
-        mutableStateOf(0)
-    }
-    val pagerState = rememberPagerState()
+            Column(modifier = Modifier.height(screenHeight)) {
+                val tabList = listOf(
+                    stringResource(id = R.string.tab_posts),
+                    stringResource(id = R.string.tab_reactions)
+                )
+                val pagerState = rememberPagerState(initialPage = 0)
+                val coroutineScope = rememberCoroutineScope()
 
-    val titles =
-        listOf(stringResource(id = R.string.tab_posts), stringResource(id = R.string.tab_reactions))
-
-    Column(
-    ) {
-        header()
-        stickyHeader()
-        HorizontalPager(
-            count = titles.size,
-            state = pagerState
-        ) { tabIndex ->
-            when (tabIndex) {
-                0 -> LazyColumn(
-                    state = listState,
-                ) {
-                    items(uiState.value.posts) {
-                        PostItem(
-                            uiState = it,
-                            onImageClick = { state, url -> viewModel.onImageClick(state, url) },
-                            onContentClick = { state -> viewModel.onContentClick(state) },
-                            onUserIconClick = { viewModel.onUserIconClick() },
+                TabRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    selectedTabIndex = pagerState.currentPage,
+                    // Override the indicator, using the provided pagerTabIndicatorOffset modifier
+                    indicator = { tabPositions ->
+                        TabRowDefaults.Indicator(
+                            Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
                         )
-                        Divider(thickness = 1.dp, color = Color.LightGray)
+                    }
+                ) {
+                    tabList.forEachIndexed { index, title ->
+                        Tab(
+                            text = { Text(title) },
+                            selected = pagerState.currentPage == index,
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
+                        )
                     }
                 }
-                1 -> LazyColumn(
-                ) {
-                    items(uiState.value.posts) {
-                        PostItem(
-                            uiState = it,
-                            onImageClick = { state, url -> viewModel.onImageClick(state, url) },
-                            onContentClick = { state -> viewModel.onContentClick(state) },
-                            onUserIconClick = { viewModel.onUserIconClick() },
-                        )
-                        Divider(thickness = 1.dp, color = Color.LightGray)
+
+                HorizontalPager(
+                    state = pagerState,
+                    count = tabList.size,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .nestedScroll(remember {
+                            object : NestedScrollConnection {
+                                override fun onPreScroll(
+                                    available: Offset,
+                                    source: NestedScrollSource
+                                ): Offset {
+                                    return if (available.y > 0) Offset.Zero else Offset(
+                                        x = 0f,
+                                        y = -scrollState.dispatchRawDelta(-available.y)
+                                    )
+                                }
+                            }
+                        })
+                ) { page: Int ->
+                    when (page) {
+                        0 -> LazyColumn(
+                            state = listState,
+                        ) {
+                            items(uiState.value.posts) {
+                                PostItem(
+                                    uiState = it,
+                                    onImageClick = { state, url ->
+                                        viewModel.onImageClick(
+                                            state,
+                                            url
+                                        )
+                                    },
+                                    onContentClick = { state -> viewModel.onContentClick(state) },
+                                    onUserIconClick = { viewModel.onUserIconClick() },
+                                )
+                                Divider(thickness = 1.dp, color = Color.LightGray)
+                            }
+                        }
+                        1 -> LazyColumn(
+                        ) {
+                            items(uiState.value.posts) {
+                                PostItem(
+                                    uiState = it,
+                                    onImageClick = { state, url ->
+                                        viewModel.onImageClick(
+                                            state,
+                                            url
+                                        )
+                                    },
+                                    onContentClick = { state -> viewModel.onContentClick(state) },
+                                    onUserIconClick = { viewModel.onUserIconClick() },
+                                )
+                                Divider(thickness = 1.dp, color = Color.LightGray)
+                            }
+                        }
                     }
                 }
             }
         }
-
     }
 }
 
@@ -151,9 +194,10 @@ fun UserProfileView(
     following: Boolean,
     onFollowButtonClick: () -> Unit = {},
     onEditButtonClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier.padding(16.dp)
+        modifier = modifier.padding(16.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -167,7 +211,7 @@ fun UserProfileView(
             } else {
                 Button(onClick = onFollowButtonClick, shape = RoundedCornerShape(50)) {
                     if (following) Text(text = stringResource(id = R.string.following))
-                    else Text(text = stringResource(id = R.string.followers))
+                    else Text(text = stringResource(id = R.string.follow))
                 }
             }
         }
