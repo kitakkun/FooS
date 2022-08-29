@@ -114,13 +114,9 @@ fun ClickableUserIcon(
     Box(modifier = modifier) {
         UserIcon(
             url = imageUri,
-            modifier = Modifier
-                .width(70.dp)
-                .height(70.dp)
-                .clip(CircleShape)
-                .background(Color.Gray)
-                .border(1.dp, Color.Gray)
-                .clickable { onClick.invoke() })
+            onClick = onClick,
+            modifier = Modifier.width(70.dp).height(70.dp)
+        )
         Icon(
             Icons.Filled.Edit, null,
             modifier = Modifier
