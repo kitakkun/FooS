@@ -12,8 +12,9 @@ import com.example.foos.ui.view.screen.Page
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,35 +39,37 @@ class FollowListViewModel @Inject constructor(
 
     fun fetchFollowees(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val followees = fetchFolloweesWithMyFollowStateByUserIdUseCase(Firebase.auth.uid!!, userId).map {
-                UserItemUiState(
-                    username = it.user.username,
-                    profileImage = it.user.profileImage,
-                    userId = it.user.userId,
-                    // TODO: ユーザのデータベースデータの拡張とフォロー関係の取得
-                    bio = "BIO",
-                    following = it.followState.following,
-                    followingYou = it.followState.followed,
-                )
-            }
-            _uiState.update { it.copy(followees = it.followees + followees) }
+            val followees =
+                fetchFolloweesWithMyFollowStateByUserIdUseCase(Firebase.auth.uid!!, userId).map {
+                    UserItemUiState(
+                        username = it.user.username,
+                        profileImage = it.user.profileImage,
+                        userId = it.user.userId,
+                        // TODO: ユーザのデータベースデータの拡張とフォロー関係の取得
+                        bio = "BIO",
+                        following = it.followState.following,
+                        followingYou = it.followState.followed,
+                    )
+                }
+            _uiState.update { it.copy(followees = (it.followees + followees).distinct()) }
         }
     }
 
     fun fetchFollowers(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val followers = fetchFollowersWithMyFollowStateByUserIdUseCase(Firebase.auth.uid!!, userId).map {
-                UserItemUiState(
-                    username = it.user.username,
-                    profileImage = it.user.profileImage,
-                    userId = it.user.userId,
-                    // TODO: ユーザのデータベースデータの拡張とフォロー関係の取得
-                    bio = "BIO",
-                    following = it.followState.following,
-                    followingYou = it.followState.followed,
-                )
-            }
-            _uiState.update { it.copy(followers = it.followers + followers) }
+            val followers =
+                fetchFollowersWithMyFollowStateByUserIdUseCase(Firebase.auth.uid!!, userId).map {
+                    UserItemUiState(
+                        username = it.user.username,
+                        profileImage = it.user.profileImage,
+                        userId = it.user.userId,
+                        // TODO: ユーザのデータベースデータの拡張とフォロー関係の取得
+                        bio = "BIO",
+                        following = it.followState.following,
+                        followingYou = it.followState.followed,
+                    )
+                }
+            _uiState.update { it.copy(followers = (it.followers + followers).distinct()) }
         }
     }
 
