@@ -46,7 +46,7 @@ fun FollowListScreen(viewModel: FollowListViewModel, userId: String, initialPage
         stringResource(id = R.string.followers)
     )
 
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState(initialPage)
     val coroutineScope = rememberCoroutineScope()
 
     Column() {

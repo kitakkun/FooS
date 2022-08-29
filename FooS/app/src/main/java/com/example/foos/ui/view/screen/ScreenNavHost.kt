@@ -99,13 +99,19 @@ fun ScreenNavHost(
             }
         }
         composable(Page.FollowList.routeWithParam, listOf(
-            navArgument("userId") { type = NavType.StringType }
+            navArgument("userId") { type = NavType.StringType },
+            navArgument("followees") {type = NavType.BoolType}
         )
         ) {
             val userId = it.arguments?.getString("userId")
+            val followees = it.arguments?.getBoolean("followees")
+            var index = 0
+            followees?.let {
+                if (!followees) index = 1
+            }
             userId?.let {
                 val vm: FollowListViewModel = hiltViewModel()
-                FollowListScreen(viewModel = vm, userId = userId)
+                FollowListScreen(viewModel = vm, userId = userId, initialPage = index)
             }
         }
     }

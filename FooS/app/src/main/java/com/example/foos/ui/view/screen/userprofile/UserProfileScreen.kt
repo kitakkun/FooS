@@ -85,7 +85,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                     onFollowButtonClick = { viewModel.onFollowButtonClick() },
                     following = uiState.value.following,
                     onFollowersTextClick = { viewModel.navigateToFollowerList(uiState.value.userId) },
-                    onFollowingTextClick = { viewModel.navigateToFollowerList(uiState.value.userId) }
+                    onFollowingTextClick = { viewModel.navigateToFolloweeList(uiState.value.userId) }
                 )
             }
 
