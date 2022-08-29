@@ -3,8 +3,13 @@ package com.example.foos.ui.view.screen.followlist
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -14,18 +19,26 @@ import androidx.compose.ui.unit.dp
 import com.example.foos.R
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
 import com.example.foos.ui.view.component.FollowButton
+import com.example.foos.ui.view.component.OnAppearLastItem
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.VerticalUserIdentityText
-import com.google.accompanist.pager.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun FollowListScreen(viewModel: FollowListViewModel, userId: String) {
+fun FollowListScreen(viewModel: FollowListViewModel, userId: String, initialPage: Int = 0) {
     val uiState = viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.fetchFollowers(userId)
+        viewModel.fetchFollowees(userId)
     }
 
     val tabTitles = listOf(
@@ -47,7 +60,7 @@ fun FollowListScreen(viewModel: FollowListViewModel, userId: String) {
         ) {
             tabTitles.forEachIndexed { index, title ->
                 Tab(
-                    text = { Text(text = title)},
+                    text = { Text(text = title) },
                     selected = pagerState.currentPage == index,
                     onClick = {
                         coroutineScope.launch {
@@ -60,11 +73,18 @@ fun FollowListScreen(viewModel: FollowListViewModel, userId: String) {
 
         HorizontalPager(
             state = pagerState,
-            count = tabTitles.size
+            count = tabTitles.size,
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.Top
         ) { page: Int ->
-            when(page) {
-                0 -> FolloweeList(uiState.value.followees)
-                1 -> FollowerList(uiState.value.followers)
+            when (page) {
+                0 -> FolloweeList(
+                    followees = uiState.value.followees,
+                    fetchEvent = { viewModel.fetchFollowees(userId) })
+                1 -> FollowerList(
+                    followers = uiState.value.followers,
+                    fetchEvent = { viewModel.fetchFollowers(userId) }
+                )
             }
         }
     }
@@ -73,23 +93,36 @@ fun FollowListScreen(viewModel: FollowListViewModel, userId: String) {
 
 @Composable
 fun FolloweeList(
-    followees: List<UserItemUiState>
+    followees: List<UserItemUiState>,
+    fetchEvent: () -> Unit,
 ) {
-    UserList(uiStates = followees)
+    UserList(
+        uiStates = followees,
+        onAppearLastItem = {fetchEvent()},
+    )
 }
 
 @Composable
 fun FollowerList(
-    followers: List<UserItemUiState>
+    followers: List<UserItemUiState>,
+    fetchEvent: () -> Unit,
 ) {
-    UserList(uiStates = followers)
+    UserList(
+        uiStates = followers,
+        onAppearLastItem = {fetchEvent()},
+    )
 }
 
 @Composable
 fun UserList(
-    uiStates: List<UserItemUiState>
+    uiStates: List<UserItemUiState>,
+    onAppearLastItem: (Int) -> Unit,
 ) {
-    LazyColumn() {
+    val state = rememberLazyListState()
+    state.OnAppearLastItem(onAppearLastItem = onAppearLastItem)
+    LazyColumn(
+        state = state
+    ) {
         items(uiStates) {
             UserItem(uiState = it)
             Divider(thickness = 1.dp, color = Color.LightGray)
@@ -112,7 +145,7 @@ fun UserItem(
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
                 modifier = Modifier.weight(1f)
@@ -124,16 +157,15 @@ fun UserItem(
                         VerticalUserIdentityText(
                             username = uiState.username,
                             userId = uiState.userId,
-                            after = {
-
-                            }
                         )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(text = uiState.bio)
                 }
             }
-            FollowButton(onClick = { /*TODO*/ }, following = uiState.following)
+            if (uiState.userId != Firebase.auth.uid) {
+                FollowButton(onClick = { /*TODO*/ }, following = uiState.following)
+            }
         }
     }
 }

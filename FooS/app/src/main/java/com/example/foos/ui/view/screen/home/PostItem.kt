@@ -22,6 +22,7 @@ import com.example.foos.R
 import com.example.foos.ui.constants.PADDING_MEDIUM
 import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.view.component.HorizontalUserIdentityText
+import com.example.foos.ui.view.component.OnAppearLastItem
 import com.example.foos.ui.view.component.UserIcon
 import kotlinx.coroutines.flow.filter
 import java.time.LocalDateTime
@@ -58,24 +59,6 @@ fun PostItemList(
             PostItem(post, onUserIconClick, onContentClick, onImageClick)
             Divider(thickness = 1.dp, color = Color.LightGray)
         }
-    }
-}
-
-@Composable
-fun LazyListState.OnAppearLastItem(onAppearLastItem: (Int) -> Unit) {
-    val isReachedToListEnd by remember {
-        derivedStateOf {
-            layoutInfo.visibleItemsInfo.size < layoutInfo.totalItemsCount &&
-                    layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        snapshotFlow { isReachedToListEnd }
-            .filter { it }
-            .collect {
-                onAppearLastItem(layoutInfo.totalItemsCount)
-            }
     }
 }
 

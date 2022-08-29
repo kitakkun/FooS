@@ -2,11 +2,14 @@ package com.example.foos.ui.view.screen.followlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foos.data.model.DatabaseUser
+import com.example.foos.data.domain.FetchFolloweesWithMyFollowStateByUserIdUseCase
+import com.example.foos.data.domain.FetchFollowersWithMyFollowStateByUserIdUseCase
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.UsersRepository
 import com.example.foos.ui.state.screen.followlist.FollowListScreenUiState
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,49 +21,45 @@ import javax.inject.Inject
 class FollowListViewModel @Inject constructor(
     private val usersRepository: UsersRepository,
     private val followRepository: FollowRepository,
+    private val fetchFollowersWithMyFollowStateByUserIdUseCase: FetchFollowersWithMyFollowStateByUserIdUseCase,
+    private val fetchFolloweesWithMyFollowStateByUserIdUseCase: FetchFolloweesWithMyFollowStateByUserIdUseCase,
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(FollowListScreenUiState(listOf(), listOf()))
     val uiState = _uiState.asStateFlow()
 
-    suspend fun fetchFollowers(userId: String) {
+    fun fetchFollowees(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val jobs = mutableListOf<Job>()
-            val users = mutableListOf<UserItemUiState>()
-            followRepository.fetchFollowers(userId).forEach {
-                jobs.add(async {
-                    usersRepository.fetchByUserId(it.follower)?.let { user ->
-                        users.add(
-                            UserItemUiState(
-                                username = user.username,
-                                profileImage = user.profileImage,
-                                userId = user.userId,
-                                // TODO: ユーザのデータベースデータの拡張とフォロー関係の取得
-                                bio = "BIO",
-                                following = true,
-                                followingYou = true,
-                            )
-                        )
-                    }
-                })
+            val followees = fetchFolloweesWithMyFollowStateByUserIdUseCase(Firebase.auth.uid!!, userId).map {
+                UserItemUiState(
+                    username = it.user.username,
+                    profileImage = it.user.profileImage,
+                    userId = it.user.userId,
+                    // TODO: ユーザのデータベースデータの拡張とフォロー関係の取得
+                    bio = "BIO",
+                    following = it.followState.following,
+                    followingYou = it.followState.followed,
+                )
             }
-            jobs.joinAll()
-            _uiState.update { it.copy(followers = it.followers + users) }
+            _uiState.update { it.copy(followees = it.followees + followees) }
         }
     }
 
-    suspend fun fetchFollowees(userId: String) {
+    fun fetchFollowers(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val jobs = mutableListOf<Job>()
-            val users = mutableListOf<DatabaseUser>()
-            followRepository.fetchFollowees(userId).forEach {
-                jobs.add(async {
-                    usersRepository.fetchByUserId(it.follower)?.let { user ->
-                        users.add(user)
-                    }
-                })
+            val followers = fetchFollowersWithMyFollowStateByUserIdUseCase(Firebase.auth.uid!!, userId).map {
+                UserItemUiState(
+                    username = it.user.username,
+                    profileImage = it.user.profileImage,
+                    userId = it.user.userId,
+                    // TODO: ユーザのデータベースデータの拡張とフォロー関係の取得
+                    bio = "BIO",
+                    following = it.followState.following,
+                    followingYou = it.followState.followed,
+                )
             }
-            jobs.joinAll()
+            _uiState.update { it.copy(followers = it.followers + followers) }
         }
     }
+
 }

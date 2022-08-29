@@ -21,20 +21,19 @@ class GetReactionsByUserIdUseCase constructor(
 ) {
 
     suspend operator fun invoke(userId: String): List<Reaction> {
-        val postJobs = mutableListOf<Job>()
-        val userJobs = mutableListOf<Job>()
+        val jobs = mutableListOf<Job>()
         val reactions = reactionsRepository.fetchReactionsByUserId(userId, true)
         val posts = mutableMapOf<String, DatabasePost?>()
         val users = mutableMapOf<String, DatabaseUser?>()
         coroutineScope {
             reactions.forEach {
-                postJobs.add(async {
+                jobs.add(async {
                     posts.put(
                         it.reactionId,
                         postsRepository.fetchByPostId(it.postId)
                     )
                 })
-                userJobs.add(async {
+                jobs.add(async {
                     users.put(
                         it.reactionId,
                         usersRepository.fetchByUserId(it.from)
@@ -42,9 +41,8 @@ class GetReactionsByUserIdUseCase constructor(
                 })
             }
         }
-        postJobs.joinAll()
-        userJobs.joinAll()
-        return reactions.map {
+        jobs.joinAll()
+        return reactions.mapNotNull {
             val reactionId = it.reactionId
             val post = posts.get(reactionId)
             val user = users.get(reactionId)
@@ -53,6 +51,6 @@ class GetReactionsByUserIdUseCase constructor(
             } else {
                 Reaction(reaction = it, post = post, user = user)
             }
-        }.filterNotNull()
+        }
     }
 }

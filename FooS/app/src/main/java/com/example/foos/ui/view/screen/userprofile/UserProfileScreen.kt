@@ -26,9 +26,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.view.component.FollowButton
+import com.example.foos.ui.view.component.OnAppearLastItem
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.VerticalUserIdentityText
-import com.example.foos.ui.view.screen.home.OnAppearLastItem
 import com.example.foos.ui.view.screen.home.PostItemList
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
