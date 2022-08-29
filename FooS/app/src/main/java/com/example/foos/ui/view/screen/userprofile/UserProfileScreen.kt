@@ -1,8 +1,8 @@
 package com.example.foos.ui.view.screen.userprofile
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -26,9 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foos.R
+import com.example.foos.ui.view.component.FollowButton
+import com.example.foos.ui.view.component.OnAppearLastItem
 import com.example.foos.ui.view.component.UserIcon
-import com.example.foos.ui.view.screen.home.OnAppearLastItem
-import com.example.foos.ui.view.screen.home.PostItem
+import com.example.foos.ui.view.component.VerticalUserIdentityText
 import com.example.foos.ui.view.screen.home.PostItemList
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -52,7 +52,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
     listState.OnAppearLastItem(onAppearLastItem = { viewModel.fetchOlderPosts() })
 
     LaunchedEffect(Unit) {
-        viewModel.navigateRouteFlow.collect {
+        viewModel.navEvent.collect {
             navController.navigate(it)
         }
     }
@@ -157,6 +157,8 @@ fun UserProfileView(
     followerNum: Int,
     followeeNum: Int,
     following: Boolean,
+    onFollowingTextClick: () -> Unit = {},
+    onFollowersTextClick: () -> Unit = {},
     onFollowButtonClick: () -> Unit = {},
     onEditButtonClick: () -> Unit = {},
     modifier: Modifier = Modifier
@@ -174,18 +176,19 @@ fun UserProfileView(
                     Text(text = stringResource(id = R.string.edit_profile))
                 }
             } else {
-                Button(onClick = onFollowButtonClick, shape = RoundedCornerShape(50)) {
-                    if (following) Text(text = stringResource(id = R.string.following))
-                    else Text(text = stringResource(id = R.string.follow))
-                }
+                FollowButton(onClick = onFollowButtonClick, following = following)
             }
         }
         Spacer(Modifier.height(16.dp))
-        Text(username, fontWeight = FontWeight.Bold, fontSize = 15.sp)
-        Text(userId, fontWeight = FontWeight.Light, fontSize = 12.sp)
+        VerticalUserIdentityText(username = username, userId = userId)
         Spacer(Modifier.height(16.dp))
         Biography(bio = bio)
-        FollowInfo(followerNum = followerNum, followeeNum = followeeNum)
+        FollowInfo(
+            followerNum = followerNum,
+            followeeNum = followeeNum,
+            onFollowingTextClick = onFollowingTextClick,
+            onFollowersTextClick = onFollowersTextClick,
+        )
     }
 
 }
@@ -206,6 +209,8 @@ fun Biography(
 fun FollowInfo(
     followerNum: Int,   // フォロワー数
     followeeNum: Int,   // フォロー数
+    onFollowersTextClick: () -> Unit,
+    onFollowingTextClick: () -> Unit,
 ) {
     Row(
     ) {
@@ -218,7 +223,9 @@ fun FollowInfo(
                     append(stringResource(id = R.string.following))
                 }
             },
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .padding(16.dp)
+                .clickable { onFollowingTextClick() }
         )
         Text(
             buildAnnotatedString {
@@ -229,7 +236,9 @@ fun FollowInfo(
                     append(stringResource(id = R.string.followers))
                 }
             },
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .padding(16.dp)
+                .clickable { onFollowersTextClick() }
         )
     }
 }

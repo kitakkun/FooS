@@ -1,7 +1,10 @@
 package com.example.foos.di
 
 import com.example.foos.data.domain.*
-import com.example.foos.data.repository.*
+import com.example.foos.data.repository.FollowRepository
+import com.example.foos.data.repository.PostsRepository
+import com.example.foos.data.repository.ReactionsRepository
+import com.example.foos.data.repository.UsersRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -54,4 +57,15 @@ object Modules {
     fun provideConvertPostWithUserToUiStateUseCase(): ConvertPostWithUserToUiStateUseCase =
         ConvertPostWithUserToUiStateUseCase()
 
+    @Provides
+    fun provideFetchFollowersWithMyFollowStateByUserIdUseCase(): FetchFollowersWithMyFollowStateByUserIdUseCase =
+        FetchFollowersWithMyFollowStateByUserIdUseCase(
+            provideUsersRepository(), provideFollowRepository()
+        )
+
+    @Provides
+    fun provideFetchFolloweesWithMyFollowStateByUserIdUseCase(): FetchFolloweesWithMyFollowStateByUserIdUseCase =
+        FetchFolloweesWithMyFollowStateByUserIdUseCase(
+            provideUsersRepository(), provideFollowRepository()
+        )
 }
