@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.foos"
@@ -45,7 +45,7 @@ android {
     }
     composeOptions {
         kotlinCompilerVersion '1.7.0'
-        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerExtensionVersion '1.2.0'
     }
     packagingOptions {
         resources {
@@ -80,7 +80,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     implementation "androidx.compose.runtime:runtime:$compose_version"
-    implementation "androidx.compose.compiler:compiler:$compose_version"
+    implementation "androidx.compose.compiler:compiler:1.3.0"
 
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:30.3.0')
@@ -132,5 +132,9 @@ dependencies {
 
     // emoji support
     implementation 'androidx.emoji2:emoji2-bundled:1.2.0'
+
+    // horizontal pager
+    implementation "com.google.accompanist:accompanist-pager:0.25.0"
+    implementation "com.google.accompanist:accompanist-pager-indicators:0.25.0"
 
 }
