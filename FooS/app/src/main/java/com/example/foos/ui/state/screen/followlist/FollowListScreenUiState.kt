@@ -1,5 +1,6 @@
 package com.example.foos.ui.state.screen.followlist
 
 data class FollowListScreenUiState(
-    val users: List<UserItemUiState>
+    val followers: List<UserItemUiState>,
+    val followees: List<UserItemUiState>,
 )

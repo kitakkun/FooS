@@ -20,7 +20,7 @@ class FollowListViewModel @Inject constructor(
     private val followRepository: FollowRepository,
 ) : ViewModel() {
 
-    private var _uiState = MutableStateFlow(FollowListScreenUiState(listOf()))
+    private var _uiState = MutableStateFlow(FollowListScreenUiState(listOf(), listOf()))
     val uiState = _uiState.asStateFlow()
 
     suspend fun fetchFollowers(userId: String) {
@@ -45,7 +45,7 @@ class FollowListViewModel @Inject constructor(
                 })
             }
             jobs.joinAll()
-            _uiState.update { it.copy(users = it.users + users) }
+            _uiState.update { it.copy(followers = it.followers + users) }
         }
     }
 

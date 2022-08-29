@@ -3,11 +3,8 @@ package com.example.foos.ui.view.screen.followlist
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -17,10 +14,12 @@ import androidx.compose.ui.unit.dp
 import com.example.foos.R
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
 import com.example.foos.ui.view.component.FollowButton
-import com.example.foos.ui.view.component.RoundButton
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.VerticalUserIdentityText
+import com.google.accompanist.pager.*
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun FollowListScreen(viewModel: FollowListViewModel, userId: String) {
     val uiState = viewModel.uiState.collectAsState()
@@ -29,7 +28,61 @@ fun FollowListScreen(viewModel: FollowListViewModel, userId: String) {
         viewModel.fetchFollowers(userId)
     }
 
-    UserList(uiStates = uiState.value.users)
+    val tabTitles = listOf(
+        stringResource(id = R.string.following),
+        stringResource(id = R.string.followers)
+    )
+
+    val pagerState = rememberPagerState()
+    val coroutineScope = rememberCoroutineScope()
+
+    Column() {
+        TabRow(
+            selectedTabIndex = pagerState.currentPage,
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                )
+            }
+        ) {
+            tabTitles.forEachIndexed { index, title ->
+                Tab(
+                    text = { Text(text = title)},
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    }
+                )
+            }
+        }
+
+        HorizontalPager(
+            state = pagerState,
+            count = tabTitles.size
+        ) { page: Int ->
+            when(page) {
+                0 -> FolloweeList(uiState.value.followees)
+                1 -> FollowerList(uiState.value.followers)
+            }
+        }
+    }
+
+}
+
+@Composable
+fun FolloweeList(
+    followees: List<UserItemUiState>
+) {
+    UserList(uiStates = followees)
+}
+
+@Composable
+fun FollowerList(
+    followers: List<UserItemUiState>
+) {
+    UserList(uiStates = followers)
 }
 
 @Composable
