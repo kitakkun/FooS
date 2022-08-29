@@ -19,6 +19,8 @@ import com.example.foos.ui.view.screen.followlist.FollowListViewModel
 import com.example.foos.ui.view.screen.home.HomeScreen
 import com.example.foos.ui.view.screen.home.HomeViewModel
 import com.example.foos.ui.view.screen.imagedetail.ImageDetailScreen
+import com.example.foos.ui.view.screen.locationconfirm.LocationConfirmScreen
+import com.example.foos.ui.view.screen.locationconfirm.LocationConfirmViewModel
 import com.example.foos.ui.view.screen.locationselect.LocationSelectScreen
 import com.example.foos.ui.view.screen.locationselect.LocationSelectViewModel
 import com.example.foos.ui.view.screen.map.MapScreen
@@ -33,6 +35,7 @@ import com.example.foos.ui.view.screen.setting.SettingScreen
 import com.example.foos.ui.view.screen.setting.SettingViewModel
 import com.example.foos.ui.view.screen.userprofile.UserProfileScreen
 import com.example.foos.ui.view.screen.userprofile.UserProfileViewModel
+import com.google.android.gms.maps.model.LatLng
 
 /**
  * 画面下部ナビゲーションのNavHost
@@ -71,6 +74,21 @@ fun ScreenNavHost(
         composable(Page.LocationSelect.route) {
             val vm: LocationSelectViewModel = hiltViewModel()
             LocationSelectScreen(vm, navController)
+        }
+        composable(
+            Page.LocationConfirm.routeWithParam,
+            listOf(
+                navArgument("longitude") {type = NavType.FloatType},
+                navArgument("latitude") {type = NavType.FloatType},
+            )
+        ) {
+            val longitude = it.arguments?.getFloat("longitude")?.toDouble()
+            val latitude = it.arguments?.getFloat("latitude")?.toDouble()
+            if (longitude != null && latitude != null) {
+                val vm: LocationConfirmViewModel = hiltViewModel()
+                val location = LatLng(longitude, latitude)
+                LocationConfirmScreen(vm, navController, location)
+            }
         }
         composable(
             Page.UserProfile.routeWithParam,

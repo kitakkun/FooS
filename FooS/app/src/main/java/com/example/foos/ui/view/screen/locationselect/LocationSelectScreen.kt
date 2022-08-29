@@ -22,6 +22,16 @@ fun LocationSelectScreen(viewModel: LocationSelectViewModel, navController: NavC
     val uiState = viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
+        viewModel.navEvent.collect {
+            navController.currentBackStackEntry?.savedStateHandle?.set(
+                "location",
+                uiState.value.pinPosition
+            )
+            navController.navigate(it)
+        }
+    }
+
+    LaunchedEffect(Unit) {
         viewModel.navUpEvent.collect {
             navController.previousBackStackEntry?.savedStateHandle?.set(
                 "location",
@@ -41,7 +51,7 @@ fun LocationSelectScreen(viewModel: LocationSelectViewModel, navController: NavC
                     }
                 },
                 actions = {
-                    IconButton(onClick = { viewModel.navigateUp() }) {
+                    IconButton(onClick = { viewModel.navigateToNextStep() }) {
                         Icon(imageVector = Icons.Filled.Check, contentDescription = null)
                     }
                 }

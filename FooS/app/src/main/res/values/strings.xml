@@ -22,4 +22,5 @@
     <string name="tab_posts">Posts</string>
     <string name="tab_reactions">Reactions</string>
     <string name="select_pin_message">Please select a Location</string>
+    <string name="enter_location_name_message">Enter the restaurant\'s name.</string>
 </resources>
