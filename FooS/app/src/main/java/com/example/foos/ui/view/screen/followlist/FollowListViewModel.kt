@@ -8,13 +8,12 @@ import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.UsersRepository
 import com.example.foos.ui.state.screen.followlist.FollowListScreenUiState
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
+import com.example.foos.ui.view.screen.Page
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +26,15 @@ class FollowListViewModel @Inject constructor(
 
     private var _uiState = MutableStateFlow(FollowListScreenUiState(listOf(), listOf()))
     val uiState = _uiState.asStateFlow()
+
+    private var _navEvent = MutableSharedFlow<String>()
+    val navEvent = _navEvent.asSharedFlow()
+
+    fun navigateToUserProfile(userId: String) {
+        viewModelScope.launch {
+            _navEvent.emit("${Page.UserProfile.route}/$userId")
+        }
+    }
 
     fun fetchFollowees(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {

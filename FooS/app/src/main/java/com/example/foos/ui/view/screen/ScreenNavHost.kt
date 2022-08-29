@@ -100,7 +100,7 @@ fun ScreenNavHost(
         }
         composable(Page.FollowList.routeWithParam, listOf(
             navArgument("userId") { type = NavType.StringType },
-            navArgument("followees") {type = NavType.BoolType}
+            navArgument("followees") { type = NavType.BoolType }
         )
         ) {
             val userId = it.arguments?.getString("userId")
@@ -111,7 +111,12 @@ fun ScreenNavHost(
             }
             userId?.let {
                 val vm: FollowListViewModel = hiltViewModel()
-                FollowListScreen(viewModel = vm, userId = userId, initialPage = index)
+                FollowListScreen(
+                    viewModel = vm,
+                    userId = userId,
+                    initialPage = index,
+                    navController = navController
+                )
             }
         }
     }

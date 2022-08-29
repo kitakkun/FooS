@@ -1,5 +1,6 @@
 package com.example.foos.ui.view.screen.followlist
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
 import com.example.foos.ui.view.component.FollowButton
@@ -28,13 +30,18 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun FollowListScreen(viewModel: FollowListViewModel, userId: String, initialPage: Int = 0) {
+fun FollowListScreen(viewModel: FollowListViewModel, navController: NavController, userId: String, initialPage: Int = 0) {
     val uiState = viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.navEvent.collect {
+            navController.navigate(it)
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.fetchFollowers(userId)
@@ -80,10 +87,13 @@ fun FollowListScreen(viewModel: FollowListViewModel, userId: String, initialPage
             when (page) {
                 0 -> FolloweeList(
                     followees = uiState.value.followees,
-                    fetchEvent = { viewModel.fetchFollowees(userId) })
+                    fetchEvent = { viewModel.fetchFollowees(userId) },
+                    onItemClicked = { id -> viewModel.navigateToUserProfile(id) }
+                )
                 1 -> FollowerList(
                     followers = uiState.value.followers,
-                    fetchEvent = { viewModel.fetchFollowers(userId) }
+                    fetchEvent = { viewModel.fetchFollowers(userId) },
+                    onItemClicked = { id -> viewModel.navigateToUserProfile(id) },
                 )
             }
         }
@@ -95,10 +105,12 @@ fun FollowListScreen(viewModel: FollowListViewModel, userId: String, initialPage
 fun FolloweeList(
     followees: List<UserItemUiState>,
     fetchEvent: () -> Unit,
+    onItemClicked: (String) -> Unit,
 ) {
     UserList(
         uiStates = followees,
-        onAppearLastItem = {fetchEvent()},
+        onAppearLastItem = { fetchEvent() },
+        onItemClicked = onItemClicked,
     )
 }
 
@@ -106,10 +118,12 @@ fun FolloweeList(
 fun FollowerList(
     followers: List<UserItemUiState>,
     fetchEvent: () -> Unit,
+    onItemClicked: (String) -> Unit,
 ) {
     UserList(
         uiStates = followers,
-        onAppearLastItem = {fetchEvent()},
+        onAppearLastItem = { fetchEvent() },
+        onItemClicked = onItemClicked,
     )
 }
 
@@ -117,6 +131,7 @@ fun FollowerList(
 fun UserList(
     uiStates: List<UserItemUiState>,
     onAppearLastItem: (Int) -> Unit,
+    onItemClicked: (String) -> Unit,
 ) {
     val state = rememberLazyListState()
     state.OnAppearLastItem(onAppearLastItem = onAppearLastItem)
@@ -124,7 +139,7 @@ fun UserList(
         state = state
     ) {
         items(uiStates) {
-            UserItem(uiState = it)
+            UserItem(uiState = it, onItemClicked = onItemClicked)
             Divider(thickness = 1.dp, color = Color.LightGray)
         }
     }
@@ -134,11 +149,13 @@ fun UserList(
 fun UserItem(
     uiState: UserItemUiState,
     modifier: Modifier = Modifier,
+    onItemClicked: (String) -> Unit,
 ) {
     Column(
         modifier = modifier
             .padding(16.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable { onItemClicked(uiState.userId) },
     ) {
         if (uiState.followingYou) {
             Text(text = "follows you", fontWeight = FontWeight.Light)
@@ -174,5 +191,5 @@ fun UserItem(
 @Composable
 fun UserItemPreview() {
     val uiState = UserItemUiState("username", "userId", "", "BIO", true, false)
-    UserItem(uiState = uiState)
+    UserItem(uiState = uiState, onItemClicked = {})
 }
