@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home">ホーム</string>
+    <string name="map">マップ</string>
+    <string name="title_activity_sign_in">SignInActivity</string>
+    <string name="reaction">リアクション</string>
+    <string name="setting">設定</string>
+    <string name="post">投稿</string>
+    <string name="account_settings">アカウント設定</string>
+    <string name="privacy_settings">プライバシー設定</string>
+    <string name="log_out">ログアウト</string>
+    <string name="log_out_confirm_title">ログアウトしようとしています。</string>
+    <string name="log_out_confirm_message">本当にログアウトしますか？</string>
+    <string name="reaction_message">%1$s から %2$s のリアクションを受け取りました。</string>
+    <string name="emoji_like">&#10084;</string>
+    <string name="emoji_fire">&#128293;</string>
+    <string name="emoji_yummy">&#128523;</string>
+    <string name="following">フォロー中</string>
+    <string name="followers">フォロワー</string>
+    <string name="follow">フォロー</string>
+    <string name="edit_profile">プロフィール編集</string>
+    <string name="tab_posts">投稿</string>
+    <string name="tab_reactions">リアクション</string>
+</resources>
