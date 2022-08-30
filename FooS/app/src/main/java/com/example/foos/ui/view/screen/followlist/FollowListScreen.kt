@@ -1,15 +1,13 @@
 package com.example.foos.ui.view.screen.followlist
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,11 +39,6 @@ fun FollowListScreen(viewModel: FollowListViewModel, navController: NavControlle
         viewModel.navEvent.collect {
             navController.navigate(it)
         }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.fetchFollowers(userId)
-        viewModel.fetchFollowees(userId)
     }
 
     val tabTitles = listOf(
@@ -107,6 +100,9 @@ fun FolloweeList(
     fetchEvent: () -> Unit,
     onItemClicked: (String) -> Unit,
 ) {
+    SideEffect {
+        fetchEvent()
+    }
     UserList(
         uiStates = followees,
         onAppearLastItem = { fetchEvent() },
@@ -120,6 +116,9 @@ fun FollowerList(
     fetchEvent: () -> Unit,
     onItemClicked: (String) -> Unit,
 ) {
+    SideEffect {
+        fetchEvent()
+    }
     UserList(
         uiStates = followers,
         onAppearLastItem = { fetchEvent() },
