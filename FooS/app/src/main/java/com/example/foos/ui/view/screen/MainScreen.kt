@@ -42,6 +42,8 @@ sealed class Page(val route: String, val routeWithParam: String = "") {
     object PostCreate : Page("post_create")
     object UserProfile : Page("user_profile", "user_profile/{userId}")
     object FollowList: Page("follow_list", "follow_list/{userId}/{followees}")
+    object LocationSelect: Page("location_select")
+    object LocationConfirm: Page("location_confirm", "location_confirm/{longitude}/{latitude}")
 }
 
 /**

@@ -20,8 +20,9 @@ data class DatabasePost(
     val attachedImages: List<String>,
     val longitude: Double?,
     val latitude: Double?,
+    val locationName: String?,
     @ServerTimestamp
     val createdAt: Date? = null,
 ) {
-    constructor() : this("", "", "", listOf(), null, null, Date())
+    constructor() : this("", "", "", listOf(), null, null, null)
 }

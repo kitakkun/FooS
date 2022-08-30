@@ -1,8 +1,10 @@
 package com.example.foos.ui.view.screen.post
 
 import android.Manifest
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -13,8 +15,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,13 +23,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.foos.R
 import com.example.foos.ui.state.screen.post.PostScreenUiState
+import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
@@ -39,7 +43,27 @@ import com.google.accompanist.permissions.rememberPermissionState
  */
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun PostScreen(viewModel: PostViewModel, navController: NavController) {
+fun PostScreen(
+    viewModel: PostViewModel,
+    navController: NavController,
+    sharedViewModel: ScreenViewModel,
+) {
+
+    val location = sharedViewModel.postCreateSharedData.value.location
+    val locationName = sharedViewModel.postCreateSharedData.value.locationName
+
+    val locationAttached = location != null && locationName != null
+    Log.d("LOCATION", locationAttached.toString())
+
+    if (locationAttached) {
+        viewModel.applyLocationData(location!!, locationName!!)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.navEvent.collect {
+            navController.navigate(it)
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.navUpEvent.collect {
@@ -62,60 +86,81 @@ fun PostScreen(viewModel: PostViewModel, navController: NavController) {
         permission = Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
-    PostUI(
-        onCanceled = { navController.navigateUp() },
-        onSent = { viewModel.post() },
-        onAddImagesBtnClicked = {
-            if (filePermissionState.status == PermissionStatus.Granted) {
-                launcher.launch("image/*")
-            } else {
-                filePermissionState.launchPermissionRequest()
-                launcher.launch("image/*")
-            }
-        },
-        uiState = uiState,
-        onTextUpdate = { viewModel.onTextFieldUpdated(it) },
+    val locationPermissionState = rememberPermissionState(
+        permission = Manifest.permission.ACCESS_FINE_LOCATION
     )
-}
 
-@Composable
-fun PostUI(
-    uiState: PostScreenUiState,
-    onCanceled: () -> Unit = {},
-    onSent: () -> Unit = {},
-    onAddImagesBtnClicked: () -> Unit = {},
-    onTextUpdate: (String) -> Unit = {},
-) {
-    Column {
-        PostUITopRow(
-            confirmText = "Send",
-            onCanceled = onCanceled,
-            onConfirmed = onSent
-        )
-        OutlinedTextField(
-            colors = TextFieldDefaults.textFieldColors(
-                focusedIndicatorColor = Color.Transparent,
-                backgroundColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            ),
-            value = uiState.content,
-            onValueChange = onTextUpdate,
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            singleLine = false,
-        )
-        AttachedImagesRow(attachedImages = uiState.attachedImages)
-        ToolBar(
-            onAddImagesBtnClicked = onAddImagesBtnClicked
-        )
+    Scaffold(
+        topBar = {
+            TopRow(
+                onCanceled = { navController.navigateUp() },
+                onConfirmed = {
+                    viewModel.post()
+                },
+                confirmText = "Send",
+            )
+        },
+        bottomBar = {
+            ToolBar(
+                onAddImagesBtnClicked = {
+                    if (filePermissionState.status == PermissionStatus.Granted) {
+                        launcher.launch("image/*")
+                    } else {
+                        filePermissionState.launchPermissionRequest()
+                    }
+                },
+                onLocationAddButtonClicked = {
+                    if (locationPermissionState.status == PermissionStatus.Granted) {
+                        viewModel.navigateToLocationSelect()
+                    } else {
+                        locationPermissionState.launchPermissionRequest()
+                    }
+                },
+                haveAccessToFile = filePermissionState.status == PermissionStatus.Granted,
+                haveAccessToLocation = locationPermissionState.status == PermissionStatus.Granted,
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            ContentEditor(
+                uiState = uiState,
+                onTextUpdate = { viewModel.onTextFieldUpdated(it) },
+            )
+            Attachments(
+                attachedImages = uiState.attachedImages,
+                locationAttached = locationAttached
+            )
+        }
     }
 }
 
 @Composable
-fun AttachedImagesRow(
-    attachedImages: List<String>
+private fun ColumnScope.ContentEditor(
+    uiState: PostScreenUiState,
+    onTextUpdate: (String) -> Unit = {},
+) {
+    OutlinedTextField(
+        colors = TextFieldDefaults.textFieldColors(
+            focusedIndicatorColor = Color.Transparent,
+            backgroundColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        ),
+        value = uiState.content,
+        onValueChange = onTextUpdate,
+        modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f),
+        singleLine = false,
+    )
+}
+
+@Composable
+fun Attachments(
+    attachedImages: List<String>,
+    locationAttached: Boolean,
 ) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -128,11 +173,39 @@ fun AttachedImagesRow(
                         .data(it).build(), contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .width(100.dp)
-                        .height(100.dp)
-                        .clip(RoundedCornerShape(25))
+                        .size(100.dp)
+                        .clip(RoundedCornerShape(10))
                 )
                 Icon(Icons.Default.Close, contentDescription = "remove Image")
+            }
+        }
+        if (locationAttached) {
+            item {
+                Column(
+                    modifier = Modifier
+                        .border(width = 1.dp, color = MaterialTheme.colors.onSurface)
+                        .size(100.dp)
+                        .clip(RoundedCornerShape(10)),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = "remove location data",
+                        modifier = Modifier.align(Alignment.End)
+                    )
+                    Icon(
+                        painter = painterResource(R.drawable.ic_pin_drop),
+                        tint = MaterialTheme.colors.onSurface,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(40.dp)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.location_attached),
+                        fontSize = 12.sp,
+                    )
+                }
             }
         }
     }
@@ -140,7 +213,7 @@ fun AttachedImagesRow(
 
 @Preview
 @Composable
-fun PostUITopRow(
+private fun TopRow(
     confirmText: String = "Confirm",
     onCanceled: () -> Unit = {},
     onConfirmed: () -> Unit = {}
@@ -163,10 +236,12 @@ fun PostUITopRow(
     }
 }
 
-@Preview
 @Composable
-fun ToolBar(
-    onAddImagesBtnClicked: () -> Unit = {}
+private fun ToolBar(
+    haveAccessToFile: Boolean,
+    haveAccessToLocation: Boolean,
+    onAddImagesBtnClicked: () -> Unit = {},
+    onLocationAddButtonClicked: () -> Unit = {},
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
@@ -176,14 +251,16 @@ fun ToolBar(
         ) {
             Icon(
                 Icons.Default.Add,
+                tint = MaterialTheme.colors.onSurface.copy(alpha = if (haveAccessToFile) 1f else 0.4f),
                 contentDescription = "Add images",
             )
         }
         IconButton(
-            onClick = { /*TODO*/ }
+            onClick = onLocationAddButtonClicked
         ) {
             Icon(
                 painterResource(R.drawable.ic_pin_drop),
+                tint = MaterialTheme.colors.onSurface.copy(alpha = if (haveAccessToLocation) 1f else 0.4f),
                 contentDescription = "Add location",
             )
         }
