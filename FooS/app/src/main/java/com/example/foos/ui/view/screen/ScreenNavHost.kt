@@ -79,7 +79,7 @@ fun ScreenNavHost(
             SubScreen.UserProfile.routeWithParam,
             SubScreen.UserProfile.arguments,
         ) {
-            val userId = it.arguments?.getString("userId")
+            val userId = it.arguments?.getString(SubScreen.UserProfile.key(0))
             userId?.let {
                 val vm: UserProfileViewModel = hiltViewModel()
                 vm.setUserId(userId)
@@ -90,7 +90,7 @@ fun ScreenNavHost(
             SubScreen.PostDetail.routeWithParam,
             SubScreen.PostDetail.arguments,
         ) {
-            val postId = it.arguments?.getString("postId")
+            val postId = it.arguments?.getString(SubScreen.PostDetail.key(0))
             postId?.let {
                 val vm: PostDetailViewModel = hiltViewModel()
                 PostDetailScreen(vm, navController, postId)
@@ -100,8 +100,9 @@ fun ScreenNavHost(
             SubScreen.ImageDetail.routeWithParam,
             SubScreen.ImageDetail.arguments,
         ) {
-            val imageUrls = it.arguments?.getParcelable<StringList>("imageUrls")
-            val clickedImageIndex = it.arguments?.getString("clickedImageIndex")
+            val imageUrls =
+                it.arguments?.getParcelable<StringList>(SubScreen.ImageDetail.key(0))
+            val clickedImageIndex = it.arguments?.getString(SubScreen.ImageDetail.key(1))
             if (imageUrls != null && clickedImageIndex != null) {
                 ImageDetailScreen(
                     navController = navController,
@@ -114,10 +115,10 @@ fun ScreenNavHost(
             SubScreen.FollowList.routeWithParam,
             SubScreen.FollowList.arguments,
         ) {
-            val userId = it.arguments?.getString("userId")
-            val followees = it.arguments?.getBoolean("followees")
+            val userId = it.arguments?.getString(SubScreen.FollowList.key(0))
+            val followees = it.arguments?.getBoolean(SubScreen.FollowList.key(1))
             if (userId != null && followees != null) {
-                val index = if (followees) 1 else 0
+                val index = if (followees) 0 else 1
                 val vm: FollowListViewModel = hiltViewModel()
                 FollowListScreen(
                     viewModel = vm,

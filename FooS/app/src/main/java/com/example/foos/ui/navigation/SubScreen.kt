@@ -15,6 +15,10 @@ sealed class SubScreen(
     val arguments: List<NamedNavArgument> = listOf(),
 ) {
 
+    fun key(index: Int): String {
+        return this.arguments[index].name
+    }
+
     /**
      * パラメータを考慮したナビゲーションルートを作成
      */
