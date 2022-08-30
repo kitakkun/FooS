@@ -24,7 +24,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -87,11 +86,9 @@ fun PostScreen(
         permission = Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
-    SideEffect {
-        if (filePermissionState.status != PermissionStatus.Granted) {
-            filePermissionState.launchPermissionRequest()
-        }
-    }
+    val locationPermissionState = rememberPermissionState(
+        permission = Manifest.permission.ACCESS_FINE_LOCATION
+    )
 
     Scaffold(
         topBar = {
@@ -106,9 +103,21 @@ fun PostScreen(
         bottomBar = {
             ToolBar(
                 onAddImagesBtnClicked = {
-                    launcher.launch("image/*")
+                    if (filePermissionState.status == PermissionStatus.Granted) {
+                        launcher.launch("image/*")
+                    } else {
+                        filePermissionState.launchPermissionRequest()
+                    }
                 },
-                onLocationAddButtonClicked = { viewModel.navigateToLocationSelect() },
+                onLocationAddButtonClicked = {
+                    if (locationPermissionState.status == PermissionStatus.Granted) {
+                        viewModel.navigateToLocationSelect()
+                    } else {
+                        locationPermissionState.launchPermissionRequest()
+                    }
+                },
+                haveAccessToFile = filePermissionState.status == PermissionStatus.Granted,
+                haveAccessToLocation = locationPermissionState.status == PermissionStatus.Granted,
             )
         }
     ) { innerPadding ->
@@ -227,9 +236,10 @@ private fun TopRow(
     }
 }
 
-@Preview
 @Composable
 private fun ToolBar(
+    haveAccessToFile: Boolean,
+    haveAccessToLocation: Boolean,
     onAddImagesBtnClicked: () -> Unit = {},
     onLocationAddButtonClicked: () -> Unit = {},
 ) {
@@ -241,6 +251,7 @@ private fun ToolBar(
         ) {
             Icon(
                 Icons.Default.Add,
+                tint = MaterialTheme.colors.onSurface.copy(alpha = if (haveAccessToFile) 1f else 0.4f),
                 contentDescription = "Add images",
             )
         }
@@ -249,6 +260,7 @@ private fun ToolBar(
         ) {
             Icon(
                 painterResource(R.drawable.ic_pin_drop),
+                tint = MaterialTheme.colors.onSurface.copy(alpha = if (haveAccessToLocation) 1f else 0.4f),
                 contentDescription = "Add location",
             )
         }
