@@ -4,6 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
+import com.example.foos.data.domain.GetPostWithUserByPostIdUseCase
 import com.example.foos.data.model.DatabaseReaction
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.ui.state.screen.home.PostItemUiState
@@ -17,6 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostDetailViewModel @Inject constructor(
+    private val getPostWithUserByPostIdUseCase: GetPostWithUserByPostIdUseCase,
+    private val convertPostWithUserToUiStateUseCase: ConvertPostWithUserToUiStateUseCase,
     private val reactionsRepository: ReactionsRepository
 ) : ViewModel() {
 
@@ -26,6 +30,16 @@ class PostDetailViewModel @Inject constructor(
     fun setPostUiState(uiState: PostItemUiState) {
         _uiState.value = _uiState.value.copy(postItemUiState = uiState)
     }
+
+    suspend fun fetchPost(postId: String) {
+        val state = getPostWithUserByPostIdUseCase(postId)?.let {
+            convertPostWithUserToUiStateUseCase(it)
+        }
+        state?.let {
+            _uiState.value = uiState.value.copy(postItemUiState = state)
+        }
+    }
+
 
     /**
      * ユーザー情報がクリックされたときの処理

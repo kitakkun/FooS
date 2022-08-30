@@ -94,7 +94,7 @@ class UserProfileViewModel @Inject constructor(
      * @param uiState クリックされた投稿のUI状態
      */
     fun onContentClick(uiState: PostItemUiState) {
-        val data = Uri.encode(Gson().toJson(uiState))
+        val data = uiState.postId
         viewModelScope.launch {
             _navEvent.emit("${Page.PostDetail.route}/$data")
         }

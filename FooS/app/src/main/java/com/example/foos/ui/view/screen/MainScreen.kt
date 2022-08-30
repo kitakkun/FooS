@@ -37,13 +37,13 @@ sealed class Screen(val route: String, @StringRes val stringId: Int, @DrawableRe
  * サブスクリーン（メインメニューのスクリーンから呼ばれる）
  */
 sealed class Page(val route: String, val routeWithParam: String = "") {
-    object PostDetail : Page("post_detail", "post_detail/{uiState}")
+    object PostDetail : Page("post_detail", "post_detail/{postId}")
     object ImageDetail : Page("image_detail", "image_detail/{uiStateWithImageUrl}")
     object PostCreate : Page("post_create")
     object UserProfile : Page("user_profile", "user_profile/{userId}")
     object FollowList: Page("follow_list", "follow_list/{userId}/{followees}")
     object LocationSelect: Page("location_select")
-    object LocationConfirm: Page("location_confirm", "location_confirm/{longitude}/{latitude}")
+    object LocationConfirm: Page("location_confirm")
 }
 
 /**

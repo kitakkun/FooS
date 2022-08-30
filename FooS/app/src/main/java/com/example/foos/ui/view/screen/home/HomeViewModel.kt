@@ -51,7 +51,7 @@ class HomeViewModel @Inject constructor(
      */
     fun onContentClick(uiState: PostItemUiState) {
         viewModelScope.launch {
-            val data = Uri.encode(Gson().toJson(uiState))
+            val data = uiState.postId
             _navEvent.emit("${Page.PostDetail.route}/$data")
         }
     }

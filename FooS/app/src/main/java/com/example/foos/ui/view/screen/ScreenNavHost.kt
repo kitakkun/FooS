@@ -12,8 +12,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
 import com.example.foos.ui.navargs.PostItemUiStateWithImageUrlType
-import com.example.foos.ui.navargs.PostType
-import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.view.screen.followlist.FollowListScreen
 import com.example.foos.ui.view.screen.followlist.FollowListViewModel
 import com.example.foos.ui.view.screen.home.HomeScreen
@@ -91,13 +89,12 @@ fun ScreenNavHost(
         }
         composable(
             Page.PostDetail.routeWithParam,
-            listOf(navArgument("uiState") { type = PostType })
+            listOf(navArgument("postId") { type = NavType.StringType })
         ) {
-            val uiState = it.arguments?.getParcelable<PostItemUiState>("uiState")
+            val postId = it.arguments?.getString("postId")
             val vm: PostDetailViewModel = hiltViewModel()
-            uiState?.let {
-                vm.setPostUiState(it)
-                PostDetailScreen(vm, navController)
+            postId?.let {
+                PostDetailScreen(vm, navController, postId)
             }
         }
         composable(Page.ImageDetail.routeWithParam, listOf(
