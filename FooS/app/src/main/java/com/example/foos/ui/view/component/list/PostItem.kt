@@ -1,13 +1,12 @@
 package com.example.foos.ui.view.screen.home
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -24,7 +23,6 @@ import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.view.component.HorizontalUserIdentityText
 import com.example.foos.ui.view.component.OnAppearLastItem
 import com.example.foos.ui.view.component.UserIcon
-import kotlinx.coroutines.flow.filter
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -39,7 +37,6 @@ import java.util.*
  * @param onContentClick コンテンツクリック時の挙動
  * @param onImageClick 添付画像クリック時の挙動
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PostItemList(
     listState: LazyListState = rememberLazyListState(),
