@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun FollowListScreen(viewModel: FollowListViewModel, navController: NavController, userId: String, initialPage: Int = 0) {
-    val uiState = viewModel.uiState.collectAsState()
+    val uiState = viewModel.uiState.value
 
     LaunchedEffect(Unit) {
         viewModel.navEvent.collect {
@@ -86,12 +86,12 @@ fun FollowListScreen(viewModel: FollowListViewModel, navController: NavControlle
         ) { page: Int ->
             when (page) {
                 0 -> FolloweeList(
-                    followees = uiState.value.followees,
+                    followees = uiState.followees,
                     fetchEvent = { viewModel.fetchFollowees(userId) },
                     onItemClicked = { id -> viewModel.navigateToUserProfile(id) }
                 )
                 1 -> FollowerList(
-                    followers = uiState.value.followers,
+                    followers = uiState.followers,
                     fetchEvent = { viewModel.fetchFollowers(userId) },
                     onItemClicked = { id -> viewModel.navigateToUserProfile(id) },
                 )

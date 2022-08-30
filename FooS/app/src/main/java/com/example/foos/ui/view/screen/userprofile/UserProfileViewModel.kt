@@ -1,6 +1,8 @@
 package com.example.foos.ui.view.screen.userprofile
 
 import android.net.Uri
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
@@ -16,7 +18,9 @@ import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,8 +35,8 @@ class UserProfileViewModel @Inject constructor(
     private val convertPostWithUserToUiStateUseCase: ConvertPostWithUserToUiStateUseCase,
 ) : ViewModel() {
 
-    private var _uiState = MutableStateFlow(UserProfileScreenUiState.Default)
-    val uiState: StateFlow<UserProfileScreenUiState> get() = _uiState
+    private var _uiState = mutableStateOf(UserProfileScreenUiState.Default)
+    val uiState: State<UserProfileScreenUiState> = _uiState
 
     // ナビゲーションイベント
     private var _navEvent = MutableSharedFlow<String>()
@@ -52,13 +56,11 @@ class UserProfileViewModel @Inject constructor(
                 else followRepository.delete(it, uiState.value.userId)
                 val followee = followRepository.fetchFollowees(uiState.value.userId)
                 val follower = followRepository.fetchFollowers(uiState.value.userId)
-                _uiState.update {
-                    it.copy (
-                        followerCount = follower.size,
-                        followeeCount = followee.size,
-                        following = !following
-                    )
-                }
+                _uiState.value = uiState.value.copy(
+                    followerCount = follower.size,
+                    followeeCount = followee.size,
+                    following = !following
+                )
             }
         }
     }
@@ -125,17 +127,15 @@ class UserProfileViewModel @Inject constructor(
             val followees = followRepository.fetchFollowees(userId)
             val user = usersRepository.fetchByUserId(userId)
             user?.let {
-                _uiState.update {
-                    it.copy(
-                        userId = user.userId,
-                        userIcon = user.profileImage,
-                        username = user.username,
-                        followeeCount = followees.size,
-                        followerCount = followers.size,
-                        following = followers.map { followInfo -> followInfo.follower }
-                            .contains(Firebase.auth.uid.toString())
-                    )
-                }
+                _uiState.value = uiState.value.copy(
+                    userId = user.userId,
+                    userIcon = user.profileImage,
+                    username = user.username,
+                    followeeCount = followees.size,
+                    followerCount = followers.size,
+                    following = followers.map { followInfo -> followInfo.follower }
+                        .contains(Firebase.auth.uid.toString())
+                )
             }
         }
     }
@@ -145,7 +145,7 @@ class UserProfileViewModel @Inject constructor(
             val posts = getPostsWithUserByUserIdWithDateUseCase(userId).map {
                 convertPostWithUserToUiStateUseCase(it)
             }
-            _uiState.update { it.copy(posts = posts) }
+            _uiState.value = uiState.value.copy(posts = posts)
         }
     }
 
@@ -164,9 +164,7 @@ class UserProfileViewModel @Inject constructor(
                 ).map {
                     convertPostWithUserToUiStateUseCase(it)
                 }
-                _uiState.update { state ->
-                    state.copy(posts = (state.posts + posts).distinct())
-                }
+                _uiState.value = uiState.value.copy(posts = (uiState.value.posts + posts).distinct())
             }
         }
     }

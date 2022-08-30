@@ -47,7 +47,7 @@ fun PostScreen(viewModel: PostViewModel, navController: NavController) {
         }
     }
 
-    val uiState by viewModel.postUiState.collectAsState()
+    val uiState = viewModel.uiState.value
 
     val context = LocalContext.current
 

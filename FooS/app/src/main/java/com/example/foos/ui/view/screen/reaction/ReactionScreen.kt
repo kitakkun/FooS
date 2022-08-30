@@ -24,13 +24,13 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 @Composable
 fun ReactionScreen(viewModel: ReactionViewModel, navController: NavController) {
 
-    val uiState = viewModel.uiState.collectAsState()
+    val uiState = viewModel.uiState.value
 
-    SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = uiState.value.isRefreshing),
+    SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing),
         onRefresh = { viewModel.fetchNewReactions() }
     ) {
         ReactionItemList(
-            uiStates = uiState.value.reactions,
+            uiStates = uiState.reactions,
             onUserIconClick = { userId -> viewModel.onUserIconClick(userId) },
             onContentClick = { viewModel.onContentClick() },
         )

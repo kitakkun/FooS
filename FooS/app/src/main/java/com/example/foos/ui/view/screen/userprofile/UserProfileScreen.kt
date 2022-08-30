@@ -43,7 +43,7 @@ import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
 @Composable
 fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavController) {
 
-    val uiState = viewModel.uiState.collectAsState()
+    val uiState = viewModel.uiState.value
     val listState = rememberLazyListState()
 
     listState.OnAppearLastItem(onAppearLastItem = { viewModel.fetchOlderPosts() })
@@ -67,16 +67,16 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
         state = nestedScrollViewState,
         header = {
             UserProfileView(
-                username = uiState.value.username,
-                userId = uiState.value.userId,
+                username = uiState.username,
+                userId = uiState.userId,
                 bio = "",
-                profileImage = uiState.value.userIcon,
-                followerNum = uiState.value.followerCount,
-                followeeNum = uiState.value.followeeCount,
-                onFollowingTextClick = { viewModel.navigateToFolloweeList(userId = uiState.value.userId) },
-                onFollowersTextClick = { viewModel.navigateToFollowerList(userId = uiState.value.userId) },
+                profileImage = uiState.userIcon,
+                followerNum = uiState.followerCount,
+                followeeNum = uiState.followeeCount,
+                onFollowingTextClick = { viewModel.navigateToFolloweeList(userId = uiState.userId) },
+                onFollowersTextClick = { viewModel.navigateToFollowerList(userId = uiState.userId) },
                 onFollowButtonClick = { viewModel.onFollowButtonClick() },
-                following = uiState.value.following,
+                following = uiState.following,
             )
         },
         content = {
@@ -119,7 +119,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                 ) { page: Int ->
                     when (page) {
                         0 -> PostItemList(
-                            uiStates = uiState.value.posts,
+                            uiStates = uiState.posts,
                             onImageClick = { state, url ->
                                 viewModel.onImageClick(
                                     state,

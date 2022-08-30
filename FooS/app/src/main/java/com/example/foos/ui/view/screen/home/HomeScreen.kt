@@ -24,7 +24,7 @@ fun HomeScreen(
     screenViewModel: ScreenViewModel
 ) {
 
-    val uiState = viewModel.uiState.collectAsState()
+    val uiState = viewModel.uiState.value
     val listState = rememberLazyListState()
 
     // 起動時初回フェッチ
@@ -48,12 +48,12 @@ fun HomeScreen(
         }
     }
 
-    SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = uiState.value.isRefreshing),
+    SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing),
         onRefresh = { viewModel.onRefresh() }
     ) {
         PostItemList(
             listState = listState,
-            uiStates = uiState.value.posts,
+            uiStates = uiState.posts,
             onUserIconClick = { userId -> viewModel.onUserIconClick(userId) },
             onContentClick = { uiState -> viewModel.onContentClick(uiState) },
             onImageClick = { uiState, clickedImageUrl ->
