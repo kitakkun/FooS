@@ -4,8 +4,10 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import com.example.foos.data.model.DatabasePost
 import com.example.foos.util.ImageConverter
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -24,6 +26,19 @@ object PostsRepository {
     private const val DEFAULT_LOAD_LIMIT: Long = 15
     private const val MAX_UPLOAD_IMAGE_SIZE = 1024
     private const val COLLECTION = "posts"
+
+    /**
+     *
+     */
+    suspend fun fetchByLatLngBounds(bounds: LatLngBounds): List<DatabasePost> {
+        Log.d("FETCH", "FETCHBYBOUNDS")
+        return Firebase.firestore.collection(COLLECTION)
+            .whereLessThanOrEqualTo("longitude", bounds.northeast.longitude)
+            .whereGreaterThanOrEqualTo("longitude", bounds.southwest.longitude)
+            .get().await().toObjects(DatabasePost::class.java).filter {
+                it.latitude!! <= bounds.northeast.latitude && it.latitude >= bounds.southwest.latitude
+            }
+    }
 
     /**
      * ユーザーIDと日時を指定して投稿を取得します

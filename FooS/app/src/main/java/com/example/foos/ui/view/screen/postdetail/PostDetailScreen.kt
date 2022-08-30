@@ -19,12 +19,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
@@ -36,14 +33,12 @@ import com.google.maps.android.compose.*
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun PostDetailScreenPreview() {
-    PostDetailScreen(viewModel = hiltViewModel(), navController = rememberNavController())
-}
+fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavController, postId: String) {
 
-@Composable
-fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavController) {
+    LaunchedEffect(Unit) {
+        viewModel.fetchPost(postId)
+    }
 
     val uiState = viewModel.uiState.value
     val postItemUiState = uiState.postItemUiState
