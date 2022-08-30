@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
 import com.example.foos.data.domain.GetPostsWithUserUseCase
-import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
+import com.example.foos.ui.navigation.navargs.PostItemUiStateWithImageUrl
 import com.example.foos.ui.state.screen.home.HomeScreenUiState
 import com.example.foos.ui.state.screen.home.PostItemUiState
-import com.example.foos.ui.view.screen.Page
+import com.example.foos.ui.navigation.SubScreen
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +41,7 @@ class HomeViewModel @Inject constructor(
      */
     fun onUserIconClick(userId: String) {
         viewModelScope.launch {
-            _navEvent.emit("${Page.UserProfile.route}/$userId")
+            _navEvent.emit("${SubScreen.UserProfile.route}/$userId")
         }
     }
 
@@ -52,7 +52,7 @@ class HomeViewModel @Inject constructor(
     fun onContentClick(uiState: PostItemUiState) {
         viewModelScope.launch {
             val data = uiState.postId
-            _navEvent.emit("${Page.PostDetail.route}/$data")
+            _navEvent.emit("${SubScreen.PostDetail.route}/$data")
         }
     }
 
@@ -69,7 +69,7 @@ class HomeViewModel @Inject constructor(
                     uiState.attachedImages.indexOf(clickedImageUrl)
                 )
             val data = Uri.encode(Gson().toJson(uiStateWithImageUrl))
-            _navEvent.emit("${Page.ImageDetail.route}/$data")
+            _navEvent.emit("${SubScreen.ImageDetail.route}/$data")
         }
     }
 

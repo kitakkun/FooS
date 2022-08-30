@@ -10,7 +10,7 @@ import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.UsersRepository
 import com.example.foos.ui.state.screen.followlist.FollowListScreenUiState
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
-import com.example.foos.ui.view.screen.Page
+import com.example.foos.ui.navigation.SubScreen
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +36,7 @@ class FollowListViewModel @Inject constructor(
 
     fun navigateToUserProfile(userId: String) {
         viewModelScope.launch {
-            _navEvent.emit("${Page.UserProfile.route}/$userId")
+            _navEvent.emit("${SubScreen.UserProfile.route}/$userId")
         }
     }
 

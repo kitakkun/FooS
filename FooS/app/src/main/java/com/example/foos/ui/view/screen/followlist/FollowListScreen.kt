@@ -1,13 +1,15 @@
 package com.example.foos.ui.view.screen.followlist
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,24 +24,31 @@ import com.example.foos.ui.view.component.FollowButton
 import com.example.foos.ui.view.component.OnAppearLastItem
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.VerticalUserIdentityText
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.pager.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
+/**
+ * フォロワーとフォロー中のユーザリストを表示するスクリーン
+ */
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun FollowListScreen(viewModel: FollowListViewModel, navController: NavController, userId: String, initialPage: Int = 0) {
-    val uiState = viewModel.uiState.value
+fun FollowListScreen(
+    viewModel: FollowListViewModel,
+    navController: NavController,
+    userId: String,
+    initialPage: Int = 0
+) {
 
+    // ナビゲーションイベントの処理
     LaunchedEffect(Unit) {
         viewModel.navEvent.collect {
             navController.navigate(it)
         }
     }
+
+    val uiState = viewModel.uiState.value
 
     val tabTitles = listOf(
         stringResource(id = R.string.following),
@@ -49,27 +58,9 @@ fun FollowListScreen(viewModel: FollowListViewModel, navController: NavControlle
     val pagerState = rememberPagerState(initialPage)
     val coroutineScope = rememberCoroutineScope()
 
-    Column() {
-        TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
-                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-                )
-            }
-        ) {
-            tabTitles.forEachIndexed { index, title ->
-                Tab(
-                    text = { Text(text = title) },
-                    selected = pagerState.currentPage == index,
-                    onClick = {
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(index)
-                        }
-                    }
-                )
-            }
-        }
+    Column {
+
+        MyTabRow(pagerState = pagerState, tabTitles = tabTitles)
 
         HorizontalPager(
             state = pagerState,
@@ -92,6 +83,34 @@ fun FollowListScreen(viewModel: FollowListViewModel, navController: NavControlle
         }
     }
 
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+private fun MyTabRow(
+    pagerState: PagerState,
+    tabTitles: List<String>,
+) {
+    val coroutineScope = rememberCoroutineScope()
+    TabRow(
+        selectedTabIndex = pagerState.currentPage, indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+            )
+        }
+    ) {
+        tabTitles.forEachIndexed { index, title ->
+            Tab(
+                text = { Text(text = title) },
+                selected = pagerState.currentPage == index,
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(index)
+                    }
+                }
+            )
+        }
+    }
 }
 
 @Composable

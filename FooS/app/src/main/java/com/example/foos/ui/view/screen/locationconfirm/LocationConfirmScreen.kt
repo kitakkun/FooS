@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.foos.R
-import com.example.foos.ui.view.screen.Page
+import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
@@ -60,7 +60,7 @@ fun LocationConfirmScreen(
                 return@collect
             }
             sharedViewModel.updatePostCreateSharedData(location, uiState.locationName)
-            navController.navigate(Page.PostCreate.route) {
+            navController.navigate(SubScreen.PostCreate.route) {
                 popUpTo(navController.graph.findStartDestination().id) {
                     inclusive = true
                 }

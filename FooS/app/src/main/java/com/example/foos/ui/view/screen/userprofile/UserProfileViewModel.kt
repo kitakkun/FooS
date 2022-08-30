@@ -1,6 +1,7 @@
 package com.example.foos.ui.view.screen.userprofile
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -9,10 +10,10 @@ import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
 import com.example.foos.data.domain.GetPostsWithUserByUserIdWithDateUseCase
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.UsersRepository
-import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
+import com.example.foos.ui.navigation.navargs.PostItemUiStateWithImageUrl
 import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.state.screen.userprofile.UserProfileScreenUiState
-import com.example.foos.ui.view.screen.Page
+import com.example.foos.ui.navigation.SubScreen
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
@@ -70,7 +71,7 @@ class UserProfileViewModel @Inject constructor(
      */
     fun navigateToFollowerList(userId: String) {
         viewModelScope.launch {
-            _navEvent.emit("${Page.FollowList.route}/$userId/${false}")
+            _navEvent.emit(SubScreen.FollowList.route(userId, false.toString()))
         }
     }
 
@@ -79,7 +80,8 @@ class UserProfileViewModel @Inject constructor(
      */
     fun navigateToFolloweeList(userId: String) {
         viewModelScope.launch {
-            _navEvent.emit("${Page.FollowList.route}/$userId/${true}")
+            Log.d("NAV", SubScreen.FollowList.route(userId, true.toString()))
+            _navEvent.emit(SubScreen.FollowList.route(userId, true.toString()))
         }
     }
 
@@ -96,7 +98,7 @@ class UserProfileViewModel @Inject constructor(
     fun onContentClick(uiState: PostItemUiState) {
         val data = uiState.postId
         viewModelScope.launch {
-            _navEvent.emit("${Page.PostDetail.route}/$data")
+            _navEvent.emit("${SubScreen.PostDetail.route}/$data")
         }
     }
 
@@ -110,7 +112,7 @@ class UserProfileViewModel @Inject constructor(
             PostItemUiStateWithImageUrl(uiState, uiState.attachedImages.indexOf(clickedImageUrl))
         val data = Uri.encode(Gson().toJson(uiStateWithImageUrl))
         viewModelScope.launch {
-            _navEvent.emit("${Page.ImageDetail.route}/$data")
+            _navEvent.emit("${SubScreen.ImageDetail.route}/$data")
         }
     }
 

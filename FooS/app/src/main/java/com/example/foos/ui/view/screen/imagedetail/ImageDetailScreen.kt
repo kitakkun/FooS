@@ -14,7 +14,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.foos.R
-import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
+import com.example.foos.ui.navigation.navargs.PostItemUiStateWithImageUrl
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 import kotlinx.coroutines.launch

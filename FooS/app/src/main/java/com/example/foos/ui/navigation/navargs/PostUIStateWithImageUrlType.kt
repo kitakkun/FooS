@@ -1,4 +1,4 @@
-package com.example.foos.ui.navargs
+package com.example.foos.ui.navigation.navargs
 
 import android.os.Bundle
 import androidx.navigation.NavType

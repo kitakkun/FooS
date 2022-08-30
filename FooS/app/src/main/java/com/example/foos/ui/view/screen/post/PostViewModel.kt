@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.foos.data.model.DatabasePost
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.ui.state.screen.post.PostScreenUiState
-import com.example.foos.ui.view.screen.Page
+import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.util.FileUtils.getRealPath
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.ktx.auth
@@ -62,7 +62,7 @@ class PostViewModel @Inject constructor(
      */
     fun navigateToLocationSelect() {
         viewModelScope.launch {
-            _navEvent.emit(Page.LocationSelect.route)
+            _navEvent.emit(SubScreen.PostCreate.LocationSelect.route)
         }
     }
 

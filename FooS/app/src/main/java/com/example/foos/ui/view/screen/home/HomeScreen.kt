@@ -3,11 +3,10 @@ package com.example.foos.ui.view.screen.home
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavController
 import com.example.foos.ui.view.component.RoundIconActionButton
-import com.example.foos.ui.view.screen.Page
-import com.example.foos.ui.view.screen.Screen
+import com.example.foos.ui.navigation.SubScreen
+import com.example.foos.ui.navigation.Screen
 import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -27,19 +26,19 @@ fun HomeScreen(
     val uiState = viewModel.uiState.value
     val listState = rememberLazyListState()
 
-    // 起動時初回フェッチ
+    // 初回起動時の投稿フェッチ
     LaunchedEffect(Unit) {
         viewModel.fetchNewerPosts()
     }
 
-    // ナビゲーションイベントの処理
+    // ナビゲーションイベント処理
     LaunchedEffect(Unit) {
         viewModel.navEvent.collect {
             navController.navigate(it)
         }
     }
 
-    // Bottomナビゲーションのイベントを受け取る
+    // Bottomナビゲーションでホームがクリックされたらトップへスクロール
     LaunchedEffect(Unit) {
         screenViewModel.navRoute.collect {
             if (it == Screen.Home.route) {
@@ -48,14 +47,15 @@ fun HomeScreen(
         }
     }
 
-    SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing),
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing),
         onRefresh = { viewModel.onRefresh() }
     ) {
         PostItemList(
             listState = listState,
             uiStates = uiState.posts,
-            onUserIconClick = { userId -> viewModel.onUserIconClick(userId) },
-            onContentClick = { uiState -> viewModel.onContentClick(uiState) },
+            onUserIconClick = { viewModel.onUserIconClick(it) },
+            onContentClick = { viewModel.onContentClick(it) },
             onImageClick = { uiState, clickedImageUrl ->
                 viewModel.onImageClick(
                     uiState,
@@ -65,5 +65,5 @@ fun HomeScreen(
             onAppearLastItem = { viewModel.fetchOlderPosts() }
         )
     }
-    RoundIconActionButton(onClick = { navController.navigate(Page.PostCreate.route) })
+    RoundIconActionButton(onClick = { navController.navigate(SubScreen.PostCreate.route) })
 }
