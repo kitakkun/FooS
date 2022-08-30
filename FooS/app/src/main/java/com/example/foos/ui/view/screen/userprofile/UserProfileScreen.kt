@@ -8,7 +8,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foos.R
+import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.view.component.FollowButton
 import com.example.foos.ui.view.component.OnAppearLastItem
 import com.example.foos.ui.view.component.UserIcon
@@ -120,10 +120,10 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                     when (page) {
                         0 -> PostItemList(
                             uiStates = uiState.posts,
-                            onImageClick = { state, url ->
+                            onImageClick = { imageUrls, clickedImageUrl ->
                                 viewModel.onImageClick(
-                                    state,
-                                    url
+                                    imageUrls,
+                                    clickedImageUrl
                                 )
                             },
                             onContentClick = { state -> viewModel.onContentClick(state) },
@@ -163,7 +163,7 @@ fun UserProfileView(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.padding(16.dp)
+        modifier = modifier.padding(paddingMedium)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -178,9 +178,9 @@ fun UserProfileView(
                 FollowButton(onClick = onFollowButtonClick, following = following)
             }
         }
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(paddingMedium))
         VerticalUserIdentityText(username = username, userId = userId)
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(paddingMedium))
         Biography(bio = bio)
         FollowInfo(
             followerNum = followerNum,
@@ -223,7 +223,7 @@ fun FollowInfo(
                 }
             },
             modifier = Modifier
-                .padding(16.dp)
+                .padding(paddingMedium)
                 .clickable { onFollowingTextClick() }
         )
         Text(
@@ -236,7 +236,7 @@ fun FollowInfo(
                 }
             },
             modifier = Modifier
-                .padding(16.dp)
+                .padding(paddingMedium)
                 .clickable { onFollowersTextClick() }
         )
     }

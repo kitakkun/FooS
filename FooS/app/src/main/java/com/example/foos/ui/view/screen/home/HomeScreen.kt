@@ -4,9 +4,9 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavController
-import com.example.foos.ui.view.component.RoundIconActionButton
-import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.navigation.Screen
+import com.example.foos.ui.navigation.SubScreen
+import com.example.foos.ui.view.component.RoundIconActionButton
 import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -56,9 +56,9 @@ fun HomeScreen(
             uiStates = uiState.posts,
             onUserIconClick = { viewModel.onUserIconClick(it) },
             onContentClick = { viewModel.onContentClick(it) },
-            onImageClick = { uiState, clickedImageUrl ->
+            onImageClick = { imageUrls, clickedImageUrl ->
                 viewModel.onImageClick(
-                    uiState,
+                    imageUrls,
                     clickedImageUrl
                 )
             },

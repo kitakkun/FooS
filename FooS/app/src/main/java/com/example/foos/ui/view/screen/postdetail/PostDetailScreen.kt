@@ -26,6 +26,7 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.foos.R
+import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.view.component.UserIcon
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -131,7 +132,7 @@ fun AttachedImagesDisplay(
     LazyRow(
         state = lazyListState,
         flingBehavior = rememberSnapperFlingBehavior(lazyListState),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(paddingMedium)
     ) {
         items(urls) { image ->
             AsyncImage(

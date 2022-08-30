@@ -13,12 +13,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.foos.R
-import com.example.foos.ui.constants.PADDING_MEDIUM
+import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.view.component.HorizontalUserIdentityText
 import com.example.foos.ui.view.component.OnAppearLastItem
@@ -41,9 +42,9 @@ import java.util.*
 fun PostItemList(
     listState: LazyListState = rememberLazyListState(),
     uiStates: List<PostItemUiState>,
-    onUserIconClick: (userId: String) -> Unit = { },
-    onContentClick: (uiState: PostItemUiState) -> Unit = { },
-    onImageClick: (uiState: PostItemUiState, clickedImageUrl: String) -> Unit = { _, _ -> },
+    onUserIconClick: (String) -> Unit = { },
+    onContentClick: (PostItemUiState) -> Unit = { },
+    onImageClick: (List<String>, String) -> Unit = { _, _ -> },
     onAppearLastItem: (Int) -> Unit = {},
 ) {
     listState.OnAppearLastItem(onAppearLastItem = onAppearLastItem)
@@ -70,17 +71,17 @@ fun PostItemList(
 @Composable
 fun PostItem(
     uiState: PostItemUiState,
-    onUserIconClick: (userId: String) -> Unit = { },
+    onUserIconClick: (String) -> Unit = { },
     onContentClick: (PostItemUiState) -> Unit = { },
-    onImageClick: (PostItemUiState, String) -> Unit = { _, _ -> },
+    onImageClick: (List<String>, String) -> Unit = { _, _ -> },
 ) {
     Row(
         modifier = Modifier
             .clickable { onContentClick.invoke(uiState) }
-            .padding(PADDING_MEDIUM)
+            .padding(paddingMedium)
     ) {
         UserIcon(url = uiState.userIcon, onClick = { onUserIconClick.invoke(uiState.userId) })
-        Spacer(modifier = Modifier.width(20.dp))
+        Spacer(modifier = Modifier.width(paddingMedium))
         Column {
             UserIdentityWithCreatedAtRow(uiState.username, uiState.userId, createdAt = uiState.createdAt)
             Text(
@@ -89,10 +90,25 @@ fun PostItem(
                     .fillMaxWidth(),
                 textAlign = TextAlign.Justify,
             )
-            Spacer(Modifier.height(16.dp))
-            AttachedImagesRow(uiState, onImageClick)
+            Spacer(Modifier.height(paddingMedium))
+            AttachedImagesRow(uiState.attachedImages, onImageClick)
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PostItemPreview() {
+    val uiState = PostItemUiState(
+        userIcon = "",
+        username = "username",
+        userId = "userId",
+        content = "some interesting post content...",
+        attachedImages = listOf("", "", ""),
+        postId = "",
+        createdAt = Date()
+    )
+    PostItem(uiState = uiState)
 }
 
 /**
@@ -164,13 +180,13 @@ fun PostTime(
  */
 @Composable
 fun AttachedImagesRow(
-    uiState: PostItemUiState,
-    onClick: (PostItemUiState, String) -> Unit = { _, _ -> },
+    attachedImages: List<String>,
+    onClick: (List<String>, String) -> Unit = { _, _ -> },
 ) {
     LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(paddingMedium)
     ) {
-        items(uiState.attachedImages) { image ->
+        items(attachedImages) { image ->
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(image).crossfade(true)
@@ -179,7 +195,7 @@ fun AttachedImagesRow(
                     .build(),
                 contentDescription = null,
                 modifier = Modifier
-                    .clickable { onClick.invoke(uiState, image) }
+                    .clickable { onClick.invoke(attachedImages, image) }
                     .size(120.dp)
                     .clip(RoundedCornerShape(10)),
                 contentScale = ContentScale.Crop,

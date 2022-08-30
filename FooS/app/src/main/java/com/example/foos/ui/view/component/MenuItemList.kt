@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.component.MenuItemUiState
 
 /**
@@ -30,7 +31,7 @@ fun MenuItemList(
     Column {
         headerText?.let { Text(stringResource(it)) }
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(paddingMedium),
             contentPadding = PaddingValues(vertical = 8.dp)
         ) {
             items(menuItemUiStates) {
@@ -55,7 +56,7 @@ fun MenuItem(
         modifier = modifier
             .clickable { uiState.onClick.invoke() }
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(paddingMedium)
     ) {
         // アイコン
         uiState.icon?.let {
@@ -64,7 +65,7 @@ fun MenuItem(
                 contentDescription = null,
                 tint = MaterialTheme.colors.onSurface,
             )
-            Spacer(Modifier.width(16.dp))
+            Spacer(Modifier.width(paddingMedium))
         }
         // メニューテキスト
         Text(stringResource(id = uiState.text), fontSize = 18.sp)

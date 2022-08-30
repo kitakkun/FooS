@@ -8,8 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.foos.R
+import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
 import com.example.foos.ui.view.component.FollowButton
 import com.example.foos.ui.view.component.UserIcon
@@ -24,7 +24,7 @@ fun UserItem(
 ) {
     Column(
         modifier = modifier
-            .padding(16.dp)
+            .padding(paddingMedium)
             .fillMaxWidth()
             .clickable { onItemClicked(uiState.userId) },
     ) {
@@ -39,7 +39,7 @@ fun UserItem(
                 modifier = Modifier.weight(1f)
             ) {
                 UserIcon(url = uiState.profileImage)
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(paddingMedium))
                 Column {
                     Row {
                         VerticalUserIdentityText(
@@ -47,7 +47,7 @@ fun UserItem(
                             userId = uiState.userId,
                         )
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(paddingMedium))
                     Text(text = uiState.bio)
                 }
             }

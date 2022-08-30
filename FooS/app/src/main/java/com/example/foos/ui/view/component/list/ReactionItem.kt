@@ -10,29 +10,50 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.foos.R
+import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.screen.reaction.ReactionItemUiState
 import com.example.foos.ui.view.component.UserIcon
 
-@Preview
+/**
+ * リアクションリストのアイテム
+ */
 @Composable
 fun ReactionItem(
-    uiState: ReactionItemUiState = ReactionItemUiState.Default
+    uiState: ReactionItemUiState,
+    modifier: Modifier = Modifier,
+    onContentClick: (String) -> Unit = {},
+    onUserIconClick: (String) -> Unit = {},
 ) {
     Row(
-        modifier = Modifier.padding(16.dp)
+        modifier = modifier.padding(paddingMedium)
     ) {
         UserIcon(url = uiState.userIcon)
-        Spacer(modifier = Modifier.width(16.dp))
-        Column() {
-            val text = stringResource(R.string.reaction_message, uiState.username, uiState.reaction)
-            WordEmText(text = text, emIndices = listOf(0))
-            Text(
-                text = uiState.postContent
+        Spacer(modifier = Modifier.width(paddingMedium))
+        Column {
+            WordEmText(
+                text = stringResource(
+                    R.string.reaction_message,
+                    uiState.username,
+                    uiState.reaction
+                ),
+                emIndices = listOf(0)
             )
+            Text(text = uiState.postContent)
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ReactionItemPreview() {
+    val uiState = ReactionItemUiState(
+        username = "username",
+        userIcon = "",
+        reaction = "'emoji'",
+        postContent = "some interesting post content..."
+    )
+    ReactionItem(uiState = uiState)
 }
 
 @Composable
@@ -40,22 +61,20 @@ fun WordEmText(
     text: String,
     emIndices: List<Int>,
 ) {
-    val texts = text.split(" ")
-    var first = true
+    val words = text.split(" ")
     Text(
         buildAnnotatedString {
-            for (i in texts.indices) {
-                if (!first) {
+            words.forEachIndexed { i, word ->
+                if (i != 0) {
                     append(" ")
                 }
                 if (i in emIndices) {
                     withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(texts[i])
+                        append(word)
                     }
                 } else {
-                    append(texts[i])
+                    append(word)
                 }
-                first = false
             }
         }
     )

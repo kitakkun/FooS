@@ -10,7 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.foos.ui.navigation.Screen
 import com.example.foos.ui.navigation.SubScreen
-import com.example.foos.ui.navigation.navargs.PostItemUiStateWithImageUrl
+import com.example.foos.ui.navigation.navargs.StringList
 import com.example.foos.ui.view.screen.followlist.FollowListScreen
 import com.example.foos.ui.view.screen.followlist.FollowListViewModel
 import com.example.foos.ui.view.screen.home.HomeScreen
@@ -79,7 +79,7 @@ fun ScreenNavHost(
             SubScreen.UserProfile.routeWithParam,
             SubScreen.UserProfile.arguments,
         ) {
-            val userId = SubScreen.PostDetail.resolveArguments(it.arguments)["userId"] as String?
+            val userId = it.arguments?.getString("userId")
             userId?.let {
                 val vm: UserProfileViewModel = hiltViewModel()
                 vm.setUserId(userId)
@@ -90,29 +90,32 @@ fun ScreenNavHost(
             SubScreen.PostDetail.routeWithParam,
             SubScreen.PostDetail.arguments,
         ) {
-            val userId = SubScreen.PostDetail.resolveArguments(it.arguments)["userId"] as String?
-            userId?.let {
+            val postId = it.arguments?.getString("postId")
+            postId?.let {
                 val vm: PostDetailViewModel = hiltViewModel()
-                PostDetailScreen(vm, navController, userId)
+                PostDetailScreen(vm, navController, postId)
             }
         }
         composable(
             SubScreen.ImageDetail.routeWithParam,
             SubScreen.ImageDetail.arguments,
         ) {
-            val uiStateWithImageUrl =
-                SubScreen.PostDetail.resolveArguments(it.arguments)["uiStateWithImageUrl"] as PostItemUiStateWithImageUrl?
-            uiStateWithImageUrl?.let {
-                ImageDetailScreen(navController = navController, post = uiStateWithImageUrl)
+            val imageUrls = it.arguments?.getParcelable<StringList>("imageUrls")
+            val clickedImageIndex = it.arguments?.getString("clickedImageIndex")
+            if (imageUrls != null && clickedImageIndex != null) {
+                ImageDetailScreen(
+                    navController = navController,
+                    imageUrls = imageUrls.value,
+                    initialIndex = clickedImageIndex.toInt(),
+                )
             }
         }
         composable(
             SubScreen.FollowList.routeWithParam,
             SubScreen.FollowList.arguments,
         ) {
-            val params = SubScreen.FollowList.resolveArguments(it.arguments)
-            val userId = params["userId"] as String?
-            val followees = params["followees"] as Boolean?
+            val userId = it.arguments?.getString("userId")
+            val followees = it.arguments?.getBoolean("followees")
             if (userId != null && followees != null) {
                 val index = if (followees) 1 else 0
                 val vm: FollowListViewModel = hiltViewModel()

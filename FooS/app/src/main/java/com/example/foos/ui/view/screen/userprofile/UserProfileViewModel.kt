@@ -10,13 +10,11 @@ import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
 import com.example.foos.data.domain.GetPostsWithUserByUserIdWithDateUseCase
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.UsersRepository
-import com.example.foos.ui.navigation.navargs.PostItemUiStateWithImageUrl
+import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.state.screen.userprofile.UserProfileScreenUiState
-import com.example.foos.ui.navigation.SubScreen
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -104,15 +102,17 @@ class UserProfileViewModel @Inject constructor(
 
     /**
      * 投稿コンテンツの画像クリック時のイベント
-     * @param uiState クリックされた画像を持つ投稿のUI状態
+     * @param imageUrls クリックされた画像を持つ投稿のUI状態
      * @param clickedImageUrl クリックされた画像のURL
      */
-    fun onImageClick(uiState: PostItemUiState, clickedImageUrl: String) {
-        val uiStateWithImageUrl =
-            PostItemUiStateWithImageUrl(uiState, uiState.attachedImages.indexOf(clickedImageUrl))
-        val data = Uri.encode(Gson().toJson(uiStateWithImageUrl))
+    fun onImageClick(imageUrls: List<String>, clickedImageUrl: String) {
         viewModelScope.launch {
-            _navEvent.emit("${SubScreen.ImageDetail.route}/$data")
+            _navEvent.emit(
+                SubScreen.ImageDetail.route(
+                    imageUrls.map { Uri.encode(it) }.toString(),
+                    clickedImageUrl
+                )
+            )
         }
     }
 
@@ -166,7 +166,8 @@ class UserProfileViewModel @Inject constructor(
                 ).map {
                     convertPostWithUserToUiStateUseCase(it)
                 }
-                _uiState.value = uiState.value.copy(posts = (uiState.value.posts + posts).distinct())
+                _uiState.value =
+                    uiState.value.copy(posts = (uiState.value.posts + posts).distinct())
             }
         }
     }
