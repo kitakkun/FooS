@@ -35,7 +35,6 @@ import com.example.foos.ui.view.screen.setting.SettingScreen
 import com.example.foos.ui.view.screen.setting.SettingViewModel
 import com.example.foos.ui.view.screen.userprofile.UserProfileScreen
 import com.example.foos.ui.view.screen.userprofile.UserProfileViewModel
-import com.google.android.gms.maps.model.LatLng
 
 /**
  * 画面下部ナビゲーションのNavHost
@@ -69,26 +68,15 @@ fun ScreenNavHost(
         }
         composable(Page.PostCreate.route) {
             val vm: PostViewModel = hiltViewModel()
-            PostScreen(vm, navController)
+            PostScreen(vm, navController, screenViewModel)
         }
         composable(Page.LocationSelect.route) {
             val vm: LocationSelectViewModel = hiltViewModel()
-            LocationSelectScreen(vm, navController)
+            LocationSelectScreen(vm, navController, screenViewModel)
         }
-        composable(
-            Page.LocationConfirm.routeWithParam,
-            listOf(
-                navArgument("longitude") {type = NavType.FloatType},
-                navArgument("latitude") {type = NavType.FloatType},
-            )
-        ) {
-            val longitude = it.arguments?.getFloat("longitude")?.toDouble()
-            val latitude = it.arguments?.getFloat("latitude")?.toDouble()
-            if (longitude != null && latitude != null) {
-                val vm: LocationConfirmViewModel = hiltViewModel()
-                val location = LatLng(longitude, latitude)
-                LocationConfirmScreen(vm, navController, location)
-            }
+        composable(Page.LocationConfirm.route) {
+            val vm: LocationConfirmViewModel = hiltViewModel()
+            LocationConfirmScreen(vm, navController, screenViewModel)
         }
         composable(
             Page.UserProfile.routeWithParam,

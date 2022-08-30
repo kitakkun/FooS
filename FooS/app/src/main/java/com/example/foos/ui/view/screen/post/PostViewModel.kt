@@ -29,7 +29,7 @@ class PostViewModel @Inject constructor(
     application: Application
 ) : AndroidViewModel(application) {
 
-    private var _uiState = mutableStateOf(PostScreenUiState("", listOf(), null))
+    private var _uiState = mutableStateOf(PostScreenUiState("", listOf(), null, null))
     val uiState: State<PostScreenUiState> = _uiState
 
     private var _navUpEvent = MutableSharedFlow<Boolean>()
@@ -38,16 +38,19 @@ class PostViewModel @Inject constructor(
     private var _navEvent = MutableSharedFlow<String>()
     val navEvent = _navEvent.asSharedFlow()
 
+    fun applyLocationData(location: LatLng, locationName: String) {
+        _uiState.value = uiState.value.copy(
+            location = location,
+            locationName = locationName
+        )
+    }
+
     fun setImages(context: Context, imageUris: List<Uri>) {
         _uiState.value = _uiState.value.copy(
             attachedImages = (uiState.value.attachedImages + imageUris.map { uri ->
                 "file://" + getRealPath(context, uri)
             }).distinct()
         )
-    }
-
-    fun registerLocation(location: LatLng) {
-        _uiState.value = uiState.value.copy(location = location)
     }
 
     fun onTextFieldUpdated(text: String) {
@@ -75,6 +78,7 @@ class PostViewModel @Inject constructor(
                 attachedImages = uiState.value.attachedImages,
                 longitude = uiState.value.location?.longitude,
                 latitude = uiState.value.location?.latitude,
+                locationName = uiState.value.locationName,
             )
             postsRepository.create(databasePost, getApplication())
         }

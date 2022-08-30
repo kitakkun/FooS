@@ -6,4 +6,5 @@ data class PostScreenUiState(
     var content: String,
     val attachedImages: List<String>,
     val location: LatLng?,
+    val locationName: String?,
 )
