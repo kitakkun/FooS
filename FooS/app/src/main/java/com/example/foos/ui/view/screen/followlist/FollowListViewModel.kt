@@ -45,6 +45,7 @@ class FollowListViewModel @Inject constructor(
             val followees =
                 fetchFolloweesWithMyFollowStateByUserIdUseCase(Firebase.auth.uid!!, userId).map {
                     UserItemUiState(
+                        clientUserId = Firebase.auth.uid!!,
                         username = it.user.username,
                         profileImage = it.user.profileImage,
                         userId = it.user.userId,
@@ -64,6 +65,7 @@ class FollowListViewModel @Inject constructor(
             val followers =
                 fetchFollowersWithMyFollowStateByUserIdUseCase(Firebase.auth.uid!!, userId).map {
                     UserItemUiState(
+                        clientUserId = Firebase.auth.uid!!,
                         username = it.user.username,
                         profileImage = it.user.profileImage,
                         userId = it.user.userId,

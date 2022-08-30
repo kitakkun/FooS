@@ -24,6 +24,7 @@ import com.example.foos.ui.view.component.FollowButton
 import com.example.foos.ui.view.component.OnAppearLastItem
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.VerticalUserIdentityText
+import com.example.foos.ui.view.component.list.UserItem
 import com.google.accompanist.pager.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -163,51 +164,9 @@ fun UserList(
     }
 }
 
-@Composable
-fun UserItem(
-    uiState: UserItemUiState,
-    modifier: Modifier = Modifier,
-    onItemClicked: (String) -> Unit,
-) {
-    Column(
-        modifier = modifier
-            .padding(16.dp)
-            .fillMaxWidth()
-            .clickable { onItemClicked(uiState.userId) },
-    ) {
-        if (uiState.followingYou) {
-            Text(text = "follows you", fontWeight = FontWeight.Light)
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Row(
-                modifier = Modifier.weight(1f)
-            ) {
-                UserIcon(url = uiState.profileImage)
-                Spacer(modifier = Modifier.width(16.dp))
-                Column {
-                    Row {
-                        VerticalUserIdentityText(
-                            username = uiState.username,
-                            userId = uiState.userId,
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(text = uiState.bio)
-                }
-            }
-            if (uiState.userId != Firebase.auth.uid) {
-                FollowButton(onClick = { /*TODO*/ }, following = uiState.following)
-            }
-        }
-    }
-}
-
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun UserItemPreview() {
-    val uiState = UserItemUiState("username", "userId", "", "BIO", true, false)
+    val uiState = UserItemUiState("userId", "username", "userId", "", "BIO", true, false)
     UserItem(uiState = uiState, onItemClicked = {})
 }
