@@ -79,7 +79,7 @@ fun ScreenNavHost(
             SubScreen.UserProfile.routeWithParam,
             SubScreen.UserProfile.arguments,
         ) {
-            val userId = it.arguments?.getString("userId")
+            val userId = SubScreen.PostDetail.resolveArguments(it.arguments)["userId"] as String?
             userId?.let {
                 val vm: UserProfileViewModel = hiltViewModel()
                 vm.setUserId(userId)
@@ -90,10 +90,10 @@ fun ScreenNavHost(
             SubScreen.PostDetail.routeWithParam,
             SubScreen.PostDetail.arguments,
         ) {
-            val postId = it.arguments?.getString("postId")
-            val vm: PostDetailViewModel = hiltViewModel()
-            postId?.let {
-                PostDetailScreen(vm, navController, postId)
+            val userId = SubScreen.PostDetail.resolveArguments(it.arguments)["userId"] as String?
+            userId?.let {
+                val vm: PostDetailViewModel = hiltViewModel()
+                PostDetailScreen(vm, navController, userId)
             }
         }
         composable(
@@ -101,22 +101,20 @@ fun ScreenNavHost(
             SubScreen.ImageDetail.arguments,
         ) {
             val uiStateWithImageUrl =
-                it.arguments?.getParcelable<PostItemUiStateWithImageUrl>("uiStateWithImageUrl")
+                SubScreen.PostDetail.resolveArguments(it.arguments)["uiStateWithImageUrl"] as PostItemUiStateWithImageUrl?
             uiStateWithImageUrl?.let {
-                ImageDetailScreen(navController = navController, post = it)
+                ImageDetailScreen(navController = navController, post = uiStateWithImageUrl)
             }
         }
         composable(
             SubScreen.FollowList.routeWithParam,
             SubScreen.FollowList.arguments,
         ) {
-            val userId = it.arguments?.getString("userId")
-            val followees = it.arguments?.getBoolean("followees")
-            var index = 0
-            followees?.let {
-                if (!followees) index = 1
-            }
-            userId?.let {
+            val params = SubScreen.FollowList.resolveArguments(it.arguments)
+            val userId = params["userId"] as String?
+            val followees = params["followees"] as Boolean?
+            if (userId != null && followees != null) {
+                val index = if (followees) 1 else 0
                 val vm: FollowListViewModel = hiltViewModel()
                 FollowListScreen(
                     viewModel = vm,

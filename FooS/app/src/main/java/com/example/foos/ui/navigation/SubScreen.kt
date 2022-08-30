@@ -1,8 +1,10 @@
 package com.example.foos.ui.navigation
 
+import android.os.Bundle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.foos.ui.navigation.navargs.PostItemUiStateWithImageUrl
 import com.example.foos.ui.navigation.navargs.PostItemUiStateWithImageUrlType
 
 /**
@@ -28,6 +30,24 @@ sealed class SubScreen(
             throw Exception("Illegal arguments length for navigation params.")
         }
         return route + params.toList().joinToString { "/$it" }
+    }
+
+    /**
+     * 引数の解決．マップ型で結果を返す．
+     */
+    fun resolveArguments(arguments: Bundle?) : Map<String, Any?> {
+        return this.arguments.associate {
+            val key = it.name
+            key to when (it.argument.type) {
+                NavType.LongType -> arguments?.getLong(key)
+                NavType.IntType -> arguments?.getInt(key)
+                NavType.StringType -> arguments?.getString(key)
+                NavType.BoolType -> arguments?.getBoolean(key)
+                NavType.FloatType -> arguments?.getFloat(key)
+                PostItemUiStateWithImageUrlType -> arguments?.getParcelable<PostItemUiStateWithImageUrl>(key)
+                else -> null
+            }
+        }
     }
 
     /**
