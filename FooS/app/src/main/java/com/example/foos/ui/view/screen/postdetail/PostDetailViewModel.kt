@@ -1,5 +1,7 @@
 package com.example.foos.ui.view.screen.postdetail
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.model.DatabaseReaction
@@ -10,9 +12,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,11 +20,11 @@ class PostDetailViewModel @Inject constructor(
     private val reactionsRepository: ReactionsRepository
 ) : ViewModel() {
 
-    private var _uiState = MutableStateFlow(PostDetailScreenUiState(PostItemUiState.Default))
-    val uiState: StateFlow<PostDetailScreenUiState> get() = _uiState
+    private var _uiState = mutableStateOf(PostDetailScreenUiState(PostItemUiState.Default))
+    val uiState: State<PostDetailScreenUiState> = _uiState
 
     fun setPostUiState(uiState: PostItemUiState) {
-        this._uiState.update { it.copy(postItemUiState = uiState) }
+        _uiState.value = _uiState.value.copy(postItemUiState = uiState)
     }
 
     /**

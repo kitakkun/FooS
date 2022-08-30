@@ -1,6 +1,8 @@
 package com.example.foos.ui.view.screen.home
 
 import android.net.Uri
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
@@ -12,7 +14,8 @@ import com.example.foos.ui.view.screen.Page
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,8 +29,8 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     // HomeScreenのUI状態
-    private var _uiState = MutableStateFlow(HomeScreenUiState(listOf(), false))
-    val uiState: StateFlow<HomeScreenUiState> get() = _uiState
+    private var _uiState = mutableStateOf(HomeScreenUiState(listOf(), false))
+    val uiState: State<HomeScreenUiState> = _uiState
 
     private val _navEvent = MutableSharedFlow<String>()
     val navEvent: SharedFlow<String> get() = _navEvent
@@ -75,11 +78,11 @@ class HomeViewModel @Inject constructor(
      */
     fun onRefresh() {
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.update { it.copy(isRefreshing = true) }
+            _uiState.value = uiState.value.copy(isRefreshing = true)
             val posts = getPostsWithUserUseCase().map { postWithUser ->
                 convertPostWithUserToUiStateUseCase(postWithUser)
             }
-            _uiState.update { it.copy(posts = posts, isRefreshing = false) }
+            _uiState.value = uiState.value.copy(posts = posts, isRefreshing = false)
         }
     }
 
@@ -91,7 +94,7 @@ class HomeViewModel @Inject constructor(
             val posts = getPostsWithUserUseCase().map { postWithUser ->
                 convertPostWithUserToUiStateUseCase(postWithUser)
             }
-            _uiState.update { it.copy(posts = (posts + it.posts).distinct()) }
+            _uiState.value = uiState.value.copy(posts = (posts + uiState.value.posts).distinct())
         }
     }
 
@@ -106,9 +109,7 @@ class HomeViewModel @Inject constructor(
                 val posts = getPostsWithUserUseCase(it).map { postWithUser ->
                     convertPostWithUserToUiStateUseCase(postWithUser)
                 }
-                _uiState.update { state ->
-                    state.copy(posts = (state.posts + posts).distinct())
-                }
+                _uiState.value = uiState.value.copy(posts = (uiState.value.posts + posts).distinct())
             }
         }
     }

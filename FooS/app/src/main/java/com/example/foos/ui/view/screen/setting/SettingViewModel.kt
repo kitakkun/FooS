@@ -1,5 +1,7 @@
 package com.example.foos.ui.view.screen.setting
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canhub.cropper.CropImageView
@@ -10,9 +12,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,18 +20,16 @@ class SettingViewModel @Inject constructor(
     private val usersRepository: UsersRepository
 ) : ViewModel(
 ) {
-    private var _uiState = MutableStateFlow(SettingUiState("", ""))
-    val uiState: StateFlow<SettingUiState> get() = _uiState
+    private var _uiState = mutableStateOf(SettingUiState("", ""))
+    val uiState: State<SettingUiState> = _uiState
 
     fun fetchUserData() {
         viewModelScope.launch(Dispatchers.IO) {
             val user = usersRepository.fetchByUserId(Firebase.auth.uid.toString()) ?: return@launch
-            _uiState.update {
-                it.copy(
-                    username = user.username,
-                    profileImage = user.profileImage
-                )
-            }
+            _uiState.value = _uiState.value.copy(
+                username = user.username,
+                profileImage = user.profileImage
+            )
         }
     }
 

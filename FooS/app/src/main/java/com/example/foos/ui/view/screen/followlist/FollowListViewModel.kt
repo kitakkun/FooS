@@ -1,5 +1,7 @@
 package com.example.foos.ui.view.screen.followlist
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.domain.FetchFolloweesWithMyFollowStateByUserIdUseCase
@@ -13,7 +15,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,8 +28,8 @@ class FollowListViewModel @Inject constructor(
     private val fetchFolloweesWithMyFollowStateByUserIdUseCase: FetchFolloweesWithMyFollowStateByUserIdUseCase,
 ) : ViewModel() {
 
-    private var _uiState = MutableStateFlow(FollowListScreenUiState(listOf(), listOf()))
-    val uiState = _uiState.asStateFlow()
+    private var _uiState = mutableStateOf(FollowListScreenUiState(listOf(), listOf()))
+    val uiState: State<FollowListScreenUiState> = _uiState
 
     private var _navEvent = MutableSharedFlow<String>()
     val navEvent = _navEvent.asSharedFlow()
@@ -51,7 +54,8 @@ class FollowListViewModel @Inject constructor(
                         followingYou = it.followState.followed,
                     )
                 }
-            _uiState.update { it.copy(followees = (it.followees + followees).distinct()) }
+            _uiState.value =
+                uiState.value.copy(followees = (uiState.value.followees + followees).distinct())
         }
     }
 
@@ -69,7 +73,7 @@ class FollowListViewModel @Inject constructor(
                         followingYou = it.followState.followed,
                     )
                 }
-            _uiState.update { it.copy(followers = (it.followers + followers).distinct()) }
+            _uiState.value = uiState.value.copy(followers = (uiState.value.followers + followers).distinct())
         }
     }
 

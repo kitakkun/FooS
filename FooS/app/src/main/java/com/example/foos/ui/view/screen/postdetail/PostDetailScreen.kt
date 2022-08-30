@@ -45,8 +45,8 @@ fun PostDetailScreenPreview() {
 @Composable
 fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavController) {
 
-    val uiState = viewModel.uiState.collectAsState()
-    val postItemUiState = uiState.value.postItemUiState
+    val uiState = viewModel.uiState.value
+    val postItemUiState = uiState.postItemUiState
 
     Column(
         modifier = Modifier

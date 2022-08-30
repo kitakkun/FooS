@@ -40,7 +40,7 @@ import com.google.firebase.storage.ktx.storage
 @Composable
 fun SettingScreen(viewModel: SettingViewModel) {
 
-    val uiState = viewModel.uiState.collectAsState()
+    val uiState = viewModel.uiState.value
     viewModel.fetchUserData()
 
     val context = LocalContext.current
@@ -57,7 +57,7 @@ fun SettingScreen(viewModel: SettingViewModel) {
     ) {
         Spacer(Modifier.height(80.dp))
         ClickableUserIcon(
-            imageUri = uiState.value.profileImage,
+            imageUri = uiState.profileImage,
             onClick = {
                 cropImage.launch(
                     options {
@@ -73,7 +73,7 @@ fun SettingScreen(viewModel: SettingViewModel) {
             iconScale = 2f
         )
         Spacer(Modifier.height(32.dp))
-        Text(uiState.value.username, fontSize = 18.sp)
+        Text(uiState.username, fontSize = 18.sp)
         Spacer(Modifier.height(60.dp))
         var logOutRequest by remember { mutableStateOf(false) }
 
