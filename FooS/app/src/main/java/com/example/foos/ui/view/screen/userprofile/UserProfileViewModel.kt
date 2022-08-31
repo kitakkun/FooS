@@ -11,7 +11,7 @@ import com.example.foos.data.domain.GetPostsWithUserByUserIdWithDateUseCase
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.UsersRepository
 import com.example.foos.ui.navigation.SubScreen
-import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.state.component.PostItemUiState
 import com.example.foos.ui.state.screen.userprofile.UserProfileScreenUiState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase

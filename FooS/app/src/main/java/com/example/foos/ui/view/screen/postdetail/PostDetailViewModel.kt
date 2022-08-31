@@ -4,11 +4,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
-import com.example.foos.data.domain.GetPostWithUserByPostIdUseCase
+import com.example.foos.data.domain.ConvertPostToUiStateUseCase
+import com.example.foos.data.domain.GetPostByPostIdUseCase
 import com.example.foos.data.model.DatabaseReaction
 import com.example.foos.data.repository.ReactionsRepository
-import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.state.component.PostItemUiState
 import com.example.foos.ui.state.screen.postdetail.PostDetailScreenUiState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -19,27 +19,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostDetailViewModel @Inject constructor(
-    private val getPostWithUserByPostIdUseCase: GetPostWithUserByPostIdUseCase,
-    private val convertPostWithUserToUiStateUseCase: ConvertPostWithUserToUiStateUseCase,
+    private val getPostByPostIdUseCase: GetPostByPostIdUseCase,
+    private val convertPostToUiStateUseCase: ConvertPostToUiStateUseCase,
     private val reactionsRepository: ReactionsRepository
 ) : ViewModel() {
 
     private var _uiState = mutableStateOf(PostDetailScreenUiState(PostItemUiState.Default))
     val uiState: State<PostDetailScreenUiState> = _uiState
 
-    fun setPostUiState(uiState: PostItemUiState) {
-        _uiState.value = _uiState.value.copy(postItemUiState = uiState)
-    }
-
-    suspend fun fetchPost(postId: String) {
-        val state = getPostWithUserByPostIdUseCase(postId)?.let {
-            convertPostWithUserToUiStateUseCase(it)
+    suspend fun fetch(postId: String) {
+        val state = getPostByPostIdUseCase(postId)?.let {
+            convertPostToUiStateUseCase(it)
         }
         state?.let {
             _uiState.value = uiState.value.copy(postItemUiState = state)
         }
     }
-
 
     /**
      * ユーザー情報がクリックされたときの処理
@@ -68,6 +63,20 @@ class PostDetailViewModel @Inject constructor(
         )
         viewModelScope.launch(Dispatchers.IO) {
             reactionsRepository.create(reaction)
+            fetch(uiState.value.postItemUiState.postId)
+        }
+    }
+
+    fun onReactionRemoved() {
+        val id = uiState.value.postItemUiState.reactions.find {
+            it.from == Firebase.auth.uid
+        }?.reactionId
+
+        id?.let {
+            viewModelScope.launch(Dispatchers.IO) {
+                reactionsRepository.delete(it)
+                fetch(uiState.value.postItemUiState.postId)
+            }
         }
     }
 

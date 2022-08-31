@@ -38,6 +38,16 @@ object Modules {
      * Provide UseCases...
      */
     @Provides
+    fun provideGetPostByPostIdUseCase(): GetPostByPostIdUseCase = GetPostByPostIdUseCase(
+        providePostsRepository(),
+        provideUsersRepository(),
+        provideReactionsRepository(),
+    )
+
+    @Provides
+    fun providePostToUiStateUseCase(): ConvertPostToUiStateUseCase = ConvertPostToUiStateUseCase()
+
+    @Provides
     fun provideCompletePostsRepository(): GetPostsWithUserUseCase =
         GetPostsWithUserUseCase(PostsRepository, UsersRepository)
 

@@ -20,7 +20,7 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.foos.R
 import com.example.foos.ui.constants.paddingMedium
-import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.state.component.PostItemUiState
 import com.example.foos.ui.view.component.HorizontalUserIdentityText
 import com.example.foos.ui.view.component.UserIcon
 import java.time.LocalDateTime
