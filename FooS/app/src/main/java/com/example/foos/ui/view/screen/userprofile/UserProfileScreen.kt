@@ -26,8 +26,11 @@ import com.example.foos.ui.view.component.FollowButton
 import com.example.foos.ui.view.component.OnAppearLastItem
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.VerticalUserIdentityText
+import com.example.foos.ui.view.component.list.MediaPostGrid
 import com.example.foos.ui.view.component.list.PostItemList
 import com.google.accompanist.pager.*
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
@@ -58,64 +61,80 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
     }
 
     val nestedScrollViewState = rememberNestedScrollViewState()
+    val pagerState = rememberPagerState(initialPage = 0)
 
     // this layout produce buggy scroll if we don't use jetpack compose alpha02 or above.
     // nestedScroll's bug exists until alpha01.
-    VerticalNestedScrollView(
-        state = nestedScrollViewState,
-        header = {
-            UserProfileView(
-                username = uiState.username,
-                userId = uiState.userId,
-                bio = "",
-                profileImage = uiState.userIcon,
-                followerNum = uiState.followerCount,
-                followeeNum = uiState.followeeCount,
-                onFollowingTextClick = { viewModel.navigateToFolloweeList(userId = uiState.userId) },
-                onFollowersTextClick = { viewModel.navigateToFollowerList(userId = uiState.userId) },
-                onFollowButtonClick = { viewModel.onFollowButtonClick() },
-                following = uiState.following,
-            )
-        },
-        content = {
-            Column {
-                val tabList = listOf(
-                    stringResource(id = R.string.tab_posts),
-                    stringResource(id = R.string.tab_reactions)
-                )
-                val pagerState = rememberPagerState(initialPage = 0)
-
-                MyTabRow(pagerState = pagerState, tabList = tabList)
-
-                MyPager(
-                    pagerState = pagerState, pageCount = tabList.size,
-                    pageContents = listOf(
-                        {
-                            PostItemList(
-                                uiStates = uiState.posts,
-                                onImageClick = { imageUrls, clickedImageUrl ->
-                                    viewModel.onImageClick(
-                                        imageUrls,
-                                        clickedImageUrl
-                                    )
-                                },
-                                onContentClick = { state -> viewModel.onContentClick(state) },
-                                onUserIconClick = { viewModel.onUserIconClick() },
-                                onAppearLastItem = { viewModel.fetchOlderPosts() },
-                            )
-                        },
-                        {
-                            LazyColumn {
-                                item {
-                                    Text(text = "Reaction Items will come here.")
-                                }
-                            }
-                        }
-                    )
-                )
-            }
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing)
+    SwipeRefresh(state = swipeRefreshState, onRefresh = {
+        when(pagerState.currentPage) {
+            0, 1 -> viewModel.refreshUserPosts()
+            else -> viewModel.fetchUserReactedPosts()
         }
-    )
+
+    }) {
+        VerticalNestedScrollView(
+            state = nestedScrollViewState,
+            header = {
+                UserProfileView(
+                    username = uiState.username,
+                    userId = uiState.userId,
+                    bio = "",
+                    profileImage = uiState.userIcon,
+                    followerNum = uiState.followerCount,
+                    followeeNum = uiState.followeeCount,
+                    onFollowingTextClick = { viewModel.navigateToFolloweeList(userId = uiState.userId) },
+                    onFollowersTextClick = { viewModel.navigateToFollowerList(userId = uiState.userId) },
+                    onFollowButtonClick = { viewModel.onFollowButtonClick() },
+                    following = uiState.following,
+                )
+            },
+            content = {
+                Column {
+                    val tabList = listOf(
+                        stringResource(id = R.string.tab_posts),
+                        stringResource(id = R.string.tab_media),
+                        stringResource(id = R.string.tab_reactions),
+                    )
+
+                    MyTabRow(pagerState = pagerState, tabList = tabList)
+
+                    MyPager(
+                        pagerState = pagerState, pageCount = tabList.size,
+                        pageContents = listOf(
+                            {
+                                PostItemList(
+                                    uiStates = uiState.posts,
+                                    onImageClick = { imageUrls, clickedImageUrl ->
+                                        viewModel.onImageClick(
+                                            imageUrls,
+                                            clickedImageUrl
+                                        )
+                                    },
+                                    onContentClick = { state -> viewModel.onContentClick(state) },
+                                    onUserIconClick = { viewModel.onUserIconClick() },
+                                    onAppearLastItem = { viewModel.fetchOlderPosts() },
+                                )
+                            },
+                            {
+                                MediaPostGrid(
+                                    uiStates = uiState.posts.filter { it.attachedImages.isNotEmpty() },
+                                    onAppearLastItem = { viewModel.fetchOlderPosts() },
+                                )
+                            },
+                            {
+                                LazyColumn {
+                                    item {
+                                        Text(text = "Reaction Items will come here.")
+                                    }
+                                }
+                            },
+                        )
+                    )
+                }
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalPagerApi::class)

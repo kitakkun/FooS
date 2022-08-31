@@ -171,4 +171,16 @@ class UserProfileViewModel @Inject constructor(
             }
         }
     }
+
+    fun refreshUserPosts() {
+        viewModelScope.launch(Dispatchers.IO) {
+
+        }
+    }
+
+    fun fetchUserReactedPosts() {
+        viewModelScope.launch(Dispatchers.IO) {
+
+        }
+    }
 }
