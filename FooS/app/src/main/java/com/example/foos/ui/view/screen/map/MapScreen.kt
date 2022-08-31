@@ -3,20 +3,24 @@ package com.example.foos.ui.view.screen.map
 import android.Manifest
 import android.annotation.SuppressLint
 import android.location.Location
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foos.R
-import com.example.foos.data.model.DatabasePost
 import com.example.foos.ui.constants.paddingMedium
+import com.example.foos.ui.constants.paddingSmall
+import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.view.component.PostDetailView
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.PermissionStatus
@@ -28,6 +32,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.*
 import com.google.maps.android.ui.IconGenerator
+import kotlinx.coroutines.launch
 
 /**
  * グルメマップ画面のコンポーザブル
@@ -36,7 +41,7 @@ import com.google.maps.android.ui.IconGenerator
  *  ManifestにPermissionを定義しても警告が出続けるため、MissingPermissionを無視
  *  参考 -> https://stackoverflow.com/questions/45279370/android-studio-complains-about-missing-permission-check-for-fingerprint-sensor
  */
-@OptIn(ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterialApi::class)
 @SuppressLint("MissingPermission")
 @Composable
 fun MapScreen(viewModel: MapViewModel, navController: NavController) {
@@ -57,27 +62,64 @@ fun MapScreen(viewModel: MapViewModel, navController: NavController) {
         position = CameraPosition.fromLatLngZoom(latLng, 15f)
     }
 
-    when (locationPermissionState.status) {
-        PermissionStatus.Granted -> {
-            val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
-                LocalContext.current
-            )
-            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location? ->
-                location?.let {
-                    Log.d("LOCATION", location.toString())
-                    latLng = LatLng(it.latitude, it.longitude)
-                    cameraPositionState.position = CameraPosition.fromLatLngZoom(latLng, 15f)
-                }
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = BottomSheetState((BottomSheetValue.Collapsed))
+    )
+    val coroutineScope = rememberCoroutineScope()
+    BottomSheetScaffold(
+        scaffoldState = bottomSheetScaffoldState,
+        sheetContent = {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Box(
+                    modifier = Modifier
+                        .padding(paddingSmall)
+                        .width(60.dp)
+                        .height(4.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(MaterialTheme.colors.onSurface)
+                )
+                PostDetailView(uiState = uiState.focusingPost)
             }
-            Map(
-                cameraPositionState = cameraPositionState,
-                posts = uiState.posts,
-                onLoad = { viewModel.fetchNearbyPosts(it) },
-                onBubbleClick = { viewModel.navigateToPost(it) }
-            )
-        }
-        else -> {
-            MapDeniedView(locationPermissionState)
+        },
+        sheetPeekHeight = 0.dp
+    ) {
+        when (locationPermissionState.status) {
+            PermissionStatus.Granted -> {
+                val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
+                    LocalContext.current
+                )
+                fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location? ->
+                    location?.let {
+                        latLng = LatLng(it.latitude, it.longitude)
+                        cameraPositionState.position = CameraPosition.fromLatLngZoom(latLng, 15f)
+                    }
+                }
+                Map(
+                    cameraPositionState = cameraPositionState,
+                    posts = uiState.posts,
+                    onLoad = { viewModel.fetchNearbyPosts(it) },
+                    onBubbleClick = {
+                        coroutineScope.launch {
+                            viewModel.showPostDetail(it)
+                            if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                                bottomSheetScaffoldState.bottomSheetState.expand()
+                            } else {
+                                bottomSheetScaffoldState.bottomSheetState.collapse()
+                            }
+                        }
+                    },
+                    onMapClick = {
+                        coroutineScope.launch {
+                            if (bottomSheetScaffoldState.bottomSheetState.isExpanded) {
+                                bottomSheetScaffoldState.bottomSheetState.collapse()
+                            }
+                        }
+                    }
+                )
+            }
+            else -> {
+                MapDeniedView(locationPermissionState)
+            }
         }
     }
 }
@@ -85,9 +127,10 @@ fun MapScreen(viewModel: MapViewModel, navController: NavController) {
 @Composable
 fun Map(
     cameraPositionState: CameraPositionState,
-    posts: List<DatabasePost>,
+    posts: List<PostItemUiState>,
     onLoad: (LatLngBounds) -> Unit,
-    onBubbleClick: (String) -> Unit,
+    onBubbleClick: (PostItemUiState) -> Unit,
+    onMapClick: (LatLng) -> Unit,
 ) {
     val properties by remember { mutableStateOf(MapProperties(isMyLocationEnabled = true)) }
     val uiSettings by remember { mutableStateOf(MapUiSettings(myLocationButtonEnabled = true)) }
@@ -99,7 +142,8 @@ fun Map(
         uiSettings = uiSettings,
         onMapLoaded = {
             cameraPositionState.projection?.visibleRegion?.latLngBounds?.let(onLoad)
-        }
+        },
+        onMapClick = onMapClick,
     ) {
         posts.forEach { post ->
             val iconGenerator = IconGenerator(LocalContext.current)
@@ -115,7 +159,7 @@ fun Map(
                     state = MarkerState(position = LatLng(post.latitude, post.longitude)),
                     icon = BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon()),
                     onClick = {
-                        onBubbleClick(post.postId)
+                        onBubbleClick(post)
                         false
                     }
                 )

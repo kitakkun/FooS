@@ -39,7 +39,7 @@ fun PostDetailView(
     uiState: PostItemUiState,
     onUserInfoClicked: (String) -> Unit = {},
     onReactionButtonClicked: (String) -> Unit = {},
-    onGoogleMapsClicked: () -> Unit,
+    onGoogleMapsClicked: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
