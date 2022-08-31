@@ -30,7 +30,11 @@ fun UserItem(
             .clickable { onItemClicked(uiState.userId) },
     ) {
         if (uiState.followingYou) {
-            Text(text = stringResource(R.string.follows_you), style = MaterialTheme.typography.caption, fontWeight = FontWeight.Light)
+            Text(
+                text = stringResource(R.string.follows_you),
+                style = MaterialTheme.typography.caption,
+                fontWeight = FontWeight.Light
+            )
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -53,7 +57,10 @@ fun UserItem(
                 }
             }
             if (uiState.userId != uiState.clientUserId) {
-                FollowButton(onClick = { onFollowButtonClicked(uiState.userId) }, following = uiState.following)
+                FollowButton(
+                    onClick = { onFollowButtonClicked(uiState.userId) },
+                    following = uiState.following
+                )
             }
         }
     }

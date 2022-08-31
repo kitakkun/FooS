@@ -60,7 +60,7 @@ fun LocationSelectScreen(
     LaunchedEffect(Unit) {
         if (permissionStatus.status == PermissionStatus.Granted) {
             fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location ->
-                location?.let {
+                location.let {
                     val latLng = LatLng(it.latitude, it.longitude)
                     cameraPositionState.position = CameraPosition.fromLatLngZoom(latLng, 15f)
                 }

@@ -25,7 +25,11 @@ import kotlinx.coroutines.launch
  */
 @OptIn(ExperimentalSnapperApi::class)
 @Composable
-fun ImageDetailScreen(navController: NavHostController, imageUrls: List<String>, initialIndex: Int) {
+fun ImageDetailScreen(
+    navController: NavHostController,
+    imageUrls: List<String>,
+    initialIndex: Int
+) {
     val lazyListState = rememberLazyListState()
     var showedFirstTime by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()

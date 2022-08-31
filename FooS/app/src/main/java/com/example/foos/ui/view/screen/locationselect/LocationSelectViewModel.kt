@@ -4,8 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foos.ui.state.screen.locationselect.LocationSelectScreenUiState
 import com.example.foos.ui.navigation.SubScreen
+import com.example.foos.ui.state.screen.locationselect.LocationSelectScreenUiState
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

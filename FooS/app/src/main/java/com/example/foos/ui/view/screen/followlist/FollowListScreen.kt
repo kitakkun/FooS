@@ -1,7 +1,7 @@
 package com.example.foos.ui.view.screen.followlist
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -14,20 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
-import com.example.foos.ui.view.component.FollowButton
 import com.example.foos.ui.view.component.OnAppearLastItem
-import com.example.foos.ui.view.component.UserIcon
-import com.example.foos.ui.view.component.VerticalUserIdentityText
 import com.example.foos.ui.view.component.list.UserItem
 import com.google.accompanist.pager.*
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 /**

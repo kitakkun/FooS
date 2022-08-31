@@ -26,6 +26,7 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.foos.R
+import com.example.foos.ui.constants.paddingLarge
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.view.component.UserIcon
 import com.google.android.gms.maps.model.CameraPosition
@@ -47,13 +48,13 @@ fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavControlle
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
-            .padding(24.dp)
+            .padding(paddingLarge)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             UserIcon(url = postItemUiState.userIcon, onClick = { viewModel.onUserInfoClicked() })
-            Spacer(Modifier.width(24.dp))
+            Spacer(Modifier.width(paddingLarge))
             UserIdentityColumn(
                 username = postItemUiState.username,
                 userId = postItemUiState.userId,
@@ -65,11 +66,11 @@ fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavControlle
                 )
             })
         }
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(paddingLarge))
         Text(postItemUiState.content)
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(paddingLarge))
         AttachedImagesDisplay(urls = postItemUiState.attachedImages)
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(paddingLarge))
         LocationMap(
             postItemUiState.latitude,
             postItemUiState.longitude,
@@ -83,7 +84,7 @@ fun UserIdentityColumn(
     userId: String,
     onClick: () -> Unit = {},
 ) {
-    Column() {
+    Column {
         Text(text = username, fontWeight = FontWeight.Bold)
         Text(text = userId, fontWeight = FontWeight.Light, fontSize = 12.sp)
     }

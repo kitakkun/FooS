@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.PostsRepository.fetchByLatLngBounds
-import com.example.foos.ui.state.screen.map.MapScreenUiState
 import com.example.foos.ui.navigation.SubScreen
+import com.example.foos.ui.state.screen.map.MapScreenUiState
 import com.google.android.gms.maps.model.LatLngBounds
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

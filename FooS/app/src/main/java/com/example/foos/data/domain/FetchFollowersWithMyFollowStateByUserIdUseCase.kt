@@ -22,7 +22,7 @@ class FetchFollowersWithMyFollowStateByUserIdUseCase @Inject constructor(
     /**
      * userIdのフォロワーをクライアントのフォロー状態と一緒に取得
      */
-    suspend operator fun invoke(myUserId: String, userId: String) : List<UserWithFollowState> {
+    suspend operator fun invoke(myUserId: String, userId: String): List<UserWithFollowState> {
         val followers = followRepository.fetchFollowers(userId).map { it.follower } // フォロー情報
         val jobs = mutableListOf<Job>()
         val users = mutableListOf<DatabaseUser>()
@@ -34,7 +34,10 @@ class FetchFollowersWithMyFollowStateByUserIdUseCase @Inject constructor(
                 jobs.add(async { usersRepository.fetchByUserId(it)?.let { users.add(it) } })
                 // クライアントと該当ユーザとのフォロー関係を解決
                 jobs.add(async {
-                    followStates.put(it, followRepository.fetchFollowState(from = myUserId, to = it))
+                    followStates.put(
+                        it,
+                        followRepository.fetchFollowState(from = myUserId, to = it)
+                    )
                 })
             }
         }

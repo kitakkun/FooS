@@ -22,7 +22,8 @@ sealed class SubScreen(
     /**
      * パラメータを考慮したナビゲーションルートを作成
      */
-    val routeWithParam: String get() = route + arguments.map { it.name }.joinToString(separator = "") { "/{$it}" }
+    val routeWithParam: String
+        get() = route + arguments.map { it.name }.joinToString(separator = "") { "/{$it}" }
 
     /**
      * パラメータを代入してナビゲーションルートを作成
