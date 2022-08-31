@@ -1,6 +1,6 @@
 package com.example.foos.ui.state.screen.userprofile
 
-import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.state.component.PostItemUiState
 
 /**
  * ユーザプロフィール画面のUI状態

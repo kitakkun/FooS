@@ -1,7 +1,7 @@
 package com.example.foos.data.domain
 
 import com.example.foos.data.model.PostWithUser
-import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.state.component.PostItemUiState
 
 class ConvertPostWithUserToUiStateUseCase {
 

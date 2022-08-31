@@ -1,13 +1,13 @@
 package com.example.foos.ui.view.component
 
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.*
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,9 +27,11 @@ import coil.request.ImageRequest
 import com.example.foos.R
 import com.example.foos.ui.constants.paddingLarge
 import com.example.foos.ui.constants.paddingMedium
-import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.state.component.PostItemUiState
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.google.maps.android.compose.*
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
@@ -39,8 +41,10 @@ fun PostDetailView(
     uiState: PostItemUiState,
     onUserInfoClicked: (String) -> Unit = {},
     onReactionButtonClicked: (String) -> Unit = {},
+    onReactionRemoved: () -> Unit = {},
     onGoogleMapsClicked: () -> Unit = {},
 ) {
+    var myReaction = uiState.reactions.find { it.from == Firebase.auth.uid }?.reaction
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -57,7 +61,17 @@ fun PostDetailView(
                 modifier = Modifier.clickable { onUserInfoClicked(uiState.userId) }
             )
             Spacer(Modifier.weight(1f))
-            ReactionButton(onReactionClicked = { onReactionButtonClicked(it) })
+            ReactionButton(
+                onReactionClicked = {
+                    onReactionButtonClicked(it)
+                    myReaction = it
+                },
+                onReactionRemoved = {
+                    onReactionRemoved()
+                    myReaction = null
+                },
+                myReaction = myReaction,
+            )
         }
         Spacer(Modifier.height(paddingLarge))
         Text(uiState.content)
@@ -142,15 +156,34 @@ fun AttachedImagesDisplay(
 @Composable
 fun ReactionButton(
     onReactionClicked: (String) -> Unit,
+    onReactionRemoved: () -> Unit,
+    myReaction: String?,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    IconButton(onClick = { expanded = !expanded }) {
-        Icon(painterResource(R.drawable.ic_add_reaction), null)
-        ReactionDropdown(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            onReactionClicked = onReactionClicked
-        )
+    if (myReaction == null) {
+        IconButton(onClick = { expanded = !expanded }) {
+            Icon(painterResource(R.drawable.ic_add_reaction), null)
+            ReactionDropdown(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                onReactionClicked = { onReactionClicked(it) }
+            )
+        }
+    } else {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .border(1.dp, MaterialTheme.colors.surface, shape = CircleShape)
+                .background(MaterialTheme.colors.surface)
+                .clickable { onReactionRemoved() },
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = myReaction,
+                fontSize = 25.sp,
+            )
+        }
     }
 }
 
@@ -160,6 +193,7 @@ fun ReactionButton(
  * @param onDismissRequest ドロップダウンメニューの範囲外をタップしたときの挙動
  * @param onReactionClicked リアクションが行われた際の挙動
  */
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ReactionDropdown(
     expanded: Boolean,
@@ -172,24 +206,34 @@ fun ReactionDropdown(
         stringResource(id = R.string.emoji_fire),
     )
 
+    val density = LocalDensity.current
+
     val dropdownWidth = with(LocalDensity.current) {
         60.sp.toDp()
     }
-    MaterialTheme(shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(45))) {
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = onDismissRequest,
-            modifier = Modifier.width(dropdownWidth)
-        ) {
-            reactions.forEach {
-                DropdownMenuItem(onClick = { onReactionClicked.invoke(it) }) {
-                    Text(
-                        text = it,
-                        fontSize = 30.sp,
-                        textAlign = TextAlign.Center
-                    )
+
+    AnimatedVisibility(
+        visible = expanded,
+        enter = fadeIn() + expandVertically(expandFrom = Alignment.CenterVertically),
+        exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)
+    ) {
+        MaterialTheme(shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(45))) {
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = onDismissRequest,
+                modifier = Modifier.width(dropdownWidth)
+            ) {
+                reactions.forEach {
+                    DropdownMenuItem(onClick = { onReactionClicked.invoke(it) }) {
+                        Text(
+                            text = it,
+                            fontSize = 30.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
         }
     }
+
 }

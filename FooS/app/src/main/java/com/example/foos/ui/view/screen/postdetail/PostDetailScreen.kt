@@ -9,7 +9,7 @@ import com.example.foos.ui.view.component.PostDetailView
 fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavController, postId: String) {
 
     LaunchedEffect(Unit) {
-        viewModel.fetchPost(postId)
+        viewModel.fetch(postId)
     }
 
     val uiState = viewModel.uiState.value
@@ -19,6 +19,7 @@ fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavControlle
         uiState = postItemUiState,
         onUserInfoClicked = { viewModel.onUserInfoClicked() },
         onReactionButtonClicked = { viewModel.onReactionButtonClicked(it) },
+        onReactionRemoved = { viewModel.onReactionRemoved() },
         onGoogleMapsClicked = { viewModel.onGoogleMapsClicked() }
     )
 }

@@ -1,5 +1,7 @@
 package com.example.foos.ui.state.screen.home
 
+import com.example.foos.ui.state.component.PostItemUiState
+
 /**
  * ホーム画面のUI状態
  * @param posts 投稿のUI状態のリスト
