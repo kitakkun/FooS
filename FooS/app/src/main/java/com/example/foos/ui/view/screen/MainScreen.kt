@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination
@@ -106,6 +107,7 @@ fun RowScope.MyBottomNavigationItem(
     onClick: (Screen) -> Unit,
 ) {
     BottomNavigationItem(
+        label = { Text(text = stringResource(id = screen.stringId)) },
         icon = { Icon(painterResource(screen.iconId), null) },
         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
         onClick = { onClick.invoke(screen) }
