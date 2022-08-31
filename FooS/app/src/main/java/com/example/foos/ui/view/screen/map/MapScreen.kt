@@ -62,10 +62,26 @@ fun MapScreen(viewModel: MapViewModel, navController: NavController) {
         position = CameraPosition.fromLatLngZoom(latLng, 15f)
     }
 
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        if (locationPermissionState.status == PermissionStatus.Granted) {
+            val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
+                context
+            )
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location? ->
+                location?.let {
+                    latLng = LatLng(it.latitude, it.longitude)
+                    cameraPositionState.position = CameraPosition.fromLatLngZoom(latLng, 15f)
+                }
+            }
+        }
+    }
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState((BottomSheetValue.Collapsed))
     )
     val coroutineScope = rememberCoroutineScope()
+
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
@@ -84,42 +100,29 @@ fun MapScreen(viewModel: MapViewModel, navController: NavController) {
         sheetPeekHeight = 0.dp
     ) {
         when (locationPermissionState.status) {
-            PermissionStatus.Granted -> {
-                val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
-                    LocalContext.current
-                )
-                fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location? ->
-                    location?.let {
-                        latLng = LatLng(it.latitude, it.longitude)
-                        cameraPositionState.position = CameraPosition.fromLatLngZoom(latLng, 15f)
+            PermissionStatus.Granted -> Map(
+                cameraPositionState = cameraPositionState,
+                posts = uiState.posts,
+                onLoad = { viewModel.fetchNearbyPosts(it) },
+                onBubbleClick = {
+                    coroutineScope.launch {
+                        viewModel.showPostDetail(it)
+                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                            bottomSheetScaffoldState.bottomSheetState.expand()
+                        } else {
+                            bottomSheetScaffoldState.bottomSheetState.collapse()
+                        }
+                    }
+                },
+                onMapClick = {
+                    coroutineScope.launch {
+                        if (bottomSheetScaffoldState.bottomSheetState.isExpanded) {
+                            bottomSheetScaffoldState.bottomSheetState.collapse()
+                        }
                     }
                 }
-                Map(
-                    cameraPositionState = cameraPositionState,
-                    posts = uiState.posts,
-                    onLoad = { viewModel.fetchNearbyPosts(it) },
-                    onBubbleClick = {
-                        coroutineScope.launch {
-                            viewModel.showPostDetail(it)
-                            if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                                bottomSheetScaffoldState.bottomSheetState.expand()
-                            } else {
-                                bottomSheetScaffoldState.bottomSheetState.collapse()
-                            }
-                        }
-                    },
-                    onMapClick = {
-                        coroutineScope.launch {
-                            if (bottomSheetScaffoldState.bottomSheetState.isExpanded) {
-                                bottomSheetScaffoldState.bottomSheetState.collapse()
-                            }
-                        }
-                    }
-                )
-            }
-            else -> {
-                MapDeniedView(locationPermissionState)
-            }
+            )
+            else -> MapDeniedView(locationPermissionState)
         }
     }
 }
