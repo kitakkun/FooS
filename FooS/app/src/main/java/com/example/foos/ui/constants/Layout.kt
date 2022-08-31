@@ -2,4 +2,6 @@ package com.example.foos.ui.constants
 
 import androidx.compose.ui.unit.dp
 
-val PADDING_MEDIUM = 16.dp
+val paddingSmall = 8.dp
+val paddingMedium = 16.dp
+val paddingLarge = 24.dp

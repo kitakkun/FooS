@@ -16,11 +16,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.foos.R
-import com.example.foos.ui.view.screen.Page
+import com.example.foos.ui.constants.paddingMedium
+import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
@@ -60,7 +60,7 @@ fun LocationConfirmScreen(
                 return@collect
             }
             sharedViewModel.updatePostCreateSharedData(location, uiState.locationName)
-            navController.navigate(Page.PostCreate.route) {
+            navController.navigate(SubScreen.PostCreate.route) {
                 popUpTo(navController.graph.findStartDestination().id) {
                     inclusive = true
                 }
@@ -91,10 +91,10 @@ fun LocationConfirmScreen(
         }
     ) { innerPadding ->
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(paddingMedium),
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(16.dp)
+                .padding(paddingMedium)
         ) {
             val focusManager = LocalFocusManager.current
             Text(text = stringResource(R.string.enter_location_name_message))

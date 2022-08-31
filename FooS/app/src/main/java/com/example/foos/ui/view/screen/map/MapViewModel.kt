@@ -1,14 +1,13 @@
 package com.example.foos.ui.view.screen.map
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.PostsRepository.fetchByLatLngBounds
+import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.state.screen.map.MapScreenUiState
-import com.example.foos.ui.view.screen.Page
 import com.google.android.gms.maps.model.LatLngBounds
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -29,7 +28,7 @@ class MapViewModel @Inject constructor(
 
     fun navigateToPost(postId: String) {
         viewModelScope.launch {
-            _navEvent.emit("${Page.PostDetail.route}/$postId")
+            _navEvent.emit("${SubScreen.PostDetail.route}/$postId")
         }
     }
 

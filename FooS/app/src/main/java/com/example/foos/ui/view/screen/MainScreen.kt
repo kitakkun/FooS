@@ -1,7 +1,5 @@
 package com.example.foos.ui.view.screen
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
@@ -22,31 +20,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.foos.FirebaseAuthManager
-import com.example.foos.R
+import com.example.foos.ui.navigation.Screen
+import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.theme.FooSTheme
-
-/**
- * メインメニューのスクリーン
- */
-sealed class Screen(val route: String, @StringRes val stringId: Int, @DrawableRes val iconId: Int) {
-    object Home : Screen("home", R.string.home, R.drawable.ic_home)
-    object Map : Screen("maps", R.string.map, R.drawable.ic_pin_drop)
-    object Reaction : Screen("reactions", R.string.reaction, R.drawable.ic_favorite)
-    object Setting : Screen("settings", R.string.setting, R.drawable.ic_settings)
-}
-
-/**
- * サブスクリーン（メインメニューのスクリーンから呼ばれる）
- */
-sealed class Page(val route: String, val routeWithParam: String = "") {
-    object PostDetail : Page("post_detail", "post_detail/{postId}")
-    object ImageDetail : Page("image_detail", "image_detail/{uiStateWithImageUrl}")
-    object PostCreate : Page("post_create")
-    object UserProfile : Page("user_profile", "user_profile/{userId}")
-    object FollowList: Page("follow_list", "follow_list/{userId}/{followees}")
-    object LocationSelect: Page("location_select")
-    object LocationConfirm: Page("location_confirm")
-}
 
 /**
  * メイン画面のコンポーザブル（アプリ全体のエントリポイント）
@@ -145,12 +121,12 @@ fun ScreenTopBar(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    val pages = listOf(
-        Page.ImageDetail,
-        Page.UserProfile,
-        Page.PostDetail,
+    val subScreens = listOf(
+        SubScreen.ImageDetail,
+        SubScreen.UserProfile,
+        SubScreen.PostDetail,
     )
-    if (pages.map { it.routeWithParam }.contains(currentDestination?.route)) {
+    if (subScreens.map { it.routeWithParam }.contains(currentDestination?.route)) {
         TopAppBar(
             title = {},
             navigationIcon = {

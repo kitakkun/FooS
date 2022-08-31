@@ -1,5 +1,6 @@
 package com.example.foos.ui.view.screen.imagedetail
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +15,6 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.foos.R
-import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 import kotlinx.coroutines.launch
@@ -25,7 +25,11 @@ import kotlinx.coroutines.launch
  */
 @OptIn(ExperimentalSnapperApi::class)
 @Composable
-fun ImageDetailScreen(navController: NavHostController, post: PostItemUiStateWithImageUrl) {
+fun ImageDetailScreen(
+    navController: NavHostController,
+    imageUrls: List<String>,
+    initialIndex: Int
+) {
     val lazyListState = rememberLazyListState()
     var showedFirstTime by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
@@ -33,7 +37,7 @@ fun ImageDetailScreen(navController: NavHostController, post: PostItemUiStateWit
     LaunchedEffect(Unit) {
         if (showedFirstTime) {
             coroutineScope.launch {
-                lazyListState.scrollToItem(post.index)
+                lazyListState.scrollToItem(initialIndex)
                 showedFirstTime = false
             }
         }
@@ -44,7 +48,8 @@ fun ImageDetailScreen(navController: NavHostController, post: PostItemUiStateWit
         modifier = Modifier.fillMaxSize(),
     )
     {
-        items(post.uiState.attachedImages) {
+        items(imageUrls) {
+            Log.d("TAG", it)
             FullSizeImage(url = it, modifier = Modifier.fillParentMaxSize())
         }
     }

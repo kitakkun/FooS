@@ -1,45 +1,50 @@
 package com.example.foos.ui.view.screen.followlist
 
-import android.util.Log
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
-import com.example.foos.ui.view.component.FollowButton
 import com.example.foos.ui.view.component.OnAppearLastItem
-import com.example.foos.ui.view.component.UserIcon
-import com.example.foos.ui.view.component.VerticalUserIdentityText
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.google.accompanist.pager.rememberPagerState
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.example.foos.ui.view.component.list.UserItem
+import com.example.foos.ui.view.component.list.UserList
+import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
+/**
+ * フォロワーとフォロー中のユーザリストを表示するスクリーン
+ */
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun FollowListScreen(viewModel: FollowListViewModel, navController: NavController, userId: String, initialPage: Int = 0) {
-    val uiState = viewModel.uiState.value
+fun FollowListScreen(
+    viewModel: FollowListViewModel,
+    navController: NavController,
+    userId: String,
+    initialPage: Int = 0
+) {
 
+    // ナビゲーションイベントの処理
     LaunchedEffect(Unit) {
         viewModel.navEvent.collect {
             navController.navigate(it)
         }
     }
+
+    val uiState = viewModel.uiState.value
 
     val tabTitles = listOf(
         stringResource(id = R.string.following),
@@ -49,27 +54,9 @@ fun FollowListScreen(viewModel: FollowListViewModel, navController: NavControlle
     val pagerState = rememberPagerState(initialPage)
     val coroutineScope = rememberCoroutineScope()
 
-    Column() {
-        TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
-                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-                )
-            }
-        ) {
-            tabTitles.forEachIndexed { index, title ->
-                Tab(
-                    text = { Text(text = title) },
-                    selected = pagerState.currentPage == index,
-                    onClick = {
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(index)
-                        }
-                    }
-                )
-            }
-        }
+    Column {
+
+        MyTabRow(pagerState = pagerState, tabTitles = tabTitles)
 
         HorizontalPager(
             state = pagerState,
@@ -92,6 +79,34 @@ fun FollowListScreen(viewModel: FollowListViewModel, navController: NavControlle
         }
     }
 
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+private fun MyTabRow(
+    pagerState: PagerState,
+    tabTitles: List<String>,
+) {
+    val coroutineScope = rememberCoroutineScope()
+    TabRow(
+        selectedTabIndex = pagerState.currentPage, indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+            )
+        }
+    ) {
+        tabTitles.forEachIndexed { index, title ->
+            Tab(
+                text = { Text(text = title) },
+                selected = pagerState.currentPage == index,
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(index)
+                    }
+                }
+            )
+        }
+    }
 }
 
 @Composable
@@ -126,69 +141,10 @@ fun FollowerList(
     )
 }
 
-@Composable
-fun UserList(
-    uiStates: List<UserItemUiState>,
-    onAppearLastItem: (Int) -> Unit,
-    onItemClicked: (String) -> Unit,
-) {
-    val state = rememberLazyListState()
-    state.OnAppearLastItem(onAppearLastItem = onAppearLastItem)
-    LazyColumn(
-        state = state
-    ) {
-        items(uiStates) {
-            UserItem(uiState = it, onItemClicked = onItemClicked)
-            Divider(thickness = 1.dp, color = Color.LightGray)
-        }
-    }
-}
-
-@Composable
-fun UserItem(
-    uiState: UserItemUiState,
-    modifier: Modifier = Modifier,
-    onItemClicked: (String) -> Unit,
-) {
-    Column(
-        modifier = modifier
-            .padding(16.dp)
-            .fillMaxWidth()
-            .clickable { onItemClicked(uiState.userId) },
-    ) {
-        if (uiState.followingYou) {
-            Text(text = "follows you", fontWeight = FontWeight.Light)
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Row(
-                modifier = Modifier.weight(1f)
-            ) {
-                UserIcon(url = uiState.profileImage)
-                Spacer(modifier = Modifier.width(16.dp))
-                Column {
-                    Row {
-                        VerticalUserIdentityText(
-                            username = uiState.username,
-                            userId = uiState.userId,
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(text = uiState.bio)
-                }
-            }
-            if (uiState.userId != Firebase.auth.uid) {
-                FollowButton(onClick = { /*TODO*/ }, following = uiState.following)
-            }
-        }
-    }
-}
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun UserItemPreview() {
-    val uiState = UserItemUiState("username", "userId", "", "BIO", true, false)
+    val uiState = UserItemUiState("userId", "username", "userId", "", "BIO", true, false)
     UserItem(uiState = uiState, onItemClicked = {})
 }

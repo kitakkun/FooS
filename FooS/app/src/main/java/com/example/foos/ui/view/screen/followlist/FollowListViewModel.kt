@@ -8,9 +8,9 @@ import com.example.foos.data.domain.FetchFolloweesWithMyFollowStateByUserIdUseCa
 import com.example.foos.data.domain.FetchFollowersWithMyFollowStateByUserIdUseCase
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.UsersRepository
+import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.state.screen.followlist.FollowListScreenUiState
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
-import com.example.foos.ui.view.screen.Page
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +36,7 @@ class FollowListViewModel @Inject constructor(
 
     fun navigateToUserProfile(userId: String) {
         viewModelScope.launch {
-            _navEvent.emit("${Page.UserProfile.route}/$userId")
+            _navEvent.emit("${SubScreen.UserProfile.route}/$userId")
         }
     }
 
@@ -45,6 +45,7 @@ class FollowListViewModel @Inject constructor(
             val followees =
                 fetchFolloweesWithMyFollowStateByUserIdUseCase(Firebase.auth.uid!!, userId).map {
                     UserItemUiState(
+                        clientUserId = Firebase.auth.uid!!,
                         username = it.user.username,
                         profileImage = it.user.profileImage,
                         userId = it.user.userId,
@@ -64,6 +65,7 @@ class FollowListViewModel @Inject constructor(
             val followers =
                 fetchFollowersWithMyFollowStateByUserIdUseCase(Firebase.auth.uid!!, userId).map {
                     UserItemUiState(
+                        clientUserId = Firebase.auth.uid!!,
                         username = it.user.username,
                         profileImage = it.user.profileImage,
                         userId = it.user.userId,
@@ -73,7 +75,8 @@ class FollowListViewModel @Inject constructor(
                         followingYou = it.followState.followed,
                     )
                 }
-            _uiState.value = uiState.value.copy(followers = (uiState.value.followers + followers).distinct())
+            _uiState.value =
+                uiState.value.copy(followers = (uiState.value.followers + followers).distinct())
         }
     }
 

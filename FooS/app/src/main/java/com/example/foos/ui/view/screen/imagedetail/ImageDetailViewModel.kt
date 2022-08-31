@@ -5,7 +5,4 @@ import androidx.lifecycle.ViewModel
 /**
  * ImageDetailScreenに対応するViewModel
  */
-class ImageDetailViewModel constructor() : ViewModel() {
-
-
-}
+class ImageDetailViewModel : ViewModel()

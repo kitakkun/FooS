@@ -12,5 +12,6 @@ data class DatabaseUser(
     val profileImage: String,
 ) {
     constructor() : this(
-        userId = "", username = "", profileImage = "")
+        userId = "", username = "", profileImage = ""
+    )
 }

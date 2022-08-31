@@ -13,10 +13,10 @@ data class ReactionItemUiState(
 ) {
     companion object {
         val Default = ReactionItemUiState(
-            "username",
-            "https://cdn-icons-png.flaticon.com/512/1006/1006771.png",
-            "❤️",
-            "post content..."
+            username = "username",
+            userIcon = "",
+            reaction = "😭",
+            postContent = "post content..."
         )
     }
 }

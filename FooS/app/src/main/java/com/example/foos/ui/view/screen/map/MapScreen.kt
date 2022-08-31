@@ -6,7 +6,6 @@ import android.location.Location
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -14,11 +13,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.core.view.updateLayoutParams
 import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.data.model.DatabasePost
+import com.example.foos.ui.constants.paddingMedium
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.PermissionStatus
@@ -141,7 +139,7 @@ fun MapDeniedView(
         Text(
             text = "Please give the permission."
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(paddingMedium))
         Button(onClick = { locationPermissionState.launchPermissionRequest() }) {
             Text("Request permission")
         }

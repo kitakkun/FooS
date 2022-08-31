@@ -4,11 +4,7 @@ import android.app.Activity
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -16,8 +12,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -115,7 +109,9 @@ fun ClickableUserIcon(
         UserIcon(
             url = imageUri,
             onClick = onClick,
-            modifier = Modifier.width(70.dp).height(70.dp)
+            modifier = Modifier
+                .width(70.dp)
+                .height(70.dp)
         )
         Icon(
             Icons.Filled.Edit, null,

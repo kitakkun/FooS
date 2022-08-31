@@ -15,7 +15,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +30,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.foos.R
+import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.screen.post.PostScreenUiState
 import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -163,8 +163,8 @@ fun Attachments(
     locationAttached: Boolean,
 ) {
     LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(paddingMedium),
+        contentPadding = PaddingValues(paddingMedium)
     ) {
         items(attachedImages) {
             Box(contentAlignment = Alignment.TopEnd) {
@@ -221,7 +221,7 @@ private fun TopRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(paddingMedium),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         IconButton(onClick = onCanceled) {

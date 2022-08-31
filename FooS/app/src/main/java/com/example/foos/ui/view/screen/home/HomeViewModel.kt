@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
 import com.example.foos.data.domain.GetPostsWithUserUseCase
-import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
+import com.example.foos.ui.navigation.SubScreen
+import com.example.foos.ui.navigation.navargs.StringList
 import com.example.foos.ui.state.screen.home.HomeScreenUiState
 import com.example.foos.ui.state.screen.home.PostItemUiState
-import com.example.foos.ui.view.screen.Page
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +41,7 @@ class HomeViewModel @Inject constructor(
      */
     fun onUserIconClick(userId: String) {
         viewModelScope.launch {
-            _navEvent.emit("${Page.UserProfile.route}/$userId")
+            _navEvent.emit("${SubScreen.UserProfile.route}/$userId")
         }
     }
 
@@ -52,7 +52,7 @@ class HomeViewModel @Inject constructor(
     fun onContentClick(uiState: PostItemUiState) {
         viewModelScope.launch {
             val data = uiState.postId
-            _navEvent.emit("${Page.PostDetail.route}/$data")
+            _navEvent.emit("${SubScreen.PostDetail.route}/$data")
         }
     }
 
@@ -61,15 +61,14 @@ class HomeViewModel @Inject constructor(
      * @param uiState クリックされた画像を持つ投稿のUI状態
      * @param clickedImageUrl クリックされた画像のURL
      */
-    fun onImageClick(uiState: PostItemUiState, clickedImageUrl: String) {
+    fun onImageClick(imageUrls: List<String>, clickedImageUrl: String) {
         viewModelScope.launch {
-            val uiStateWithImageUrl =
-                PostItemUiStateWithImageUrl(
-                    uiState,
-                    uiState.attachedImages.indexOf(clickedImageUrl)
-                )
-            val data = Uri.encode(Gson().toJson(uiStateWithImageUrl))
-            _navEvent.emit("${Page.ImageDetail.route}/$data")
+            _navEvent.emit(
+                SubScreen.ImageDetail.route(
+                    Uri.encode(Gson().toJson(StringList(imageUrls))),
+                    imageUrls.indexOf(clickedImageUrl).toString()
+                ),
+            )
         }
     }
 
@@ -109,7 +108,8 @@ class HomeViewModel @Inject constructor(
                 val posts = getPostsWithUserUseCase(it).map { postWithUser ->
                     convertPostWithUserToUiStateUseCase(postWithUser)
                 }
-                _uiState.value = uiState.value.copy(posts = (uiState.value.posts + posts).distinct())
+                _uiState.value =
+                    uiState.value.copy(posts = (uiState.value.posts + posts).distinct())
             }
         }
     }

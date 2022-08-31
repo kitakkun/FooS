@@ -8,7 +8,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,15 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foos.R
+import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.view.component.FollowButton
 import com.example.foos.ui.view.component.OnAppearLastItem
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.VerticalUserIdentityText
-import com.example.foos.ui.view.screen.home.PostItemList
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.google.accompanist.pager.rememberPagerState
+import com.example.foos.ui.view.component.list.PostItemList
+import com.google.accompanist.pager.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
@@ -61,6 +58,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
     }
 
     val nestedScrollViewState = rememberNestedScrollViewState()
+
     // this layout produce buggy scroll if we don't use jetpack compose alpha02 or above.
     // nestedScroll's bug exists until alpha01.
     VerticalNestedScrollView(
@@ -86,61 +84,86 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                     stringResource(id = R.string.tab_reactions)
                 )
                 val pagerState = rememberPagerState(initialPage = 0)
-                val coroutineScope = rememberCoroutineScope()
 
-                TabRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    selectedTabIndex = pagerState.currentPage,
-                    // Override the indicator, using the provided pagerTabIndicatorOffset modifier
-                    indicator = { tabPositions ->
-                        TabRowDefaults.Indicator(
-                            Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-                        )
-                    }
-                ) {
-                    tabList.forEachIndexed { index, title ->
-                        Tab(
-                            text = { Text(title) },
-                            selected = pagerState.currentPage == index,
-                            onClick = {
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(index)
+                MyTabRow(pagerState = pagerState, tabList = tabList)
+
+                MyPager(
+                    pagerState = pagerState, pageCount = tabList.size,
+                    pageContents = listOf(
+                        {
+                            PostItemList(
+                                uiStates = uiState.posts,
+                                onImageClick = { imageUrls, clickedImageUrl ->
+                                    viewModel.onImageClick(
+                                        imageUrls,
+                                        clickedImageUrl
+                                    )
+                                },
+                                onContentClick = { state -> viewModel.onContentClick(state) },
+                                onUserIconClick = { viewModel.onUserIconClick() },
+                                onAppearLastItem = { viewModel.fetchOlderPosts() },
+                            )
+                        },
+                        {
+                            LazyColumn {
+                                item {
+                                    Text(text = "Reaction Items will come here.")
                                 }
-                            },
-                        )
-                    }
-                }
-
-                HorizontalPager(
-                    state = pagerState,
-                    count = tabList.size,
-                    modifier = Modifier.fillMaxHeight(),
-                    verticalAlignment = Alignment.Top
-                ) { page: Int ->
-                    when (page) {
-                        0 -> PostItemList(
-                            uiStates = uiState.posts,
-                            onImageClick = { state, url ->
-                                viewModel.onImageClick(
-                                    state,
-                                    url
-                                )
-                            },
-                            onContentClick = { state -> viewModel.onContentClick(state) },
-                            onUserIconClick = { viewModel.onUserIconClick() },
-                            onAppearLastItem = { viewModel.fetchOlderPosts() },
-                        )
-                        1 -> LazyColumn(
-                        ) {
-                            item {
-                                Text(text = "Reaction Items will come here.")
                             }
                         }
-                    }
-                }
+                    )
+                )
             }
         }
     )
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+private fun MyTabRow(
+    pagerState: PagerState,
+    tabList: List<String>,
+) {
+    val coroutineScope = rememberCoroutineScope()
+    TabRow(
+        modifier = Modifier.fillMaxWidth(),
+        selectedTabIndex = pagerState.currentPage,
+        // Override the indicator, using the provided pagerTabIndicatorOffset modifier
+        indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+            )
+        }
+    ) {
+        tabList.forEachIndexed { index, title ->
+            Tab(
+                text = { Text(title) },
+                selected = pagerState.currentPage == index,
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(index)
+                    }
+                },
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+private fun MyPager(
+    pagerState: PagerState,
+    pageCount: Int,
+    pageContents: List<@Composable () -> Unit>
+) {
+    HorizontalPager(
+        state = pagerState,
+        count = pageCount,
+        modifier = Modifier.fillMaxHeight(),
+        verticalAlignment = Alignment.Top
+    ) { page: Int ->
+        pageContents[page]()
+    }
 }
 
 /**
@@ -163,7 +186,7 @@ fun UserProfileView(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.padding(16.dp)
+        modifier = modifier.padding(paddingMedium)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -178,9 +201,9 @@ fun UserProfileView(
                 FollowButton(onClick = onFollowButtonClick, following = following)
             }
         }
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(paddingMedium))
         VerticalUserIdentityText(username = username, userId = userId)
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(paddingMedium))
         Biography(bio = bio)
         FollowInfo(
             followerNum = followerNum,
@@ -211,8 +234,7 @@ fun FollowInfo(
     onFollowersTextClick: () -> Unit,
     onFollowingTextClick: () -> Unit,
 ) {
-    Row(
-    ) {
+    Row {
         Text(
             buildAnnotatedString {
                 withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
@@ -223,7 +245,7 @@ fun FollowInfo(
                 }
             },
             modifier = Modifier
-                .padding(16.dp)
+                .padding(paddingMedium)
                 .clickable { onFollowingTextClick() }
         )
         Text(
@@ -236,7 +258,7 @@ fun FollowInfo(
                 }
             },
             modifier = Modifier
-                .padding(16.dp)
+                .padding(paddingMedium)
                 .clickable { onFollowersTextClick() }
         )
     }

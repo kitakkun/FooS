@@ -6,12 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import com.example.foos.ui.navargs.PostItemUiStateWithImageUrl
-import com.example.foos.ui.navargs.PostItemUiStateWithImageUrlType
+import com.example.foos.ui.navigation.Screen
+import com.example.foos.ui.navigation.SubScreen
+import com.example.foos.ui.navigation.navargs.StringList
 import com.example.foos.ui.view.screen.followlist.FollowListScreen
 import com.example.foos.ui.view.screen.followlist.FollowListViewModel
 import com.example.foos.ui.view.screen.home.HomeScreen
@@ -64,23 +63,23 @@ fun ScreenNavHost(
             val vm: SettingViewModel = hiltViewModel()
             SettingScreen(vm)
         }
-        composable(Page.PostCreate.route) {
+        composable(SubScreen.PostCreate.route) {
             val vm: PostViewModel = hiltViewModel()
             PostScreen(vm, navController, screenViewModel)
         }
-        composable(Page.LocationSelect.route) {
+        composable(SubScreen.PostCreate.LocationSelect.route) {
             val vm: LocationSelectViewModel = hiltViewModel()
             LocationSelectScreen(vm, navController, screenViewModel)
         }
-        composable(Page.LocationConfirm.route) {
+        composable(SubScreen.PostCreate.LocationConfirm.route) {
             val vm: LocationConfirmViewModel = hiltViewModel()
             LocationConfirmScreen(vm, navController, screenViewModel)
         }
         composable(
-            Page.UserProfile.routeWithParam,
-            listOf(navArgument("userId") { type = NavType.StringType })
+            SubScreen.UserProfile.routeWithParam,
+            SubScreen.UserProfile.arguments,
         ) {
-            val userId = it.arguments?.getString("userId")
+            val userId = it.arguments?.getString(SubScreen.UserProfile.key(0))
             userId?.let {
                 val vm: UserProfileViewModel = hiltViewModel()
                 vm.setUserId(userId)
@@ -88,37 +87,38 @@ fun ScreenNavHost(
             }
         }
         composable(
-            Page.PostDetail.routeWithParam,
-            listOf(navArgument("postId") { type = NavType.StringType })
+            SubScreen.PostDetail.routeWithParam,
+            SubScreen.PostDetail.arguments,
         ) {
-            val postId = it.arguments?.getString("postId")
-            val vm: PostDetailViewModel = hiltViewModel()
+            val postId = it.arguments?.getString(SubScreen.PostDetail.key(0))
             postId?.let {
+                val vm: PostDetailViewModel = hiltViewModel()
                 PostDetailScreen(vm, navController, postId)
             }
         }
-        composable(Page.ImageDetail.routeWithParam, listOf(
-            navArgument("uiStateWithImageUrl") { type = PostItemUiStateWithImageUrlType }
-        )
+        composable(
+            SubScreen.ImageDetail.routeWithParam,
+            SubScreen.ImageDetail.arguments,
         ) {
-            val uiStateWithImageUrl =
-                it.arguments?.getParcelable<PostItemUiStateWithImageUrl>("uiStateWithImageUrl")
-            uiStateWithImageUrl?.let {
-                ImageDetailScreen(navController = navController, post = it)
+            val imageUrls =
+                it.arguments?.getParcelable<StringList>(SubScreen.ImageDetail.key(0))
+            val clickedImageIndex = it.arguments?.getString(SubScreen.ImageDetail.key(1))
+            if (imageUrls != null && clickedImageIndex != null) {
+                ImageDetailScreen(
+                    navController = navController,
+                    imageUrls = imageUrls.value,
+                    initialIndex = clickedImageIndex.toInt(),
+                )
             }
         }
-        composable(Page.FollowList.routeWithParam, listOf(
-            navArgument("userId") { type = NavType.StringType },
-            navArgument("followees") { type = NavType.BoolType }
-        )
+        composable(
+            SubScreen.FollowList.routeWithParam,
+            SubScreen.FollowList.arguments,
         ) {
-            val userId = it.arguments?.getString("userId")
-            val followees = it.arguments?.getBoolean("followees")
-            var index = 0
-            followees?.let {
-                if (!followees) index = 1
-            }
-            userId?.let {
+            val userId = it.arguments?.getString(SubScreen.FollowList.key(0))
+            val followees = it.arguments?.getBoolean(SubScreen.FollowList.key(1))
+            if (userId != null && followees != null) {
+                val index = if (followees) 0 else 1
                 val vm: FollowListViewModel = hiltViewModel()
                 FollowListScreen(
                     viewModel = vm,
