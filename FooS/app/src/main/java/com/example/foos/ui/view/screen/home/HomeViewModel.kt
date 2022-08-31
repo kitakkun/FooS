@@ -10,7 +10,6 @@ import com.example.foos.data.domain.fetcher.post.FetchPostsUseCase
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.navigation.navargs.StringList
 import com.example.foos.ui.state.screen.home.HomeScreenUiState
-import com.example.foos.ui.state.component.PostItemUiState
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -47,12 +46,11 @@ class HomeViewModel @Inject constructor(
 
     /**
      * 投稿コンテンツクリック時のイベント
-     * @param uiState クリックされた投稿のUI状態
+     * @param postId クリックされた投稿のID
      */
-    fun onContentClick(uiState: PostItemUiState) {
+    fun onContentClick(postId: String) {
         viewModelScope.launch {
-            val data = uiState.postId
-            _navEvent.emit("${SubScreen.PostDetail.route}/$data")
+            _navEvent.emit(SubScreen.PostDetail.route(postId))
         }
     }
 

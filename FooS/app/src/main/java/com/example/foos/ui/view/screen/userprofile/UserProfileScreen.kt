@@ -115,6 +115,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                                 }
                                 MediaPostGrid(
                                     uiStates = uiState.mediaPosts,
+                                    onContentClick = { viewModel.onContentClick(it) },
                                     onAppearLastItem = { viewModel.fetchOlderMediaPosts() },
                                 )
                             },
