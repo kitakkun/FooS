@@ -17,6 +17,7 @@ data class UserProfileScreenUiState(
     val followerCount: Int,
     val followeeCount: Int,
     val following: Boolean = false,
+    val isRefreshing: Boolean = false,
 ) {
     companion object {
         val Default = UserProfileScreenUiState(
