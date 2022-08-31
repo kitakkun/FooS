@@ -27,17 +27,36 @@ object PostsRepository {
     private const val MAX_UPLOAD_IMAGE_SIZE = 1024
     private const val COLLECTION = "posts"
 
-    suspend fun fetch(start: Date? = null, end: Date? = null, count: Long = DEFAULT_LOAD_LIMIT) : List<DatabasePost> {
-        val collection = Firebase.firestore.collection(COLLECTION)
-        var query: Query? = null
-        start?.let { query = (query ?: collection).whereGreaterThanOrEqualTo("createdAt", start) }
-        end?.let { query = (query ?: collection).whereLessThanOrEqualTo("createdAt", end) }
-        query = (query ?: collection).orderBy("createdAt", Query.Direction.DESCENDING)
-            .limit(count)
-        query?.let {
-            return it.get().await().toObjects(DatabasePost::class.java)
-        }
-        return listOf()
+    suspend fun fetch(
+        start: Date? = null,
+        end: Date? = null,
+        count: Long = DEFAULT_LOAD_LIMIT
+    ): List<DatabasePost> {
+        var query = Firebase.firestore.collection(COLLECTION)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+        start?.let { query = query.whereGreaterThanOrEqualTo("createdAt", start) }
+        end?.let { query = query.whereLessThanOrEqualTo("createdAt", end) }
+        return query.limit(count)
+            .get().await().toObjects(DatabasePost::class.java)
+    }
+
+    /**
+     * 画像付きの投稿をフェッチ
+     */
+    suspend fun fetchWithMediaByUserId(
+        userId: String,
+        start: Date? = null,
+        end: Date? = null,
+        count: Long = DEFAULT_LOAD_LIMIT * 2
+    ): List<DatabasePost> {
+        var query = Firebase.firestore.collection(COLLECTION)
+            .whereEqualTo("userId", userId)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+        start?.let { query = query.whereGreaterThanOrEqualTo("createdAt", start) }
+        end?.let { query = query.whereLessThanOrEqualTo("createdAt", end) }
+        return query.limit(count)
+            .get().await().toObjects(DatabasePost::class.java)
+            .filter { it.attachedImages.isNotEmpty() }
     }
 
     /**
@@ -164,7 +183,12 @@ object PostsRepository {
                 e.printStackTrace()
             }
         }
-        document.set(databasePost.copy(postId = document.id, attachedImages = imageDownloadLinks))
+        document.set(
+            databasePost.copy(
+                postId = document.id,
+                attachedImages = imageDownloadLinks
+            )
+        )
         document.update("createdAt", FieldValue.serverTimestamp()).await()
     }
 

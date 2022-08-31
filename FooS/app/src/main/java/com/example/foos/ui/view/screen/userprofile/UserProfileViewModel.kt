@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.domain.converter.uistate.ConvertPostToUiStateUseCase
 import com.example.foos.data.domain.fetcher.post.FetchPostsByUserIdUseCase
+import com.example.foos.data.domain.fetcher.post.FetchPostsUserReactedByUserIdUseCase
+import com.example.foos.data.domain.fetcher.post.FetchPostsWithMediaByUserIdUseCase
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.UsersRepository
 import com.example.foos.ui.navigation.SubScreen
@@ -32,6 +34,8 @@ class UserProfileViewModel @Inject constructor(
     private val followRepository: FollowRepository,
     private val fetchPostsByUserIdUseCase: FetchPostsByUserIdUseCase,
     private val convertPostToUiStateUseCase: ConvertPostToUiStateUseCase,
+    private val fetchPostsUserReactedByUserIdUseCase: FetchPostsUserReactedByUserIdUseCase,
+    private val fetchPostsWithMediaByUserIdUseCase: FetchPostsWithMediaByUserIdUseCase,
 ) : ViewModel() {
 
     private var _uiState = mutableStateOf(UserProfileScreenUiState.Default)
@@ -83,9 +87,11 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-    fun onUserIconClick() {
+    fun onUserIconClick(userId: String) {
         viewModelScope.launch {
-            _scrollUpEvent.emit(true)
+            if (userId != uiState.value.userId) {
+                _navEvent.emit(SubScreen.UserProfile.route(userId))
+            }
         }
     }
 
@@ -116,14 +122,10 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-    fun setUserId(userId: String) {
-        viewModelScope.launch {
-            fetchPosts(userId)
-            fetchUserInfo(userId)
-        }
-    }
-
-    private suspend fun fetchUserInfo(userId: String) {
+    /**
+     * ユーザプロフィールをフェッチ
+     */
+    suspend fun fetchUserInfo(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val followers = followRepository.fetchFollowers(userId)
             val followees = followRepository.fetchFollowees(userId)
@@ -142,24 +144,14 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchPosts(userId: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val posts = fetchPostsByUserIdUseCase(userId).map {
-                convertPostToUiStateUseCase(it)
-            }
-            _uiState.value = uiState.value.copy(posts = posts)
-        }
-    }
-
     /**
-     * 古い投稿をフェッチします
+     * ユーザの古い投稿をフェッチします
      */
-    fun fetchOlderPosts() {
+    fun fetchOlderUserPosts() {
         viewModelScope.launch {
-            val oldestPost = uiState.value.posts.last()
-            val oldestDate = oldestPost.createdAt
+            val oldestDate = uiState.value.posts.last().createdAt
             oldestDate?.let {
-                val posts = fetchPostsByUserIdUseCase( uiState.value.userId, oldestDate ).map {
+                val posts = fetchPostsByUserIdUseCase(uiState.value.userId, end = oldestDate).map {
                     convertPostToUiStateUseCase(it)
                 }
                 _uiState.value =
@@ -168,15 +160,91 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-    fun refreshUserPosts() {
+    /**
+     * ユーザの新しい投稿をフェッチする
+     */
+    fun fetchNewUserPosts(indicateRefresh: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
-
+            if (indicateRefresh) {
+                _uiState.value = uiState.value.copy(isRefreshing = true)
+            }
+            val posts = fetchPostsByUserIdUseCase(uiState.value.userId).map {
+                convertPostToUiStateUseCase(it)
+            }
+            _uiState.value = uiState.value.copy(isRefreshing = false, posts = posts)
         }
     }
 
-    fun fetchUserReactedPosts() {
+    /**
+     * ユーザの新しいメディア付き投稿をフェッチする
+     */
+    fun fetchNewMediaPosts(indicateRefresh: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
+            if (indicateRefresh) {
+                _uiState.value = uiState.value.copy(isRefreshing = true)
+            }
+            val posts = fetchPostsWithMediaByUserIdUseCase(uiState.value.userId).map {
+                convertPostToUiStateUseCase(it)
+            }
+            _uiState.value = uiState.value.copy(isRefreshing = false, mediaPosts = posts)
+        }
+    }
 
+    /**
+     * ユーザの古いメディア付き投稿をフェッチする
+     */
+    fun fetchOlderMediaPosts() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val lastCreatedAt =
+                uiState.value.mediaPosts.last().createdAt
+            lastCreatedAt?.let {
+                val posts = fetchPostsWithMediaByUserIdUseCase(
+                    uiState.value.userId,
+                    end = lastCreatedAt
+                ).map {
+                    convertPostToUiStateUseCase(it)
+                }
+                _uiState.value = uiState.value.copy(
+                    userReactedPosts = (uiState.value.mediaPosts + posts).distinct()
+                )
+            }
+        }
+    }
+
+    /**
+     * ユーザがリアクションした投稿リストを更新する
+     */
+    fun fetchNewUserReactedPosts(indicateRefresh: Boolean = false) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (indicateRefresh) {
+                _uiState.value = uiState.value.copy(isRefreshing = true)
+            }
+            val posts = fetchPostsUserReactedByUserIdUseCase(uiState.value.userId).map {
+                convertPostToUiStateUseCase(it)
+            }
+            _uiState.value = uiState.value.copy(isRefreshing = false, userReactedPosts = posts)
+        }
+    }
+
+    /**
+     * より古いユーザがリアクションした投稿をフェッチする
+     */
+    fun fetchOlderUserReactedPosts() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val lastCreatedAt =
+                uiState.value.userReactedPosts.last().reactions.find { it.from == uiState.value.userId }?.createdAt
+            lastCreatedAt?.let {
+                val posts = fetchPostsUserReactedByUserIdUseCase(
+                    uiState.value.userId,
+                    end = lastCreatedAt
+                ).map {
+                    convertPostToUiStateUseCase(it)
+                }
+                _uiState.value = uiState.value.copy(
+                    isRefreshing = false,
+                    userReactedPosts = (uiState.value.userReactedPosts + posts).distinct()
+                )
+            }
         }
     }
 }

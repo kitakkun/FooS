@@ -2,8 +2,6 @@ package com.example.foos.ui.view.screen.userprofile
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -23,7 +21,6 @@ import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.view.component.FollowButton
-import com.example.foos.ui.view.component.OnAppearLastItem
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.VerticalUserIdentityText
 import com.example.foos.ui.view.component.list.MediaPostGrid
@@ -41,22 +38,14 @@ import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
     ExperimentalPagerApi::class,
 )
 @Composable
-fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavController) {
+fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavController, userId: String) {
 
     val uiState = viewModel.uiState.value
-    val listState = rememberLazyListState()
-
-    listState.OnAppearLastItem(onAppearLastItem = { viewModel.fetchOlderPosts() })
 
     LaunchedEffect(Unit) {
+        viewModel.fetchUserInfo(userId = userId)
         viewModel.navEvent.collect {
             navController.navigate(it)
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.scrollUpEvent.collect {
-            if (it) listState.animateScrollToItem(0, 0)
         }
     }
 
@@ -68,8 +57,9 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing)
     SwipeRefresh(state = swipeRefreshState, onRefresh = {
         when(pagerState.currentPage) {
-            0, 1 -> viewModel.refreshUserPosts()
-            else -> viewModel.fetchUserReactedPosts()
+            0 -> viewModel.fetchNewUserPosts(true)
+            1 -> viewModel.fetchNewMediaPosts(true)
+            else -> viewModel.fetchNewUserReactedPosts(true)
         }
 
     }) {
@@ -103,6 +93,9 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                         pagerState = pagerState, pageCount = tabList.size,
                         pageContents = listOf(
                             {
+                                LaunchedEffect(Unit) {
+                                    viewModel.fetchNewUserPosts()
+                                }
                                 PostItemList(
                                     uiStates = uiState.posts,
                                     onImageClick = { imageUrls, clickedImageUrl ->
@@ -111,23 +104,36 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                                             clickedImageUrl
                                         )
                                     },
-                                    onContentClick = { state -> viewModel.onContentClick(state) },
-                                    onUserIconClick = { viewModel.onUserIconClick() },
-                                    onAppearLastItem = { viewModel.fetchOlderPosts() },
+                                    onContentClick = { viewModel.onContentClick(it) },
+                                    onUserIconClick = { viewModel.onUserIconClick(it) },
+                                    onAppearLastItem = { viewModel.fetchOlderUserPosts() },
                                 )
                             },
                             {
-                                MediaPostGrid(
-                                    uiStates = uiState.posts.filter { it.attachedImages.isNotEmpty() },
-                                    onAppearLastItem = { viewModel.fetchOlderPosts() },
-                                )
-                            },
-                            {
-                                LazyColumn {
-                                    item {
-                                        Text(text = "Reaction Items will come here.")
-                                    }
+                                LaunchedEffect(Unit) {
+                                    viewModel.fetchNewUserPosts()
                                 }
+                                MediaPostGrid(
+                                    uiStates = uiState.mediaPosts,
+                                    onAppearLastItem = { viewModel.fetchOlderMediaPosts() },
+                                )
+                            },
+                            {
+                                LaunchedEffect(Unit) {
+                                    viewModel.fetchNewUserReactedPosts()
+                                }
+                                PostItemList(
+                                    uiStates = uiState.userReactedPosts,
+                                    onImageClick = { imageUrls, clickedImageUrl ->
+                                        viewModel.onImageClick(
+                                            imageUrls,
+                                            clickedImageUrl
+                                        )
+                                    },
+                                    onContentClick = { viewModel.onContentClick(it) },
+                                    onUserIconClick = { viewModel.onUserIconClick(it) },
+                                    onAppearLastItem = { viewModel.fetchOlderUserReactedPosts() },
+                                )
                             },
                         )
                     )

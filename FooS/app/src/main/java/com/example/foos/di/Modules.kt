@@ -5,9 +5,7 @@ import com.example.foos.data.domain.converter.uistate.ConvertPostToUiStateUseCas
 import com.example.foos.data.domain.converter.uistate.ConvertReactionToUiStateUseCase
 import com.example.foos.data.domain.fetcher.follow.FetchFolloweesWithMyFollowStateByUserIdUseCase
 import com.example.foos.data.domain.fetcher.follow.FetchFollowersWithMyFollowStateByUserIdUseCase
-import com.example.foos.data.domain.fetcher.post.FetchPostByPostIdUseCase
-import com.example.foos.data.domain.fetcher.post.FetchPostsByLocationBoundsUseCase
-import com.example.foos.data.domain.fetcher.post.FetchPostsUseCase
+import com.example.foos.data.domain.fetcher.post.*
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.ReactionsRepository
@@ -45,7 +43,7 @@ object Modules {
      * Provide UseCases...
      */
     @Provides
-    fun provideGetPostByPostIdUseCase(): FetchPostByPostIdUseCase = FetchPostByPostIdUseCase(
+    fun provideFetchPostByPostIdUseCase(): FetchPostByPostIdUseCase = FetchPostByPostIdUseCase(
         providePostsRepository(),
         provideUsersRepository(),
         provideReactionsRepository(),
@@ -59,6 +57,25 @@ object Modules {
 
     @Provides
     fun providePostToUiStateUseCase(): ConvertPostToUiStateUseCase = ConvertPostToUiStateUseCase()
+
+    @Provides
+    fun provideFetchPostByDatabasePostUseCase(): FetchPostByDatabasePostUseCase =
+        FetchPostByDatabasePostUseCase(
+            provideUsersRepository(),
+            provideReactionsRepository(),
+        )
+
+    @Provides
+    fun provideFetchPostsUserReactedByUserIdUseCase(): FetchPostsUserReactedByUserIdUseCase =
+        FetchPostsUserReactedByUserIdUseCase(
+            provideReactionsRepository(), provideFetchPostByPostIdUseCase()
+        )
+
+    @Provides
+    fun provideFetchPostsWithMediaByUserIdUseCase(): FetchPostsWithMediaByUserIdUseCase =
+        FetchPostsWithMediaByUserIdUseCase(
+            providePostsRepository(), provideUsersRepository(), provideReactionsRepository()
+        )
 
 
     @Provides

@@ -2,9 +2,11 @@ package com.example.foos.data.repository
 
 import com.example.foos.data.model.database.DatabaseReaction
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
+import java.util.*
 
 /**
  * リアクションデータの読み書きを行うためのリポジトリ
@@ -12,6 +14,18 @@ import kotlinx.coroutines.tasks.await
 object ReactionsRepository {
 
     private const val COLLECTION = "reactions"
+
+    suspend fun fetchByUserIdWithDate(
+        userId: String,
+        start: Date? = null,
+        end: Date? = null,
+    ): List<DatabaseReaction> {
+        var query = Firebase.firestore.collection(COLLECTION).whereEqualTo("from", userId)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+        start?.let { query = query.whereGreaterThanOrEqualTo("createdAt", start) }
+        end?.let { query = query.whereLessThanOrEqualTo("createdAt", end) }
+        return query.get().await().toObjects(DatabaseReaction::class.java).toList()
+    }
 
     /**
      * 投稿に対応するリアクションデータを取得します
@@ -21,6 +35,7 @@ object ReactionsRepository {
     suspend fun fetchReactionsByPostId(postId: String): List<DatabaseReaction> {
         return Firebase.firestore.collection(COLLECTION)
             .whereEqualTo("postId", postId)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
             .get().await().toObjects(DatabaseReaction::class.java).toList()
     }
 
@@ -37,6 +52,7 @@ object ReactionsRepository {
         val field = if (received) "to" else "from"
         return Firebase.firestore.collection(COLLECTION)
             .whereEqualTo(field, userId)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
             .get().await().toObjects(DatabaseReaction::class.java).toList()
     }
 
