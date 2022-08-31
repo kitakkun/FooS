@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -83,7 +85,11 @@ fun PostItem(
         UserIcon(url = uiState.userIcon, onClick = { onUserIconClick.invoke(uiState.userId) })
         Spacer(modifier = Modifier.width(paddingMedium))
         Column {
-            UserIdentityWithCreatedAtRow(uiState.username, uiState.userId, createdAt = uiState.createdAt)
+            UserIdentityWithCreatedAtRow(
+                uiState.username,
+                uiState.userId,
+                createdAt = uiState.createdAt
+            )
             Text(
                 text = uiState.content,
                 modifier = Modifier
@@ -123,17 +129,13 @@ fun UserIdentityWithCreatedAtRow(
     userId: String,
     createdAt: Date?,
 ) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        HorizontalUserIdentityText(
-            username = username,
-            userId = userId,
-            after = {
-                PostTime(createdAt = createdAt)
-            }
-        )
-    }
+    HorizontalUserIdentityText(
+        username = username,
+        userId = userId,
+        after = {
+            PostTime(createdAt = createdAt)
+        }
+    )
 }
 
 /**
@@ -169,7 +171,12 @@ fun PostTime(
             // ex) 40s
             "${secondsDiff}s"
         }
-        Text("・${text}", modifier = modifier)
+        Text(
+            "・${text}",
+            style = MaterialTheme.typography.caption,
+            fontWeight = FontWeight.Light,
+            modifier = modifier
+        )
     }
 }
 

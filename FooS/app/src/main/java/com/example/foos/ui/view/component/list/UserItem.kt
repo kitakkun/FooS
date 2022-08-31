@@ -2,6 +2,7 @@ package com.example.foos.ui.view.component.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -29,7 +30,7 @@ fun UserItem(
             .clickable { onItemClicked(uiState.userId) },
     ) {
         if (uiState.followingYou) {
-            Text(text = stringResource(R.string.follows_you), fontWeight = FontWeight.Light)
+            Text(text = stringResource(R.string.follows_you), style = MaterialTheme.typography.caption, fontWeight = FontWeight.Light)
         }
         Row(
             modifier = Modifier.fillMaxWidth(),

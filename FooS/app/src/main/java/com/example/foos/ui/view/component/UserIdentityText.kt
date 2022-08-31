@@ -2,13 +2,46 @@ package com.example.foos.ui.view.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.foos.ui.constants.paddingSmall
+
+@Composable
+private fun UsernameText(
+    username: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = username,
+        maxLines = 1,
+        style = MaterialTheme.typography.subtitle1,
+        fontWeight = FontWeight.Bold,
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun UserIdText(
+    userId: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = "@${userId}",
+        style = MaterialTheme.typography.caption,
+        fontWeight = FontWeight.Light,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier
+    )
+}
 
 @Composable
 fun VerticalUserIdentityText(
@@ -22,17 +55,8 @@ fun VerticalUserIdentityText(
         modifier = modifier
     ) {
         before()
-        Text(
-            text = username,
-            fontWeight = FontWeight.Bold,
-            maxLines = 1,
-        )
-        Text(
-            text = "@${userId}",
-            fontWeight = FontWeight.Light,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+        UsernameText(username = username)
+        UserIdText(userId = userId)
         after()
     }
 }
@@ -50,19 +74,21 @@ fun HorizontalUserIdentityText(
         verticalAlignment = Alignment.CenterVertically
     ) {
         before()
-        Text(
-            text = username,
-            fontWeight = FontWeight.Bold,
-            maxLines = 1,
-        )
-        Text(
-            text = "@${userId}",
-            fontWeight = FontWeight.Light,
-            fontSize = 12.sp,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f)
-        )
+        UsernameText(username = username)
+        Spacer(Modifier.width(paddingSmall))
+        UserIdText(userId = userId, modifier = Modifier.weight(1f, false))
         after()
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun VerticalUserIdentityTextPreview() {
+    VerticalUserIdentityText(username = "username", userId = "userId")
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HorizontalUserIdentityTextPreview() {
+    HorizontalUserIdentityText(username = "username", userId = "userId")
 }
