@@ -21,6 +21,7 @@ import com.example.foos.R
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
 import com.example.foos.ui.view.component.OnAppearLastItem
 import com.example.foos.ui.view.component.list.UserItem
+import com.example.foos.ui.view.component.list.UserList
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
@@ -140,23 +141,6 @@ fun FollowerList(
     )
 }
 
-@Composable
-fun UserList(
-    uiStates: List<UserItemUiState>,
-    onAppearLastItem: (Int) -> Unit,
-    onItemClicked: (String) -> Unit,
-) {
-    val state = rememberLazyListState()
-    state.OnAppearLastItem(onAppearLastItem = onAppearLastItem)
-    LazyColumn(
-        state = state
-    ) {
-        items(uiStates) {
-            UserItem(uiState = it, onItemClicked = onItemClicked)
-            Divider(thickness = 1.dp, color = Color.LightGray)
-        }
-    }
-}
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable

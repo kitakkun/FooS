@@ -26,7 +26,7 @@ import com.example.foos.ui.view.component.FollowButton
 import com.example.foos.ui.view.component.OnAppearLastItem
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.VerticalUserIdentityText
-import com.example.foos.ui.view.screen.home.PostItemList
+import com.example.foos.ui.view.component.list.PostItemList
 import com.google.accompanist.pager.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase

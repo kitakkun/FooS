@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import com.example.foos.ui.navigation.Screen
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.view.component.RoundIconActionButton
+import com.example.foos.ui.view.component.list.PostItemList
 import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState

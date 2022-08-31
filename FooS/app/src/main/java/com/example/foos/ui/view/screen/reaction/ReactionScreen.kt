@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.screen.reaction.ReactionItemUiState
 import com.example.foos.ui.view.component.list.ReactionItem
+import com.example.foos.ui.view.component.list.ReactionItemList
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
@@ -30,19 +31,3 @@ fun ReactionScreen(viewModel: ReactionViewModel, navController: NavController) {
 
 }
 
-@Composable
-fun ReactionItemList(
-    uiStates: List<ReactionItemUiState>,
-    onUserIconClick: (String) -> Unit = {},
-    onContentClick: () -> Unit = {},
-) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(paddingMedium)
-    )
-    {
-        items(uiStates) {
-            ReactionItem(it)
-        }
-    }
-}

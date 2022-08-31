@@ -12,6 +12,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.foos.R
 import com.example.foos.ui.constants.paddingMedium
+import com.example.foos.ui.constants.paddingSmall
 import com.example.foos.ui.state.screen.reaction.ReactionItemUiState
 import com.example.foos.ui.view.component.UserIcon
 
@@ -39,6 +40,7 @@ fun ReactionItem(
                 ),
                 emIndices = listOf(0)
             )
+            Spacer(modifier = Modifier.height(paddingSmall))
             Text(text = uiState.postContent)
         }
     }

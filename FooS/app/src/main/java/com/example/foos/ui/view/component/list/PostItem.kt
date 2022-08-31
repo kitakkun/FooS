@@ -1,16 +1,14 @@
-package com.example.foos.ui.view.screen.home
+package com.example.foos.ui.view.component.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -24,44 +22,12 @@ import com.example.foos.R
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.screen.home.PostItemUiState
 import com.example.foos.ui.view.component.HorizontalUserIdentityText
-import com.example.foos.ui.view.component.OnAppearLastItem
 import com.example.foos.ui.view.component.UserIcon
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
-
-
-/**
- * 投稿のリスト
- * @param uiStates 各投稿のUI状態
- * @param onUserIconClick ユーザアイコンクリック時の挙動
- * @param onContentClick コンテンツクリック時の挙動
- * @param onImageClick 添付画像クリック時の挙動
- */
-@Composable
-fun PostItemList(
-    listState: LazyListState = rememberLazyListState(),
-    uiStates: List<PostItemUiState>,
-    onUserIconClick: (String) -> Unit = { },
-    onContentClick: (PostItemUiState) -> Unit = { },
-    onImageClick: (List<String>, String) -> Unit = { _, _ -> },
-    onAppearLastItem: (Int) -> Unit = {},
-) {
-    listState.OnAppearLastItem(onAppearLastItem = onAppearLastItem)
-
-    LazyColumn(
-        state = listState,
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        items(uiStates) { post ->
-            PostItem(post, onUserIconClick, onContentClick, onImageClick)
-            Divider(thickness = 1.dp, color = Color.LightGray)
-        }
-    }
-}
-
 
 /**
  * タイムラインに表示する投稿アイテム一つに対応するコンポーザブル
@@ -182,7 +148,7 @@ fun PostTime(
 
 /**
  * 添付画像の水平方向リスト
- * @param uiState 投稿アイテムのUI状態
+ * @param attachedImages 投稿アイテムのUI状態
  * @param onClick 各画像クリック時の挙動
  */
 @Composable
