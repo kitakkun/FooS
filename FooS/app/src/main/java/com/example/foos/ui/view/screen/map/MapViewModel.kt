@@ -4,8 +4,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
-import com.example.foos.data.domain.GetPostWithUserByPostIdUseCase
+import com.example.foos.data.domain.converter.uistate.ConvertPostToUiStateUseCase
+import com.example.foos.data.domain.converter.uistate.ConvertPostWithUserToUiStateUseCase
+import com.example.foos.data.domain.fetcher.FetchPostsByLocationBoundsUseCase
 import com.example.foos.data.model.DatabaseUser
 import com.example.foos.data.model.PostWithUser
 import com.example.foos.data.repository.PostsRepository.fetchByLatLngBounds
@@ -24,21 +25,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    private val usersRepository: UsersRepository,
-    private val getPostWithUserByPostIdUseCase: GetPostWithUserByPostIdUseCase,
-    private val convertPostWithUserToUiStateUseCase: ConvertPostWithUserToUiStateUseCase
+    private val fetchPostsByLocationBoundsUseCase: FetchPostsByLocationBoundsUseCase,
+    private val convertPostToUiStateUseCase: ConvertPostToUiStateUseCase,
 ) : ViewModel() {
 
     private var _uiState = mutableStateOf(
         MapScreenUiState(
-            listOf(), PostItemUiState(
-                userId = "userId",
-                username = "username",
-                postId = "",
-                content = "content",
-                attachedImages = listOf(""),
-                userIcon = "",
-            )
+            listOf(), PostItemUiState.Default
         )
     )
     val uiState: State<MapScreenUiState> = _uiState
@@ -53,23 +46,7 @@ class MapViewModel @Inject constructor(
     fun fetchNearbyPosts(viewBounds: LatLngBounds?) {
         viewModelScope.launch {
             viewBounds?.let {
-                val posts = fetchByLatLngBounds(it)
-                val tasks = mutableListOf<Job>()
-                val users = mutableMapOf<String, DatabaseUser?>()
-                posts.map {
-                    tasks.add(async {
-                        users.put(
-                            it.postId,
-                            usersRepository.fetchByUserId(it.userId)
-                        )
-                    })
-                }
-                tasks.joinAll()
-                val newPosts = posts.mapNotNull { post ->
-                    users[post.postId]?.let { user ->
-                        convertPostWithUserToUiStateUseCase(PostWithUser(user, post))
-                    }
-                }
+                val newPosts = fetchPostsByLocationBoundsUseCase(it).map { convertPostToUiStateUseCase(it) }
                 _uiState.value = uiState.value.copy(
                     posts = (uiState.value.posts + newPosts).distinct()
                 )
