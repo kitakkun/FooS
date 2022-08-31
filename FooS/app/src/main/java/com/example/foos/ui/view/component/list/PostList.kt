@@ -25,7 +25,7 @@ fun PostItemList(
     listState: LazyListState = rememberLazyListState(),
     uiStates: List<PostItemUiState>,
     onUserIconClick: (String) -> Unit = { },
-    onContentClick: (PostItemUiState) -> Unit = { },
+    onContentClick: (String) -> Unit = { },
     onImageClick: (List<String>, String) -> Unit = { _, _ -> },
     onAppearLastItem: (Int) -> Unit = {},
 ) {

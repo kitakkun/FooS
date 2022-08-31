@@ -14,7 +14,6 @@ import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.UsersRepository
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.navigation.navargs.StringList
-import com.example.foos.ui.state.component.PostItemUiState
 import com.example.foos.ui.state.screen.userprofile.UserProfileScreenUiState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -99,12 +98,11 @@ class UserProfileViewModel @Inject constructor(
 
     /**
      * 投稿コンテンツクリック時のイベント
-     * @param uiState クリックされた投稿のUI状態
+     * @param postId クリックされた投稿のUI状態
      */
-    fun onContentClick(uiState: PostItemUiState) {
-        val data = uiState.postId
+    fun onContentClick(postId: String) {
         viewModelScope.launch {
-            _navEvent.emit("${SubScreen.PostDetail.route}/$data")
+            _navEvent.emit(SubScreen.PostDetail.route(postId))
         }
     }
 

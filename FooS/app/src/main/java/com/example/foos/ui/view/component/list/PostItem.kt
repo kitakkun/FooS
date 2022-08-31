@@ -2,7 +2,8 @@ package com.example.foos.ui.view.component.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -40,12 +41,12 @@ import java.util.*
 fun PostItem(
     uiState: PostItemUiState,
     onUserIconClick: (String) -> Unit = { },
-    onContentClick: (PostItemUiState) -> Unit = { },
+    onContentClick: (String) -> Unit = { },
     onImageClick: (List<String>, String) -> Unit = { _, _ -> },
 ) {
     Row(
         modifier = Modifier
-            .clickable { onContentClick.invoke(uiState) }
+            .clickable { onContentClick.invoke(uiState.postId) }
             .padding(paddingMedium)
     ) {
         UserIcon(url = uiState.userIcon, onClick = { onUserIconClick.invoke(uiState.userId) })
