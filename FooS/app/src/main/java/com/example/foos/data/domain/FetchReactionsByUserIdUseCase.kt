@@ -1,8 +1,8 @@
 package com.example.foos.data.domain
 
-import com.example.foos.data.model.DatabasePost
-import com.example.foos.data.model.DatabaseUser
 import com.example.foos.data.model.Reaction
+import com.example.foos.data.model.database.DatabasePost
+import com.example.foos.data.model.database.DatabaseUser
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.data.repository.UsersRepository
@@ -14,7 +14,7 @@ import kotlinx.coroutines.joinAll
 /**
  * 該当のユーザに関連するリアクションを取得
  */
-class GetReactionsByUserIdUseCase constructor(
+class FetchReactionsByUserIdUseCase constructor(
     private val usersRepository: UsersRepository,
     private val postsRepository: PostsRepository,
     private val reactionsRepository: ReactionsRepository,

@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
-import com.example.foos.data.model.DatabasePost
+import com.example.foos.data.model.database.DatabasePost
 import com.example.foos.util.ImageConverter
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.firebase.firestore.FieldValue
@@ -26,6 +26,19 @@ object PostsRepository {
     private const val DEFAULT_LOAD_LIMIT: Long = 15
     private const val MAX_UPLOAD_IMAGE_SIZE = 1024
     private const val COLLECTION = "posts"
+
+    suspend fun fetch(start: Date? = null, end: Date? = null, count: Long = DEFAULT_LOAD_LIMIT) : List<DatabasePost> {
+        val collection = Firebase.firestore.collection(COLLECTION)
+        var query: Query? = null
+        start?.let { query = (query ?: collection).whereGreaterThanOrEqualTo("createdAt", start) }
+        end?.let { query = (query ?: collection).whereLessThanOrEqualTo("createdAt", end) }
+        query = (query ?: collection).orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(count)
+        query?.let {
+            return it.get().await().toObjects(DatabasePost::class.java)
+        }
+        return listOf()
+    }
 
     /**
      *

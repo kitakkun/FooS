@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.domain.converter.uistate.ConvertPostToUiStateUseCase
-import com.example.foos.data.domain.fetcher.FetchPostByPostIdUseCase
-import com.example.foos.data.model.DatabaseReaction
+import com.example.foos.data.domain.fetcher.post.FetchPostByPostIdUseCase
+import com.example.foos.data.model.database.DatabaseReaction
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.ui.state.component.PostItemUiState
 import com.example.foos.ui.state.screen.postdetail.PostDetailScreenUiState

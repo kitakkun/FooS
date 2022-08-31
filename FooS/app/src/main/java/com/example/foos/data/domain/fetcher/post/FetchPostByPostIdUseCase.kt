@@ -1,8 +1,8 @@
-package com.example.foos.data.domain.fetcher
+package com.example.foos.data.domain.fetcher.post
 
-import com.example.foos.data.model.DatabasePost
-import com.example.foos.data.model.DatabaseReaction
-import com.example.foos.data.model.DatabaseUser
+import com.example.foos.data.model.database.DatabasePost
+import com.example.foos.data.model.database.DatabaseReaction
+import com.example.foos.data.model.database.DatabaseUser
 import com.example.foos.data.model.Post
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.ReactionsRepository

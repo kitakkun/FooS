@@ -6,10 +6,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foos.data.domain.converter.uistate.ConvertPostWithUserToUiStateUseCase
-import com.example.foos.data.domain.GetPostsWithUserByUserIdWithDateUseCase
 import com.example.foos.data.domain.converter.uistate.ConvertPostToUiStateUseCase
-import com.example.foos.data.domain.fetcher.FetchPostsByUserIdUseCase
+import com.example.foos.data.domain.fetcher.post.FetchPostsByUserIdUseCase
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.UsersRepository
 import com.example.foos.ui.navigation.SubScreen

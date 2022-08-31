@@ -1,6 +1,6 @@
 package com.example.foos.data.repository
 
-import com.example.foos.data.model.DatabaseReaction
+import com.example.foos.data.model.database.DatabaseReaction
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
