@@ -13,10 +13,12 @@ import com.example.foos.data.domain.fetcher.post.FetchPostsWithMediaByUserIdUseC
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.UsersRepository
 import com.example.foos.ui.navigation.SubScreen
+import com.example.foos.ui.navigation.navargs.StringList
 import com.example.foos.ui.state.component.PostItemUiState
 import com.example.foos.ui.state.screen.userprofile.UserProfileScreenUiState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -115,8 +117,8 @@ class UserProfileViewModel @Inject constructor(
         viewModelScope.launch {
             _navEvent.emit(
                 SubScreen.ImageDetail.route(
-                    imageUrls.map { Uri.encode(it) }.toString(),
-                    clickedImageUrl
+                    Uri.encode(Gson().toJson(StringList(imageUrls))),
+                    imageUrls.indexOf(clickedImageUrl).toString(),
                 )
             )
         }

@@ -1,10 +1,7 @@
 package com.example.foos.data.domain.fetcher.post
 
-import android.util.Log
 import com.example.foos.data.model.Post
-import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.ReactionsRepository
-import com.example.foos.data.repository.UsersRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
