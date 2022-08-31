@@ -1,4 +1,4 @@
-package com.example.foos.data.domain
+package com.example.foos.data.domain.converter.uistate
 
 import com.example.foos.data.model.PostWithUser
 import com.example.foos.ui.state.component.PostItemUiState

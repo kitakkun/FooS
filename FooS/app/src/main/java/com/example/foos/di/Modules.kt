@@ -1,6 +1,15 @@
 package com.example.foos.di
 
-import com.example.foos.data.domain.*
+import com.example.foos.data.domain.fetcher.FetchPostByPostIdUseCase
+import com.example.foos.data.domain.GetPostsWithUserByUserIdWithDateUseCase
+import com.example.foos.data.domain.GetPostsWithUserUseCase
+import com.example.foos.data.domain.GetReactionsByUserIdUseCase
+import com.example.foos.data.domain.converter.uistate.ConvertPostToUiStateUseCase
+import com.example.foos.data.domain.converter.uistate.ConvertPostWithUserToUiStateUseCase
+import com.example.foos.data.domain.converter.uistate.ConvertReactionToUiStateUseCase
+import com.example.foos.data.domain.fetcher.FetchFolloweesWithMyFollowStateByUserIdUseCase
+import com.example.foos.data.domain.fetcher.FetchFollowersWithMyFollowStateByUserIdUseCase
+import com.example.foos.data.domain.fetcher.FetchPostsByLocationBoundsUseCase
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.ReactionsRepository
@@ -38,11 +47,17 @@ object Modules {
      * Provide UseCases...
      */
     @Provides
-    fun provideGetPostByPostIdUseCase(): GetPostByPostIdUseCase = GetPostByPostIdUseCase(
+    fun provideGetPostByPostIdUseCase(): FetchPostByPostIdUseCase = FetchPostByPostIdUseCase(
         providePostsRepository(),
         provideUsersRepository(),
         provideReactionsRepository(),
     )
+
+    @Provides
+    fun provideFetchPostsByLocationBoundsUseCase(): FetchPostsByLocationBoundsUseCase =
+        FetchPostsByLocationBoundsUseCase(
+            providePostsRepository(), provideUsersRepository(), provideReactionsRepository(),
+        )
 
     @Provides
     fun providePostToUiStateUseCase(): ConvertPostToUiStateUseCase = ConvertPostToUiStateUseCase()

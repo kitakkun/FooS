@@ -1,8 +1,11 @@
-package com.example.foos.data.domain
+package com.example.foos.data.domain.converter.uistate
 
 import com.example.foos.data.model.Reaction
 import com.example.foos.ui.state.screen.reaction.ReactionItemUiState
 
+/**
+ * ReactionをReactionItemUiStateへ変換
+ */
 class ConvertReactionToUiStateUseCase {
 
     operator fun invoke(reaction: Reaction): ReactionItemUiState =

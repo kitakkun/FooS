@@ -5,7 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
+import com.example.foos.data.domain.converter.uistate.ConvertPostWithUserToUiStateUseCase
 import com.example.foos.data.domain.GetPostsWithUserUseCase
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.navigation.navargs.StringList

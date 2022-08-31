@@ -6,8 +6,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foos.data.domain.ConvertPostWithUserToUiStateUseCase
+import com.example.foos.data.domain.converter.uistate.ConvertPostWithUserToUiStateUseCase
 import com.example.foos.data.domain.GetPostsWithUserByUserIdWithDateUseCase
+import com.example.foos.data.domain.converter.uistate.ConvertPostToUiStateUseCase
+import com.example.foos.data.domain.fetcher.FetchPostsByUserIdUseCase
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.UsersRepository
 import com.example.foos.ui.navigation.SubScreen
@@ -30,8 +32,8 @@ import javax.inject.Inject
 class UserProfileViewModel @Inject constructor(
     private val usersRepository: UsersRepository,
     private val followRepository: FollowRepository,
-    private val getPostsWithUserByUserIdWithDateUseCase: GetPostsWithUserByUserIdWithDateUseCase,
-    private val convertPostWithUserToUiStateUseCase: ConvertPostWithUserToUiStateUseCase,
+    private val fetchPostsByUserIdUseCase: FetchPostsByUserIdUseCase,
+    private val convertPostToUiStateUseCase: ConvertPostToUiStateUseCase,
 ) : ViewModel() {
 
     private var _uiState = mutableStateOf(UserProfileScreenUiState.Default)
@@ -144,8 +146,8 @@ class UserProfileViewModel @Inject constructor(
 
     private suspend fun fetchPosts(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val posts = getPostsWithUserByUserIdWithDateUseCase(userId).map {
-                convertPostWithUserToUiStateUseCase(it)
+            val posts = fetchPostsByUserIdUseCase(userId).map {
+                convertPostToUiStateUseCase(it)
             }
             _uiState.value = uiState.value.copy(posts = posts)
         }
@@ -159,12 +161,8 @@ class UserProfileViewModel @Inject constructor(
             val oldestPost = uiState.value.posts.last()
             val oldestDate = oldestPost.createdAt
             oldestDate?.let {
-                val posts = getPostsWithUserByUserIdWithDateUseCase(
-                    uiState.value.userId,
-                    null,
-                    oldestDate
-                ).map {
-                    convertPostWithUserToUiStateUseCase(it)
+                val posts = fetchPostsByUserIdUseCase( uiState.value.userId, oldestDate ).map {
+                    convertPostToUiStateUseCase(it)
                 }
                 _uiState.value =
                     uiState.value.copy(posts = (uiState.value.posts + posts).distinct())

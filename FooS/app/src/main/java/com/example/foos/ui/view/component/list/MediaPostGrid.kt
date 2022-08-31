@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.foos.ui.constants.paddingLarge
-import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.state.component.PostItemUiState
 
 /**
  * プロフィール画面の画像コンテンツベースの投稿グリッドビュー

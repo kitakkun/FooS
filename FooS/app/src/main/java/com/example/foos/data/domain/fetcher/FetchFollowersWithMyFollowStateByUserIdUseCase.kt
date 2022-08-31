@@ -1,4 +1,4 @@
-package com.example.foos.data.domain
+package com.example.foos.data.domain.fetcher
 
 import com.example.foos.data.model.DatabaseUser
 import com.example.foos.data.model.MyFollowingState
@@ -14,23 +14,25 @@ import javax.inject.Inject
 /**
  * フォロー状態とユーザ情報をまとめたデータを取得する
  */
-class FetchFolloweesWithMyFollowStateByUserIdUseCase @Inject constructor(
+class FetchFollowersWithMyFollowStateByUserIdUseCase @Inject constructor(
     private val usersRepository: UsersRepository,
     private val followRepository: FollowRepository,
 ) {
 
     /**
-     * userIdのフォロイーをクライアントのフォロー状態と一緒に取得
+     * userIdのフォロワーをクライアントのフォロー状態と一緒に取得
      */
     suspend operator fun invoke(myUserId: String, userId: String): List<UserWithFollowState> {
-        val followees = followRepository.fetchFollowees(userId).map { it.followee } // フォロー情報
+        val followers = followRepository.fetchFollowers(userId).map { it.follower } // フォロー情報
         val jobs = mutableListOf<Job>()
         val users = mutableListOf<DatabaseUser>()
         val followStates = mutableMapOf<String, MyFollowingState>()
-
         coroutineScope {
-            followees.forEach {
+            // 各フォロワーに関して
+            followers.forEach {
+                // ユーザー情報を取得
                 jobs.add(async { usersRepository.fetchByUserId(it)?.let { users.add(it) } })
+                // クライアントと該当ユーザとのフォロー関係を解決
                 jobs.add(async {
                     followStates.put(
                         it,

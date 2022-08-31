@@ -4,8 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foos.data.domain.ConvertPostToUiStateUseCase
-import com.example.foos.data.domain.GetPostByPostIdUseCase
+import com.example.foos.data.domain.converter.uistate.ConvertPostToUiStateUseCase
+import com.example.foos.data.domain.fetcher.FetchPostByPostIdUseCase
 import com.example.foos.data.model.DatabaseReaction
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.ui.state.component.PostItemUiState
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostDetailViewModel @Inject constructor(
-    private val getPostByPostIdUseCase: GetPostByPostIdUseCase,
+    private val fetchPostByPostIdUseCase: FetchPostByPostIdUseCase,
     private val convertPostToUiStateUseCase: ConvertPostToUiStateUseCase,
     private val reactionsRepository: ReactionsRepository
 ) : ViewModel() {
@@ -28,7 +28,7 @@ class PostDetailViewModel @Inject constructor(
     val uiState: State<PostDetailScreenUiState> = _uiState
 
     suspend fun fetch(postId: String) {
-        val state = getPostByPostIdUseCase(postId)?.let {
+        val state = fetchPostByPostIdUseCase(postId)?.let {
             convertPostToUiStateUseCase(it)
         }
         state?.let {

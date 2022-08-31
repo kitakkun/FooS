@@ -4,7 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foos.data.domain.ConvertReactionToUiStateUseCase
+import com.example.foos.data.domain.converter.uistate.ConvertReactionToUiStateUseCase
 import com.example.foos.data.domain.GetReactionsByUserIdUseCase
 import com.example.foos.ui.state.screen.reaction.ReactionScreenUiState
 import com.google.firebase.auth.ktx.auth

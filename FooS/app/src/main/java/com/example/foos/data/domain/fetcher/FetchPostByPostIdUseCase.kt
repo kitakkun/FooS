@@ -1,4 +1,4 @@
-package com.example.foos.data.domain
+package com.example.foos.data.domain.fetcher
 
 import com.example.foos.data.model.DatabasePost
 import com.example.foos.data.model.DatabaseReaction
@@ -13,7 +13,10 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import javax.inject.Inject
 
-class GetPostByPostIdUseCase @Inject constructor(
+/**
+ * 投稿IDからPostをフェッチするユースケース
+ */
+class FetchPostByPostIdUseCase @Inject constructor(
     private val postsRepository: PostsRepository,
     private val usersRepository: UsersRepository,
     private val reactionsRepository: ReactionsRepository,

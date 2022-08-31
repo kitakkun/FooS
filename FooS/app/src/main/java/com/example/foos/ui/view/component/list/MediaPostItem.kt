@@ -9,7 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.state.component.PostItemUiState
 
 @Composable
 fun MediaPostItem(
@@ -24,7 +24,7 @@ fun MediaPostItem(
         modifier = modifier
             .aspectRatio(1f)
             .clickable {
-               onContentClick(uiState.postId)
+                onContentClick(uiState.postId)
             },
         contentScale = ContentScale.Crop,
     )
