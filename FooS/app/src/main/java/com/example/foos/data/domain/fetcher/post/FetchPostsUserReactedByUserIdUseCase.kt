@@ -1,10 +1,7 @@
 package com.example.foos.data.domain.fetcher.post
 
-import android.util.Log
 import com.example.foos.data.model.Post
-import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.ReactionsRepository
-import com.example.foos.data.repository.UsersRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -26,14 +23,18 @@ class FetchPostsUserReactedByUserIdUseCase @Inject constructor(
         end: Date? = null
     ): List<Post> {
         val jobs = mutableListOf<Job>()
-        val posts = mutableListOf<Post>()
+        val posts = mutableMapOf<String, Post>()
         val reactions = reactionsRepository.fetchByUserIdWithDate(userId, start, end)
         coroutineScope {
-           reactions.forEach {
-                jobs.add(async { fetchPostByPostIdUseCase(it.postId)?.let { posts.add(it) } })
+            reactions.forEach { reaction ->
+                jobs.add(async {
+                    fetchPostByPostIdUseCase(reaction.postId)?.let {
+                        posts[reaction.reactionId] = it
+                    }
+                })
             }
         }
         jobs.joinAll()
-        return posts
+        return reactions.mapNotNull { reaction -> posts[reaction.reactionId] }
     }
 }
