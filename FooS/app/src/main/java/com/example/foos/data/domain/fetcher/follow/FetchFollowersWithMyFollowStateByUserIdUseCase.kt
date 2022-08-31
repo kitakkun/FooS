@@ -1,6 +1,6 @@
-package com.example.foos.data.domain
+package com.example.foos.data.domain.fetcher.follow
 
-import com.example.foos.data.model.DatabaseUser
+import com.example.foos.data.model.database.DatabaseUser
 import com.example.foos.data.model.MyFollowingState
 import com.example.foos.data.model.UserWithFollowState
 import com.example.foos.data.repository.FollowRepository

@@ -1,4 +1,4 @@
-package com.example.foos.data.model
+package com.example.foos.data.model.database
 
 import com.google.firebase.firestore.ServerTimestamp
 import java.util.*

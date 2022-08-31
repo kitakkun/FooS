@@ -82,8 +82,7 @@ fun ScreenNavHost(
             val userId = it.arguments?.getString(SubScreen.UserProfile.key(0))
             userId?.let {
                 val vm: UserProfileViewModel = hiltViewModel()
-                vm.setUserId(userId)
-                UserProfileScreen(vm, navController)
+                UserProfileScreen(vm, navController, userId)
             }
         }
         composable(

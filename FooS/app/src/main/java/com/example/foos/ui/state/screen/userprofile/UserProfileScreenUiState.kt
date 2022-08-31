@@ -14,6 +14,8 @@ data class UserProfileScreenUiState(
     val username: String,
     val userIcon: String,
     val posts: List<PostItemUiState>,
+    val mediaPosts: List<PostItemUiState>,
+    val userReactedPosts: List<PostItemUiState>,
     val followerCount: Int,
     val followeeCount: Int,
     val following: Boolean = false,
@@ -25,6 +27,8 @@ data class UserProfileScreenUiState(
             username = "username",
             userIcon = "",
             posts = listOf(),
+            mediaPosts = listOf(),
+            userReactedPosts = listOf(),
             followerCount = 0,
             followeeCount = 0,
         )

@@ -1,6 +1,11 @@
 package com.example.foos.di
 
-import com.example.foos.data.domain.*
+import com.example.foos.data.domain.FetchReactionsByUserIdUseCase
+import com.example.foos.data.domain.converter.uistate.ConvertPostToUiStateUseCase
+import com.example.foos.data.domain.converter.uistate.ConvertReactionToUiStateUseCase
+import com.example.foos.data.domain.fetcher.follow.FetchFolloweesWithMyFollowStateByUserIdUseCase
+import com.example.foos.data.domain.fetcher.follow.FetchFollowersWithMyFollowStateByUserIdUseCase
+import com.example.foos.data.domain.fetcher.post.*
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.ReactionsRepository
@@ -38,34 +43,48 @@ object Modules {
      * Provide UseCases...
      */
     @Provides
-    fun provideGetPostByPostIdUseCase(): GetPostByPostIdUseCase = GetPostByPostIdUseCase(
+    fun provideFetchPostByPostIdUseCase(): FetchPostByPostIdUseCase = FetchPostByPostIdUseCase(
         providePostsRepository(),
         provideUsersRepository(),
         provideReactionsRepository(),
     )
 
     @Provides
+    fun provideFetchPostsByLocationBoundsUseCase(): FetchPostsByLocationBoundsUseCase =
+        FetchPostsByLocationBoundsUseCase(
+            providePostsRepository(), provideUsersRepository(), provideReactionsRepository(),
+        )
+
+    @Provides
     fun providePostToUiStateUseCase(): ConvertPostToUiStateUseCase = ConvertPostToUiStateUseCase()
 
     @Provides
-    fun provideCompletePostsRepository(): GetPostsWithUserUseCase =
-        GetPostsWithUserUseCase(PostsRepository, UsersRepository)
+    fun provideFetchPostByDatabasePostUseCase(): FetchPostByDatabasePostUseCase =
+        FetchPostByDatabasePostUseCase(
+            provideUsersRepository(),
+            provideReactionsRepository(),
+        )
 
     @Provides
-    fun provideGetReactionsByUserIdUseCase(): GetReactionsByUserIdUseCase =
-        GetReactionsByUserIdUseCase(UsersRepository, PostsRepository, ReactionsRepository)
+    fun provideFetchPostsUserReactedByUserIdUseCase(): FetchPostsUserReactedByUserIdUseCase =
+        FetchPostsUserReactedByUserIdUseCase(
+            provideReactionsRepository(), provideFetchPostByPostIdUseCase()
+        )
 
     @Provides
-    fun provideGetPostsWithUserByUserIdWithDateUseCase(): GetPostsWithUserByUserIdWithDateUseCase =
-        GetPostsWithUserByUserIdWithDateUseCase(PostsRepository, UsersRepository)
+    fun provideFetchPostsWithMediaByUserIdUseCase(): FetchPostsWithMediaByUserIdUseCase =
+        FetchPostsWithMediaByUserIdUseCase(
+            providePostsRepository(), provideUsersRepository(), provideReactionsRepository()
+        )
+
+
+    @Provides
+    fun provideFetchReactionsByUserIdUseCase(): FetchReactionsByUserIdUseCase =
+        FetchReactionsByUserIdUseCase(UsersRepository, PostsRepository, ReactionsRepository)
 
     @Provides
     fun provideConvertReactionToUiStateUseCase(): ConvertReactionToUiStateUseCase =
         ConvertReactionToUiStateUseCase()
-
-    @Provides
-    fun provideConvertPostWithUserToUiStateUseCase(): ConvertPostWithUserToUiStateUseCase =
-        ConvertPostWithUserToUiStateUseCase()
 
     @Provides
     fun provideFetchFollowersWithMyFollowStateByUserIdUseCase(): FetchFollowersWithMyFollowStateByUserIdUseCase =
@@ -78,4 +97,9 @@ object Modules {
         FetchFolloweesWithMyFollowStateByUserIdUseCase(
             provideUsersRepository(), provideFollowRepository()
         )
+
+    @Provides
+    fun provideFetchPostsUseCase(): FetchPostsUseCase = FetchPostsUseCase(
+        providePostsRepository(), provideUsersRepository(), provideReactionsRepository()
+    )
 }

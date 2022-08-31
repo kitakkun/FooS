@@ -1,6 +1,6 @@
 package com.example.foos.data.repository
 
-import com.example.foos.data.model.DatabaseFollow
+import com.example.foos.data.model.database.DatabaseFollow
 import com.example.foos.data.model.MyFollowingState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue

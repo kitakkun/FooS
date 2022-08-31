@@ -1,4 +1,4 @@
-package com.example.foos.data.model
+package com.example.foos.data.model.database
 
 /**
  * ユーザーのデータベース上のデータ

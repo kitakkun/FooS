@@ -1,8 +1,6 @@
 package com.example.foos.ui.state.component
 
-import android.os.Parcelable
-import com.example.foos.data.model.DatabaseReaction
-import kotlinx.parcelize.Parcelize
+import com.example.foos.data.model.database.DatabaseReaction
 import java.util.*
 
 /**

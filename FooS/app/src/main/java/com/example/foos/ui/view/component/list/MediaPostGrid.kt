@@ -5,13 +5,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.foos.ui.constants.paddingLarge
-import com.example.foos.ui.state.screen.home.PostItemUiState
+import com.example.foos.ui.state.component.PostItemUiState
+import com.example.foos.ui.view.component.OnAppearLastItem
+import com.example.foos.ui.view.component.extensions.OnAppearLastItem
 
 /**
  * プロフィール画面の画像コンテンツベースの投稿グリッドビュー
@@ -24,6 +27,8 @@ fun MediaPostGrid(
     onContentClick: (String) -> Unit = {},
     onAppearLastItem: () -> Unit = {},
 ) {
+    val gridState = rememberLazyGridState()
+    gridState.OnAppearLastItem(onAppearLastItem = { onAppearLastItem.invoke() })
     if (uiStates.isEmpty()) {
         Text(
             text = "No posts available.",
@@ -34,6 +39,7 @@ fun MediaPostGrid(
         )
     } else {
         LazyVerticalGrid(
+            state = gridState,
             columns = GridCells.Adaptive(minSize = 128.dp),
         ) {
             items(uiStates) {
