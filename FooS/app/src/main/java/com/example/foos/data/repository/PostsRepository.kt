@@ -163,9 +163,8 @@ object PostsRepository {
         val document = Firebase.firestore.collection(COLLECTION).document()
         val imageDownloadLinks = mutableListOf<String>()
         // ファイルの圧縮
-        var i = 1
-        databasePost.attachedImages.forEach {
-            val bitmap = BitmapFactory.decodeFile(it.removePrefix("file://"))
+        databasePost.attachedImages.forEachIndexed { i, url ->
+            val bitmap = BitmapFactory.decodeFile(url.removePrefix("file://"))
             val resized = ImageConverter.resize(bitmap, MAX_UPLOAD_IMAGE_SIZE, true)
             val compressedFilePath = "${context.cacheDir}/image$i.jpeg"
             try {
@@ -178,7 +177,6 @@ object PostsRepository {
                     file.path.toString()
                 )
                 imageDownloadLinks.add(downloadUrl.toString())
-                i++
             } catch (e: IOException) {
                 e.printStackTrace()
             }
