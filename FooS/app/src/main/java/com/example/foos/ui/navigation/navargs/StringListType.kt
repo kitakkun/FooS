@@ -6,6 +6,9 @@ import androidx.navigation.NavType
 import com.google.gson.Gson
 import kotlinx.parcelize.Parcelize
 
+/**
+ * NavArgumentでStringのリストを渡すための型
+ */
 @Parcelize
 data class StringList(
     val value: List<String>

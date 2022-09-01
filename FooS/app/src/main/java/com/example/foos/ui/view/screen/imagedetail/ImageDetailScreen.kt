@@ -13,8 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.foos.R
+import com.example.foos.ui.view.component.MaxSizeLoadingIndicator
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 import kotlinx.coroutines.launch
@@ -69,13 +71,15 @@ fun FullSizeImage(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        AsyncImage(
+        SubcomposeAsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(url)
                 .crossfade(true)
-                .placeholder(R.drawable.ic_no_image)
                 .build(),
             contentDescription = null,
+            loading = {
+                MaxSizeLoadingIndicator()
+            },
             modifier = Modifier.fillMaxWidth()
         )
     }

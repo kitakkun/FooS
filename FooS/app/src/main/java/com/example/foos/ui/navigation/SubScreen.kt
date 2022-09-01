@@ -15,6 +15,9 @@ sealed class SubScreen(
     val arguments: List<NamedNavArgument> = listOf(),
 ) {
 
+    /**
+     * ナビゲーション引数のキーを取得
+     */
     fun key(index: Int): String {
         return this.arguments[index].name
     }

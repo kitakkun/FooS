@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.foos.R
 
@@ -99,9 +100,12 @@ fun ImageAttachment(
         modifier = modifier,
         onCloseButtonClick = onCloseButtonClick,
     ) {
-        AsyncImage(
+        SubcomposeAsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(imageUrl).build(),
+            loading = {
+                  MaxSizeLoadingIndicator()
+            },
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier

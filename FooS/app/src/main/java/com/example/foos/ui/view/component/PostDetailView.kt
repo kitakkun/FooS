@@ -135,7 +135,6 @@ fun AttachedImagesDisplay(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(image).crossfade(true)
                     .memoryCachePolicy(CachePolicy.ENABLED)
-                    .placeholder(R.drawable.ic_no_image)
                     .build(),
                 contentDescription = null,
                 modifier = Modifier
