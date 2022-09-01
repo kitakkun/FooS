@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,11 +26,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.example.foos.R
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.screen.post.PostScreenUiState
+import com.example.foos.ui.view.component.ImageAttachment
+import com.example.foos.ui.view.component.LocationAttachment
 import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
@@ -130,7 +129,12 @@ fun PostScreen(
             )
             Attachments(
                 attachedImages = uiState.attachedImages,
-                locationAttached = locationAttached
+                locationAttached = locationAttached,
+                onImageAttachmentRemove = { viewModel.onImageAttachmentRemove(it)},
+                onLocationRemove = {
+                    viewModel.onLocationRemove()
+                    sharedViewModel.updatePostCreateSharedData(null, null)
+                }
             )
         }
     }
@@ -161,51 +165,19 @@ private fun ColumnScope.ContentEditor(
 fun Attachments(
     attachedImages: List<String>,
     locationAttached: Boolean,
+    onImageAttachmentRemove: (String) -> Unit,
+    onLocationRemove: () -> Unit,
 ) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(paddingMedium),
         contentPadding = PaddingValues(paddingMedium)
     ) {
         items(attachedImages) {
-            Box(contentAlignment = Alignment.TopEnd) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(it).build(), contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(100.dp)
-                        .clip(RoundedCornerShape(10))
-                )
-                Icon(Icons.Default.Close, contentDescription = "remove Image")
-            }
+            ImageAttachment(imageUrl = it, onCloseButtonClick = { onImageAttachmentRemove(it) })
         }
         if (locationAttached) {
             item {
-                Column(
-                    modifier = Modifier
-                        .border(width = 1.dp, color = MaterialTheme.colors.onSurface)
-                        .size(100.dp)
-                        .clip(RoundedCornerShape(10)),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Icon(
-                        Icons.Default.Close,
-                        contentDescription = "remove location data",
-                        modifier = Modifier.align(Alignment.End)
-                    )
-                    Icon(
-                        painter = painterResource(R.drawable.ic_pin_drop),
-                        tint = MaterialTheme.colors.onSurface,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(40.dp)
-                    )
-                    Text(
-                        text = stringResource(id = R.string.location_attached),
-                        fontSize = 12.sp,
-                    )
-                }
+                LocationAttachment (onCloseButtonClick = onLocationRemove)
             }
         }
     }

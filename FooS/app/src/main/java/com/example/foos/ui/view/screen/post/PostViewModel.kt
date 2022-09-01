@@ -58,6 +58,21 @@ class PostViewModel @Inject constructor(
     }
 
     /**
+     * 画像アタッチメントの削除
+     */
+    fun onImageAttachmentRemove(url: String) {
+        _uiState.value =
+            uiState.value.copy(attachedImages = uiState.value.attachedImages.filter { it != url })
+    }
+
+    /**
+     * 位置情報アタッチメントの削除
+     */
+    fun onLocationRemove() {
+        _uiState.value = uiState.value.copy(locationName = null, location = null)
+    }
+
+    /**
      * 位置情報の指定を行う
      */
     fun navigateToLocationSelect() {
