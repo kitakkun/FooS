@@ -125,7 +125,7 @@ class UserProfileViewModel @Inject constructor(
     /**
      * ユーザプロフィールをフェッチ
      */
-    suspend fun fetchUserInfo(userId: String) {
+    suspend fun fetchUserInfo(userId: String, onFinished: suspend() -> Unit = {}) {
         viewModelScope.launch(Dispatchers.IO) {
             val followers = followRepository.fetchFollowers(userId)
             val followees = followRepository.fetchFollowees(userId)
@@ -141,6 +141,7 @@ class UserProfileViewModel @Inject constructor(
                         .contains(Firebase.auth.uid.toString())
                 )
             }
+            onFinished()
         }
     }
 

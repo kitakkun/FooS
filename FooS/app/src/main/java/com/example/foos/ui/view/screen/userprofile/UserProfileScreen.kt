@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -38,12 +39,21 @@ import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
     ExperimentalPagerApi::class,
 )
 @Composable
-fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavController, userId: String) {
+fun UserProfileScreen(
+    viewModel: UserProfileViewModel,
+    navController: NavController,
+    userId: String
+) {
 
     val uiState = viewModel.uiState.value
 
     LaunchedEffect(Unit) {
-        viewModel.fetchUserInfo(userId = userId)
+        // 最初のページだけユーザ情報が読み込まれる前にフェッチ試行してしまうことがあるので、
+        // 完了後にフェッチできる仕組みにした（暫定的）
+        viewModel.fetchUserInfo(
+            userId = userId,
+            onFinished = { viewModel.fetchNewUserPosts() }
+        )
         viewModel.navEvent.collect {
             navController.navigate(it)
         }
@@ -52,11 +62,21 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
     val nestedScrollViewState = rememberNestedScrollViewState()
     val pagerState = rememberPagerState(initialPage = 0)
 
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            when (page) {
+                0 -> if (uiState.posts.isEmpty()) viewModel.fetchNewUserPosts()
+                1 -> if (uiState.mediaPosts.isEmpty()) viewModel.fetchNewMediaPosts()
+                else -> if (uiState.userReactedPosts.isEmpty()) viewModel.fetchNewUserReactedPosts()
+            }
+        }
+    }
+
     // this layout produce buggy scroll if we don't use jetpack compose alpha02 or above.
     // nestedScroll's bug exists until alpha01.
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing)
     SwipeRefresh(state = swipeRefreshState, onRefresh = {
-        when(pagerState.currentPage) {
+        when (pagerState.currentPage) {
             0 -> viewModel.fetchNewUserPosts(true)
             1 -> viewModel.fetchNewMediaPosts(true)
             else -> viewModel.fetchNewUserReactedPosts(true)
@@ -93,9 +113,6 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                         pagerState = pagerState, pageCount = tabList.size,
                         pageContents = listOf(
                             {
-                                LaunchedEffect(Unit) {
-                                    viewModel.fetchNewUserPosts()
-                                }
                                 PostItemList(
                                     uiStates = uiState.posts,
                                     onImageClick = { imageUrls, clickedImageUrl ->
@@ -110,18 +127,12 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                                 )
                             },
                             {
-                                LaunchedEffect(Unit) {
-                                    viewModel.fetchNewUserPosts()
-                                }
                                 MediaPostGrid(
                                     uiStates = uiState.mediaPosts,
                                     onAppearLastItem = { viewModel.fetchOlderMediaPosts() },
                                 )
                             },
                             {
-                                LaunchedEffect(Unit) {
-                                    viewModel.fetchNewUserReactedPosts()
-                                }
                                 PostItemList(
                                     uiStates = uiState.userReactedPosts,
                                     onImageClick = { imageUrls, clickedImageUrl ->
