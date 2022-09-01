@@ -1,5 +1,7 @@
 package com.example.foos.ui.view.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,7 +14,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +25,29 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.foos.R
+
+/**
+ * アニメーション付き
+ */
+@Composable
+private fun AnimatedRemovableAttachment(
+    modifier: Modifier = Modifier,
+    onCloseButtonClick: () -> Unit,
+    content: @Composable () -> Unit = {},
+) {
+    val state = remember {
+        MutableTransitionState(false).apply {
+            targetState = true
+        }
+    }
+    AnimatedVisibility(visibleState = state) {
+        RemovableAttachment(
+            modifier = modifier,
+            onCloseButtonClick = onCloseButtonClick,
+            content = content
+        )
+    }
+}
 
 /**
  * 投稿画面のアタッチメント
