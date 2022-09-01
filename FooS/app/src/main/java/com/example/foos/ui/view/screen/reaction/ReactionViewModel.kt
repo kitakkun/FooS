@@ -23,9 +23,11 @@ class ReactionViewModel @Inject constructor(
     private var _uiState = mutableStateOf(ReactionScreenUiState(listOf(), false))
     val uiState: State<ReactionScreenUiState> = _uiState
 
-    fun fetchNewReactions() {
+    fun fetchNewReactions(indicateRefreshing: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.value = uiState.value.copy(isRefreshing = true)
+            if (indicateRefreshing) {
+                _uiState.value = uiState.value.copy(isRefreshing = true)
+            }
             _uiState.value = uiState.value.copy(
                 reactions = fetchReactionsByUserIdUseCase.invoke(Firebase.auth.uid.toString())
                     .map { convertReactionToUiStateUseCase.invoke(it) })
