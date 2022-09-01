@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.view.component.FollowButton
+import com.example.foos.ui.view.component.MaxSizeLoadingIndicator
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.VerticalUserIdentityText
 import com.example.foos.ui.view.component.list.MediaPostGrid
@@ -69,7 +70,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                 UserProfileView(
                     username = uiState.username,
                     userId = uiState.userId,
-                    bio = "",
+                    bio = "biography (not available for now)",
                     profileImage = uiState.userIcon,
                     followerNum = uiState.followerCount,
                     followeeNum = uiState.followeeCount,
@@ -93,48 +94,60 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                         pagerState = pagerState, pageCount = tabList.size,
                         pageContents = listOf(
                             {
-                                LaunchedEffect(Unit) {
+                                LaunchedEffect(uiState.posts.isEmpty()) {
                                     viewModel.fetchNewUserPosts()
                                 }
-                                PostItemList(
-                                    uiStates = uiState.posts,
-                                    onImageClick = { imageUrls, clickedImageUrl ->
-                                        viewModel.onImageClick(
-                                            imageUrls,
-                                            clickedImageUrl
-                                        )
-                                    },
-                                    onContentClick = { viewModel.onContentClick(it) },
-                                    onUserIconClick = { viewModel.onUserIconClick(it) },
-                                    onAppearLastItem = { viewModel.fetchOlderUserPosts() },
-                                )
-                            },
-                            {
-                                LaunchedEffect(Unit) {
-                                    viewModel.fetchNewUserPosts()
+                                if (uiState.posts.isEmpty()) {
+                                    MaxSizeLoadingIndicator()
+                                } else {
+                                    PostItemList(
+                                        uiStates = uiState.posts,
+                                        onImageClick = { imageUrls, clickedImageUrl ->
+                                            viewModel.onImageClick(
+                                                imageUrls,
+                                                clickedImageUrl
+                                            )
+                                        },
+                                        onContentClick = { viewModel.onContentClick(it) },
+                                        onUserIconClick = { viewModel.onUserIconClick(it) },
+                                        onAppearLastItem = { viewModel.fetchOlderUserPosts() },
+                                    )
                                 }
-                                MediaPostGrid(
-                                    uiStates = uiState.mediaPosts,
-                                    onContentClick = { viewModel.onContentClick(it) },
-                                    onAppearLastItem = { viewModel.fetchOlderMediaPosts() },
-                                )
                             },
                             {
-                                LaunchedEffect(Unit) {
+                                LaunchedEffect(uiState.mediaPosts.isEmpty()) {
+                                    viewModel.fetchNewMediaPosts()
+                                }
+                                if (uiState.mediaPosts.isEmpty()) {
+                                    MaxSizeLoadingIndicator()
+                                } else {
+                                    MediaPostGrid(
+                                        uiStates = uiState.mediaPosts,
+                                        onContentClick = { viewModel.onContentClick(it) },
+                                        onAppearLastItem = { viewModel.fetchOlderMediaPosts() },
+                                    )
+                                }
+                            },
+                            {
+                                LaunchedEffect(uiState.userReactedPosts.isEmpty()) {
                                     viewModel.fetchNewUserReactedPosts()
                                 }
-                                PostItemList(
-                                    uiStates = uiState.userReactedPosts,
-                                    onImageClick = { imageUrls, clickedImageUrl ->
-                                        viewModel.onImageClick(
-                                            imageUrls,
-                                            clickedImageUrl
-                                        )
-                                    },
-                                    onContentClick = { viewModel.onContentClick(it) },
-                                    onUserIconClick = { viewModel.onUserIconClick(it) },
-                                    onAppearLastItem = { viewModel.fetchOlderUserReactedPosts() },
-                                )
+                                if (uiState.userReactedPosts.isEmpty()) {
+                                    MaxSizeLoadingIndicator()
+                                } else {
+                                    PostItemList(
+                                        uiStates = uiState.userReactedPosts,
+                                        onImageClick = { imageUrls, clickedImageUrl ->
+                                            viewModel.onImageClick(
+                                                imageUrls,
+                                                clickedImageUrl
+                                            )
+                                        },
+                                        onContentClick = { viewModel.onContentClick(it) },
+                                        onUserIconClick = { viewModel.onUserIconClick(it) },
+                                        onAppearLastItem = { viewModel.fetchOlderUserReactedPosts() },
+                                    )
+                                }
                             },
                         )
                     )
