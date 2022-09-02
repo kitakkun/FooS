@@ -1,10 +1,11 @@
 package com.example.foos.data.domain.fetcher.post
 
-import com.example.foos.data.model.*
+import com.example.foos.data.model.Post
 import com.example.foos.data.model.database.DatabasePost
 import com.example.foos.data.model.database.DatabaseReaction
 import com.example.foos.data.model.database.DatabaseUser
 import com.example.foos.data.repository.PostsRepository
+import com.example.foos.data.repository.PostsRepositoryImpl
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.data.repository.UsersRepository
 import kotlinx.coroutines.Job
@@ -31,7 +32,14 @@ class FetchPostsByUserIdUseCase @Inject constructor(
 
         coroutineScope {
             jobs.add(async { dbUser = usersRepository.fetchByUserId(userId) })
-            jobs.add(async { dbPosts = postsRepository.fetchByUserIdWithDate(userId, null, end)})
+            jobs.add(async {
+                dbPosts = postsRepository.fetchByUserIdWithDate(
+                    userId,
+                    null,
+                    end,
+                    PostsRepositoryImpl.DEFAULT_LOAD_LIMIT
+                )
+            })
         }
         jobs.joinAll()
         jobs.clear()

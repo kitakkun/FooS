@@ -4,6 +4,7 @@ import com.example.foos.data.model.Reaction
 import com.example.foos.data.model.database.DatabasePost
 import com.example.foos.data.model.database.DatabaseUser
 import com.example.foos.data.repository.PostsRepository
+import com.example.foos.data.repository.PostsRepositoryImpl
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.data.repository.UsersRepository
 import kotlinx.coroutines.Job

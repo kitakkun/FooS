@@ -2,7 +2,7 @@ package com.example.foos.data.domain.fetcher.post
 
 import com.example.foos.data.model.Post
 import com.example.foos.data.repository.PostsRepository
-import com.example.foos.di.Modules_ProvidePostsRepositoryFactory
+import com.example.foos.data.repository.PostsRepositoryImpl
 import java.util.*
 import javax.inject.Inject
 

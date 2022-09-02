@@ -6,38 +6,20 @@ import com.example.foos.data.domain.converter.uistate.ConvertReactionToUiStateUs
 import com.example.foos.data.domain.fetcher.follow.FetchFolloweesWithMyFollowStateByUserIdUseCase
 import com.example.foos.data.domain.fetcher.follow.FetchFollowersWithMyFollowStateByUserIdUseCase
 import com.example.foos.data.domain.fetcher.post.*
-import com.example.foos.data.repository.FollowRepository
-import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.data.repository.UsersRepository
+import com.example.foos.di.RepositoryModule.provideFollowRepository
+import com.example.foos.di.RepositoryModule.providePostsRepository
+import com.example.foos.di.RepositoryModule.provideReactionsRepository
+import com.example.foos.di.RepositoryModule.provideUsersRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object Modules {
-
-    /**
-     * Provide Repositories...
-     */
-    @Provides
-    @Singleton
-    fun providePostsRepository(): PostsRepository = PostsRepository
-
-    @Provides
-    @Singleton
-    fun provideUsersRepository(): UsersRepository = UsersRepository
-
-    @Provides
-    @Singleton
-    fun provideReactionsRepository(): ReactionsRepository = ReactionsRepository
-
-    @Provides
-    @Singleton
-    fun provideFollowRepository(): FollowRepository = FollowRepository
 
     /**
      * Provide UseCases...
@@ -80,7 +62,11 @@ object Modules {
 
     @Provides
     fun provideFetchReactionsByUserIdUseCase(): FetchReactionsByUserIdUseCase =
-        FetchReactionsByUserIdUseCase(UsersRepository, PostsRepository, ReactionsRepository)
+        FetchReactionsByUserIdUseCase(
+            UsersRepository,
+            providePostsRepository(),
+            ReactionsRepository
+        )
 
     @Provides
     fun provideConvertReactionToUiStateUseCase(): ConvertReactionToUiStateUseCase =
