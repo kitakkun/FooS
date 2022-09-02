@@ -6,7 +6,6 @@ import com.example.foos.data.domain.converter.uistate.ConvertReactionToUiStateUs
 import com.example.foos.data.domain.fetcher.follow.FetchFolloweesWithMyFollowStateByUserIdUseCase
 import com.example.foos.data.domain.fetcher.follow.FetchFollowersWithMyFollowStateByUserIdUseCase
 import com.example.foos.data.domain.fetcher.post.*
-import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.data.repository.UsersRepository
 import com.example.foos.di.RepositoryModule.provideFollowRepository
 import com.example.foos.di.RepositoryModule.providePostsRepository
@@ -65,7 +64,7 @@ object Modules {
         FetchReactionsByUserIdUseCase(
             UsersRepository,
             providePostsRepository(),
-            ReactionsRepository
+            provideReactionsRepository()
         )
 
     @Provides

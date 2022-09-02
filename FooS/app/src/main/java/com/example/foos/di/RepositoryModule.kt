@@ -24,7 +24,7 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideReactionsRepository(): ReactionsRepository = ReactionsRepository
+    fun provideReactionsRepository(): ReactionsRepository = ReactionsRepositoryImpl()
 
     @Provides
     @Singleton
