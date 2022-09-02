@@ -52,13 +52,15 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
+    signingConfigs {
+        debug {
+            storeFile file('./debug.keystore')
+        }
+    }
 }
 
 dependencies {
-
-    // fire base
-//    implementation platform('com.google.firebase:firebase-bom:30.3.1')
-//    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation "androidx.compose.ui:ui:$compose_version"
