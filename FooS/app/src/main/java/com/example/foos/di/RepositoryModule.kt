@@ -20,7 +20,7 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideUsersRepository(): UsersRepository = UsersRepository
+    fun provideUsersRepository(): UsersRepository = UsersRepositoryImpl()
 
     @Provides
     @Singleton
