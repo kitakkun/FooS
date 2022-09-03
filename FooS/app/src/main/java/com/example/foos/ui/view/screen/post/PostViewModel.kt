@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.model.database.DatabasePost
 import com.example.foos.data.repository.PostsRepository
+import com.example.foos.data.repository.PostsRepositoryImpl
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.state.screen.post.PostScreenUiState
 import com.example.foos.util.FileUtils.getRealPath

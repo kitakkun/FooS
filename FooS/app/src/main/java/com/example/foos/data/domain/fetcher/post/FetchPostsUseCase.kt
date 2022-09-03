@@ -4,6 +4,7 @@ import com.example.foos.data.model.database.DatabaseReaction
 import com.example.foos.data.model.database.DatabaseUser
 import com.example.foos.data.model.Post
 import com.example.foos.data.repository.PostsRepository
+import com.example.foos.data.repository.PostsRepositoryImpl
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.data.repository.UsersRepository
 import kotlinx.coroutines.Job
@@ -24,7 +25,7 @@ class FetchPostsUseCase @Inject constructor(
 
     suspend operator fun invoke(start: Date? = null, end: Date? = null): List<Post> {
         val jobs = mutableListOf<Job>()
-        val dbPosts = postsRepository.fetch(start, end)
+        val dbPosts = postsRepository.fetch(start, end, PostsRepositoryImpl.DEFAULT_LOAD_LIMIT)
         val dbUsers = mutableMapOf<String, DatabaseUser?>()
         val dbReactions = mutableMapOf<String, List<DatabaseReaction>>()
         coroutineScope {
