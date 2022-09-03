@@ -1,6 +1,9 @@
 package com.example.foos.di
 
 import com.example.foos.data.repository.*
+import com.example.foos.di.FirebaseModule.provideFireStoreInstance
+import com.example.foos.di.FirebaseModule.provideFirebaseAuthInstance
+import com.example.foos.di.FirebaseModule.provideFirebaseStorageInstance
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,17 +19,19 @@ object RepositoryModule {
      */
     @Provides
     @Singleton
-    fun providePostsRepository(): PostsRepository = PostsRepositoryImpl()
+    fun providePostsRepository(): PostsRepository = PostsRepositoryImpl(provideFireStoreInstance(), provideFirebaseStorageInstance())
 
     @Provides
     @Singleton
-    fun provideUsersRepository(): UsersRepository = UsersRepositoryImpl()
+    fun provideUsersRepository(): UsersRepository = UsersRepositoryImpl(provideFireStoreInstance())
 
     @Provides
     @Singleton
-    fun provideReactionsRepository(): ReactionsRepository = ReactionsRepositoryImpl()
+    fun provideReactionsRepository(): ReactionsRepository =
+        ReactionsRepositoryImpl(provideFireStoreInstance())
 
     @Provides
     @Singleton
-    fun provideFollowRepository(): FollowRepository = FollowRepositoryImpl()
+    fun provideFollowRepository(): FollowRepository =
+        FollowRepositoryImpl(provideFirebaseAuthInstance(), provideFireStoreInstance())
 }
