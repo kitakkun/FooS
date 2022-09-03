@@ -1,14 +1,16 @@
 package com.example.foos.data.repository
 
 import com.example.foos.data.model.database.DatabaseUser
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
 /**
  * ユーザ情報を管理するリポジトリ
  */
-class UsersRepositoryImpl : UsersRepository {
+class UsersRepositoryImpl @Inject constructor(
+    private val database: FirebaseFirestore,
+) : UsersRepository {
 
     companion object {
         private const val COLLECTION = "users"
@@ -18,7 +20,7 @@ class UsersRepositoryImpl : UsersRepository {
      * ユーザ情報を取得します
      */
     override suspend fun fetchByUserId(userId: String): DatabaseUser? {
-        val databaseUserData = Firebase.firestore.collection(COLLECTION)
+        val databaseUserData = database.collection(COLLECTION)
             .whereEqualTo("userId", userId)
             .get().await().toObjects(DatabaseUser::class.java)
         return if (databaseUserData.size > 0) {
@@ -32,7 +34,7 @@ class UsersRepositoryImpl : UsersRepository {
      * ユーザ情報を更新します
      */
     override suspend fun update(databaseUser: DatabaseUser) {
-        val document = Firebase.firestore.collection(COLLECTION)
+        val document = database.collection(COLLECTION)
             .document(databaseUser.userId)
         val updates = hashMapOf<String, Any>(
             "username" to databaseUser.username,
@@ -45,6 +47,6 @@ class UsersRepositoryImpl : UsersRepository {
      * ユーザを削除します
      */
     override suspend fun delete(userId: String) {
-        Firebase.firestore.collection(COLLECTION).document(userId).delete()
+        database.collection(COLLECTION).document(userId).delete()
     }
 }

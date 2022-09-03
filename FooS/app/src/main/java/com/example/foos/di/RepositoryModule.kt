@@ -22,7 +22,7 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideUsersRepository(): UsersRepository = UsersRepositoryImpl()
+    fun provideUsersRepository(): UsersRepository = UsersRepositoryImpl(provideFireStoreInstance())
 
     @Provides
     @Singleton
