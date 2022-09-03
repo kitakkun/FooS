@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.io.FileOutputStream
@@ -22,6 +23,7 @@ import javax.inject.Inject
  */
 class PostsRepositoryImpl @Inject constructor(
     private val database: FirebaseFirestore,
+    private val storage: FirebaseStorage,
 ): PostsRepository {
 
     companion object {
@@ -174,10 +176,11 @@ class PostsRepositoryImpl @Inject constructor(
                 resized.compress(Bitmap.CompressFormat.JPEG, 85, outStream)
                 // アップロードしてダウンロードリンクを取得
                 val file = Uri.fromFile(File(compressedFilePath))
-                val downloadUrl = FirebaseStorage.create(
+                val ref = storage.reference.child(
                     "images/posts/${document.id}/${file.lastPathSegment}",
-                    file.path.toString()
                 )
+                ref.putFile(file).await()
+                val downloadUrl = ref.downloadUrl.await()
                 imageDownloadLinks.add(downloadUrl.toString())
             } catch (e: IOException) {
                 e.printStackTrace()

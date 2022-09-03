@@ -3,6 +3,7 @@ package com.example.foos.di
 import com.example.foos.data.repository.*
 import com.example.foos.di.FirebaseModule.provideFireStoreInstance
 import com.example.foos.di.FirebaseModule.provideFirebaseAuthInstance
+import com.example.foos.di.FirebaseModule.provideFirebaseStorageInstance
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,7 +19,7 @@ object RepositoryModule {
      */
     @Provides
     @Singleton
-    fun providePostsRepository(): PostsRepository = PostsRepositoryImpl(provideFireStoreInstance())
+    fun providePostsRepository(): PostsRepository = PostsRepositoryImpl(provideFireStoreInstance(), provideFirebaseStorageInstance())
 
     @Provides
     @Singleton
