@@ -26,9 +26,11 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideReactionsRepository(): ReactionsRepository = ReactionsRepositoryImpl()
+    fun provideReactionsRepository(): ReactionsRepository =
+        ReactionsRepositoryImpl(provideFireStoreInstance())
 
     @Provides
     @Singleton
-    fun provideFollowRepository(): FollowRepository = FollowRepositoryImpl(provideFirebaseAuthInstance(), provideFireStoreInstance())
+    fun provideFollowRepository(): FollowRepository =
+        FollowRepositoryImpl(provideFirebaseAuthInstance(), provideFireStoreInstance())
 }

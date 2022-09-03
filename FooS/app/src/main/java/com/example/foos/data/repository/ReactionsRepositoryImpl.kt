@@ -2,16 +2,18 @@ package com.example.foos.data.repository
 
 import com.example.foos.data.model.database.DatabaseReaction
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 import java.util.*
+import javax.inject.Inject
 
 /**
  * リアクションデータの読み書きを行うためのリポジトリ
  */
-class ReactionsRepositoryImpl : ReactionsRepository {
+class ReactionsRepositoryImpl @Inject constructor(
+    private val database: FirebaseFirestore,
+): ReactionsRepository {
 
     companion object {
         private const val COLLECTION = "reactions"
@@ -22,7 +24,7 @@ class ReactionsRepositoryImpl : ReactionsRepository {
         start: Date?,
         end: Date?,
     ): List<DatabaseReaction> {
-        var query = Firebase.firestore.collection(COLLECTION).whereEqualTo("from", userId)
+        var query = database.collection(COLLECTION).whereEqualTo("from", userId)
             .orderBy("createdAt", Query.Direction.DESCENDING)
         start?.let { query = query.whereGreaterThanOrEqualTo("createdAt", start) }
         end?.let { query = query.whereLessThanOrEqualTo("createdAt", end) }
@@ -35,7 +37,7 @@ class ReactionsRepositoryImpl : ReactionsRepository {
      * @return 指定した投稿に紐づくリアクションのリスト
      */
     override suspend fun fetchReactionsByPostId(postId: String): List<DatabaseReaction> {
-        return Firebase.firestore.collection(COLLECTION)
+        return database.collection(COLLECTION)
             .whereEqualTo("postId", postId)
             .orderBy("createdAt", Query.Direction.DESCENDING)
             .get().await().toObjects(DatabaseReaction::class.java).toList()
@@ -52,7 +54,7 @@ class ReactionsRepositoryImpl : ReactionsRepository {
         received: Boolean
     ): List<DatabaseReaction> {
         val field = if (received) "to" else "from"
-        return Firebase.firestore.collection(COLLECTION)
+        return database.collection(COLLECTION)
             .whereEqualTo(field, userId)
             .orderBy("createdAt", Query.Direction.DESCENDING)
             .get().await().toObjects(DatabaseReaction::class.java).toList()
@@ -63,7 +65,7 @@ class ReactionsRepositoryImpl : ReactionsRepository {
      * @param databaseReaction 登録するリアクションデータ
      */
     override suspend fun create(databaseReaction: DatabaseReaction) {
-        val document = Firebase.firestore.collection(COLLECTION).document()
+        val document = database.collection(COLLECTION).document()
         document.set(databaseReaction).await()
         val updateData = hashMapOf(
             "createdAt" to FieldValue.serverTimestamp(),
@@ -77,6 +79,6 @@ class ReactionsRepositoryImpl : ReactionsRepository {
      * @param reactionId 削除するリアクションのID
      */
     override suspend fun delete(reactionId: String) {
-        Firebase.firestore.collection(COLLECTION).document(reactionId).delete()
+        database.collection(COLLECTION).document(reactionId).delete()
     }
 }
