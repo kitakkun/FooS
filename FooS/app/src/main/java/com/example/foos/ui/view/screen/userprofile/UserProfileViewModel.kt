@@ -6,7 +6,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foos.data.domain.converter.uistate.ConvertPostToUiStateUseCase
 import com.example.foos.data.domain.fetcher.post.FetchPostsByUserIdUseCase
 import com.example.foos.data.domain.fetcher.post.FetchPostsUserReactedByUserIdUseCase
 import com.example.foos.data.domain.fetcher.post.FetchPostsWithMediaByUserIdUseCase
@@ -14,6 +13,7 @@ import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.UsersRepository
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.navigation.navargs.StringList
+import com.example.foos.ui.state.component.PostItemUiState
 import com.example.foos.ui.state.screen.userprofile.UserProfileScreenUiState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -34,7 +34,6 @@ class UserProfileViewModel @Inject constructor(
     private val usersRepository: UsersRepository,
     private val followRepository: FollowRepository,
     private val fetchPostsByUserIdUseCase: FetchPostsByUserIdUseCase,
-    private val convertPostToUiStateUseCase: ConvertPostToUiStateUseCase,
     private val fetchPostsUserReactedByUserIdUseCase: FetchPostsUserReactedByUserIdUseCase,
     private val fetchPostsWithMediaByUserIdUseCase: FetchPostsWithMediaByUserIdUseCase,
 ) : ViewModel() {
@@ -153,7 +152,7 @@ class UserProfileViewModel @Inject constructor(
             val oldestDate = uiState.value.posts.last().createdAt
             oldestDate?.let {
                 val posts = fetchPostsByUserIdUseCase(uiState.value.userId, end = oldestDate).map {
-                    convertPostToUiStateUseCase(it)
+                    PostItemUiState.convert(it)
                 }
                 _uiState.value =
                     uiState.value.copy(posts = (uiState.value.posts + posts).distinct())
@@ -170,7 +169,7 @@ class UserProfileViewModel @Inject constructor(
                 _uiState.value = uiState.value.copy(isRefreshing = true)
             }
             val posts = fetchPostsByUserIdUseCase(uiState.value.userId).map {
-                convertPostToUiStateUseCase(it)
+                PostItemUiState.convert(it)
             }
             _uiState.value = uiState.value.copy(isRefreshing = false, posts = posts)
         }
@@ -185,7 +184,7 @@ class UserProfileViewModel @Inject constructor(
                 _uiState.value = uiState.value.copy(isRefreshing = true)
             }
             val posts = fetchPostsWithMediaByUserIdUseCase(uiState.value.userId).map {
-                convertPostToUiStateUseCase(it)
+                PostItemUiState.convert(it)
             }
             _uiState.value = uiState.value.copy(isRefreshing = false, mediaPosts = posts)
         }
@@ -203,7 +202,7 @@ class UserProfileViewModel @Inject constructor(
                     uiState.value.userId,
                     end = lastCreatedAt
                 ).map {
-                    convertPostToUiStateUseCase(it)
+                    PostItemUiState.convert(it)
                 }
                 _uiState.value = uiState.value.copy(
                     userReactedPosts = (uiState.value.mediaPosts + posts).distinct()
@@ -221,7 +220,7 @@ class UserProfileViewModel @Inject constructor(
                 _uiState.value = uiState.value.copy(isRefreshing = true)
             }
             val posts = fetchPostsUserReactedByUserIdUseCase(uiState.value.userId).map {
-                convertPostToUiStateUseCase(it)
+                PostItemUiState.convert(it)
             }
             _uiState.value = uiState.value.copy(isRefreshing = false, userReactedPosts = posts)
         }
@@ -239,7 +238,7 @@ class UserProfileViewModel @Inject constructor(
                     uiState.value.userId,
                     end = lastCreatedAt
                 ).map {
-                    convertPostToUiStateUseCase(it)
+                    PostItemUiState.convert(it)
                 }
                 _uiState.value = uiState.value.copy(
                     isRefreshing = false,

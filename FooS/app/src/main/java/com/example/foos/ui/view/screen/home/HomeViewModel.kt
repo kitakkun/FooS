@@ -5,10 +5,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foos.data.domain.converter.uistate.ConvertPostToUiStateUseCase
 import com.example.foos.data.domain.fetcher.post.FetchPostsUseCase
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.navigation.navargs.StringList
+import com.example.foos.ui.state.component.PostItemUiState
 import com.example.foos.ui.state.screen.home.HomeScreenUiState
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +24,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val fetchPostsUseCase: FetchPostsUseCase,
-    private val convertPostToUiStateUseCase: ConvertPostToUiStateUseCase,
 ) : ViewModel() {
 
     // HomeScreenのUI状態
@@ -77,7 +76,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = uiState.value.copy(isRefreshing = true)
             val posts = fetchPostsUseCase().map { post ->
-                convertPostToUiStateUseCase(post)
+                PostItemUiState.convert(post)
             }
             _uiState.value = uiState.value.copy(posts = posts, isRefreshing = false)
         }
@@ -89,7 +88,7 @@ class HomeViewModel @Inject constructor(
     fun fetchNewerPosts() {
         viewModelScope.launch(Dispatchers.IO) {
             val posts =  fetchPostsUseCase().map { post ->
-                convertPostToUiStateUseCase(post)
+                PostItemUiState.convert(post)
             }
             _uiState.value = uiState.value.copy(posts = (posts + uiState.value.posts).distinct())
         }
@@ -104,7 +103,7 @@ class HomeViewModel @Inject constructor(
             val oldestDate = oldestPost.createdAt
             oldestDate?.let {
                 val posts = fetchPostsUseCase(end = it).map { post ->
-                    convertPostToUiStateUseCase(post)
+                    PostItemUiState.convert(post)
                 }
                 _uiState.value =
                     uiState.value.copy(posts = (uiState.value.posts + posts).distinct())
