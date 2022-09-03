@@ -18,7 +18,7 @@ object RepositoryModule {
      */
     @Provides
     @Singleton
-    fun providePostsRepository(): PostsRepository = PostsRepositoryImpl()
+    fun providePostsRepository(): PostsRepository = PostsRepositoryImpl(provideFireStoreInstance())
 
     @Provides
     @Singleton
