@@ -4,7 +4,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foos.data.domain.converter.uistate.ConvertPostToUiStateUseCase
 import com.example.foos.data.domain.fetcher.post.FetchPostsByLocationBoundsUseCase
 import com.example.foos.ui.state.component.PostItemUiState
 import com.example.foos.ui.state.screen.map.MapScreenUiState
@@ -18,7 +17,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MapViewModel @Inject constructor(
     private val fetchPostsByLocationBoundsUseCase: FetchPostsByLocationBoundsUseCase,
-    private val convertPostToUiStateUseCase: ConvertPostToUiStateUseCase,
 ) : ViewModel() {
 
     private var _uiState = mutableStateOf(
@@ -38,7 +36,7 @@ class MapViewModel @Inject constructor(
     fun fetchNearbyPosts(viewBounds: LatLngBounds?) {
         viewModelScope.launch {
             viewBounds?.let {
-                val newPosts = fetchPostsByLocationBoundsUseCase(it).map { convertPostToUiStateUseCase(it) }
+                val newPosts = fetchPostsByLocationBoundsUseCase(it).map { PostItemUiState.convert(it) }
                 _uiState.value = uiState.value.copy(
                     posts = (uiState.value.posts + newPosts).distinct()
                 )

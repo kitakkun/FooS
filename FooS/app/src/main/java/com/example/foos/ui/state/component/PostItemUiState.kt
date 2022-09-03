@@ -1,5 +1,6 @@
 package com.example.foos.ui.state.component
 
+import com.example.foos.data.model.Post
 import com.example.foos.data.model.database.DatabaseReaction
 import java.util.*
 
@@ -27,6 +28,7 @@ data class PostItemUiState(
     val longitude: Double? = null,
     val createdAt: Date? = null,
 ) {
+
     companion object {
         val Default = PostItemUiState(
             "postId",
@@ -36,5 +38,21 @@ data class PostItemUiState(
             "content",
             listOf("test"),
         )
+
+        fun convert(post: Post) : PostItemUiState {
+            return PostItemUiState(
+                postId = post.post.postId,
+                userIcon = post.user.profileImage,
+                username = post.user.username,
+                longitude = post.post.longitude,
+                latitude = post.post.latitude,
+                createdAt = post.post.createdAt,
+                content = post.post.content,
+                attachedImages = post.post.attachedImages,
+                userId = post.user.userId,
+                reactions = post.reaction,
+            )
+        }
     }
+
 }

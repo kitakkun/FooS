@@ -1,7 +1,6 @@
 package com.example.foos.di
 
 import com.example.foos.data.domain.FetchReactionsByUserIdUseCase
-import com.example.foos.data.domain.converter.uistate.ConvertPostToUiStateUseCase
 import com.example.foos.data.domain.converter.uistate.ConvertReactionToUiStateUseCase
 import com.example.foos.data.domain.fetcher.follow.FetchFolloweesWithMyFollowStateByUserIdUseCase
 import com.example.foos.data.domain.fetcher.follow.FetchFollowersWithMyFollowStateByUserIdUseCase
@@ -34,9 +33,6 @@ object Modules {
         FetchPostsByLocationBoundsUseCase(
             providePostsRepository(), provideUsersRepository(), provideReactionsRepository(),
         )
-
-    @Provides
-    fun providePostToUiStateUseCase(): ConvertPostToUiStateUseCase = ConvertPostToUiStateUseCase()
 
     @Provides
     fun provideFetchPostByDatabasePostUseCase(): FetchPostByDatabasePostUseCase =
