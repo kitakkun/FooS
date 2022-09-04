@@ -6,13 +6,29 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 
+/**
+ * 親要素に対してフルサイズでストレッチするローディングインディケータ
+ * @param isLoading ローディング中かどうか
+ */
 @Composable
-fun MaxSizeLoadingIndicator() {
+fun MaxSizeLoadingIndicator(
+    isLoading: Boolean = true,
+    modifier: Modifier = Modifier
+) {
     Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
     ) {
-        CircularProgressIndicator()
+        if (isLoading) {
+            CircularProgressIndicator()
+        }
     }
+}
+
+@Preview(showSystemUi = true, showBackground = true)
+@Composable
+fun MaxSizeLoadingIndicatorPreview() {
+    MaxSizeLoadingIndicator(isLoading = true)
 }
