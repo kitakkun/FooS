@@ -28,4 +28,6 @@
     <string name="location_attached">Location Data</string>
     <string name="specify_location_alert_message">Please specify the restaurant\'s name.</string>
     <string name="follows_you">follows you</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
 </resources>

@@ -84,6 +84,8 @@ fun SettingScreen(viewModel: SettingViewModel) {
             ConfirmAlertDialog(
                 title = stringResource(id = R.string.log_out_confirm_title),
                 message = stringResource(id = R.string.log_out_confirm_message),
+                confirmButtonText = stringResource(id = R.string.dialog_ok),
+                dismissButtonText = stringResource(id = R.string.dialog_cancel),
                 onConfirmed = {
                     FirebaseAuthManager.logOut()
                     (context as? Activity)?.recreate()
