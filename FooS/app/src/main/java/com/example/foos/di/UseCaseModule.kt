@@ -1,8 +1,7 @@
 package com.example.foos.di
 
 import com.example.foos.data.domain.FetchReactionsByUserIdUseCase
-import com.example.foos.data.domain.fetcher.follow.FetchFolloweesWithMyFollowStateByUserIdUseCase
-import com.example.foos.data.domain.fetcher.follow.FetchFollowersWithMyFollowStateByUserIdUseCase
+import com.example.foos.data.domain.fetcher.follow.FetchFollowStateUseCase
 import com.example.foos.data.domain.fetcher.post.*
 import com.example.foos.di.RepositoryModule.provideFollowRepository
 import com.example.foos.di.RepositoryModule.providePostsRepository
@@ -15,7 +14,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-object Modules {
+object UseCaseModule {
 
     /**
      * Provide UseCases...
@@ -62,19 +61,12 @@ object Modules {
         )
 
     @Provides
-    fun provideFetchFollowersWithMyFollowStateByUserIdUseCase(): FetchFollowersWithMyFollowStateByUserIdUseCase =
-        FetchFollowersWithMyFollowStateByUserIdUseCase(
-            provideUsersRepository(), provideFollowRepository()
-        )
-
-    @Provides
-    fun provideFetchFolloweesWithMyFollowStateByUserIdUseCase(): FetchFolloweesWithMyFollowStateByUserIdUseCase =
-        FetchFolloweesWithMyFollowStateByUserIdUseCase(
-            provideUsersRepository(), provideFollowRepository()
-        )
-
-    @Provides
     fun provideFetchPostsUseCase(): FetchPostsUseCase = FetchPostsUseCase(
         providePostsRepository(), provideUsersRepository(), provideReactionsRepository()
+    )
+
+    @Provides
+    fun provideFetchFollowStateUseCase(): FetchFollowStateUseCase = FetchFollowStateUseCase(
+        provideFollowRepository()
     )
 }

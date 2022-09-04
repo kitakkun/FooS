@@ -57,8 +57,8 @@ class UserProfileViewModel @Inject constructor(
             Firebase.auth.uid?.let {
                 if (!following) followRepository.create(it, uiState.value.userId)
                 else followRepository.delete(it, uiState.value.userId)
-                val followee = followRepository.fetchFollowees(uiState.value.userId)
-                val follower = followRepository.fetchFollowers(uiState.value.userId)
+                val followee = followRepository.fetchByFollowerId(uiState.value.userId)
+                val follower = followRepository.fetchByFolloweeId(uiState.value.userId)
                 _uiState.value = uiState.value.copy(
                     followerCount = follower.size,
                     followeeCount = followee.size,
@@ -126,8 +126,8 @@ class UserProfileViewModel @Inject constructor(
      */
     suspend fun fetchUserInfo(userId: String, onFinished: suspend() -> Unit = {}) {
         viewModelScope.launch(Dispatchers.IO) {
-            val followers = followRepository.fetchFollowers(userId)
-            val followees = followRepository.fetchFollowees(userId)
+            val followers = followRepository.fetchByFolloweeId(userId)
+            val followees = followRepository.fetchByFollowerId(userId)
             val user = usersRepository.fetchByUserId(userId)
             user?.let {
                 _uiState.value = uiState.value.copy(

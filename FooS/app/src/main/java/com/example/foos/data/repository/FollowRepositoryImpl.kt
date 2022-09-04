@@ -1,15 +1,9 @@
 package com.example.foos.data.repository
 
-import com.example.foos.data.model.MyFollowingState
 import com.example.foos.data.model.database.DatabaseFollow
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -19,57 +13,50 @@ import javax.inject.Inject
 class FollowRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private val database: FirebaseFirestore,
-): FollowRepository {
+) : FollowRepository {
 
     companion object {
         private const val COLLECTION = "follows"
     }
 
-    override suspend fun fetchFollowState(from: String, to: String): MyFollowingState {
-        var following: Boolean = false
-        var followed: Boolean = false
-        val jobs = mutableListOf<Job>()
-        coroutineScope {
-            jobs.add(async { followed = isFollowed(from, to) })
-            jobs.add(async { following = isFollowing(from, to) })
-        }
-        jobs.joinAll()
-        return MyFollowingState(following = following, followed = followed)
-    }
-
-    private suspend fun isFollowing(from: String, to: String): Boolean {
-        return !database.collection(COLLECTION)
-            .whereEqualTo("followee", to)
-            .whereEqualTo("follower", from)
-            .get().await().isEmpty
-    }
-
-    private suspend fun isFollowed(from: String, to: String): Boolean {
-        return !database.collection(COLLECTION)
-            .whereEqualTo("follower", to)
-            .whereEqualTo("followee", from)
-            .get().await().isEmpty
+    override suspend fun fetch(followee: String, follower: String): DatabaseFollow? {
+        database.collection(COLLECTION)
+            .whereEqualTo("followee", followee)
+            .whereEqualTo("follower", follower)
+            .limit(1)
+            .get().await().toObjects(DatabaseFollow::class.java).apply {
+                return if (size > 0) get(0) else null
+            }
     }
 
     /**
-     * 指定ユーザのフォロワーを情報を取得します
+     * followeeのユーザIDでフォローデータをフィルタしてフェッチ
      */
-    override suspend fun fetchFollowers(followeeId: String): List<DatabaseFollow> {
-        return database.collection(COLLECTION)
+    override suspend fun fetchByFolloweeId(followeeId: String): List<DatabaseFollow> =
+        database.collection(COLLECTION)
             .whereEqualTo("followee", followeeId)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-            .get().await().toObjects(DatabaseFollow::class.java).toList()
-    }
+            .get().await().toObjects(DatabaseFollow::class.java)
+
+    override suspend fun fetchByFollowerId(followerId: String): List<DatabaseFollow> =
+        database.collection(COLLECTION)
+            .whereEqualTo("follower", followerId)
+            .get().await().toObjects(DatabaseFollow::class.java)
 
     /**
-     * 指定ユーザがフォローしているユーザを取得します
+     * 各フォロイーのユーザIDをfolloweeに含むデータベースエントリをフェッチ
      */
-    override suspend fun fetchFollowees(followerId: String): List<DatabaseFollow> {
-        return database.collection(COLLECTION)
-            .whereEqualTo("follower", followerId)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-            .get().await().toObjects(DatabaseFollow::class.java).toList()
-    }
+    override suspend fun fetchByFolloweeIds(followeeIds: List<String>): List<DatabaseFollow> =
+        database.collection(COLLECTION)
+            .whereIn("followee", followeeIds)
+            .get().await().toObjects(DatabaseFollow::class.java)
+
+    /**
+     * 各フォロワーのユーザIDをfollowerに含むデータベースエントリをフェッチ
+     */
+    override suspend fun fetchByFollowerIds(followerIds: List<String>): List<DatabaseFollow> =
+        database.collection(COLLECTION)
+            .whereIn("follower", followerIds)
+            .get().await().toObjects(DatabaseFollow::class.java)
 
     /**
      * フォロー関係を作成

@@ -16,6 +16,15 @@ class UsersRepositoryImpl @Inject constructor(
         private const val COLLECTION = "users"
     }
 
+    override suspend fun fetchByUserIds(userIds: List<String>): List<DatabaseUser> =
+        if (userIds.isNotEmpty()){
+           database.collection(COLLECTION)
+                .whereIn("userId", userIds.toSet().toList())
+                .get().await().toObjects(DatabaseUser::class.java)
+        } else {
+            listOf()
+        }
+
     /**
      * ユーザ情報を取得します
      */

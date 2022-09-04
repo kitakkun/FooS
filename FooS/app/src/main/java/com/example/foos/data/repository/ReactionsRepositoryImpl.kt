@@ -13,11 +13,17 @@ import javax.inject.Inject
  */
 class ReactionsRepositoryImpl @Inject constructor(
     private val database: FirebaseFirestore,
-): ReactionsRepository {
+) : ReactionsRepository {
 
     companion object {
         private const val COLLECTION = "reactions"
     }
+
+    override suspend fun fetchByPostIds(postids: List<String>): List<DatabaseReaction> =
+        if (postids.isEmpty()) listOf()
+        else database.collection(COLLECTION)
+            .whereIn("postId", postids)
+            .get().await().toObjects(DatabaseReaction::class.java)
 
     override suspend fun fetchByUserIdWithDate(
         userId: String,

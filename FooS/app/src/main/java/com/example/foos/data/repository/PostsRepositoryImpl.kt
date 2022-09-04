@@ -160,6 +160,11 @@ class PostsRepositoryImpl @Inject constructor(
         return document.get().await().toObject(DatabasePost::class.java)
     }
 
+    override suspend fun fetchByPostIds(postIds: List<String>): List<DatabasePost> =
+        database.collection(COLLECTION)
+            .whereIn("postId", postIds)
+            .get().await().toObjects(DatabasePost::class.java)
+
     /**
      * 投稿を作成します
      */

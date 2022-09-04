@@ -1,15 +1,33 @@
 package com.example.foos.data.repository
 
-import com.example.foos.data.model.MyFollowingState
 import com.example.foos.data.model.database.DatabaseFollow
 
 interface FollowRepository {
 
-    suspend fun fetchFollowState(from: String, to: String): MyFollowingState
+    /**
+     * 通常のフェッチ処理
+     */
+    suspend fun fetch(followee: String, follower: String): DatabaseFollow?
 
-    suspend fun fetchFollowers(followeeId: String): List<DatabaseFollow>
+    /**
+     * 指定したIDがfollowerとして定義されているデータベースエントリを取得
+     */
+    suspend fun fetchByFollowerId(followerId: String): List<DatabaseFollow>
 
-    suspend fun fetchFollowees(followerId: String): List<DatabaseFollow>
+    /**
+     * 指定したID(複数)がfollowerとして定義されているデータベースエントリを取得
+     */
+    suspend fun fetchByFollowerIds(followerIds: List<String>): List<DatabaseFollow>
+
+    /**
+     * 指定したIDがfolloweeとして定義されているデータベースエントリを取得
+     */
+    suspend fun fetchByFolloweeId(followeeId: String): List<DatabaseFollow>
+
+    /**
+     * 指定したID(複数)がfolloweeとして定義されているデータベースエントリを取得
+     */
+    suspend fun fetchByFolloweeIds(followeeIds: List<String>): List<DatabaseFollow>
 
     suspend fun create(follower: String, followee: String)
 

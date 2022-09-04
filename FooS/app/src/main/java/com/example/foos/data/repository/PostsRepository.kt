@@ -38,6 +38,8 @@ interface PostsRepository {
 
     suspend fun fetchByPostId(postId: String): DatabasePost?
 
+    suspend fun fetchByPostIds(postIds: List<String>): List<DatabasePost>
+
     suspend fun create(databasePost: DatabasePost, context: Context)
 
     suspend fun deletePost(postId: String)

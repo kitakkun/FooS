@@ -1,16 +1,13 @@
 package com.example.foos.data.domain.fetcher.post
 
+import android.util.Log
+import com.example.foos.data.model.Post
 import com.example.foos.data.model.database.DatabaseReaction
 import com.example.foos.data.model.database.DatabaseUser
-import com.example.foos.data.model.Post
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.PostsRepositoryImpl
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.data.repository.UsersRepository
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.joinAll
 import java.util.*
 import javax.inject.Inject
 
@@ -24,30 +21,25 @@ class FetchPostsUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(start: Date? = null, end: Date? = null): List<Post> {
-        val jobs = mutableListOf<Job>()
         val dbPosts = postsRepository.fetch(start, end, PostsRepositoryImpl.DEFAULT_LOAD_LIMIT)
-        val dbUsers = mutableMapOf<String, DatabaseUser?>()
-        val dbReactions = mutableMapOf<String, List<DatabaseReaction>>()
-        coroutineScope {
-            dbPosts.forEach {
-                // 投稿者の情報をフェッチ
-                jobs.add(async { dbUsers.put(it.postId, usersRepository.fetchByUserId(it.userId)) })
-                // 投稿に対するリアクションをフェッチ
-                jobs.add(async {
-                    dbReactions.put(
-                        it.postId,
-                        reactionsRepository.fetchReactionsByPostId(it.postId)
-                    )
-                })
-            }
+        val dbUsers = mutableListOf<DatabaseUser>()
+        val dbReactions = mutableListOf<DatabaseReaction>()
+        dbPosts.map { it.userId }.chunked(10).forEach {
+            dbUsers.addAll(usersRepository.fetchByUserIds(it))
         }
-        jobs.joinAll()
+        dbPosts.map { it.postId }.chunked(10).forEach {
+            dbReactions.addAll(reactionsRepository.fetchByPostIds(it))
+        }
+
+        Log.d("DEBUG", dbReactions.toString())
         return dbPosts.mapNotNull { post ->
-            dbUsers[post.postId]?.let { user ->
+            val user = dbUsers.find { it.userId == post.userId }
+            val reactions = dbReactions.filter { it.postId == post.postId }
+            user?.let {
                 Post(
                     post = post,
                     user = user,
-                    reaction = dbReactions[post.postId] ?: listOf()
+                    reaction = reactions,
                 )
             }
         }
