@@ -35,7 +35,7 @@ fun ConfirmAlertDialog(
 
 @Preview
 @Composable
-fun ConfirmAlertDialogPreview() {
+private fun ConfirmAlertDialogPreview() {
     ConfirmAlertDialog(
         title = "Title",
         message = "some message",
