@@ -27,7 +27,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     // HomeScreenのUI状態
-    private var _uiState = mutableStateOf(HomeScreenUiState(listOf(), false))
+    private var _uiState = mutableStateOf(HomeScreenUiState.Default)
     val uiState: State<HomeScreenUiState> = _uiState
 
     private val _navEvent = MutableSharedFlow<String>()
@@ -75,23 +75,24 @@ class HomeViewModel @Inject constructor(
     fun onRefresh() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = uiState.value.copy(isRefreshing = true)
-            val posts = fetchPostsUseCase().map { post ->
-                PostItemUiState.convert(post)
-            }
+            val posts = fetchPostsUseCase().map { PostItemUiState.convert(it) }
             _uiState.value = uiState.value.copy(posts = posts, isRefreshing = false)
         }
     }
 
     /**
-     * 新しい投稿をフェッチします（サイレント）
+     * 初回フェッチ
      */
-    fun fetchNewerPosts() {
+    fun fetchInitialPosts() {
         viewModelScope.launch(Dispatchers.IO) {
-            val posts =  fetchPostsUseCase().map { post ->
-
+            _uiState.value = uiState.value.copy(isLoading = true)
+            val posts = fetchPostsUseCase().map { post ->
                 PostItemUiState.convert(post)
             }
-            _uiState.value = uiState.value.copy(posts = (posts + uiState.value.posts).distinct())
+            _uiState.value = uiState.value.copy(
+                isLoading = false,
+                posts = (posts + uiState.value.posts).distinct()
+            )
         }
     }
 

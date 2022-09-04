@@ -12,6 +12,7 @@ import com.example.foos.ui.view.component.list.PostItemList
 import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.launch
 
 /**
  * ホーム画面のコンポーザブル。ユーザーの投稿をリストで表示。
@@ -28,23 +29,22 @@ fun HomeScreen(
     val uiState = viewModel.uiState.value
     val listState = rememberLazyListState()
 
-    // 初回起動時の投稿フェッチ
-    LaunchedEffect(uiState.posts.isEmpty()) {
-        viewModel.fetchNewerPosts()
-    }
-
-    // ナビゲーションイベント処理
     LaunchedEffect(Unit) {
-        viewModel.navEvent.collect {
-            navController.navigate(it)
+        launch {
+            // 初回起動時の投稿フェッチ
+            viewModel.fetchInitialPosts()
         }
-    }
-
-    // Bottomナビゲーションでホームがクリックされたらトップへスクロール
-    LaunchedEffect(Unit) {
-        screenViewModel.navRoute.collect {
-            if (it == Screen.Home.route) {
-                listState.animateScrollToItem(0, 0)
+        launch {
+            viewModel.navEvent.collect {
+                navController.navigate(it)
+            }
+        }
+        launch {
+            // Bottomナビゲーションでホームがクリックされたらトップへスクロール
+            screenViewModel.navRoute.collect {
+                if (it == Screen.Home.route) {
+                    listState.animateScrollToItem(0, 0)
+                }
             }
         }
     }
@@ -53,7 +53,7 @@ fun HomeScreen(
         state = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing),
         onRefresh = { viewModel.onRefresh() }
     ) {
-        if (uiState.posts.isEmpty()) {
+        if (uiState.isLoading) {
             MaxSizeLoadingIndicator()
         } else {
             PostItemList(
@@ -62,10 +62,7 @@ fun HomeScreen(
                 onUserIconClick = { viewModel.onUserIconClick(it) },
                 onContentClick = { viewModel.onContentClick(it) },
                 onImageClick = { imageUrls, clickedImageUrl ->
-                    viewModel.onImageClick(
-                        imageUrls,
-                        clickedImageUrl
-                    )
+                    viewModel.onImageClick(imageUrls, clickedImageUrl)
                 },
                 onAppearLastItem = { viewModel.fetchOlderPosts() }
             )
