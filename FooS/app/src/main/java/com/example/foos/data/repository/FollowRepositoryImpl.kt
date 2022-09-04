@@ -1,6 +1,7 @@
 package com.example.foos.data.repository
 
 import com.example.foos.data.model.database.DatabaseFollow
+import com.example.foos.util.join
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -46,17 +47,25 @@ class FollowRepositoryImpl @Inject constructor(
      * 各フォロイーのユーザIDをfolloweeに含むデータベースエントリをフェッチ
      */
     override suspend fun fetchByFolloweeIds(followeeIds: List<String>): List<DatabaseFollow> =
-        database.collection(COLLECTION)
-            .whereIn("followee", followeeIds)
-            .get().await().toObjects(DatabaseFollow::class.java)
+        if (followeeIds.size > 10) {
+            followeeIds.chunked(10).map { fetchByFolloweeIds(it) }.join()
+        } else {
+            database.collection(COLLECTION)
+                .whereIn("followee", followeeIds)
+                .get().await().toObjects(DatabaseFollow::class.java)
+        }
 
     /**
      * 各フォロワーのユーザIDをfollowerに含むデータベースエントリをフェッチ
      */
     override suspend fun fetchByFollowerIds(followerIds: List<String>): List<DatabaseFollow> =
-        database.collection(COLLECTION)
-            .whereIn("follower", followerIds)
-            .get().await().toObjects(DatabaseFollow::class.java)
+        if (followerIds.size > 10) {
+            followerIds.chunked(10).map { fetchByFolloweeIds(it) }.join()
+        } else {
+            database.collection(COLLECTION)
+                .whereIn("follower", followerIds)
+                .get().await().toObjects(DatabaseFollow::class.java)
+        }
 
     /**
      * フォロー関係を作成

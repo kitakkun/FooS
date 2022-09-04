@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import com.example.foos.data.model.database.DatabasePost
 import com.example.foos.util.ImageConverter
+import com.example.foos.util.join
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -24,7 +25,7 @@ import javax.inject.Inject
 class PostsRepositoryImpl @Inject constructor(
     private val database: FirebaseFirestore,
     private val storage: FirebaseStorage,
-): PostsRepository {
+) : PostsRepository {
 
     companion object {
         const val DEFAULT_LOAD_LIMIT: Long = 15
@@ -32,138 +33,107 @@ class PostsRepositoryImpl @Inject constructor(
         private const val COLLECTION = "posts"
     }
 
-    override suspend fun fetch(
+    /**
+     * 作成日時以外フィルタなしの通常のフェッチ
+     */
+    override suspend fun fetch(start: Date?, end: Date?, count: Long?): List<DatabasePost> =
+        database.collection(COLLECTION)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .let { if (start != null) it.whereGreaterThanOrEqualTo("createdAt", start) else it }
+            .let { if (end != null) it.whereLessThanOrEqualTo("createdAt", end) else it }
+            .let { if (count != null) it.limit(count) else it }
+            .get().await().toObjects(DatabasePost::class.java)
+
+    /**
+     * ユーザIDでフィルタしてフェッチ
+     */
+    override suspend fun fetchByUserId(
+        userId: String,
         start: Date?,
         end: Date?,
-        count: Long,
-    ): List<DatabasePost> {
-        var query = database.collection(COLLECTION)
+        count: Long?
+    ): List<DatabasePost> =
+        database.collection(COLLECTION)
+            .whereEqualTo("userId", userId)
             .orderBy("createdAt", Query.Direction.DESCENDING)
-        start?.let { query = query.whereGreaterThanOrEqualTo("createdAt", start) }
-        end?.let { query = query.whereLessThanOrEqualTo("createdAt", end) }
-        return query.limit(count)
+            .let { if (start != null) it.whereGreaterThanOrEqualTo("createdAt", start) else it }
+            .let { if (end != null) it.whereLessThanOrEqualTo("createdAt", end) else it }
+            .let { if (count != null) it.limit(count) else it }
             .get().await().toObjects(DatabasePost::class.java)
-    }
+
+    /**
+     * ユーザIDでフィルタしてフェッチ（複数版）
+     */
+    override suspend fun fetchByUserIds(
+        userIds: List<String>,
+        start: Date?,
+        end: Date?,
+        count: Long?
+    ): List<DatabasePost> =
+        if (userIds.size > 10) {
+            userIds.chunked(10).map { fetchByUserIds(it, start, end, count) }.join()
+        } else {
+            database.collection(COLLECTION)
+                .whereIn("userId", userIds)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .let { if (start != null) it.whereGreaterThanOrEqualTo("createdAt", start) else it }
+                .let { if (end != null) it.whereLessThanOrEqualTo("createdAt", end) else it }
+                .let { if (count != null) it.limit(count) else it }
+                .get().await().toObjects(DatabasePost::class.java)
+        }
+
+    /**
+     * 投稿IDでフェッチ
+     */
+    override suspend fun fetchByPostId(postId: String): DatabasePost? =
+        database.collection(COLLECTION)
+            .whereEqualTo("postId", postId)
+            .get().await().toObjects(DatabasePost::class.java).let {
+                if (it.size > 0) it[0]
+                else null
+            }
+
+    /**
+     * 投稿IDで複数まとめてフェッチ
+     */
+    override suspend fun fetchByPostIds(postIds: List<String>): List<DatabasePost> =
+        if (postIds.size > 10) {
+            postIds.chunked(10).map { fetchByPostIds(it) }.join()
+        } else {
+            database.collection(COLLECTION)
+                .whereIn("postId", postIds)
+                .get().await().toObjects(DatabasePost::class.java)
+        }
+
 
     /**
      * 画像付きの投稿をフェッチ
      */
-    override suspend fun fetchWithMediaByUserId(
+    override suspend fun fetchPostsWithMediaByUserId(
         userId: String,
         start: Date?,
         end: Date?,
-        count: Long,
-    ): List<DatabasePost> {
-        var query = database.collection(COLLECTION)
+        count: Long?,
+    ): List<DatabasePost> =
+        database.collection(COLLECTION)
             .whereEqualTo("userId", userId)
             .orderBy("createdAt", Query.Direction.DESCENDING)
-        start?.let { query = query.whereGreaterThanOrEqualTo("createdAt", start) }
-        end?.let { query = query.whereLessThanOrEqualTo("createdAt", end) }
-        return query.limit(count)
+            .let { if (start != null) it.whereGreaterThanOrEqualTo("createdAt", start) else it }
+            .let { if (end != null) it.whereLessThanOrEqualTo("createdAt", end) else it }
+            .let { if (count != null) it.limit(count) else it }
             .get().await().toObjects(DatabasePost::class.java)
             .filter { it.attachedImages.isNotEmpty() }
-    }
 
     /**
-     *
+     * 位置情報範囲を指定して投稿をフェッチ
      */
-    override suspend fun fetchByLatLngBounds(bounds: LatLngBounds): List<DatabasePost> {
-        return database.collection(COLLECTION)
+    override suspend fun fetchByLatLngBounds(bounds: LatLngBounds): List<DatabasePost> =
+        database.collection(COLLECTION)
             .whereLessThanOrEqualTo("longitude", bounds.northeast.longitude)
             .whereGreaterThanOrEqualTo("longitude", bounds.southwest.longitude)
             .get().await().toObjects(DatabasePost::class.java).filter {
                 it.latitude!! <= bounds.northeast.latitude && it.latitude >= bounds.southwest.latitude
             }
-    }
-
-    /**
-     * ユーザーIDと日時を指定して投稿を取得します
-     * @param userId ユーザID
-     * @param start 開始の日時 ex) 2022/01/01
-     * @param end 終了の日時   ex) 2022/01/06
-     * @param count 取得するデータ数
-     */
-    override suspend fun fetchByUserIdWithDate(
-        userId: String,
-        start: Date?,
-        end: Date?,
-        count: Long,
-    ): List<DatabasePost> {
-        val collection = database.collection(COLLECTION)
-        var query = collection.whereEqualTo("userId", userId)
-        start?.let { query = query.whereGreaterThanOrEqualTo("createdAt", start) }
-        end?.let { query = query.whereLessThanOrEqualTo("createdAt", end) }
-        query = query.orderBy("createdAt", Query.Direction.DESCENDING)
-            .limit(count)
-        return query.get().await().toObjects(DatabasePost::class.java)
-    }
-
-    /**
-     * ユーザーID(複数)と日時を指定して投稿を取得します
-     * @param userIds ユーザID
-     * @param start 開始の日時 ex) 2022/01/01
-     * @param end 終了の日時   ex) 2022/01/06
-     * @param count 取得するデータ数
-     */
-    override suspend fun fetchByUserIdsWithDate(
-        userIds: List<String>,
-        start: Date?,
-        end: Date?,
-        count: Long,
-    ): List<DatabasePost> {
-        val collection = database.collection(COLLECTION)
-        var query = collection.whereIn("userId", userIds)
-        start?.let { query = query.whereGreaterThanOrEqualTo("createdAt", start) }
-        end?.let { query = query.whereGreaterThanOrEqualTo("createdAt", end) }
-        query = query.orderBy("createdAt", Query.Direction.DESCENDING)
-            .limit(count)
-        return query.get().await().toObjects(DatabasePost::class.java)
-    }
-
-    /**
-     * 指定ユーザの最新の投稿を取得します
-     * @param userId ユーザID
-     * @param count 取得するデータ数
-     */
-    override suspend fun fetchByUserId(
-        userId: String,
-        count: Long,
-    ): List<DatabasePost> {
-        val collection = database.collection(COLLECTION)
-        var query = collection.whereEqualTo("userId", userId)
-        query = query.orderBy("createdAt", Query.Direction.DESCENDING)
-            .limit(count)
-        return query.get().await().toObjects(DatabasePost::class.java)
-    }
-
-    /**
-     * 指定ユーザ（複数）の最新の投稿を取得します
-     * @param userIds ユーザIDのリスト
-     * @param count 取得するデータ数
-     */
-    override suspend fun fetchByUserIds(
-        userIds: List<String>,
-        count: Long,
-    ): List<DatabasePost> {
-        val collection = database.collection(COLLECTION)
-        var query = collection.whereIn("userId", userIds)
-        query = query.orderBy("createdAt", Query.Direction.DESCENDING)
-            .limit(count)
-        return query.get().await().toObjects(DatabasePost::class.java)
-    }
-
-    /**
-     * 投稿を取得します
-     */
-    override suspend fun fetchByPostId(postId: String): DatabasePost? {
-        val document = database.collection(COLLECTION).document(postId)
-        return document.get().await().toObject(DatabasePost::class.java)
-    }
-
-    override suspend fun fetchByPostIds(postIds: List<String>): List<DatabasePost> =
-        database.collection(COLLECTION)
-            .whereIn("postId", postIds)
-            .get().await().toObjects(DatabasePost::class.java)
 
     /**
      * 投稿を作成します
@@ -205,30 +175,6 @@ class PostsRepositoryImpl @Inject constructor(
      */
     override suspend fun deletePost(postId: String) {
         database.collection(COLLECTION).document(postId).delete()
-    }
-
-    /**
-     * 最新の投稿を取得します
-     */
-    override suspend fun fetchNewerPosts(from: Date): List<DatabasePost> {
-        val response = database.collection(COLLECTION)
-            .whereLessThanOrEqualTo("createdAt", from)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-            .limit(DEFAULT_LOAD_LIMIT)
-            .get().await()
-        return response.toObjects(DatabasePost::class.java)
-    }
-
-    /**
-     * 古い投稿を取得します
-     */
-    override suspend fun fetchOlderPosts(from: Date): List<DatabasePost> {
-        val response = database.collection(COLLECTION)
-            .whereLessThanOrEqualTo("createdAt", from)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-            .limit(DEFAULT_LOAD_LIMIT)
-            .get().await()
-        return response.toObjects(DatabasePost::class.java)
     }
 
 }

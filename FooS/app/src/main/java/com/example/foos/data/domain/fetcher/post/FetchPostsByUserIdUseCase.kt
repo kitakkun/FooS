@@ -20,7 +20,7 @@ class FetchPostsByUserIdUseCase @Inject constructor(
 
     suspend operator fun invoke(userId: String, end: Date = Date()): List<Post> {
         val dbUser = usersRepository.fetchByUserId(userId)
-        val dbPosts = postsRepository.fetchByUserIdWithDate(
+        val dbPosts = postsRepository.fetchByUserId(
             userId,
             null,
             end,

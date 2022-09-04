@@ -20,7 +20,7 @@ class FetchPostsWithMediaByUserIdUseCase @Inject constructor(
         end: Date? = null
     ): List<Post> {
         val dbUser = usersRepository.fetchByUserId(userId)
-        val dbPosts = postsRepository.fetchWithMediaByUserId(
+        val dbPosts = postsRepository.fetchPostsWithMediaByUserId(
             userId,
             start,
             end,

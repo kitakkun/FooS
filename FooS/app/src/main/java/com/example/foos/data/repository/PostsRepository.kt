@@ -7,36 +7,32 @@ import java.util.*
 
 interface PostsRepository {
 
-    suspend fun fetch(start: Date?, end: Date?, count: Long): List<DatabasePost>
+    suspend fun fetch(start: Date?, end: Date?, count: Long?): List<DatabasePost>
 
-    suspend fun fetchWithMediaByUserId(
+    suspend fun fetchByUserId(
         userId: String,
         start: Date?,
         end: Date?,
-        count: Long
+        count: Long?
     ): List<DatabasePost>
 
-    suspend fun fetchByLatLngBounds(bounds: LatLngBounds): List<DatabasePost>
-
-    suspend fun fetchByUserIdWithDate(
-        userId: String,
-        start: Date?,
-        end: Date?,
-        count: Long,
-    ): List<DatabasePost>
-
-    suspend fun fetchByUserIdsWithDate(
+    suspend fun fetchByUserIds(
         userIds: List<String>,
         start: Date?,
         end: Date?,
-        count: Long,
+        count: Long?
     ): List<DatabasePost>
 
-    suspend fun fetchByUserId(userId: String, count: Long): List<DatabasePost>
-
-    suspend fun fetchByUserIds(userIds: List<String>, count: Long): List<DatabasePost>
+    suspend fun fetchPostsWithMediaByUserId(
+        userId: String,
+        start: Date?,
+        end: Date?,
+        count: Long?
+    ): List<DatabasePost>
 
     suspend fun fetchByPostId(postId: String): DatabasePost?
+
+    suspend fun fetchByLatLngBounds(bounds: LatLngBounds): List<DatabasePost>
 
     suspend fun fetchByPostIds(postIds: List<String>): List<DatabasePost>
 
@@ -44,7 +40,4 @@ interface PostsRepository {
 
     suspend fun deletePost(postId: String)
 
-    suspend fun fetchNewerPosts(from: Date): List<DatabasePost>
-
-    suspend fun fetchOlderPosts(from: Date): List<DatabasePost>
 }
