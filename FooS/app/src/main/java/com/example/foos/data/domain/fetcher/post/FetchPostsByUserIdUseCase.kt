@@ -5,7 +5,6 @@ import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.PostsRepositoryImpl
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.data.repository.UsersRepository
-import com.example.foos.util.join
 import java.util.*
 import javax.inject.Inject
 
@@ -26,8 +25,7 @@ class FetchPostsByUserIdUseCase @Inject constructor(
             end,
             PostsRepositoryImpl.DEFAULT_LOAD_LIMIT
         )
-        val dbReactions = dbPosts.map { it.postId }.chunked(10)
-            .map { reactionsRepository.fetchByPostIds(it) }.join()
+        val dbReactions = dbPosts.map { it.postId }.let { reactionsRepository.fetchByPostIds(it) }
 
         return dbPosts.mapNotNull { post ->
             val reactions = dbReactions.filter { it.postId == post.postId }
