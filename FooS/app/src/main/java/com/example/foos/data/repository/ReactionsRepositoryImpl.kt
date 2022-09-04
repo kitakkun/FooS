@@ -1,6 +1,7 @@
 package com.example.foos.data.repository
 
 import com.example.foos.data.model.database.DatabaseReaction
+import com.example.foos.util.join
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -21,9 +22,13 @@ class ReactionsRepositoryImpl @Inject constructor(
 
     override suspend fun fetchByPostIds(postids: List<String>): List<DatabaseReaction> =
         if (postids.isEmpty()) listOf()
-        else database.collection(COLLECTION)
-            .whereIn("postId", postids)
-            .get().await().toObjects(DatabaseReaction::class.java)
+        else if (postids.size > 10) {
+            postids.chunked(10).map { fetchByPostIds(it) }.join()
+        } else {
+            database.collection(COLLECTION)
+                .whereIn("postId", postids)
+                .get().await().toObjects(DatabaseReaction::class.java)
+        }
 
     override suspend fun fetchByUserIdWithDate(
         userId: String,
