@@ -88,6 +88,7 @@ class HomeViewModel @Inject constructor(
     fun fetchNewerPosts() {
         viewModelScope.launch(Dispatchers.IO) {
             val posts =  fetchPostsUseCase().map { post ->
+
                 PostItemUiState.convert(post)
             }
             _uiState.value = uiState.value.copy(posts = (posts + uiState.value.posts).distinct())
