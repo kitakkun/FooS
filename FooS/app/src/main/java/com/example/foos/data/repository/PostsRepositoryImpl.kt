@@ -70,17 +70,16 @@ class PostsRepositoryImpl @Inject constructor(
         end: Date?,
         count: Long?
     ): List<DatabasePost> =
-        if (userIds.size > 10) {
+        if (userIds.isEmpty()) listOf()
+        else if (userIds.size > 10)
             userIds.chunked(10).map { fetchByUserIds(it, start, end, count) }.join()
-        } else {
-            database.collection(COLLECTION)
-                .whereIn("userId", userIds)
-                .orderBy("createdAt", Query.Direction.DESCENDING)
-                .let { if (start != null) it.whereGreaterThanOrEqualTo("createdAt", start) else it }
-                .let { if (end != null) it.whereLessThanOrEqualTo("createdAt", end) else it }
-                .let { if (count != null) it.limit(count) else it }
-                .get().await().toObjects(DatabasePost::class.java)
-        }
+        else database.collection(COLLECTION)
+            .whereIn("userId", userIds)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .let { if (start != null) it.whereGreaterThanOrEqualTo("createdAt", start) else it }
+            .let { if (end != null) it.whereLessThanOrEqualTo("createdAt", end) else it }
+            .let { if (count != null) it.limit(count) else it }
+            .get().await().toObjects(DatabasePost::class.java)
 
     /**
      * 投稿IDでフェッチ
@@ -97,14 +96,11 @@ class PostsRepositoryImpl @Inject constructor(
      * 投稿IDで複数まとめてフェッチ
      */
     override suspend fun fetchByPostIds(postIds: List<String>): List<DatabasePost> =
-        if (postIds.size > 10) {
-            postIds.chunked(10).map { fetchByPostIds(it) }.join()
-        } else {
-            database.collection(COLLECTION)
-                .whereIn("postId", postIds)
-                .get().await().toObjects(DatabasePost::class.java)
-        }
-
+        if (postIds.isEmpty()) listOf()
+        else if (postIds.size > 10) postIds.chunked(10).map { fetchByPostIds(it) }.join()
+        else database.collection(COLLECTION)
+            .whereIn("postId", postIds)
+            .get().await().toObjects(DatabasePost::class.java)
 
     /**
      * 画像付きの投稿をフェッチ

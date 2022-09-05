@@ -47,13 +47,12 @@ class FollowRepositoryImpl @Inject constructor(
      * 各フォロイーのユーザIDをfolloweeに含むデータベースエントリをフェッチ
      */
     override suspend fun fetchByFolloweeIds(followeeIds: List<String>): List<DatabaseFollow> =
-        if (followeeIds.size > 10) {
+        if (followeeIds.isEmpty()) listOf()
+        else if (followeeIds.size > 10)
             followeeIds.chunked(10).map { fetchByFolloweeIds(it) }.join()
-        } else {
-            database.collection(COLLECTION)
-                .whereIn("followee", followeeIds)
-                .get().await().toObjects(DatabaseFollow::class.java)
-        }
+        else database.collection(COLLECTION)
+            .whereIn("followee", followeeIds)
+            .get().await().toObjects(DatabaseFollow::class.java)
 
     /**
      * 各フォロワーのユーザIDをfollowerに含むデータベースエントリをフェッチ

@@ -1,6 +1,7 @@
 package com.example.foos.data.repository
 
 import com.example.foos.data.model.database.DatabaseUser
+import com.example.foos.util.join
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -17,13 +18,12 @@ class UsersRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchByUserIds(userIds: List<String>): List<DatabaseUser> =
-        if (userIds.isNotEmpty()){
-           database.collection(COLLECTION)
-                .whereIn("userId", userIds.toSet().toList())
-                .get().await().toObjects(DatabaseUser::class.java)
-        } else {
-            listOf()
-        }
+        if (userIds.isEmpty()) listOf()
+        else if (userIds.size > 10)
+            userIds.chunked(10).map { fetchByUserIds(it) }.join()
+        else database.collection(COLLECTION)
+            .whereIn("userId", userIds.toSet().toList())
+            .get().await().toObjects(DatabaseUser::class.java)
 
     /**
      * ユーザ情報を取得します
