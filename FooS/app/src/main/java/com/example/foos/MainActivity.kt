@@ -18,6 +18,10 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    companion object {
+        private const val TAG = "MainActivity"
+    }
+
     private lateinit var auth: FirebaseAuth
 
     private val signIn: ActivityResultLauncher<Intent> = registerForActivityResult(
@@ -34,9 +38,9 @@ class MainActivity : ComponentActivity() {
                 .show()
             val response = result.idpResponse
             if (response == null) {
-                Log.w("MainScreen", "Sign in canceled")
+                Log.w(TAG, "Sign in canceled")
             } else {
-                Log.w("MainScreen", "Sign in error", response.error)
+                Log.w(TAG, "Sign in error", response.error)
             }
         }
     }
