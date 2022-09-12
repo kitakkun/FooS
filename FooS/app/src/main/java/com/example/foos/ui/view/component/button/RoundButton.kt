@@ -1,4 +1,4 @@
-package com.example.foos.ui.view.component
+package com.example.foos.ui.view.component.button
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button

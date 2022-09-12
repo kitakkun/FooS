@@ -1,4 +1,4 @@
-package com.example.foos.ui.view.component
+package com.example.foos.ui.view.component.button
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
