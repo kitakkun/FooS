@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
-import com.example.foos.ui.view.component.OnAppearLastItem
+import com.example.foos.ui.view.component.extensions.OnAppearLastItem
 
 @Composable
 fun UserList(

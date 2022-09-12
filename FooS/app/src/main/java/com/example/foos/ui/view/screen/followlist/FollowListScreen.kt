@@ -2,9 +2,6 @@ package com.example.foos.ui.view.screen.followlist
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -12,14 +9,11 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
-import com.example.foos.ui.view.component.OnAppearLastItem
 import com.example.foos.ui.view.component.list.UserItem
 import com.example.foos.ui.view.component.list.UserList
 import com.google.accompanist.pager.*
