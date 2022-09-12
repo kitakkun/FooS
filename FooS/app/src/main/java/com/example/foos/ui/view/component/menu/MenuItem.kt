@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import com.example.foos.R
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.component.MenuItemUiState
+import com.example.foos.ui.theme.FooSTheme
 
 /**
  * メニューアイテム
@@ -54,5 +55,7 @@ private fun MenuItemPreview() {
         icon = R.drawable.ic_account_circle,
         text = R.string.account_settings
     )
-    MenuItem(uiState = uiState)
+    FooSTheme {
+        MenuItem(uiState = uiState)
+    }
 }

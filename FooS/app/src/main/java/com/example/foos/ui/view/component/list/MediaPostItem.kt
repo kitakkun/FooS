@@ -11,6 +11,7 @@ import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.foos.ui.state.component.PostItemUiState
+import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.component.MaxSizeLoadingIndicator
 
 @Composable
@@ -38,5 +39,7 @@ fun MediaPostItem(
 @Preview(showBackground = true)
 @Composable
 private fun MediaPostItemPreview() {
-    MediaPostItem(uiState = PostItemUiState.Default)
+    FooSTheme {
+        MediaPostItem(uiState = PostItemUiState.Default)
+    }
 }

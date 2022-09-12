@@ -24,6 +24,7 @@ import coil.request.ImageRequest
 import com.example.foos.R
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.component.PostItemUiState
+import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.component.HorizontalUserIdentityText
 import com.example.foos.ui.view.component.MaxSizeLoadingIndicator
 import com.example.foos.ui.view.component.UserIcon
@@ -84,7 +85,9 @@ private fun PostItemPreview() {
         postId = "",
         createdAt = Date()
     )
-    PostItem(uiState = uiState)
+    FooSTheme {
+        PostItem(uiState = uiState)
+    }
 }
 
 /**

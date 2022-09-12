@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.foos.R
+import com.example.foos.ui.theme.FooSTheme
 
 /**
  * フォローボタン
@@ -32,8 +33,10 @@ private fun FollowButtonPreview() {
     val followingFlag = remember {
         mutableStateOf(false)
     }
-    FollowButton(
-        following = followingFlag.value,
-        onClick = { followingFlag.value = !followingFlag.value }
-    )
+    FooSTheme {
+        FollowButton(
+            following = followingFlag.value,
+            onClick = { followingFlag.value = !followingFlag.value }
+        )
+    }
 }

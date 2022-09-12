@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.foos.ui.theme.FooSTheme
 
 /**
  * 親要素に対してフルサイズでストレッチするローディングインディケータ
@@ -30,5 +31,7 @@ fun MaxSizeLoadingIndicator(
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun MaxSizeLoadingIndicatorPreview() {
-    MaxSizeLoadingIndicator(isLoading = true)
+    FooSTheme {
+        MaxSizeLoadingIndicator(isLoading = true)
+    }
 }

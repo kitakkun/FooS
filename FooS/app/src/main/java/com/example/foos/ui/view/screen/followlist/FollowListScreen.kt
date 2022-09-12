@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
+import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.component.list.UserItem
 import com.example.foos.ui.view.component.list.UserList
 import com.google.accompanist.pager.*
@@ -140,5 +141,7 @@ fun FollowerList(
 @Composable
 fun UserItemPreview() {
     val uiState = UserItemUiState("userId", "username", "userId", "", "BIO", true, false)
-    UserItem(uiState = uiState, onItemClicked = {})
+    FooSTheme {
+        UserItem(uiState = uiState, onItemClicked = {})
+    }
 }
