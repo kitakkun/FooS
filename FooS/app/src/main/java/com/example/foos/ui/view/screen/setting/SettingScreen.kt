@@ -19,20 +19,20 @@ import androidx.compose.ui.unit.sp
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
-import com.example.foos.FirebaseAuthManager
 import com.example.foos.R
 import com.example.foos.ui.state.component.MenuItemUiState
 import com.example.foos.ui.theme.Yellow
 import com.example.foos.ui.view.component.ConfirmAlertDialog
 import com.example.foos.ui.view.component.MenuItemList
 import com.example.foos.ui.view.component.UserIcon
+import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
 @Composable
-fun SettingScreen(viewModel: SettingViewModel) {
+fun SettingScreen(viewModel: SettingViewModel, screenViewModel: ScreenViewModel) {
 
     val uiState = viewModel.uiState.value
     viewModel.fetchUserData()
@@ -85,8 +85,8 @@ fun SettingScreen(viewModel: SettingViewModel) {
                 title = stringResource(id = R.string.log_out_confirm_title),
                 message = stringResource(id = R.string.log_out_confirm_message),
                 onConfirmed = {
-                    FirebaseAuthManager.logOut()
-                    (context as? Activity)?.recreate()
+                    screenViewModel.logOut()
+                    screenViewModel.recreateActivity(context)
                 },
                 onDismissed = {
                     logOutRequest = false
