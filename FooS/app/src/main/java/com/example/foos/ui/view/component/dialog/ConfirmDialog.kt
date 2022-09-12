@@ -1,4 +1,4 @@
-package com.example.foos.ui.view.component
+package com.example.foos.ui.view.component.dialog
 
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
