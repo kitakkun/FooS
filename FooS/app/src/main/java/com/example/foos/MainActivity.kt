@@ -24,9 +24,14 @@ class MainActivity : ComponentActivity() {
         FirebaseAuthUIActivityResultContract()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            Toast.makeText(this, "Successfully signed in.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                getString(R.string.message_successfully_signed_in),
+                Toast.LENGTH_SHORT
+            ).show()
         } else {
-            Toast.makeText(this, "There was an error signing in", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.message_sign_in_error), Toast.LENGTH_LONG)
+                .show()
             val response = result.idpResponse
             if (response == null) {
                 Log.w("MainScreen", "Sign in canceled")
