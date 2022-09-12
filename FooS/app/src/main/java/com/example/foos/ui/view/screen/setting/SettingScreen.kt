@@ -24,7 +24,7 @@ import com.example.foos.R
 import com.example.foos.ui.state.component.MenuItemUiState
 import com.example.foos.ui.theme.Yellow
 import com.example.foos.ui.view.component.ConfirmAlertDialog
-import com.example.foos.ui.view.component.MenuItemList
+import com.example.foos.ui.view.component.menu.MenuItemList
 import com.example.foos.ui.view.component.UserIcon
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
