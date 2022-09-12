@@ -1,6 +1,8 @@
 package com.example.foos.ui.view.screen.home
 
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavController
@@ -71,5 +73,8 @@ fun HomeScreen(
             )
         }
     }
-    RoundIconActionButton(onClick = { navController.navigate(SubScreen.PostCreate.route) })
+    RoundIconActionButton(
+        icon = Icons.Filled.Add,
+        onClick = { navController.navigate(SubScreen.PostCreate.route) }
+    )
 }

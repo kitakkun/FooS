@@ -15,10 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.foos.ui.theme.FooSTheme
 
-@Preview
 @Composable
-fun RoundIconActionButton(icon: ImageVector = Icons.Filled.Add, onClick: () -> Unit = {}) {
+fun RoundIconActionButton(icon: ImageVector, onClick: () -> Unit = {}) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.End,
@@ -30,5 +30,16 @@ fun RoundIconActionButton(icon: ImageVector = Icons.Filled.Add, onClick: () -> U
         ) {
             Icon(icon, contentDescription = "", tint = MaterialTheme.colors.onSecondary)
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun RoundIconActionButtonPreview() {
+    FooSTheme {
+        RoundIconActionButton(
+            icon = Icons.Filled.Add,
+            onClick = {}
+        )
     }
 }
