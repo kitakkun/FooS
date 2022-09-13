@@ -1,6 +1,5 @@
 package com.example.foos.ui.view.screen.userprofile
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -11,20 +10,16 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.constants.paddingMedium
-import com.example.foos.ui.view.component.button.FollowButton
+import com.example.foos.ui.view.component.FollowInfo
 import com.example.foos.ui.view.component.MaxSizeLoadingIndicator
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.VerticalUserIdentityText
+import com.example.foos.ui.view.component.button.FollowButton
 import com.example.foos.ui.view.component.list.MediaPostGrid
 import com.example.foos.ui.view.component.list.PostItemList
 import com.google.accompanist.pager.*
@@ -36,9 +31,7 @@ import kotlinx.coroutines.launch
 import moe.tlaster.nestedscrollview.VerticalNestedScrollView
 import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
 
-@OptIn(
-    ExperimentalPagerApi::class,
-)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun UserProfileScreen(
     viewModel: UserProfileViewModel,
@@ -254,7 +247,7 @@ fun UserProfileView(
         Spacer(Modifier.height(paddingMedium))
         VerticalUserIdentityText(username = username, userId = userId)
         Spacer(Modifier.height(paddingMedium))
-        Biography(bio = bio)
+        Text(bio)
         FollowInfo(
             followerNum = followerNum,
             followeeNum = followeeNum,
@@ -263,55 +256,6 @@ fun UserProfileView(
         )
     }
 
-}
-
-@Composable
-fun Biography(
-    bio: String
-) {
-    Text(bio)
-}
-
-/**
- * フォロー情報
- * @param followerNum フォロワー数
- * @param followeeNum フォロー数
- */
-@Composable
-fun FollowInfo(
-    followerNum: Int,   // フォロワー数
-    followeeNum: Int,   // フォロー数
-    onFollowersTextClick: () -> Unit,
-    onFollowingTextClick: () -> Unit,
-) {
-    Row {
-        Text(
-            buildAnnotatedString {
-                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("$followeeNum ")
-                }
-                withStyle(SpanStyle(fontWeight = FontWeight.Light, fontSize = 12.sp)) {
-                    append(stringResource(id = R.string.following))
-                }
-            },
-            modifier = Modifier
-                .padding(paddingMedium)
-                .clickable { onFollowingTextClick() }
-        )
-        Text(
-            buildAnnotatedString {
-                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append("$followerNum ")
-                }
-                withStyle(SpanStyle(fontWeight = FontWeight.Light, fontSize = 12.sp)) {
-                    append(stringResource(id = R.string.followers))
-                }
-            },
-            modifier = Modifier
-                .padding(paddingMedium)
-                .clickable { onFollowersTextClick() }
-        )
-    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
