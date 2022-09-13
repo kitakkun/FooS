@@ -2,10 +2,6 @@ package com.example.foos.ui.view.screen.userprofile
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
@@ -26,20 +22,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.constants.paddingMedium
-import com.example.foos.ui.view.component.FollowButton
-import com.example.foos.ui.view.component.MaxSizeLoadingIndicator
-import com.example.foos.ui.view.component.UserIcon
-import com.example.foos.ui.view.component.VerticalUserIdentityText
+import com.example.foos.ui.view.component.*
 import com.example.foos.ui.view.component.list.MediaPostGrid
 import com.example.foos.ui.view.component.list.PostItemList
 import com.google.accompanist.pager.*
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.example.foos.ui.view.component.*
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.google.accompanist.pager.rememberPagerState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
@@ -100,6 +88,7 @@ fun UserProfileScreen(
                     onFollowingTextClick = { viewModel.navigateToFolloweeList(userId = uiState.userId) },
                     onFollowersTextClick = { viewModel.navigateToFollowerList(userId = uiState.userId) },
                     onFollowButtonClick = { viewModel.onFollowButtonClick() },
+                    onEditButtonClick = { viewModel.navigateToEditProfile() },
                     following = uiState.following,
                 )
             },
