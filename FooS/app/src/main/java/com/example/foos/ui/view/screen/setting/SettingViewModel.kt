@@ -18,8 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     private val usersRepository: UsersRepository
-) : ViewModel(
-) {
+) : ViewModel() {
+
     private var _uiState = mutableStateOf(SettingUiState("", ""))
     val uiState: State<SettingUiState> = _uiState
 
@@ -33,7 +33,7 @@ class SettingViewModel @Inject constructor(
         }
     }
 
-    fun onCropImageSuccessful(result: CropImageView.CropResult) {
+    fun onCropImageSucceeded(result: CropImageView.CropResult) {
         viewModelScope.launch(Dispatchers.IO) {
             result.uriContent?.let {
                 val ref =
@@ -51,5 +51,9 @@ class SettingViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun onCropImageFailed(result: CropImageView.CropResult) {
+        result.error?.printStackTrace()
     }
 }

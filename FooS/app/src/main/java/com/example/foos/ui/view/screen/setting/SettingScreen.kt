@@ -2,13 +2,9 @@ package com.example.foos.ui.view.screen.setting
 
 import android.app.Activity
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,14 +18,9 @@ import com.canhub.cropper.options
 import com.example.foos.FirebaseAuthManager
 import com.example.foos.R
 import com.example.foos.ui.state.component.MenuItemUiState
-import com.example.foos.ui.theme.Yellow
+import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.dialog.ConfirmAlertDialog
 import com.example.foos.ui.view.component.menu.MenuItemList
-import com.example.foos.ui.view.component.UserIcon
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 
 @Composable
 fun SettingScreen(viewModel: SettingViewModel) {
@@ -41,8 +32,8 @@ fun SettingScreen(viewModel: SettingViewModel) {
     val cropImage = rememberLauncherForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
             viewModel.fetchUserData()
-            viewModel.onCropImageSuccessful(result)
-        } else onCropImageFail(result)
+            viewModel.onCropImageSucceeded(result)
+        } else viewModel.onCropImageFailed(result)
     }
 
     Column(
@@ -50,8 +41,8 @@ fun SettingScreen(viewModel: SettingViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.height(80.dp))
-        ClickableUserIcon(
-            imageUri = uiState.profileImage,
+        UserIcon(
+            url = uiState.profileImage,
             onClick = {
                 cropImage.launch(
                     options {
@@ -64,7 +55,7 @@ fun SettingScreen(viewModel: SettingViewModel) {
                     }
                 )
             },
-            iconScale = 2f
+            modifier = Modifier.size(80.dp)
         )
         Spacer(Modifier.height(32.dp))
         Text(uiState.username, fontSize = 18.sp)
@@ -98,51 +89,4 @@ fun SettingScreen(viewModel: SettingViewModel) {
 
         MenuItemList(null, settingMenus)
     }
-}
-
-@Composable
-fun ClickableUserIcon(
-    imageUri: String,
-    onClick: () -> Unit = {},
-    iconScale: Float = 1f,
-    modifier: Modifier = Modifier
-) {
-    Box(modifier = modifier) {
-        UserIcon(
-            url = imageUri,
-            onClick = onClick,
-            modifier = Modifier
-                .width(70.dp)
-                .height(70.dp)
-        )
-        Icon(
-            Icons.Filled.Edit, null,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .offset(12.dp, (-12).dp),
-            tint = Yellow
-        )
-    }
-}
-
-fun onCropImageSuccessful(result: CropImageView.CropResult) {
-    val uriContent = result.uriContent
-    val ref = Firebase.storage.reference.child("images/profile/" + Firebase.auth.uid + ".png")
-    uriContent?.let {
-        val uploadTask = ref.putFile(uriContent)
-        uploadTask.addOnFailureListener {
-            Log.d("MAIN_ACTIVITY", "UPLOAD FAILED")
-        }.addOnSuccessListener {
-            ref.downloadUrl.addOnSuccessListener {
-                val map = mapOf("profileImagePath" to it.toString())
-                val refLink = Firebase.firestore.collection("userinfo")
-                    .document(Firebase.auth.uid.toString()).set(map)
-            }
-            Log.d("MAIN_ACTIVITY", "SUCCESS")
-        }
-    }
-}
-
-fun onCropImageFail(result: CropImageView.CropResult) {
-    val exception = result.error
 }
