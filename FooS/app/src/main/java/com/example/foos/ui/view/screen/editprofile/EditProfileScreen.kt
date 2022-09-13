@@ -20,10 +20,11 @@ import com.example.foos.ui.view.component.UserIcon
 @Composable
 fun EditProfileScreen(viewModel: EditProfileViewModel) {
 
-    val uiState = viewModel.uiState.collectAsState()
+    val uiState = viewModel.uiState.value
+
     val editItemHeaders = mapOf(
-        R.string.name to uiState.value.username,
-        R.string.bio to uiState.value.bio,
+        R.string.name to uiState.username,
+        R.string.bio to uiState.bio,
     )
 
     LazyColumn(
@@ -31,7 +32,7 @@ fun EditProfileScreen(viewModel: EditProfileViewModel) {
         modifier = Modifier.padding(16.dp)
     ) {
         item {
-            UserIcon(url = uiState.value.profileImage)
+            UserIcon(url = uiState.profileImage)
         }
         items(editItemHeaders.toList()) {
             EditItem(

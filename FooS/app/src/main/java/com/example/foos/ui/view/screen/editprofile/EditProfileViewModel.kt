@@ -1,32 +1,25 @@
 package com.example.foos.ui.view.screen.editprofile
 
 import androidx.annotation.StringRes
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.foos.R
 import com.example.foos.ui.state.editprofile.EditProfileScreenUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor() : ViewModel() {
 
-    private var _uiState = MutableStateFlow(EditProfileScreenUiState(
-        "", "", ""
-    ))
+    private val _uiState = mutableStateOf(EditProfileScreenUiState.Default)
 
-    val uiState = _uiState.asStateFlow()
+    val uiState: State<EditProfileScreenUiState> = _uiState
 
     fun update(@StringRes key: Int, value: String) {
-        when(key) {
-            R.string.name -> _uiState.update { it.copy(username = value) }
-            R.string.bio -> _uiState.update { it.copy(bio = value) }
+        when (key) {
+            R.string.name -> _uiState.value = uiState.value.copy(username = value)
+            R.string.bio -> _uiState.value = uiState.value.copy(bio = value)
         }
-    }
-
-    fun fetchUserData() {
-
     }
 }
