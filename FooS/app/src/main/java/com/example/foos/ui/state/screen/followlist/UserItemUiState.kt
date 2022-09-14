@@ -8,4 +8,16 @@ data class UserItemUiState(
     val bio: String,
     val following: Boolean,
     val followingYou: Boolean,
-)
+) {
+    companion object {
+        val Default = UserItemUiState(
+            clientUserId = "xxxxxx",
+            username = "username",
+            userId = "userId",
+            profileImage = "",
+            bio = "",
+            following = false,
+            followingYou = false,
+        )
+    }
+}

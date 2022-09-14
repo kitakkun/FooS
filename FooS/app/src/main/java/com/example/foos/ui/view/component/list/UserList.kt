@@ -15,6 +15,7 @@ fun UserList(
     uiStates: List<UserItemUiState>,
     onAppearLastItem: (Int) -> Unit,
     onItemClicked: (String) -> Unit,
+    onFollowButtonClicked: (String) -> Unit,
 ) {
     val state = rememberLazyListState()
     state.OnAppearLastItem(onAppearLastItem = onAppearLastItem)
@@ -22,7 +23,11 @@ fun UserList(
         state = state
     ) {
         items(uiStates) {
-            UserItem(uiState = it, onItemClicked = onItemClicked)
+            UserItem(
+                uiState = it,
+                onItemClicked = { onItemClicked(it.userId) },
+                onFollowButtonClicked = { onFollowButtonClicked(it.userId) },
+            )
             Divider(thickness = 1.dp, color = Color.LightGray)
         }
     }

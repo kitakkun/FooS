@@ -21,14 +21,14 @@ import com.example.foos.ui.view.component.VerticalUserIdentityText
 fun UserItem(
     uiState: UserItemUiState,
     modifier: Modifier = Modifier,
-    onItemClicked: (String) -> Unit = {},
-    onFollowButtonClicked: (String) -> Unit = {},
+    onItemClicked: () -> Unit,
+    onFollowButtonClicked: () -> Unit,
 ) {
     Column(
         modifier = modifier
             .padding(paddingMedium)
             .fillMaxWidth()
-            .clickable { onItemClicked(uiState.userId) },
+            .clickable { onItemClicked() },
     ) {
         if (uiState.followingYou) {
             Text(
@@ -59,7 +59,7 @@ fun UserItem(
             }
             if (uiState.userId != uiState.clientUserId) {
                 FollowButton(
-                    onClick = { onFollowButtonClicked(uiState.userId) },
+                    onClick = onFollowButtonClicked,
                     following = uiState.following
                 )
             }
@@ -71,7 +71,7 @@ fun UserItem(
 @Composable
 fun UserItemPreview() {
     val uiState = UserItemUiState(
-        clientUserId = "userId",
+        clientUserId = "clientUserId",
         username = "username",
         userId = "userId",
         profileImage = "",
@@ -80,6 +80,6 @@ fun UserItemPreview() {
         followingYou = true,
     )
     FooSTheme {
-        UserItem(uiState = uiState)
+        UserItem(uiState = uiState, onFollowButtonClicked = {}, onItemClicked = {})
     }
 }
