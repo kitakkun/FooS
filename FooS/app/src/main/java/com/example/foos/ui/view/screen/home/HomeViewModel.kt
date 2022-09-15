@@ -34,6 +34,15 @@ class HomeViewModel @Inject constructor(
     val navEvent: SharedFlow<String> get() = _navEvent
 
     /**
+     * 投稿作成画面へ遷移
+     */
+    fun onPostCreateButtonClick() {
+        viewModelScope.launch {
+            _navEvent.emit(SubScreen.PostCreate.route)
+        }
+    }
+
+    /**
      * ユーザアイコンのクリックイベント
      * @param userId クリックされたユーザのID
      */
@@ -87,7 +96,7 @@ class HomeViewModel @Inject constructor(
      */
     fun fetchNewerPosts() {
         viewModelScope.launch(Dispatchers.IO) {
-            val posts =  fetchPostsUseCase().map { post ->
+            val posts = fetchPostsUseCase().map { post ->
                 PostItemUiState.convert(post)
             }
             _uiState.value = uiState.value.copy(posts = (posts + uiState.value.posts).distinct())

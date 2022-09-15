@@ -10,4 +10,11 @@ import com.example.foos.ui.state.component.PostItemUiState
 data class HomeScreenUiState(
     val posts: List<PostItemUiState>,
     val isRefreshing: Boolean,
-)
+) {
+    companion object {
+        val Default = HomeScreenUiState(
+            posts = listOf(),
+            isRefreshing = false,
+        )
+    }
+}
