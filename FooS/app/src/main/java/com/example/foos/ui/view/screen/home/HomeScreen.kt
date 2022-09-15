@@ -58,6 +58,7 @@ fun HomeScreen(
     HomeUI(
         uiState = uiState, listState = listState,
         onPostCreateButtonClick = { viewModel.onPostCreateButtonClick() },
+        isLoadingPosts = false, /* TODO: ロードインディケータの適切な制御 */
         onAppearLastItem = { viewModel.fetchOlderPosts() },
         onImageClick = { imageUrls, clickedUrl -> viewModel.onImageClick(imageUrls, clickedUrl) },
         onUserIconClick = { viewModel.onUserIconClick(it) },
@@ -71,6 +72,7 @@ fun HomeScreen(
 private fun HomeUI(
     uiState: HomeScreenUiState,
     listState: LazyListState,
+    isLoadingPosts: Boolean,
     onRefresh: () -> Unit,
     onUserIconClick: (String) -> Unit,
     onContentClick: (String) -> Unit,
@@ -83,7 +85,7 @@ private fun HomeUI(
         state = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing),
         onRefresh = onRefresh
     ) {
-        if (uiState.posts.isEmpty()) {
+        if (isLoadingPosts) {
             MaxSizeLoadingIndicator()
         } else {
             PostItemList(
@@ -106,6 +108,7 @@ private fun HomeUIPreview() {
         HomeUI(
             uiState = HomeScreenUiState.Default,
             listState = rememberLazyListState(),
+            isLoadingPosts = false,
             onRefresh = {},
             onUserIconClick = {},
             onContentClick = {},

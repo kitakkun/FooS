@@ -27,7 +27,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     // HomeScreenのUI状態
-    private var _uiState = mutableStateOf(HomeScreenUiState(listOf(), false))
+    private var _uiState = mutableStateOf(HomeScreenUiState.Default)
     val uiState: State<HomeScreenUiState> = _uiState
 
     private val _navEvent = MutableSharedFlow<String>()
