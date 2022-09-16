@@ -12,8 +12,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.foos.R
+import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
@@ -22,6 +24,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
+import kotlinx.coroutines.launch
 
 @SuppressLint("MissingPermission")
 @OptIn(ExperimentalPermissionsApi::class)
@@ -35,19 +38,17 @@ fun LocationSelectScreen(
     val uiState = viewModel.uiState.value
 
     LaunchedEffect(Unit) {
-        viewModel.navToNextEvent.collect {
-            navController.navigate(it)
+        launch {
+            viewModel.navToNextEvent.collect {
+                navController.navigate(it)
+            }
+        }
+        launch {
+            viewModel.cancelNavEvent.collect {
+                navController.navigateUp()
+            }
         }
     }
-
-    LaunchedEffect(Unit) {
-        viewModel.cancelNavEvent.collect {
-            navController.navigateUp()
-        }
-    }
-
-    val properties by remember { mutableStateOf(MapProperties(isMyLocationEnabled = true)) }
-    val uiSettings by remember { mutableStateOf(MapUiSettings(myLocationButtonEnabled = true)) }
 
     val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
         LocalContext.current
@@ -68,20 +69,44 @@ fun LocationSelectScreen(
         }
     }
 
+    LocationSelectUI(
+        cameraPositionState = cameraPositionState,
+        pinLocation = uiState.pinPosition,
+        onCancel = { viewModel.cancel() },
+        onConfirm = { viewModel.navigateToConfirmScreen() },
+        onMapClick = {
+            sharedViewModel.updatePostCreateSharedData(
+                location = it,
+                locationName = null
+            )
+            viewModel.updatePinPosition(it)
+        }
+    )
+}
+
+@Composable
+private fun LocationSelectUI(
+    cameraPositionState: CameraPositionState,
+    pinLocation: LatLng?,
+    onCancel: () -> Unit,
+    onConfirm: () -> Unit,
+    onMapClick: (LatLng) -> Unit
+) {
+
+    val properties by remember { mutableStateOf(MapProperties(isMyLocationEnabled = true)) }
+    val uiSettings by remember { mutableStateOf(MapUiSettings(myLocationButtonEnabled = true)) }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.select_pin_message)) },
                 navigationIcon = {
-                    IconButton(onClick = { viewModel.cancel() }) {
+                    IconButton(onClick = onCancel) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
                     }
                 },
                 actions = {
-                    IconButton(onClick = {
-                        viewModel.navigateToConfirmScreen()
-                    }) {
+                    IconButton(onClick = onConfirm, enabled = pinLocation != null) {
                         Icon(imageVector = Icons.Filled.Check, contentDescription = null)
                     }
                 }
@@ -92,20 +117,29 @@ fun LocationSelectScreen(
             cameraPositionState = cameraPositionState,
             properties = properties,
             uiSettings = uiSettings,
-            onMapClick = {
-                sharedViewModel.updatePostCreateSharedData(
-                    location = it,
-                    locationName = null
-                )
-                viewModel.updatePinPosition(it)
-            },
+            onMapClick = onMapClick,
             modifier = Modifier.padding(paddingValues = innerPadding)
         ) {
-            uiState.pinPosition?.let {
+            pinLocation?.let {
                 Marker(
                     state = MarkerState(it)
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun LocationSelectUIPreview() {
+    FooSTheme {
+        val cameraPositionState = rememberCameraPositionState()
+        LocationSelectUI(
+            cameraPositionState = cameraPositionState,
+            pinLocation = null,
+            onCancel = { },
+            onConfirm = { },
+            onMapClick = { },
+        )
     }
 }

@@ -1,33 +1,32 @@
 package com.example.foos.ui.view.component
 
-import androidx.compose.animation.*
-import androidx.compose.foundation.*
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.example.foos.R
 import com.example.foos.ui.constants.paddingLarge
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.component.PostItemUiState
+import com.example.foos.ui.theme.FooSTheme
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.ktx.auth
@@ -39,11 +38,12 @@ import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 @Composable
 fun PostDetailView(
     uiState: PostItemUiState,
-    onUserInfoClicked: (String) -> Unit = {},
-    onReactionButtonClicked: (String) -> Unit = {},
-    onReactionRemoved: () -> Unit = {},
-    onGoogleMapsClicked: () -> Unit = {},
+    onUserInfoClicked: (String) -> Unit,
+    onReactionButtonClicked: (String) -> Unit,
+    onReactionRemoved: () -> Unit,
+    onGoogleMapsClicked: () -> Unit,
 ) {
+    /* TODO: このFirebaseのuidを用いたロジックはビューの外へ抽出したい */
     var myReaction = uiState.reactions.find { it.from == Firebase.auth.uid }?.reaction
     Column(
         modifier = Modifier
@@ -148,91 +148,21 @@ fun AttachedImagesDisplay(
     }
 }
 
-/**
- * リアクション追加用ボタン
- * @param onReactionClicked リアクション追加時の挙動
- */
+@Preview(showBackground = true)
 @Composable
-fun ReactionButton(
-    onReactionClicked: (String) -> Unit,
-    onReactionRemoved: () -> Unit,
-    myReaction: String?,
-) {
-    var expanded by remember { mutableStateOf(false) }
-    if (myReaction == null) {
-        IconButton(onClick = { expanded = !expanded }) {
-            Icon(painterResource(R.drawable.ic_add_reaction), null)
-            ReactionDropdown(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                onReactionClicked = { onReactionClicked(it) }
-            )
-        }
-    } else {
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .border(1.dp, MaterialTheme.colors.surface, shape = CircleShape)
-                .background(MaterialTheme.colors.surface)
-                .clickable { onReactionRemoved() },
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = myReaction,
-                fontSize = 25.sp,
-            )
-        }
+private fun PostDetailPreview() {
+    FooSTheme {
+        val uiState = PostItemUiState.Default.copy(
+            username = "username",
+            userId = "userId",
+            content = "content..."
+        )
+        PostDetailView(
+            uiState = uiState,
+            onReactionRemoved = {},
+            onGoogleMapsClicked = {},
+            onReactionButtonClicked = {},
+            onUserInfoClicked = {}
+        )
     }
-}
-
-/**
- * Reactionを行うためのドロップダウン
- * @param expanded ドロップダウンを開くかどうか
- * @param onDismissRequest ドロップダウンメニューの範囲外をタップしたときの挙動
- * @param onReactionClicked リアクションが行われた際の挙動
- */
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-fun ReactionDropdown(
-    expanded: Boolean,
-    onDismissRequest: () -> Unit,
-    onReactionClicked: (String) -> Unit,
-) {
-    val reactions = listOf(
-        stringResource(id = R.string.emoji_like),
-        stringResource(id = R.string.emoji_yummy),
-        stringResource(id = R.string.emoji_fire),
-    )
-
-    val density = LocalDensity.current
-
-    val dropdownWidth = with(LocalDensity.current) {
-        60.sp.toDp()
-    }
-
-    AnimatedVisibility(
-        visible = expanded,
-        enter = fadeIn() + expandVertically(expandFrom = Alignment.CenterVertically),
-        exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)
-    ) {
-        MaterialTheme(shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(45))) {
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = onDismissRequest,
-                modifier = Modifier.width(dropdownWidth)
-            ) {
-                reactions.forEach {
-                    DropdownMenuItem(onClick = { onReactionClicked.invoke(it) }) {
-                        Text(
-                            text = it,
-                            fontSize = 30.sp,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-            }
-        }
-    }
-
 }

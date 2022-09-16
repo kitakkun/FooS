@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.foos.ui.constants.paddingSmall
+import com.example.foos.ui.theme.FooSTheme
 
 @Composable
 private fun UsernameText(
@@ -84,11 +85,15 @@ fun HorizontalUserIdentityText(
 @Preview(showBackground = true)
 @Composable
 private fun VerticalUserIdentityTextPreview() {
-    VerticalUserIdentityText(username = "username", userId = "userId")
+    FooSTheme {
+        VerticalUserIdentityText(username = "username", userId = "userId")
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun HorizontalUserIdentityTextPreview() {
-    HorizontalUserIdentityText(username = "username", userId = "userId")
+    FooSTheme {
+        HorizontalUserIdentityText(username = "username", userId = "userId")
+    }
 }

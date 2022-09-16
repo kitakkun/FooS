@@ -23,4 +23,3 @@ fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavControlle
         onGoogleMapsClicked = { viewModel.onGoogleMapsClicked() }
     )
 }
-

@@ -12,7 +12,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.foos.R
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
-import com.example.foos.ui.view.component.FollowButton
+import com.example.foos.ui.theme.FooSTheme
+import com.example.foos.ui.view.component.button.FollowButton
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.VerticalUserIdentityText
 
@@ -20,14 +21,14 @@ import com.example.foos.ui.view.component.VerticalUserIdentityText
 fun UserItem(
     uiState: UserItemUiState,
     modifier: Modifier = Modifier,
-    onItemClicked: (String) -> Unit = {},
-    onFollowButtonClicked: (String) -> Unit = {},
+    onItemClicked: () -> Unit,
+    onFollowButtonClicked: () -> Unit,
 ) {
     Column(
         modifier = modifier
             .padding(paddingMedium)
             .fillMaxWidth()
-            .clickable { onItemClicked(uiState.userId) },
+            .clickable { onItemClicked() },
     ) {
         if (uiState.followingYou) {
             Text(
@@ -58,7 +59,7 @@ fun UserItem(
             }
             if (uiState.userId != uiState.clientUserId) {
                 FollowButton(
-                    onClick = { onFollowButtonClicked(uiState.userId) },
+                    onClick = onFollowButtonClicked,
                     following = uiState.following
                 )
             }
@@ -70,7 +71,7 @@ fun UserItem(
 @Composable
 fun UserItemPreview() {
     val uiState = UserItemUiState(
-        clientUserId = "userId",
+        clientUserId = "clientUserId",
         username = "username",
         userId = "userId",
         profileImage = "",
@@ -78,5 +79,7 @@ fun UserItemPreview() {
         following = true,
         followingYou = true,
     )
-    UserItem(uiState = uiState)
+    FooSTheme {
+        UserItem(uiState = uiState, onFollowButtonClicked = {}, onItemClicked = {})
+    }
 }

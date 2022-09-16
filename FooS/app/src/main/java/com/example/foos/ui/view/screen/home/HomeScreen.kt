@@ -1,13 +1,23 @@
 package com.example.foos.ui.view.screen.home
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import com.example.foos.ui.constants.paddingLarge
 import com.example.foos.ui.navigation.Screen
-import com.example.foos.ui.navigation.SubScreen
+import com.example.foos.ui.state.screen.home.HomeScreenUiState
+import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.component.MaxSizeLoadingIndicator
-import com.example.foos.ui.view.component.RoundIconActionButton
+import com.example.foos.ui.view.component.button.RoundIconActionButton
 import com.example.foos.ui.view.component.list.PostItemList
 import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -49,24 +59,72 @@ fun HomeScreen(
         }
     }
 
+    HomeUI(
+        uiState = uiState, listState = listState,
+        onPostCreateButtonClick = { viewModel.onPostCreateButtonClick() },
+        isLoadingPosts = false, /* TODO: ロードインディケータの適切な制御 */
+        onAppearLastItem = { viewModel.fetchOlderPosts() },
+        onImageClick = { imageUrls, clickedUrl -> viewModel.onImageClick(imageUrls, clickedUrl) },
+        onUserIconClick = { viewModel.onUserIconClick(it) },
+        onRefresh = { viewModel.onRefresh() },
+        onContentClick = { viewModel.onContentClick(it) }
+    )
+
+}
+
+@Composable
+private fun HomeUI(
+    uiState: HomeScreenUiState,
+    listState: LazyListState,
+    isLoadingPosts: Boolean,
+    onRefresh: () -> Unit,
+    onUserIconClick: (String) -> Unit,
+    onContentClick: (String) -> Unit,
+    onImageClick: (List<String>, String) -> Unit,
+    onAppearLastItem: () -> Unit,
+    onPostCreateButtonClick: () -> Unit
+) {
+
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing),
-        onRefresh = { viewModel.onRefresh() }
+        onRefresh = onRefresh
     ) {
-        if (uiState.isLoading) {
-            MaxSizeLoadingIndicator()
-        } else {
-            PostItemList(
-                listState = listState,
-                uiStates = uiState.posts,
-                onUserIconClick = { viewModel.onUserIconClick(it) },
-                onContentClick = { viewModel.onContentClick(it) },
-                onImageClick = { imageUrls, clickedImageUrl ->
-                    viewModel.onImageClick(imageUrls, clickedImageUrl)
-                },
-                onAppearLastItem = { viewModel.fetchOlderPosts() }
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (isLoadingPosts) {
+                MaxSizeLoadingIndicator()
+            } else {
+                PostItemList(
+                    listState = listState,
+                    uiStates = uiState.posts,
+                    onUserIconClick = { onUserIconClick(it) },
+                    onContentClick = { onContentClick(it) },
+                    onImageClick = { imageUrls, clickedUrl -> onImageClick(imageUrls, clickedUrl) },
+                    onAppearLastItem = { onAppearLastItem() }
+                )
+            }
+            RoundIconActionButton(
+                icon = Icons.Filled.Add,
+                onClick = onPostCreateButtonClick,
+                modifier = Modifier.padding(paddingLarge)
             )
         }
     }
-    RoundIconActionButton(onClick = { navController.navigate(SubScreen.PostCreate.route) })
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun HomeUIPreview() {
+    FooSTheme {
+        HomeUI(
+            uiState = HomeScreenUiState.Default,
+            listState = rememberLazyListState(),
+            isLoadingPosts = false,
+            onRefresh = {},
+            onUserIconClick = {},
+            onContentClick = {},
+            onImageClick = { _, _ -> },
+            onAppearLastItem = {},
+            onPostCreateButtonClick = {}
+        )
+    }
 }

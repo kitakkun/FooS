@@ -9,9 +9,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.model.database.DatabasePost
 import com.example.foos.data.repository.PostsRepository
-import com.example.foos.data.repository.PostsRepositoryImpl
 import com.example.foos.ui.navigation.SubScreen
-import com.example.foos.ui.state.screen.post.PostScreenUiState
+import com.example.foos.ui.state.component.PostItemUiState
 import com.example.foos.util.FileUtils.getRealPath
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.ktx.auth
@@ -30,18 +29,28 @@ class PostViewModel @Inject constructor(
     application: Application
 ) : AndroidViewModel(application) {
 
-    private var _uiState = mutableStateOf(PostScreenUiState("", listOf(), null, null))
-    val uiState: State<PostScreenUiState> = _uiState
+    private var _uiState = mutableStateOf(PostItemUiState.Default)
+    val uiState: State<PostItemUiState> = _uiState
 
-    private var _navUpEvent = MutableSharedFlow<Boolean>()
+    private var _navUpEvent = MutableSharedFlow<Unit>()
     val navUpEvent = _navUpEvent.asSharedFlow()
 
     private var _navEvent = MutableSharedFlow<String>()
     val navEvent = _navEvent.asSharedFlow()
 
+    /**
+     * 投稿の作成がキャンセルされたとき
+     */
+    fun onCancel() {
+        viewModelScope.launch {
+            _navUpEvent.emit(Unit)
+        }
+    }
+
     fun applyLocationData(location: LatLng, locationName: String) {
         _uiState.value = uiState.value.copy(
-            location = location,
+            latitude = location.latitude,
+            longitude = location.longitude,
             locationName = locationName
         )
     }
@@ -70,7 +79,7 @@ class PostViewModel @Inject constructor(
      * 位置情報アタッチメントの削除
      */
     fun onLocationRemove() {
-        _uiState.value = uiState.value.copy(locationName = null, location = null)
+        _uiState.value = uiState.value.copy(locationName = null, latitude = null, longitude = null)
     }
 
     /**
@@ -92,14 +101,14 @@ class PostViewModel @Inject constructor(
                 userId = Firebase.auth.uid.toString(),
                 content = uiState.value.content,
                 attachedImages = uiState.value.attachedImages,
-                longitude = uiState.value.location?.longitude,
-                latitude = uiState.value.location?.latitude,
+                longitude = uiState.value.longitude,
+                latitude = uiState.value.latitude,
                 locationName = uiState.value.locationName,
             )
             postsRepository.create(databasePost, getApplication())
         }
         viewModelScope.launch {
-            _navUpEvent.emit(true)
+            _navUpEvent.emit(Unit)
         }
     }
 }

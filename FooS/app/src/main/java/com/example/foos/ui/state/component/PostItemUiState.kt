@@ -30,6 +30,7 @@ data class PostItemUiState(
     val reactions: List<DatabaseReaction> = listOf(),
     val latitude: Double? = null,
     val longitude: Double? = null,
+    val locationName: String? = null,
     val createdAt: Date? = null,
 ) {
 
@@ -65,12 +66,12 @@ data class PostItemUiState(
 
     companion object {
         val Default = PostItemUiState(
-            "postId",
-            "userId",
-            "username",
-            "",
-            "content",
-            listOf("test"),
+            postId = "",
+            userId = "",
+            username = "",
+            userIcon = "",
+            content = "",
+            attachedImages = listOf(),
         )
 
         fun convert(post: Post): PostItemUiState {

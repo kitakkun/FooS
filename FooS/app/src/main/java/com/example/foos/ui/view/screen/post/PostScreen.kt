@@ -18,17 +18,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.constants.paddingMedium
-import com.example.foos.ui.state.screen.post.PostScreenUiState
+import com.example.foos.ui.state.component.PostItemUiState
+import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.component.ImageAttachment
 import com.example.foos.ui.view.component.LocationAttachment
 import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
+import kotlinx.coroutines.launch
 
 /**
  * 投稿画面のコンポーザブル
@@ -53,14 +56,15 @@ fun PostScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.navEvent.collect {
-            navController.navigate(it)
+        launch {
+            viewModel.navEvent.collect {
+                navController.navigate(it)
+            }
         }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.navUpEvent.collect {
-            navController.navigateUp()
+        launch {
+            viewModel.navUpEvent.collect {
+                navController.navigateUp()
+            }
         }
     }
 
@@ -82,34 +86,63 @@ fun PostScreen(
         permission = Manifest.permission.ACCESS_FINE_LOCATION
     )
 
+    PostUI(
+        uiState = uiState,
+        onImageAttachmentRemove = { viewModel.onImageAttachmentRemove(it) },
+        onAddImage = {
+            if (filePermissionState.status == PermissionStatus.Granted) {
+                launcher.launch("image/*")
+            } else {
+                filePermissionState.launchPermissionRequest()
+            }
+        },
+        onAddLocation = {
+            if (locationPermissionState.status == PermissionStatus.Granted) {
+                viewModel.navigateToLocationSelect()
+            } else {
+                locationPermissionState.launchPermissionRequest()
+            }
+        },
+        onLocationAttachmentRemove = {
+            viewModel.onLocationRemove()
+            sharedViewModel.updatePostCreateSharedData(null, null)
+        },
+        haveAccessToFile = filePermissionState.status == PermissionStatus.Granted,
+        haveAccessToLocation = locationPermissionState.status == PermissionStatus.Granted,
+        onCancel = { viewModel.onCancel() },
+        onConfirm = { viewModel.post() },
+        onPostTextUpdate = { viewModel.onTextFieldUpdated(it) }
+    )
+
+}
+
+@Composable
+private fun PostUI(
+    uiState: PostItemUiState,
+    onCancel: () -> Unit,
+    onConfirm: () -> Unit,
+    onAddImage: () -> Unit,
+    onAddLocation: () -> Unit,
+    haveAccessToFile: Boolean,
+    haveAccessToLocation: Boolean,
+    onPostTextUpdate: (String) -> Unit,
+    onImageAttachmentRemove: (String) -> Unit,
+    onLocationAttachmentRemove: () -> Unit,
+) {
     Scaffold(
         topBar = {
             TopRow(
-                onCanceled = { navController.navigateUp() },
-                onConfirmed = {
-                    viewModel.post()
-                },
-                confirmText = "Send",
+                onCancel = onCancel,
+                onConfirm = onConfirm,
+                confirmText = stringResource(R.string.send)
             )
         },
         bottomBar = {
             ToolBar(
-                onAddImagesBtnClicked = {
-                    if (filePermissionState.status == PermissionStatus.Granted) {
-                        launcher.launch("image/*")
-                    } else {
-                        filePermissionState.launchPermissionRequest()
-                    }
-                },
-                onLocationAddButtonClicked = {
-                    if (locationPermissionState.status == PermissionStatus.Granted) {
-                        viewModel.navigateToLocationSelect()
-                    } else {
-                        locationPermissionState.launchPermissionRequest()
-                    }
-                },
-                haveAccessToFile = filePermissionState.status == PermissionStatus.Granted,
-                haveAccessToLocation = locationPermissionState.status == PermissionStatus.Granted,
+                onAddImage = onAddImage,
+                onAddLocation = onAddLocation,
+                haveAccessToFile = haveAccessToFile,
+                haveAccessToLocation = haveAccessToLocation
             )
         }
     ) { innerPadding ->
@@ -118,25 +151,24 @@ fun PostScreen(
         ) {
             ContentEditor(
                 uiState = uiState,
-                onTextUpdate = { viewModel.onTextFieldUpdated(it) },
+                onTextUpdate = onPostTextUpdate,
+                modifier = Modifier.weight(1f)
             )
             Attachments(
                 attachedImages = uiState.attachedImages,
-                locationAttached = locationAttached,
-                onImageAttachmentRemove = { viewModel.onImageAttachmentRemove(it) },
-                onLocationRemove = {
-                    viewModel.onLocationRemove()
-                    sharedViewModel.updatePostCreateSharedData(null, null)
-                }
+                locationAttached = uiState.latitude != null,
+                onImageAttachmentRemove = onImageAttachmentRemove,
+                onLocationRemove = onLocationAttachmentRemove,
             )
         }
     }
 }
 
 @Composable
-private fun ColumnScope.ContentEditor(
-    uiState: PostScreenUiState,
-    onTextUpdate: (String) -> Unit = {},
+private fun ContentEditor(
+    uiState: PostItemUiState,
+    onTextUpdate: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
         colors = TextFieldDefaults.textFieldColors(
@@ -147,9 +179,7 @@ private fun ColumnScope.ContentEditor(
         ),
         value = uiState.content,
         onValueChange = onTextUpdate,
-        modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f),
+        modifier = modifier.fillMaxWidth(),
         singleLine = false,
     )
 }
@@ -176,12 +206,11 @@ fun Attachments(
     }
 }
 
-@Preview
 @Composable
 private fun TopRow(
-    confirmText: String = "Confirm",
-    onCanceled: () -> Unit = {},
-    onConfirmed: () -> Unit = {}
+    confirmText: String,
+    onCancel: () -> Unit,
+    onConfirm: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -189,11 +218,11 @@ private fun TopRow(
             .padding(paddingMedium),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        IconButton(onClick = onCanceled) {
+        IconButton(onClick = onCancel) {
             Icon(Icons.Default.Close, contentDescription = "cancel")
         }
         Button(
-            onClick = onConfirmed,
+            onClick = onConfirm,
             shape = RoundedCornerShape(50)
         ) {
             Text(confirmText)
@@ -205,14 +234,14 @@ private fun TopRow(
 private fun ToolBar(
     haveAccessToFile: Boolean,
     haveAccessToLocation: Boolean,
-    onAddImagesBtnClicked: () -> Unit = {},
-    onLocationAddButtonClicked: () -> Unit = {},
+    onAddImage: () -> Unit,
+    onAddLocation: () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
         IconButton(
-            onClick = onAddImagesBtnClicked
+            onClick = onAddImage
         ) {
             Icon(
                 Icons.Default.Add,
@@ -221,7 +250,7 @@ private fun ToolBar(
             )
         }
         IconButton(
-            onClick = onLocationAddButtonClicked
+            onClick = onAddLocation
         ) {
             Icon(
                 painterResource(R.drawable.ic_pin_drop),
@@ -231,3 +260,44 @@ private fun ToolBar(
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun TopRowPreview() {
+    FooSTheme {
+        TopRow(confirmText = "Confirm", onCancel = { }, onConfirm = { })
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ToolBarPreview() {
+    FooSTheme {
+        ToolBar(
+            haveAccessToFile = true,
+            haveAccessToLocation = true,
+            onAddImage = { },
+            onAddLocation = { }
+        )
+    }
+}
+
+@Preview(showSystemUi = true, showBackground = true)
+@Composable
+private fun PostUIPreview() {
+    FooSTheme {
+        PostUI(
+            uiState = PostItemUiState.Default,
+            onCancel = { },
+            onConfirm = { },
+            onAddImage = { },
+            onAddLocation = { },
+            haveAccessToFile = true,
+            haveAccessToLocation = false,
+            onPostTextUpdate = { },
+            onImageAttachmentRemove = { },
+            onLocationAttachmentRemove = { }
+        )
+    }
+}
+

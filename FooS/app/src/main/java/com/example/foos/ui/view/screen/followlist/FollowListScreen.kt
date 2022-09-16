@@ -2,25 +2,20 @@ package com.example.foos.ui.view.screen.followlist
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
+import androidx.compose.material.TabRowDefaults
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foos.R
+import com.example.foos.ui.state.screen.followlist.FollowListScreenUiState
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
-import com.example.foos.ui.view.component.OnAppearLastItem
-import com.example.foos.ui.view.component.list.UserItem
+import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.component.list.UserList
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
@@ -28,7 +23,6 @@ import kotlinx.coroutines.launch
 /**
  * フォロワーとフォロー中のユーザリストを表示するスクリーン
  */
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun FollowListScreen(
     viewModel: FollowListViewModel,
@@ -46,13 +40,33 @@ fun FollowListScreen(
 
     val uiState = viewModel.uiState.value
 
+    FollowListUI(
+        uiState = uiState,
+        initialPage = initialPage,
+        fetchFollowee = { viewModel.fetchFollowees(userId) },
+        fetchFollower = { viewModel.fetchFollowers(userId) },
+        onItemClicked = { viewModel.navigateToUserProfile(it) },
+        onFollowButtonClicked = { /* TODO: フォロー状態の更新 */ }
+    )
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+private fun FollowListUI(
+    uiState: FollowListScreenUiState,
+    initialPage: Int,
+    fetchFollowee: () -> Unit,
+    fetchFollower: () -> Unit,
+    onItemClicked: (String) -> Unit,
+    onFollowButtonClicked: (String) -> Unit,
+) {
+
     val tabTitles = listOf(
         stringResource(id = R.string.following),
         stringResource(id = R.string.followers)
     )
 
     val pagerState = rememberPagerState(initialPage)
-    val coroutineScope = rememberCoroutineScope()
 
     Column {
 
@@ -65,20 +79,31 @@ fun FollowListScreen(
             verticalAlignment = Alignment.Top
         ) { page: Int ->
             when (page) {
-                0 -> FolloweeList(
-                    followees = uiState.followees,
-                    fetchEvent = { viewModel.fetchFollowees(userId) },
-                    onItemClicked = { id -> viewModel.navigateToUserProfile(id) }
-                )
-                1 -> FollowerList(
-                    followers = uiState.followers,
-                    fetchEvent = { viewModel.fetchFollowers(userId) },
-                    onItemClicked = { id -> viewModel.navigateToUserProfile(id) },
-                )
+                0 -> {
+                    LaunchedEffect(Unit) {
+                        fetchFollowee()
+                    }
+                    UserList(
+                        uiStates = uiState.followees,
+                        onAppearLastItem = { fetchFollowee() },
+                        onItemClicked = onItemClicked,
+                        onFollowButtonClicked = onFollowButtonClicked
+                    )
+                }
+                1 -> {
+                    LaunchedEffect(Unit) {
+                        fetchFollower()
+                    }
+                    UserList(
+                        uiStates = uiState.followers,
+                        onAppearLastItem = { fetchFollower() },
+                        onItemClicked = onItemClicked,
+                        onFollowButtonClicked = onFollowButtonClicked
+                    )
+                }
             }
         }
     }
-
 }
 
 @OptIn(ExperimentalPagerApi::class)
@@ -109,42 +134,50 @@ private fun MyTabRow(
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-fun FolloweeList(
-    followees: List<UserItemUiState>,
-    fetchEvent: () -> Unit,
-    onItemClicked: (String) -> Unit,
-) {
-    SideEffect {
-        fetchEvent()
+private fun FollowListUIPreview() {
+    FooSTheme {
+        val dummyUserList = mutableListOf<UserItemUiState>()
+        repeat(10) { i ->
+            dummyUserList.add(
+                UserItemUiState.Default.copy(
+                    username = "username$i",
+                    userId = "userid$i"
+                )
+            )
+        }
+        var uiState by remember {
+            mutableStateOf(
+                FollowListScreenUiState(
+                    followees = dummyUserList, followers = dummyUserList,
+                )
+            )
+        }
+        FollowListUI(
+            uiState = uiState,
+            initialPage = 0,
+            fetchFollowee = { },
+            fetchFollower = { },
+            onItemClicked = { },
+            onFollowButtonClicked = { userId ->
+                uiState = uiState.copy(
+                    followers = uiState.followers.map {
+                        if (it.userId == userId) {
+                            it.copy(following = !it.following)
+                        } else {
+                            it
+                        }
+                    },
+                    followees = uiState.followers.map {
+                        if (it.userId == userId) {
+                            it.copy(following = !it.following)
+                        } else {
+                            it
+                        }
+                    }
+                )
+            }
+        )
     }
-    UserList(
-        uiStates = followees,
-        onAppearLastItem = { fetchEvent() },
-        onItemClicked = onItemClicked,
-    )
-}
-
-@Composable
-fun FollowerList(
-    followers: List<UserItemUiState>,
-    fetchEvent: () -> Unit,
-    onItemClicked: (String) -> Unit,
-) {
-    SideEffect {
-        fetchEvent()
-    }
-    UserList(
-        uiStates = followers,
-        onAppearLastItem = { fetchEvent() },
-        onItemClicked = onItemClicked,
-    )
-}
-
-
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun UserItemPreview() {
-    val uiState = UserItemUiState("userId", "username", "userId", "", "BIO", true, false)
-    UserItem(uiState = uiState, onItemClicked = {})
 }

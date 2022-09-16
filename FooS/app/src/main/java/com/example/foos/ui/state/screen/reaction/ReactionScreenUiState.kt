@@ -15,10 +15,10 @@ data class ReactionItemUiState(
 ) {
     companion object {
         val Default = ReactionItemUiState(
-            username = "username",
+            username = "",
             userIcon = "",
-            reaction = "😭",
-            postContent = "post content..."
+            reaction = "",
+            postContent = ""
         )
 
         fun convert(reaction: Reaction): ReactionItemUiState =

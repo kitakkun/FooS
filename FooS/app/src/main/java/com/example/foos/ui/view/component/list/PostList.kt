@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.foos.ui.state.component.PostItemUiState
-import com.example.foos.ui.view.component.OnAppearLastItem
+import com.example.foos.ui.view.component.extensions.OnAppearLastItem
 
 /**
  * 投稿のリスト

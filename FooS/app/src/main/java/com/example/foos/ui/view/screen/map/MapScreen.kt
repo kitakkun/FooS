@@ -14,15 +14,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.constants.paddingSmall
 import com.example.foos.ui.state.component.PostItemUiState
+import com.example.foos.ui.state.screen.map.MapScreenUiState
+import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.component.PostDetailView
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.LocationServices
@@ -63,6 +66,7 @@ fun MapScreen(viewModel: MapViewModel, navController: NavController) {
     }
 
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         if (locationPermissionState.status == PermissionStatus.Granted) {
@@ -77,11 +81,43 @@ fun MapScreen(viewModel: MapViewModel, navController: NavController) {
             }
         }
     }
+
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState((BottomSheetValue.Collapsed))
     )
-    val coroutineScope = rememberCoroutineScope()
 
+    MapUI(
+        uiState = uiState,
+        bottomSheetScaffoldState = bottomSheetScaffoldState,
+        hasLocationPermission = locationPermissionState.status == PermissionStatus.Granted,
+        cameraPositionState = cameraPositionState,
+        onLoad = { viewModel.fetchNearbyPosts(it) },
+        onBubbleClick = {
+            coroutineScope.launch {
+                viewModel.showPostDetail(it)
+                if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                    bottomSheetScaffoldState.bottomSheetState.expand()
+                } else {
+                    bottomSheetScaffoldState.bottomSheetState.collapse()
+                }
+            }
+        },
+        onLocationRequestButtonClick = { locationPermissionState.launchPermissionRequest() }
+    )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun MapUI(
+    uiState: MapScreenUiState,
+    bottomSheetScaffoldState: BottomSheetScaffoldState,
+    hasLocationPermission: Boolean,
+    cameraPositionState: CameraPositionState,
+    onLoad: (LatLngBounds) -> Unit,
+    onBubbleClick: (PostItemUiState) -> Unit,
+    onLocationRequestButtonClick: () -> Unit,
+) {
+    val coroutineScope = rememberCoroutineScope()
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
@@ -94,26 +130,23 @@ fun MapScreen(viewModel: MapViewModel, navController: NavController) {
                         .clip(RoundedCornerShape(50))
                         .background(MaterialTheme.colors.onSurface)
                 )
-                PostDetailView(uiState = uiState.focusingPost)
+                PostDetailView(
+                    uiState = uiState.focusingPost,
+                    onReactionRemoved = { /* TODO */ },
+                    onGoogleMapsClicked = { /* TODO */ },
+                    onReactionButtonClicked = { /* TODO */ },
+                    onUserInfoClicked = { /* TODO */ }
+                )
             }
         },
         sheetPeekHeight = 0.dp
     ) {
-        when (locationPermissionState.status) {
-            PermissionStatus.Granted -> Map(
+        if (hasLocationPermission) {
+            Map(
                 cameraPositionState = cameraPositionState,
                 posts = uiState.posts,
-                onLoad = { viewModel.fetchNearbyPosts(it) },
-                onBubbleClick = {
-                    coroutineScope.launch {
-                        viewModel.showPostDetail(it)
-                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                            bottomSheetScaffoldState.bottomSheetState.expand()
-                        } else {
-                            bottomSheetScaffoldState.bottomSheetState.collapse()
-                        }
-                    }
-                },
+                onLoad = onLoad,
+                onBubbleClick = onBubbleClick,
                 onMapClick = {
                     coroutineScope.launch {
                         if (bottomSheetScaffoldState.bottomSheetState.isExpanded) {
@@ -122,7 +155,8 @@ fun MapScreen(viewModel: MapViewModel, navController: NavController) {
                     }
                 }
             )
-            else -> MapDeniedView(locationPermissionState)
+        } else {
+            MapDeniedView(onLocationRequestButtonClick = onLocationRequestButtonClick)
         }
     }
 }
@@ -173,22 +207,36 @@ fun Map(
     }
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun MapDeniedView(
-    locationPermissionState: PermissionState
+private fun MapDeniedView(
+    onLocationRequestButtonClick: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Please give the permission."
-        )
+        Text(text = stringResource(id = R.string.permission_request_message))
         Spacer(Modifier.height(paddingMedium))
-        Button(onClick = { locationPermissionState.launchPermissionRequest() }) {
-            Text("Request permission")
+        Button(onClick = onLocationRequestButtonClick) {
+            Text(text = stringResource(id = R.string.request_permission))
         }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun MapUIPreview() {
+    FooSTheme {
+        MapUI(
+            uiState = MapScreenUiState.Default,
+            bottomSheetScaffoldState = rememberBottomSheetScaffoldState(),
+            hasLocationPermission = false,
+            cameraPositionState = rememberCameraPositionState(),
+            onLoad = {},
+            onBubbleClick = {},
+            onLocationRequestButtonClick = {}
+        )
     }
 }

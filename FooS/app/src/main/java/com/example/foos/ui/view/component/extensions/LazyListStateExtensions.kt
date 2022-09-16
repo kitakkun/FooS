@@ -1,4 +1,4 @@
-package com.example.foos.ui.view.component
+package com.example.foos.ui.view.component.extensions
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.*

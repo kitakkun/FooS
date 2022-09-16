@@ -14,6 +14,7 @@ import com.example.foos.R
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.constants.paddingSmall
 import com.example.foos.ui.state.screen.reaction.ReactionItemUiState
+import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.component.UserIcon
 
 /**
@@ -55,7 +56,9 @@ private fun ReactionItemPreview() {
         reaction = "'emoji'",
         postContent = "some interesting post content..."
     )
-    ReactionItem(uiState = uiState)
+    FooSTheme {
+        ReactionItem(uiState = uiState)
+    }
 }
 
 @Composable

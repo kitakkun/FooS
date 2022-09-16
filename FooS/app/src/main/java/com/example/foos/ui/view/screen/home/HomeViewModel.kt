@@ -34,6 +34,15 @@ class HomeViewModel @Inject constructor(
     val navEvent: SharedFlow<String> get() = _navEvent
 
     /**
+     * 投稿作成画面へ遷移
+     */
+    fun onPostCreateButtonClick() {
+        viewModelScope.launch {
+            _navEvent.emit(SubScreen.PostCreate.route)
+        }
+    }
+
+    /**
      * ユーザアイコンのクリックイベント
      * @param userId クリックされたユーザのID
      */

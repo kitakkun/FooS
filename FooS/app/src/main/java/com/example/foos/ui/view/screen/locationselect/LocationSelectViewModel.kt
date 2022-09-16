@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LocationSelectViewModel @Inject constructor() : ViewModel() {
 
-    private var _uiState = mutableStateOf(LocationSelectScreenUiState(LatLng(0.0, 0.0)))
+    private var _uiState = mutableStateOf(LocationSelectScreenUiState())
     val uiState: State<LocationSelectScreenUiState> = _uiState
 
     private var _navEvent = MutableSharedFlow<String>()
@@ -43,6 +43,4 @@ class LocationSelectViewModel @Inject constructor() : ViewModel() {
             _navEvent.emit(SubScreen.PostCreate.LocationConfirm.route)
         }
     }
-
-
 }
