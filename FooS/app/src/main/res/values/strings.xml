@@ -31,4 +31,6 @@
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="send">Send</string>
+    <string name="permission_request_message">Please give the permission.</string>
+    <string name="request_permission">Request Permission</string>
 </resources>
