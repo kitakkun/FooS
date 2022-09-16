@@ -14,18 +14,20 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.foos.R
+import com.example.foos.ui.theme.FooSTheme
 
 /**
  * アニメーション付き
@@ -94,7 +96,7 @@ private fun CloseButton(
 fun ImageAttachment(
     imageUrl: String,
     modifier: Modifier = Modifier,
-    onCloseButtonClick: () -> Unit = {},
+    onCloseButtonClick: () -> Unit
 ) {
     RemovableAttachment(
         modifier = modifier,
@@ -104,7 +106,7 @@ fun ImageAttachment(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(imageUrl).build(),
             loading = {
-                  MaxSizeLoadingIndicator()
+                MaxSizeLoadingIndicator()
             },
             contentDescription = null,
             contentScale = ContentScale.Crop,
@@ -132,5 +134,21 @@ fun LocationAttachment(
                 contentDescription = "location attachment"
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ImageAttachmentPreview() {
+    FooSTheme {
+        ImageAttachment(imageUrl = "", onCloseButtonClick = {})
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun LocationAttachmentPreview() {
+    FooSTheme {
+        LocationAttachment(onCloseButtonClick = {})
     }
 }
