@@ -38,7 +38,7 @@ class ReactionViewModel @Inject constructor(
 
     }
 
-    fun onContentClick() {
+    fun onContentClick(reactionId: String) {
 
     }
 }

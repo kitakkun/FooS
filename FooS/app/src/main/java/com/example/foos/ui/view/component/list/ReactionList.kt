@@ -13,7 +13,7 @@ import com.example.foos.ui.state.screen.reaction.ReactionItemUiState
 fun ReactionItemList(
     uiStates: List<ReactionItemUiState>,
     onUserIconClick: (String) -> Unit = {},
-    onContentClick: () -> Unit = {},
+    onContentClick: (String) -> Unit = {},
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
