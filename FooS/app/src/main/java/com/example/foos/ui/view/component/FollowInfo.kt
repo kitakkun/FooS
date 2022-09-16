@@ -30,13 +30,15 @@ fun FollowInfo(
     onFollowersTextClick: () -> Unit = {},
     onFollowingTextClick: () -> Unit = {},
 ) {
+    val numberStyle = SpanStyle(fontWeight = FontWeight.Bold)
+    val alphabetStyle = SpanStyle(fontWeight = FontWeight.Light, fontSize = 12.sp)
     Row {
         Text(
             buildAnnotatedString {
-                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                withStyle(numberStyle) {
                     append("$followeeNum ")
                 }
-                withStyle(SpanStyle(fontWeight = FontWeight.Light, fontSize = 12.sp)) {
+                withStyle(alphabetStyle) {
                     append(stringResource(id = R.string.following))
                 }
             },
@@ -46,10 +48,10 @@ fun FollowInfo(
         )
         Text(
             buildAnnotatedString {
-                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                withStyle(numberStyle) {
                     append("$followerNum ")
                 }
-                withStyle(SpanStyle(fontWeight = FontWeight.Light, fontSize = 12.sp)) {
+                withStyle(alphabetStyle) {
                     append(stringResource(id = R.string.followers))
                 }
             },
