@@ -10,13 +10,13 @@ import com.example.foos.ui.state.component.PostItemUiState
 data class HomeScreenUiState(
     val posts: List<PostItemUiState>,
     val isRefreshing: Boolean,
-    val isLoadingPosts: Boolean,
+    val isLoading: Boolean,
 ) {
     companion object {
         val Default = HomeScreenUiState(
             posts = listOf(),
             isRefreshing = false,
-            isLoadingPosts = false,
+            isLoading = false,
         )
     }
 }

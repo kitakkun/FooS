@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.foos.ui.constants.paddingLarge
-import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.navigation.Screen
 import com.example.foos.ui.state.screen.home.HomeScreenUiState
 import com.example.foos.ui.theme.FooSTheme
@@ -41,11 +40,10 @@ fun HomeScreen(
     val listState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
-        // 初回起動時の投稿フェッチ
         launch {
-            viewModel.fetchNewerPosts()
+            // 初回起動時の投稿フェッチ
+            viewModel.fetchInitialPosts()
         }
-        // ナビゲーションイベント処理
         launch {
             viewModel.navEvent.collect {
                 navController.navigate(it)
@@ -68,7 +66,7 @@ fun HomeScreen(
         onAppearLastItem = { viewModel.fetchOlderPosts() },
         onImageClick = { imageUrls, clickedUrl -> viewModel.onImageClick(imageUrls, clickedUrl) },
         onUserIconClick = { viewModel.onUserIconClick(it) },
-        onRefresh = { viewModel.fetchNewerPosts() },
+        onRefresh = { viewModel.onRefresh() },
         onContentClick = { viewModel.onContentClick(it) }
     )
 

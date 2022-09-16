@@ -74,8 +74,7 @@ fun PostScreen(
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents()
-    )
-    {
+    ) {
         viewModel.setImages(context, it)
     }
 
@@ -301,3 +300,4 @@ private fun PostUIPreview() {
         )
     }
 }
+

@@ -59,7 +59,7 @@ fun PostItem(
             UserIdentityWithCreatedAtRow(
                 uiState.username,
                 uiState.userId,
-                createdAt = uiState.createdAt
+                createdAt = uiState.formattedCreatedAtText
             )
             Text(
                 text = uiState.content,
@@ -100,57 +100,19 @@ private fun PostItemPreview() {
 fun UserIdentityWithCreatedAtRow(
     username: String,
     userId: String,
-    createdAt: Date?,
+    createdAt: String,
 ) {
     HorizontalUserIdentityText(
         username = username,
         userId = userId,
         after = {
-            PostTime(createdAt = createdAt)
+            Text(
+                "・$createdAt",
+                style = MaterialTheme.typography.caption,
+                fontWeight = FontWeight.Light,
+            )
         }
     )
-}
-
-/**
- * 投稿時間の表示
- * @param createdAt 投稿の作成日時
- */
-@Composable
-fun PostTime(
-    createdAt: Date?,
-    modifier: Modifier = Modifier,
-) {
-    createdAt?.let {
-        val createdAtDateTime =
-            createdAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
-        val nowDateTime = LocalDateTime.now()
-        val daysDiff = ChronoUnit.DAYS.between(createdAtDateTime, nowDateTime)
-        val hoursDiff = ChronoUnit.HOURS.between(createdAtDateTime, nowDateTime)
-        val minutesDiff = ChronoUnit.MINUTES.between(createdAtDateTime, nowDateTime)
-        val secondsDiff = ChronoUnit.SECONDS.between(createdAtDateTime, nowDateTime)
-        val text: String = if (daysDiff >= 7) {
-            // ex) 9 Jan
-            createdAtDateTime.format(DateTimeFormatter.ofPattern("d MMM"))
-        } else if (daysDiff >= 1) {
-            // ex) 5d
-            "${daysDiff}d"
-        } else if (hoursDiff >= 1) {
-            // ex) 7h
-            "${hoursDiff}h"
-        } else if (minutesDiff >= 1) {
-            // ex) 10m
-            "${minutesDiff}m"
-        } else {
-            // ex) 40s
-            "${secondsDiff}s"
-        }
-        Text(
-            "・${text}",
-            style = MaterialTheme.typography.caption,
-            fontWeight = FontWeight.Light,
-            modifier = modifier
-        )
-    }
 }
 
 /**

@@ -33,4 +33,6 @@
     <string name="send">Send</string>
     <string name="permission_request_message">Please give the permission.</string>
     <string name="request_permission">Request Permission</string>
+    <string name="message_successfully_signed_in">Successfully signed in.</string>
+    <string name="message_sign_in_error">There was an error signing in.</string>
 </resources>

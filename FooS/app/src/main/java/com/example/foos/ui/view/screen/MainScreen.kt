@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,7 +19,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.foos.FirebaseAuthManager
 import com.example.foos.ui.navigation.Screen
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.theme.FooSTheme
@@ -32,10 +30,7 @@ import com.example.foos.ui.theme.FooSTheme
 @Composable
 fun MainScreen() {
 
-    // 認証済みか確認し、未認証であれば認証を行う
-    FirebaseAuthManager.checkSignInState(LocalContext.current)
     val navController = rememberNavController()
-
     val screenViewModel: ScreenViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {

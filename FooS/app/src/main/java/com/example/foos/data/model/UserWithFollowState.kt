@@ -4,5 +4,5 @@ import com.example.foos.data.model.database.DatabaseUser
 
 data class UserWithFollowState(
     val user: DatabaseUser,
-    val followState: MyFollowingState,
+    val followState: FollowState,
 )

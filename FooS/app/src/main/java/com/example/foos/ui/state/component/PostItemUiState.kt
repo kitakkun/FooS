@@ -2,6 +2,10 @@ package com.example.foos.ui.state.component
 
 import com.example.foos.data.model.Post
 import com.example.foos.data.model.database.DatabaseReaction
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 /**
@@ -30,6 +34,36 @@ data class PostItemUiState(
     val createdAt: Date? = null,
 ) {
 
+    val formattedCreatedAtText
+        get() :String =
+            if (createdAt != null) {
+                val createdAtDateTime =
+                    createdAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+                val nowDateTime = LocalDateTime.now()
+                val daysDiff = ChronoUnit.DAYS.between(createdAtDateTime, nowDateTime)
+                val hoursDiff = ChronoUnit.HOURS.between(createdAtDateTime, nowDateTime)
+                val minutesDiff = ChronoUnit.MINUTES.between(createdAtDateTime, nowDateTime)
+                val secondsDiff = ChronoUnit.SECONDS.between(createdAtDateTime, nowDateTime)
+                if (daysDiff >= 7) {
+                    // ex) 9 Jan
+                    createdAtDateTime.format(DateTimeFormatter.ofPattern("d MMM"))
+                } else if (daysDiff >= 1) {
+                    // ex) 5d
+                    "${daysDiff}d"
+                } else if (hoursDiff >= 1) {
+                    // ex) 7h
+                    "${hoursDiff}h"
+                } else if (minutesDiff >= 1) {
+                    // ex) 10m
+                    "${minutesDiff}m"
+                } else {
+                    // ex) 40s
+                    "${secondsDiff}s"
+                }
+            } else {
+                ""
+            }
+
     companion object {
         val Default = PostItemUiState(
             postId = "",
@@ -40,7 +74,7 @@ data class PostItemUiState(
             attachedImages = listOf(),
         )
 
-        fun convert(post: Post) : PostItemUiState {
+        fun convert(post: Post): PostItemUiState {
             return PostItemUiState(
                 postId = post.post.postId,
                 userIcon = post.user.profileImage,

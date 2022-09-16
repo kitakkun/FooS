@@ -1,17 +1,10 @@
 package com.example.foos.data.domain.fetcher.post
 
 import com.example.foos.data.model.Post
-import com.example.foos.data.model.database.DatabasePost
-import com.example.foos.data.model.database.DatabaseReaction
-import com.example.foos.data.model.database.DatabaseUser
 import com.example.foos.data.repository.PostsRepository
 import com.example.foos.data.repository.PostsRepositoryImpl
 import com.example.foos.data.repository.ReactionsRepository
 import com.example.foos.data.repository.UsersRepository
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.joinAll
 import java.util.*
 import javax.inject.Inject
 
@@ -25,37 +18,24 @@ class FetchPostsByUserIdUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(userId: String, end: Date = Date()): List<Post> {
-        val jobs = mutableListOf<Job>()
-        var dbUser: DatabaseUser? = null
-        var dbPosts: List<DatabasePost> = listOf()
-        val reactions = mutableMapOf<String, List<DatabaseReaction>>()
+        val dbUser = usersRepository.fetchByUserId(userId)
+        val dbPosts = postsRepository.fetchByUserId(
+            userId,
+            null,
+            end,
+            PostsRepositoryImpl.DEFAULT_LOAD_LIMIT
+        )
+        val dbReactions = dbPosts.map { it.postId }.let { reactionsRepository.fetchByPostIds(it) }
 
-        coroutineScope {
-            jobs.add(async { dbUser = usersRepository.fetchByUserId(userId) })
-            jobs.add(async {
-                dbPosts = postsRepository.fetchByUserIdWithDate(
-                    userId,
-                    null,
-                    end,
-                    PostsRepositoryImpl.DEFAULT_LOAD_LIMIT
+        return dbPosts.mapNotNull { post ->
+            val reactions = dbReactions.filter { it.postId == post.postId }
+            dbUser?.let {
+                Post(
+                    post = post,
+                    user = dbUser,
+                    reaction = reactions,
                 )
-            })
-        }
-        jobs.joinAll()
-        jobs.clear()
-
-        coroutineScope {
-            dbPosts.forEach {
-                reactions[it.postId] = reactionsRepository.fetchReactionsByPostId(it.postId)
             }
         }
-        jobs.joinAll()
-
-        dbUser?.let {
-            return dbPosts.map {
-                Post(post = it, user = dbUser!!, reaction = reactions[it.postId] ?: listOf())
-            }
-        }
-        return listOf()
     }
 }

@@ -20,6 +20,9 @@ data class UserProfileScreenUiState(
     val followeeCount: Int,
     val following: Boolean = false,
     val isRefreshing: Boolean = false,
+    val isLoadingPosts: Boolean = false,
+    val isLoadingMediaPosts: Boolean = false,
+    val isLoadingUserReactedPosts: Boolean = false,
 ) {
     companion object {
         val Default = UserProfileScreenUiState(

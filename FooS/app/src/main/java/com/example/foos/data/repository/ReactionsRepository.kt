@@ -5,6 +5,7 @@ import java.util.*
 
 interface ReactionsRepository {
 
+    suspend fun fetchByPostIds(postids: List<String>): List<DatabaseReaction>
     suspend fun fetchByUserIdWithDate(
         userId: String,
         start: Date? = null,

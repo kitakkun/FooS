@@ -61,7 +61,7 @@ fun ScreenNavHost(
         }
         composable(Screen.Setting.route) {
             val vm: SettingViewModel = hiltViewModel()
-            SettingScreen(vm)
+            SettingScreen(vm, screenViewModel)
         }
         composable(SubScreen.PostCreate.route) {
             val vm: PostViewModel = hiltViewModel()

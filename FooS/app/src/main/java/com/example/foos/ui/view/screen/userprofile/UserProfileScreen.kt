@@ -6,7 +6,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -42,12 +41,16 @@ fun UserProfileScreen(
     val uiState = viewModel.uiState.value
 
     LaunchedEffect(Unit) {
-        // 最初のページだけユーザ情報が読み込まれる前にフェッチ試行してしまうことがあるので、
-        // 完了後にフェッチできる仕組みにした（暫定的）
-        viewModel.fetchUserInfo(
-            userId = userId,
-            onFinished = { viewModel.fetchNewUserPosts() }
-        )
+        launch {
+            viewModel.fetchUserInfo(
+                userId = userId,
+                onFinished = {
+                    viewModel.fetchInitialPosts()
+                    viewModel.fetchInitialMediaPosts()
+                    viewModel.fetchInitialReactedPosts()
+                }
+            )
+        }
         viewModel.navEvent.collect {
             navController.navigate(it)
         }
@@ -56,26 +59,15 @@ fun UserProfileScreen(
     val nestedScrollViewState = rememberNestedScrollViewState()
     val pagerState = rememberPagerState(initialPage = 0)
 
-    LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.currentPage }.collect { page ->
-            when (page) {
-                0 -> if (uiState.posts.isEmpty()) viewModel.fetchNewUserPosts()
-                1 -> if (uiState.mediaPosts.isEmpty()) viewModel.fetchNewMediaPosts()
-                else -> if (uiState.userReactedPosts.isEmpty()) viewModel.fetchNewUserReactedPosts()
-            }
-        }
-    }
-
     // this layout produce buggy scroll if we don't use jetpack compose alpha02 or above.
     // nestedScroll's bug exists until alpha01.
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing)
     SwipeRefresh(state = swipeRefreshState, onRefresh = {
         when (pagerState.currentPage) {
-            0 -> viewModel.fetchNewUserPosts(true)
-            1 -> viewModel.fetchNewMediaPosts(true)
-            else -> viewModel.fetchNewUserReactedPosts(true)
+            0 -> viewModel.refreshPosts()
+            1 -> viewModel.refreshMediaPosts()
+            else -> viewModel.refreshReactedPosts()
         }
-
     }) {
         VerticalNestedScrollView(
             state = nestedScrollViewState,
@@ -107,7 +99,7 @@ fun UserProfileScreen(
                         pagerState = pagerState, pageCount = tabList.size,
                         pageContents = listOf(
                             {
-                                if (uiState.posts.isEmpty()) {
+                                if (uiState.isLoadingPosts) {
                                     MaxSizeLoadingIndicator()
                                 } else {
                                     PostItemList(
@@ -120,12 +112,12 @@ fun UserProfileScreen(
                                         },
                                         onContentClick = { viewModel.onContentClick(it) },
                                         onUserIconClick = { viewModel.onUserIconClick(it) },
-                                        onAppearLastItem = { viewModel.fetchOlderUserPosts() },
+                                        onAppearLastItem = { viewModel.fetchOlderPosts() },
                                     )
                                 }
                             },
                             {
-                                if (uiState.mediaPosts.isEmpty()) {
+                                if (uiState.isLoadingMediaPosts) {
                                     MaxSizeLoadingIndicator()
                                 } else {
                                     MediaPostGrid(
@@ -136,7 +128,7 @@ fun UserProfileScreen(
                                 }
                             },
                             {
-                                if (uiState.userReactedPosts.isEmpty()) {
+                                if (uiState.isLoadingUserReactedPosts) {
                                     MaxSizeLoadingIndicator()
                                 } else {
                                     PostItemList(

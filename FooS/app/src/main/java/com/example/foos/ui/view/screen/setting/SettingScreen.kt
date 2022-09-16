@@ -1,6 +1,5 @@
 package com.example.foos.ui.view.screen.setting
 
-import android.app.Activity
 import android.graphics.Bitmap
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.*
@@ -16,15 +15,15 @@ import androidx.compose.ui.unit.sp
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
-import com.example.foos.FirebaseAuthManager
 import com.example.foos.R
 import com.example.foos.ui.state.component.MenuItemUiState
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.dialog.ConfirmAlertDialog
 import com.example.foos.ui.view.component.menu.MenuItemList
+import com.example.foos.ui.view.screen.ScreenViewModel
 
 @Composable
-fun SettingScreen(viewModel: SettingViewModel) {
+fun SettingScreen(viewModel: SettingViewModel, screenViewModel: ScreenViewModel) {
 
     val uiState = viewModel.uiState.value
     viewModel.fetchUserData()
@@ -52,8 +51,8 @@ fun SettingScreen(viewModel: SettingViewModel) {
             )
         },
         onLogOut = {
-            FirebaseAuthManager.logOut()
-            (context as? Activity)?.recreate()
+            screenViewModel.logOut()
+            screenViewModel.recreateActivity(context)
         }
     )
 
