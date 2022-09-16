@@ -106,7 +106,7 @@ private fun LocationSelectUI(
                     }
                 },
                 actions = {
-                    IconButton(onClick = onConfirm) {
+                    IconButton(onClick = onConfirm, enabled = pinLocation != null) {
                         Icon(imageVector = Icons.Filled.Check, contentDescription = null)
                     }
                 }

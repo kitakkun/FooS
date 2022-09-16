@@ -43,6 +43,4 @@ class LocationSelectViewModel @Inject constructor() : ViewModel() {
             _navEvent.emit(SubScreen.PostCreate.LocationConfirm.route)
         }
     }
-
-
 }
