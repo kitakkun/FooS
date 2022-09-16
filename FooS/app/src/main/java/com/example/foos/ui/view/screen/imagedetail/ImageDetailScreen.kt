@@ -64,15 +64,6 @@ private fun ImageDetailUI(
     onBack: () -> Unit
 ) {
     Box {
-        TopAppBar(
-            title = {},
-            navigationIcon = {
-                IconButton(onClick = onBack) {
-                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
-                }
-            },
-            backgroundColor = Color.Transparent.copy(alpha = 0.1f),
-        )
         LazyRow(
             state = lazyListState,
             flingBehavior = rememberSnapperFlingBehavior(lazyListState),
@@ -84,6 +75,15 @@ private fun ImageDetailUI(
                 FullSizeImage(url = it, modifier = Modifier.fillParentMaxSize())
             }
         }
+        TopAppBar(
+            title = {},
+            navigationIcon = {
+                IconButton(onClick = onBack) {
+                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+                }
+            },
+            backgroundColor = Color.Transparent.copy(alpha = 0.1f),
+        )
     }
 }
 
