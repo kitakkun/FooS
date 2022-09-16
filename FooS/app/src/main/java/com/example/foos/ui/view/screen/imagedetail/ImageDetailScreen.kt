@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
@@ -82,7 +83,8 @@ private fun ImageDetailUI(
                     Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
                 }
             },
-            backgroundColor = Color.Transparent.copy(alpha = 0.1f),
+            backgroundColor = Color.Transparent.copy(alpha = 0f),
+            elevation = 0.dp
         )
     }
 }
