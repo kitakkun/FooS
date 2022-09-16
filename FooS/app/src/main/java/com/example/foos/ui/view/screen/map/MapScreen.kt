@@ -130,7 +130,13 @@ private fun MapUI(
                         .clip(RoundedCornerShape(50))
                         .background(MaterialTheme.colors.onSurface)
                 )
-                PostDetailView(uiState = uiState.focusingPost)
+                PostDetailView(
+                    uiState = uiState.focusingPost,
+                    onReactionRemoved = { /* TODO */ },
+                    onGoogleMapsClicked = { /* TODO */ },
+                    onReactionButtonClicked = { /* TODO */ },
+                    onUserInfoClicked = { /* TODO */ }
+                )
             }
         },
         sheetPeekHeight = 0.dp
