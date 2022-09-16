@@ -1,9 +1,7 @@
 package com.example.foos.ui.view.component.button
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -14,22 +12,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.foos.ui.theme.FooSTheme
 
 @Composable
-fun RoundIconActionButton(icon: ImageVector, onClick: () -> Unit = {}) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.End,
-        verticalArrangement = Arrangement.Bottom
+fun BoxScope.RoundIconActionButton(
+    icon: ImageVector,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    FloatingActionButton(
+        onClick = { onClick.invoke() },
+        modifier = modifier.align(Alignment.BottomEnd),
     ) {
-        FloatingActionButton(
-            onClick = { onClick.invoke() },
-            modifier = Modifier.padding(32.dp)
-        ) {
-            Icon(icon, contentDescription = "", tint = MaterialTheme.colors.onSecondary)
-        }
+        Icon(icon, contentDescription = "", tint = MaterialTheme.colors.onSecondary)
     }
 }
 
@@ -37,9 +32,11 @@ fun RoundIconActionButton(icon: ImageVector, onClick: () -> Unit = {}) {
 @Composable
 private fun RoundIconActionButtonPreview() {
     FooSTheme {
-        RoundIconActionButton(
-            icon = Icons.Filled.Add,
-            onClick = {}
-        )
+        Box() {
+            RoundIconActionButton(
+                icon = Icons.Filled.Add,
+                onClick = {}
+            )
+        }
     }
 }

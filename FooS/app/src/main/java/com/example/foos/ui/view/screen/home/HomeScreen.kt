@@ -1,13 +1,19 @@
 package com.example.foos.ui.view.screen.home
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import com.example.foos.ui.constants.paddingLarge
+import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.navigation.Screen
 import com.example.foos.ui.state.screen.home.HomeScreenUiState
 import com.example.foos.ui.theme.FooSTheme
@@ -85,20 +91,26 @@ private fun HomeUI(
         state = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing),
         onRefresh = onRefresh
     ) {
-        if (isLoadingPosts) {
-            MaxSizeLoadingIndicator()
-        } else {
-            PostItemList(
-                listState = listState,
-                uiStates = uiState.posts,
-                onUserIconClick = { onUserIconClick(it) },
-                onContentClick = { onContentClick(it) },
-                onImageClick = { imageUrls, clickedUrl -> onImageClick(imageUrls, clickedUrl) },
-                onAppearLastItem = { onAppearLastItem() }
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (isLoadingPosts) {
+                MaxSizeLoadingIndicator()
+            } else {
+                PostItemList(
+                    listState = listState,
+                    uiStates = uiState.posts,
+                    onUserIconClick = { onUserIconClick(it) },
+                    onContentClick = { onContentClick(it) },
+                    onImageClick = { imageUrls, clickedUrl -> onImageClick(imageUrls, clickedUrl) },
+                    onAppearLastItem = { onAppearLastItem() }
+                )
+            }
+            RoundIconActionButton(
+                icon = Icons.Filled.Add,
+                onClick = onPostCreateButtonClick,
+                modifier = Modifier.padding(paddingLarge)
             )
         }
     }
-    RoundIconActionButton(icon = Icons.Filled.Add, onClick = onPostCreateButtonClick)
 }
 
 @Preview(showBackground = true, showSystemUi = true)
