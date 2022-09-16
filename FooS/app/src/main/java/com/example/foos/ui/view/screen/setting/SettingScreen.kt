@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.canhub.cropper.CropImageContract
@@ -36,6 +37,35 @@ fun SettingScreen(viewModel: SettingViewModel) {
         } else viewModel.onCropImageFailed(result)
     }
 
+    SettingUI(
+        uiState = uiState,
+        onUserIconClick = {
+            cropImage.launch(
+                options {
+                    setCropShape(CropImageView.CropShape.RECTANGLE)
+                    setAspectRatio(1, 1)
+                    setFixAspectRatio(true)
+                    setImageSource(includeGallery = true, includeCamera = true)
+                    setOutputCompressFormat(Bitmap.CompressFormat.PNG)
+                    setRequestedSize(64, 64, CropImageView.RequestSizeOptions.SAMPLING)
+                }
+            )
+        },
+        onLogOut = {
+            FirebaseAuthManager.logOut()
+            (context as? Activity)?.recreate()
+        }
+    )
+
+}
+
+@Composable
+private fun SettingUI(
+    uiState: SettingUiState,
+    onUserIconClick: () -> Unit,
+    onLogOut: () -> Unit,
+) {
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -43,18 +73,7 @@ fun SettingScreen(viewModel: SettingViewModel) {
         Spacer(Modifier.height(80.dp))
         UserIcon(
             url = uiState.profileImage,
-            onClick = {
-                cropImage.launch(
-                    options {
-                        setCropShape(CropImageView.CropShape.RECTANGLE)
-                        setAspectRatio(1, 1)
-                        setFixAspectRatio(true)
-                        setImageSource(includeGallery = true, includeCamera = true)
-                        setOutputCompressFormat(Bitmap.CompressFormat.PNG)
-                        setRequestedSize(64, 64, CropImageView.RequestSizeOptions.SAMPLING)
-                    }
-                )
-            },
+            onClick = onUserIconClick,
             modifier = Modifier.size(80.dp)
         )
         Spacer(Modifier.height(32.dp))
@@ -77,16 +96,21 @@ fun SettingScreen(viewModel: SettingViewModel) {
                 message = stringResource(id = R.string.log_out_confirm_message),
                 confirmButtonText = stringResource(id = R.string.dialog_ok),
                 dismissButtonText = stringResource(id = R.string.dialog_cancel),
-                onConfirmed = {
-                    FirebaseAuthManager.logOut()
-                    (context as? Activity)?.recreate()
-                },
-                onDismissed = {
-                    logOutRequest = false
-                }
+                onConfirmed = onLogOut,
+                onDismissed = { logOutRequest = false }
             )
         }
 
         MenuItemList(null, settingMenus)
     }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun SettingUIPreview() {
+    SettingUI(
+        uiState = SettingUiState.Default.copy(username = "username"),
+        onUserIconClick = {},
+        onLogOut = {}
+    )
 }
