@@ -24,10 +24,7 @@ import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.*
 import kotlinx.coroutines.launch
 
 @Composable
@@ -120,6 +117,19 @@ private fun LocationConfirmUI(
                 .padding(paddingMedium)
         ) {
             val focusManager = LocalFocusManager.current
+            val mapUiSettings by remember {
+                mutableStateOf(
+                    MapUiSettings(
+                        mapToolbarEnabled = false,
+                        myLocationButtonEnabled = false,
+                        scrollGesturesEnabledDuringRotateOrZoom = false,
+                        zoomGesturesEnabled = false,
+                        zoomControlsEnabled = false,
+                        scrollGesturesEnabled = false,
+                        rotationGesturesEnabled = false,
+                    )
+                )
+            }
             Text(text = stringResource(R.string.enter_location_name_message))
             TextField(
                 value = locationName,
@@ -132,6 +142,7 @@ private fun LocationConfirmUI(
                 )
             )
             GoogleMap(
+                uiSettings = mapUiSettings,
                 cameraPositionState = cameraPositionState,
                 modifier = Modifier
                     .fillMaxWidth()
