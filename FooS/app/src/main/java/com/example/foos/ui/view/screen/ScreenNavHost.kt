@@ -8,7 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.foos.ui.navigation.Screen
+import com.example.foos.ui.navigation.MainScreen
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.navigation.navargs.StringList
 import com.example.foos.ui.view.screen.followlist.FollowListScreen
@@ -44,22 +44,22 @@ fun ScreenNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route,
+        startDestination = MainScreen.Home.route,
         Modifier.padding(innerPadding)
     ) {
-        composable(Screen.Home.route) {
+        composable(MainScreen.Home.route) {
             val vm: HomeViewModel = hiltViewModel()
             HomeScreen(vm, navController, screenViewModel)
         }
-        composable(Screen.Map.route) {
+        composable(MainScreen.Map.route) {
             val vm: MapViewModel = hiltViewModel()
             MapScreen(vm, navController)
         }
-        composable(Screen.Reaction.route) {
+        composable(MainScreen.Reaction.route) {
             val vm: ReactionViewModel = hiltViewModel()
             ReactionScreen(vm, navController)
         }
-        composable(Screen.Setting.route) {
+        composable(MainScreen.Setting.route) {
             val vm: SettingViewModel = hiltViewModel()
             SettingScreen(vm, screenViewModel)
         }

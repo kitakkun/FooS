@@ -12,7 +12,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
 import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.component.navigation.ScreenBottomNavBar
-import com.example.foos.ui.view.component.navigation.ScreenTopBar
 
 /**
  * アプリ画面のコンポーザブル（アプリ全体のエントリポイント）
@@ -40,13 +39,11 @@ fun AppScreen() {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             backgroundColor = MaterialTheme.colors.background,
-            topBar = {
-                ScreenTopBar(navController)
-            },
             bottomBar = {
                 ScreenBottomNavBar(
                     navController,
-                    onClick = { screen -> screenViewModel.navigate(screen.route) })
+                    onClick = { screen -> screenViewModel.navigate(screen.route) }
+                )
             }
         ) { innerPadding -> ScreenNavHost(navController, screenViewModel, innerPadding) }
     }

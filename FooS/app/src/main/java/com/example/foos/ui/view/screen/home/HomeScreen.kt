@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.foos.ui.constants.paddingLarge
-import com.example.foos.ui.navigation.Screen
+import com.example.foos.ui.navigation.MainScreen
 import com.example.foos.ui.state.screen.home.HomeScreenUiState
 import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.component.MaxSizeLoadingIndicator
@@ -52,7 +52,7 @@ fun HomeScreen(
         launch {
             // Bottomナビゲーションでホームがクリックされたらトップへスクロール
             screenViewModel.navRoute.collect {
-                if (it == Screen.Home.route) {
+                if (it == MainScreen.Home.route) {
                     listState.animateScrollToItem(0, 0)
                 }
             }

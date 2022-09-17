@@ -13,7 +13,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.foos.ui.navigation.Screen
+import com.example.foos.ui.navigation.MainScreen
 
 /**
  * 画面下部のナビゲーションバー
@@ -21,24 +21,17 @@ import com.example.foos.ui.navigation.Screen
 @Composable
 fun ScreenBottomNavBar(
     navController: NavHostController,
-    onClick: (Screen) -> Unit
+    onClick: (MainScreen) -> Unit
 ) {
-    val screens = listOf(
-        Screen.Home,
-        Screen.Map,
-        Screen.Reaction,
-        Screen.Setting
-    )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    if (screens.map { it.route }.contains(currentDestination?.route)) {
+    if (MainScreen.screens.map { it.route }.contains(currentDestination?.route)) {
         BottomNavigation {
-            screens.forEach { screen ->
+            MainScreen.screens.forEach { screen ->
                 MyBottomNavigationItem(
-                    screen = screen,
+                    mainScreen = screen,
                     onClick = onClick,
                     currentDestination = currentDestination,
-                    navController = navController,
                 )
             }
         }
@@ -50,15 +43,14 @@ fun ScreenBottomNavBar(
  */
 @Composable
 private fun RowScope.MyBottomNavigationItem(
-    screen: Screen,
+    mainScreen: MainScreen,
     currentDestination: NavDestination?,
-    navController: NavHostController,
-    onClick: (Screen) -> Unit,
+    onClick: (MainScreen) -> Unit,
 ) {
     BottomNavigationItem(
-        label = { Text(text = stringResource(id = screen.stringId)) },
-        icon = { Icon(painterResource(screen.iconId), null) },
-        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-        onClick = { onClick.invoke(screen) }
+        label = { Text(text = stringResource(id = mainScreen.stringId)) },
+        icon = { Icon(painterResource(mainScreen.iconId), null) },
+        selected = currentDestination?.hierarchy?.any { it.route == mainScreen.route } == true,
+        onClick = { onClick.invoke(mainScreen) }
     )
 }
