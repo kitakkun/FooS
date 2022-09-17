@@ -15,11 +15,11 @@ import com.example.foos.ui.view.component.navigation.ScreenBottomNavBar
 import com.example.foos.ui.view.component.navigation.ScreenTopBar
 
 /**
- * メイン画面のコンポーザブル（アプリ全体のエントリポイント）
+ * アプリ画面のコンポーザブル（アプリ全体のエントリポイント）
  */
 @Preview
 @Composable
-fun MainScreen() {
+fun AppScreen() {
 
     val navController = rememberNavController()
     val screenViewModel: ScreenViewModel = hiltViewModel()

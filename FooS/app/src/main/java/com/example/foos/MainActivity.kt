@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
-import com.example.foos.ui.view.screen.MainScreen
+import com.example.foos.ui.view.screen.AppScreen
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.firebase.auth.FirebaseAuth
@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
         auth = Firebase.auth
 
         setContent {
-            MainScreen()
+            AppScreen()
         }
     }
 }
