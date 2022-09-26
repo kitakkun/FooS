@@ -1,18 +1,16 @@
 package com.example.foos.ui.view.component
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.foos.ui.constants.paddingSmall
 import com.example.foos.ui.theme.FooSTheme
 
 @Composable
@@ -36,7 +34,7 @@ private fun UserIdText(
 ) {
     Text(
         text = "@${userId}",
-        style = MaterialTheme.typography.caption,
+        style = MaterialTheme.typography.subtitle2,
         fontWeight = FontWeight.Light,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
@@ -67,19 +65,22 @@ fun HorizontalUserIdentityText(
     username: String,
     userId: String,
     modifier: Modifier = Modifier,
-    before: @Composable () -> Unit = {},
-    after: @Composable () -> Unit = {},
 ) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        before()
-        UsernameText(username = username)
-        Spacer(Modifier.width(paddingSmall))
-        UserIdText(userId = userId, modifier = Modifier.weight(1f, false))
-        after()
+    val usernameStyle = MaterialTheme.typography.subtitle1.copy(
+        fontWeight = FontWeight.Bold,
+    ).toSpanStyle()
+    val userIdStyle = MaterialTheme.typography.subtitle1.copy(
+        fontWeight = FontWeight.Light
+    ).toSpanStyle()
+
+    val annotatedText = remember(username, userId) {
+        buildAnnotatedString {
+            withStyle(usernameStyle) { append(username) }
+            withStyle(userIdStyle) { append(" @$userId") }
+        }
     }
+
+    Text(text = annotatedText, modifier = modifier, overflow = TextOverflow.Ellipsis, maxLines = 1)
 }
 
 @Preview(showBackground = true)
