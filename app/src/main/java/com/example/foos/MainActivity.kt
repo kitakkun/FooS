@@ -16,10 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
@@ -30,7 +27,7 @@ class MainActivity : ComponentActivity(), CoroutineScope {
     lateinit var usersRepository: UsersRepository
 
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + SupervisorJob()
+        get() = Dispatchers.Main + Job()
 
     companion object {
         private const val TAG = "MainActivity"
