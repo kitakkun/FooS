@@ -7,6 +7,8 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
+import com.example.foos.data.model.database.DatabaseUser
+import com.example.foos.data.repository.UsersRepository
 import com.example.foos.ui.view.screen.AppScreen
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
@@ -14,9 +16,21 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), CoroutineScope {
+
+    @Inject
+    lateinit var usersRepository: UsersRepository
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + SupervisorJob()
 
     companion object {
         private const val TAG = "MainActivity"
@@ -28,14 +42,16 @@ class MainActivity : ComponentActivity() {
         FirebaseAuthUIActivityResultContract()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            Toast.makeText(
-                this,
-                getString(R.string.message_successfully_signed_in),
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(this, getString(R.string.message_successfully_signed_in), Toast.LENGTH_SHORT).show()
+            auth.currentUser?.let {
+                launch {
+                    if (usersRepository.fetchByUserId(userId = it.uid) == null) {
+                        usersRepository.create(DatabaseUser(userId = it.uid, username = it.displayName ?: "user", profileImage = ""))
+                    }
+                }
+            }
         } else {
-            Toast.makeText(this, getString(R.string.message_sign_in_error), Toast.LENGTH_LONG)
-                .show()
+            Toast.makeText(this, getString(R.string.message_sign_in_error), Toast.LENGTH_LONG).show()
             val response = result.idpResponse
             if (response == null) {
                 Log.w(TAG, "Sign in canceled")

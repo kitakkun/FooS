@@ -25,6 +25,12 @@ class UsersRepositoryImpl @Inject constructor(
             .whereIn("userId", userIds.toSet().toList())
             .get().await().toObjects(DatabaseUser::class.java)
 
+    override suspend fun create(databaseUser: DatabaseUser) {
+        database.collection(COLLECTION)
+            .document(databaseUser.userId)
+            .set(databaseUser).await()
+    }
+
     /**
      * ユーザ情報を取得します
      */
