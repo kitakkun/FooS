@@ -139,4 +139,6 @@ dependencies {
 
     implementation "com.github.Tlaster:NestedScrollView:0.7.0"
 
+    // navigation bottom sheet destinations
+    implementation "com.google.accompanist:accompanist-navigation-material:0.26.4-beta"
 }
