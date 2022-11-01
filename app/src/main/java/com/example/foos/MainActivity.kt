@@ -27,7 +27,7 @@ import kotlin.coroutines.CoroutineContext
 class MainActivity : ComponentActivity(), CoroutineScope {
 
     @Inject
-    private lateinit var auth: FirebaseAuth
+    lateinit var auth: FirebaseAuth
 
     @Inject
     lateinit var usersRepository: UsersRepository
