@@ -38,60 +38,60 @@ class MainActivity : ComponentActivity(), CoroutineScope {
     companion object {
         private const val TAG = "MainActivity"
     }
-
-
-    private val signIn: ActivityResultLauncher<Intent> = registerForActivityResult(
-        FirebaseAuthUIActivityResultContract()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            Toast.makeText(
-                this,
-                getString(R.string.message_successfully_signed_in),
-                Toast.LENGTH_SHORT
-            ).show()
-            auth.currentUser?.let {
-                launch {
-                    if (usersRepository.fetchByUserId(userId = it.uid) == null) {
-                        usersRepository.create(
-                            DatabaseUser(
-                                userId = it.uid,
-                                username = it.displayName ?: "user",
-                                profileImage = ""
-                            )
-                        )
-                    }
-                }
-            }
-        } else {
-            Toast.makeText(this, getString(R.string.message_sign_in_error), Toast.LENGTH_LONG)
-                .show()
-            val response = result.idpResponse
-            if (response == null) {
-                Log.w(TAG, "Sign in canceled")
-            } else {
-                Log.w(TAG, "Sign in error", response.error)
-            }
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        if (auth.currentUser == null) {
-            val signInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setIsSmartLockEnabled(false)
-                .setLogo(R.mipmap.ic_launcher)
-                .setTheme(R.style.Theme_FooS)
-                .setAvailableProviders(
-                    listOf(
-                        AuthUI.IdpConfig.EmailBuilder().build(),
-                        AuthUI.IdpConfig.GoogleBuilder().build(),
-                    )
-                )
-                .build()
-            signIn.launch(signInIntent)
-        }
-    }
+//
+//
+//    private val signIn: ActivityResultLauncher<Intent> = registerForActivityResult(
+//        FirebaseAuthUIActivityResultContract()
+//    ) { result ->
+//        if (result.resultCode == RESULT_OK) {
+//            Toast.makeText(
+//                this,
+//                getString(R.string.message_successfully_signed_in),
+//                Toast.LENGTH_SHORT
+//            ).show()
+//            auth.currentUser?.let {
+//                launch {
+//                    if (usersRepository.fetchByUserId(userId = it.uid) == null) {
+//                        usersRepository.create(
+//                            DatabaseUser(
+//                                userId = it.uid,
+//                                username = it.displayName ?: "user",
+//                                profileImage = ""
+//                            )
+//                        )
+//                    }
+//                }
+//            }
+//        } else {
+//            Toast.makeText(this, getString(R.string.message_sign_in_error), Toast.LENGTH_LONG)
+//                .show()
+//            val response = result.idpResponse
+//            if (response == null) {
+//                Log.w(TAG, "Sign in canceled")
+//            } else {
+//                Log.w(TAG, "Sign in error", response.error)
+//            }
+//        }
+//    }
+//
+//    override fun onStart() {
+//        super.onStart()
+//        if (auth.currentUser == null) {
+//            val signInIntent = AuthUI.getInstance()
+//                .createSignInIntentBuilder()
+//                .setIsSmartLockEnabled(false)
+//                .setLogo(R.mipmap.ic_launcher)
+//                .setTheme(R.style.Theme_FooS)
+//                .setAvailableProviders(
+//                    listOf(
+//                        AuthUI.IdpConfig.EmailBuilder().build(),
+//                        AuthUI.IdpConfig.GoogleBuilder().build(),
+//                    )
+//                )
+//                .build()
+//            signIn.launch(signInIntent)
+//        }
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

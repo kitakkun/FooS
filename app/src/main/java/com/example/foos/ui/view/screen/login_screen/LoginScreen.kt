@@ -80,7 +80,7 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Button(onClick = viewModel::onSignInButtonClick) {
+        Button(onClick = viewModel::onCreateAccountClicked) {
             Text(text = "Create account")
         }
 

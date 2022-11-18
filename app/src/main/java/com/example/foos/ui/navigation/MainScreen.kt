@@ -17,6 +17,7 @@ sealed class MainScreen(
         val screens = listOf(Home, Map, Reaction, Setting)
     }
 
+    object LoginScreen : MainScreen("login", R.string.home, R.drawable.ic_account_circle)
     object Home : MainScreen("home", R.string.home, R.drawable.ic_home)
     object Map : MainScreen("maps", R.string.map, R.drawable.ic_pin_drop)
     object Reaction : MainScreen("reactions", R.string.reaction, R.drawable.ic_favorite)

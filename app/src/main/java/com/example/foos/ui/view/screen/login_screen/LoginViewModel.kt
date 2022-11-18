@@ -1,17 +1,24 @@
 package com.example.foos.ui.view.screen.login_screen
 
+import android.app.Application
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor() : ViewModel() {
+class LoginViewModel @Inject constructor(private val auth: FirebaseAuth, application: Application) : AndroidViewModel(application) {
 
-    @Inject
-    lateinit var auth: FirebaseAuth
+    companion object {
+        private const val TAG = "LoginViewModel"
+    }
 
     private val mutableUiState = mutableStateOf(LoginUiState())
     val uiState: State<LoginUiState> = mutableUiState
@@ -28,7 +35,23 @@ class LoginViewModel @Inject constructor() : ViewModel() {
         mutableUiState.value = mutableUiState.value.copy(isPasswordVisible = value)
     }
 
-    fun onSignInButtonClick() {
-
+    fun onCreateAccountClicked() {
+        // TODO: なんかtry-catchしてもクラッシュしてしまう
+        try {
+            auth.createUserWithEmailAndPassword(uiState.value.email, uiState.value.password)
+                .addOnCompleteListener { task ->
+                    Log.d(TAG, task.result.credential.toString())
+                    if (task.isSuccessful) {
+                        Toast.makeText(getApplication(), "Succeed", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(getApplication(), "Fail", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .addOnFailureListener {
+                    Log.d(TAG, it.message ?: "")
+                }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
