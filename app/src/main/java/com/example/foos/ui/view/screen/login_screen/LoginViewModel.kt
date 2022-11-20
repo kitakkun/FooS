@@ -1,13 +1,11 @@
 package com.example.foos.ui.view.screen.login_screen
 
 import android.app.Application
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +33,7 @@ class LoginViewModel @Inject constructor(private val auth: FirebaseAuth, applica
         mutableUiState.value = mutableUiState.value.copy(isPasswordVisible = value)
     }
 
-    fun onCreateAccountClicked() {
+    fun onCreateAccountClick() {
         auth.createUserWithEmailAndPassword(uiState.value.email, uiState.value.password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {

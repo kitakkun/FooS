@@ -12,7 +12,7 @@ fun LoginScreen(
 
     LoginUi(
         uiState = uiState,
-        onCreateAccountClicked = viewModel::onCreateAccountClicked,
+        onCreateAccountClick = viewModel::onCreateAccountClick,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         onPasswordVisibilityChange = viewModel::onPasswordVisibilityChange

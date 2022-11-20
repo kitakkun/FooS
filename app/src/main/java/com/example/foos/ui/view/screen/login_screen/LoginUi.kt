@@ -26,7 +26,7 @@ fun LoginUi(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onPasswordVisibilityChange: (Boolean) -> Unit,
-    onCreateAccountClicked: () -> Unit
+    onCreateAccountClick: () -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -80,7 +80,7 @@ fun LoginUi(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Button(onClick = onCreateAccountClicked) {
+        Button(onClick = onCreateAccountClick) {
             Text(text = "Create account")
         }
 
