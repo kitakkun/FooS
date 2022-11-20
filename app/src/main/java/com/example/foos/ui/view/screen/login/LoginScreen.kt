@@ -1,4 +1,4 @@
-package com.example.foos.ui.view.screen.login_screen
+package com.example.foos.ui.view.screen.login
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

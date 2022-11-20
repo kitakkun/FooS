@@ -1,4 +1,4 @@
-package com.example.foos.ui.view.screen.login_screen
+package com.example.foos.ui.view.screen.login
 
 import android.app.Application
 import android.widget.Toast

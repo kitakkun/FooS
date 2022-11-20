@@ -20,7 +20,7 @@ import com.example.foos.ui.view.screen.locationconfirm.LocationConfirmScreen
 import com.example.foos.ui.view.screen.locationconfirm.LocationConfirmViewModel
 import com.example.foos.ui.view.screen.locationselect.LocationSelectScreen
 import com.example.foos.ui.view.screen.locationselect.LocationSelectViewModel
-import com.example.foos.ui.view.screen.login_screen.LoginScreen
+import com.example.foos.ui.view.screen.login.LoginScreen
 import com.example.foos.ui.view.screen.map.MapScreen
 import com.example.foos.ui.view.screen.map.MapViewModel
 import com.example.foos.ui.view.screen.post.PostScreen

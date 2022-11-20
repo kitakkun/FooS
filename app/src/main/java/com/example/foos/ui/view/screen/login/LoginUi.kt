@@ -1,4 +1,4 @@
-package com.example.foos.ui.view.screen.login_screen
+package com.example.foos.ui.view.screen.login
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
