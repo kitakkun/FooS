@@ -14,8 +14,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val auth: FirebaseAuth, application: Application) : AndroidViewModel(application) {
-
+class LoginViewModel @Inject constructor(private val auth: FirebaseAuth, application: Application) :
+    AndroidViewModel(application) {
     companion object {
         private const val TAG = "LoginViewModel"
     }
@@ -36,22 +36,30 @@ class LoginViewModel @Inject constructor(private val auth: FirebaseAuth, applica
     }
 
     fun onCreateAccountClicked() {
-        // TODO: なんかtry-catchしてもクラッシュしてしまう
-        try {
-            auth.createUserWithEmailAndPassword(uiState.value.email, uiState.value.password)
-                .addOnCompleteListener { task ->
-                    Log.d(TAG, task.result.credential.toString())
-                    if (task.isSuccessful) {
-                        Toast.makeText(getApplication(), "Succeed", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(getApplication(), "Fail", Toast.LENGTH_SHORT).show()
+        auth.createUserWithEmailAndPassword(uiState.value.email, uiState.value.password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(getApplication(), "Succeed", Toast.LENGTH_SHORT).show()
+                } else {
+                    val message = when (task.exception) {
+                        is FirebaseAuthUserCollisionException -> "The specified email address is already in use."
+                        is FirebaseAuthWeakPasswordException -> "Password should be at least 6 characters."
+                        else -> null
+                    }
+                    message?.let {
+                        Toast.makeText(getApplication(), it, Toast.LENGTH_SHORT).show()
                     }
                 }
-                .addOnFailureListener {
-                    Log.d(TAG, it.message ?: "")
+            }
+            .addOnFailureListener {
+                when (it) {
+                    is FirebaseAuthUserCollisionException ->
+                        Toast.makeText(
+                            getApplication(),
+                            "The specified email address is already used by others.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                 }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+            }
     }
 }
