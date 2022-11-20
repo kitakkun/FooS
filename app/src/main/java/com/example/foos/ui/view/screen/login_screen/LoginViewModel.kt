@@ -60,4 +60,8 @@ class LoginViewModel @Inject constructor(private val auth: FirebaseAuth, applica
                 }
             }
     }
+
+    fun onLoginTextClick() {
+        /* TODO: actual implementation */
+    }
 }

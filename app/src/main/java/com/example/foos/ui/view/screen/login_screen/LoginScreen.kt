@@ -15,6 +15,7 @@ fun LoginScreen(
         onCreateAccountClick = viewModel::onCreateAccountClick,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
-        onPasswordVisibilityChange = viewModel::onPasswordVisibilityChange
+        onPasswordVisibilityChange = viewModel::onPasswordVisibilityChange,
+        onLoginTextClick = viewModel::onLoginTextClick,
     )
 }

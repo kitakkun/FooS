@@ -27,6 +27,7 @@ fun LoginUi(
     onPasswordChange: (String) -> Unit,
     onPasswordVisibilityChange: (Boolean) -> Unit,
     onCreateAccountClick: () -> Unit,
+    onLoginTextClick: () -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -90,7 +91,7 @@ fun LoginUi(
             Text(text = "Have an account?")
             ClickableText(text = buildAnnotatedString {
                 append("Log in")
-            }, onClick = {})
+            }, onClick = { onLoginTextClick() })
         }
     }
 }
@@ -102,7 +103,8 @@ private fun LoginUiPreview() {
         uiState = LoginUiState(),
         onEmailChange = {},
         onPasswordChange = {},
-        onPasswordVisibilityChange = {}
-    ) {
-    }
+        onPasswordVisibilityChange = {},
+        onCreateAccountClick = {},
+        onLoginTextClick = {}
+    )
 }
