@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PostScreen(
-    viewModel: PostViewModel,
+    viewModel: PostViewModelImpl,
     navController: NavController,
     sharedViewModel: ScreenViewModel,
 ) {

@@ -23,7 +23,7 @@ import com.example.foos.ui.view.screen.locationselect.LocationSelectViewModel
 import com.example.foos.ui.view.screen.map.MapScreen
 import com.example.foos.ui.view.screen.map.MapViewModelImpl
 import com.example.foos.ui.view.screen.post.PostScreen
-import com.example.foos.ui.view.screen.post.PostViewModel
+import com.example.foos.ui.view.screen.post.PostViewModelImpl
 import com.example.foos.ui.view.screen.postdetail.PostDetailScreen
 import com.example.foos.ui.view.screen.postdetail.PostDetailViewModelImpl
 import com.example.foos.ui.view.screen.reaction.ReactionScreen
@@ -64,7 +64,7 @@ fun ScreenNavHost(
             SettingScreen(vm, screenViewModel)
         }
         composable(SubScreen.PostCreate.route) {
-            val vm: PostViewModel = hiltViewModel()
+            val vm: PostViewModelImpl = hiltViewModel()
             PostScreen(vm, navController, screenViewModel)
         }
         composable(SubScreen.PostCreate.LocationSelect.route) {
