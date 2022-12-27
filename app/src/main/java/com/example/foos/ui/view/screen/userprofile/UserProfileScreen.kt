@@ -33,7 +33,7 @@ import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun UserProfileScreen(
-    viewModel: UserProfileViewModel,
+    viewModel: UserProfileViewModelImpl,
     navController: NavController,
     userId: String
 ) {

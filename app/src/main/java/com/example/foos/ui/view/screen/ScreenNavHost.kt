@@ -31,7 +31,7 @@ import com.example.foos.ui.view.screen.reaction.ReactionViewModel
 import com.example.foos.ui.view.screen.setting.SettingScreen
 import com.example.foos.ui.view.screen.setting.SettingViewModelImpl
 import com.example.foos.ui.view.screen.userprofile.UserProfileScreen
-import com.example.foos.ui.view.screen.userprofile.UserProfileViewModel
+import com.example.foos.ui.view.screen.userprofile.UserProfileViewModelImpl
 
 /**
  * 画面下部ナビゲーションのNavHost
@@ -81,7 +81,7 @@ fun ScreenNavHost(
         ) {
             val userId = it.arguments?.getString(SubScreen.UserProfile.key(0))
             userId?.let {
-                val vm: UserProfileViewModel = hiltViewModel()
+                val vm: UserProfileViewModelImpl = hiltViewModel()
                 UserProfileScreen(vm, navController, userId)
             }
         }
