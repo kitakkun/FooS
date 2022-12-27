@@ -6,7 +6,7 @@ import androidx.navigation.NavController
 import com.example.foos.ui.view.component.PostDetailView
 
 @Composable
-fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavController, postId: String) {
+fun PostDetailScreen(viewModel: PostDetailViewModelImpl, navController: NavController, postId: String) {
 
     LaunchedEffect(Unit) {
         viewModel.fetch(postId)

@@ -25,7 +25,7 @@ import com.example.foos.ui.view.screen.map.MapViewModelImpl
 import com.example.foos.ui.view.screen.post.PostScreen
 import com.example.foos.ui.view.screen.post.PostViewModel
 import com.example.foos.ui.view.screen.postdetail.PostDetailScreen
-import com.example.foos.ui.view.screen.postdetail.PostDetailViewModel
+import com.example.foos.ui.view.screen.postdetail.PostDetailViewModelImpl
 import com.example.foos.ui.view.screen.reaction.ReactionScreen
 import com.example.foos.ui.view.screen.reaction.ReactionViewModel
 import com.example.foos.ui.view.screen.setting.SettingScreen
@@ -91,7 +91,7 @@ fun ScreenNavHost(
         ) {
             val postId = it.arguments?.getString(SubScreen.PostDetail.key(0))
             postId?.let {
-                val vm: PostDetailViewModel = hiltViewModel()
+                val vm: PostDetailViewModelImpl = hiltViewModel()
                 PostDetailScreen(vm, navController, postId)
             }
         }
