@@ -47,7 +47,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterialApi::class)
 @SuppressLint("MissingPermission")
 @Composable
-fun MapScreen(viewModel: MapViewModelImpl, navController: NavController) {
+fun MapScreen(viewModel: MapViewModel, navController: NavController) {
 
     val uiState = viewModel.uiState.value
 

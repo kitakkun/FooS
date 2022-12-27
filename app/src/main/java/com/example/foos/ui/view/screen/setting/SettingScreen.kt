@@ -23,7 +23,7 @@ import com.example.foos.ui.view.component.menu.MenuItemList
 import com.example.foos.ui.view.screen.ScreenViewModel
 
 @Composable
-fun SettingScreen(viewModel: SettingViewModelImpl, screenViewModel: ScreenViewModel) {
+fun SettingScreen(viewModel: SettingViewModel, screenViewModel: ScreenViewModel) {
 
     val uiState = viewModel.uiState.value
     viewModel.fetchUserData()
