@@ -14,7 +14,7 @@ import com.example.foos.ui.navigation.navargs.StringList
 import com.example.foos.ui.view.screen.followlist.FollowListScreen
 import com.example.foos.ui.view.screen.followlist.FollowListViewModel
 import com.example.foos.ui.view.screen.home.HomeScreen
-import com.example.foos.ui.view.screen.home.HomeViewModel
+import com.example.foos.ui.view.screen.home.HomeViewModelImpl
 import com.example.foos.ui.view.screen.imagedetail.ImageDetailScreen
 import com.example.foos.ui.view.screen.locationconfirm.LocationConfirmScreen
 import com.example.foos.ui.view.screen.locationconfirm.LocationConfirmViewModel
@@ -48,7 +48,7 @@ fun ScreenNavHost(
         Modifier.padding(innerPadding)
     ) {
         composable(MainScreen.Home.route) {
-            val vm: HomeViewModel = hiltViewModel()
+            val vm: HomeViewModelImpl = hiltViewModel()
             HomeScreen(vm, navController, screenViewModel)
         }
         composable(MainScreen.Map.route) {
