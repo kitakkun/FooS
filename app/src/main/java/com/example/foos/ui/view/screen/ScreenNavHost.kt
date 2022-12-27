@@ -29,7 +29,7 @@ import com.example.foos.ui.view.screen.postdetail.PostDetailViewModelImpl
 import com.example.foos.ui.view.screen.reaction.ReactionScreen
 import com.example.foos.ui.view.screen.reaction.ReactionViewModel
 import com.example.foos.ui.view.screen.setting.SettingScreen
-import com.example.foos.ui.view.screen.setting.SettingViewModel
+import com.example.foos.ui.view.screen.setting.SettingViewModelImpl
 import com.example.foos.ui.view.screen.userprofile.UserProfileScreen
 import com.example.foos.ui.view.screen.userprofile.UserProfileViewModel
 
@@ -60,7 +60,7 @@ fun ScreenNavHost(
             ReactionScreen(vm, navController)
         }
         composable(MainScreen.Setting.route) {
-            val vm: SettingViewModel = hiltViewModel()
+            val vm: SettingViewModelImpl = hiltViewModel()
             SettingScreen(vm, screenViewModel)
         }
         composable(SubScreen.PostCreate.route) {
