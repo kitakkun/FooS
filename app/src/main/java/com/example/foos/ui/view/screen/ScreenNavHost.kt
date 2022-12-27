@@ -27,7 +27,7 @@ import com.example.foos.ui.view.screen.post.PostViewModelImpl
 import com.example.foos.ui.view.screen.postdetail.PostDetailScreen
 import com.example.foos.ui.view.screen.postdetail.PostDetailViewModelImpl
 import com.example.foos.ui.view.screen.reaction.ReactionScreen
-import com.example.foos.ui.view.screen.reaction.ReactionViewModel
+import com.example.foos.ui.view.screen.reaction.ReactionViewModelImpl
 import com.example.foos.ui.view.screen.setting.SettingScreen
 import com.example.foos.ui.view.screen.setting.SettingViewModelImpl
 import com.example.foos.ui.view.screen.userprofile.UserProfileScreen
@@ -56,7 +56,7 @@ fun ScreenNavHost(
             MapScreen(vm, navController)
         }
         composable(MainScreen.Reaction.route) {
-            val vm: ReactionViewModel = hiltViewModel()
+            val vm: ReactionViewModelImpl = hiltViewModel()
             ReactionScreen(vm, navController)
         }
         composable(MainScreen.Setting.route) {
