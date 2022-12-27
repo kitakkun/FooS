@@ -12,26 +12,26 @@ import com.example.foos.ui.navigation.MainScreen
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.navigation.navargs.StringList
 import com.example.foos.ui.view.screen.followlist.FollowListScreen
-import com.example.foos.ui.view.screen.followlist.FollowListViewModel
+import com.example.foos.ui.view.screen.followlist.FollowListViewModelImpl
 import com.example.foos.ui.view.screen.home.HomeScreen
-import com.example.foos.ui.view.screen.home.HomeViewModel
+import com.example.foos.ui.view.screen.home.HomeViewModelImpl
 import com.example.foos.ui.view.screen.imagedetail.ImageDetailScreen
 import com.example.foos.ui.view.screen.locationconfirm.LocationConfirmScreen
-import com.example.foos.ui.view.screen.locationconfirm.LocationConfirmViewModel
+import com.example.foos.ui.view.screen.locationconfirm.LocationConfirmViewModelImpl
 import com.example.foos.ui.view.screen.locationselect.LocationSelectScreen
-import com.example.foos.ui.view.screen.locationselect.LocationSelectViewModel
+import com.example.foos.ui.view.screen.locationselect.LocationSelectViewModelImpl
 import com.example.foos.ui.view.screen.map.MapScreen
-import com.example.foos.ui.view.screen.map.MapViewModel
+import com.example.foos.ui.view.screen.map.MapViewModelImpl
 import com.example.foos.ui.view.screen.post.PostScreen
-import com.example.foos.ui.view.screen.post.PostViewModel
+import com.example.foos.ui.view.screen.post.PostViewModelImpl
 import com.example.foos.ui.view.screen.postdetail.PostDetailScreen
-import com.example.foos.ui.view.screen.postdetail.PostDetailViewModel
+import com.example.foos.ui.view.screen.postdetail.PostDetailViewModelImpl
 import com.example.foos.ui.view.screen.reaction.ReactionScreen
-import com.example.foos.ui.view.screen.reaction.ReactionViewModel
+import com.example.foos.ui.view.screen.reaction.ReactionViewModelImpl
 import com.example.foos.ui.view.screen.setting.SettingScreen
-import com.example.foos.ui.view.screen.setting.SettingViewModel
+import com.example.foos.ui.view.screen.setting.SettingViewModelImpl
 import com.example.foos.ui.view.screen.userprofile.UserProfileScreen
-import com.example.foos.ui.view.screen.userprofile.UserProfileViewModel
+import com.example.foos.ui.view.screen.userprofile.UserProfileViewModelImpl
 
 /**
  * 画面下部ナビゲーションのNavHost
@@ -48,31 +48,31 @@ fun ScreenNavHost(
         Modifier.padding(innerPadding)
     ) {
         composable(MainScreen.Home.route) {
-            val vm: HomeViewModel = hiltViewModel()
+            val vm: HomeViewModelImpl = hiltViewModel()
             HomeScreen(vm, navController, screenViewModel)
         }
         composable(MainScreen.Map.route) {
-            val vm: MapViewModel = hiltViewModel()
+            val vm: MapViewModelImpl = hiltViewModel()
             MapScreen(vm, navController)
         }
         composable(MainScreen.Reaction.route) {
-            val vm: ReactionViewModel = hiltViewModel()
+            val vm: ReactionViewModelImpl = hiltViewModel()
             ReactionScreen(vm, navController)
         }
         composable(MainScreen.Setting.route) {
-            val vm: SettingViewModel = hiltViewModel()
+            val vm: SettingViewModelImpl = hiltViewModel()
             SettingScreen(vm, screenViewModel)
         }
         composable(SubScreen.PostCreate.route) {
-            val vm: PostViewModel = hiltViewModel()
+            val vm: PostViewModelImpl = hiltViewModel()
             PostScreen(vm, navController, screenViewModel)
         }
         composable(SubScreen.PostCreate.LocationSelect.route) {
-            val vm: LocationSelectViewModel = hiltViewModel()
+            val vm: LocationSelectViewModelImpl = hiltViewModel()
             LocationSelectScreen(vm, navController, screenViewModel)
         }
         composable(SubScreen.PostCreate.LocationConfirm.route) {
-            val vm: LocationConfirmViewModel = hiltViewModel()
+            val vm: LocationConfirmViewModelImpl = hiltViewModel()
             LocationConfirmScreen(vm, navController, screenViewModel)
         }
         composable(
@@ -81,7 +81,7 @@ fun ScreenNavHost(
         ) {
             val userId = it.arguments?.getString(SubScreen.UserProfile.key(0))
             userId?.let {
-                val vm: UserProfileViewModel = hiltViewModel()
+                val vm: UserProfileViewModelImpl = hiltViewModel()
                 UserProfileScreen(vm, navController, userId)
             }
         }
@@ -91,7 +91,7 @@ fun ScreenNavHost(
         ) {
             val postId = it.arguments?.getString(SubScreen.PostDetail.key(0))
             postId?.let {
-                val vm: PostDetailViewModel = hiltViewModel()
+                val vm: PostDetailViewModelImpl = hiltViewModel()
                 PostDetailScreen(vm, navController, postId)
             }
         }
@@ -118,7 +118,7 @@ fun ScreenNavHost(
             val followees = it.arguments?.getBoolean(SubScreen.FollowList.key(1))
             if (userId != null && followees != null) {
                 val index = if (followees) 0 else 1
-                val vm: FollowListViewModel = hiltViewModel()
+                val vm: FollowListViewModelImpl = hiltViewModel()
                 FollowListScreen(
                     viewModel = vm,
                     userId = userId,
