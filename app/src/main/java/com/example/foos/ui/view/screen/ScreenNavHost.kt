@@ -19,7 +19,7 @@ import com.example.foos.ui.view.screen.imagedetail.ImageDetailScreen
 import com.example.foos.ui.view.screen.locationconfirm.LocationConfirmScreen
 import com.example.foos.ui.view.screen.locationconfirm.LocationConfirmViewModelImpl
 import com.example.foos.ui.view.screen.locationselect.LocationSelectScreen
-import com.example.foos.ui.view.screen.locationselect.LocationSelectViewModel
+import com.example.foos.ui.view.screen.locationselect.LocationSelectViewModelImpl
 import com.example.foos.ui.view.screen.map.MapScreen
 import com.example.foos.ui.view.screen.map.MapViewModelImpl
 import com.example.foos.ui.view.screen.post.PostScreen
@@ -68,7 +68,7 @@ fun ScreenNavHost(
             PostScreen(vm, navController, screenViewModel)
         }
         composable(SubScreen.PostCreate.LocationSelect.route) {
-            val vm: LocationSelectViewModel = hiltViewModel()
+            val vm: LocationSelectViewModelImpl = hiltViewModel()
             LocationSelectScreen(vm, navController, screenViewModel)
         }
         composable(SubScreen.PostCreate.LocationConfirm.route) {
