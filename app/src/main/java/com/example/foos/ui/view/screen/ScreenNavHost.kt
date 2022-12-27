@@ -12,7 +12,7 @@ import com.example.foos.ui.navigation.MainScreen
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.navigation.navargs.StringList
 import com.example.foos.ui.view.screen.followlist.FollowListScreen
-import com.example.foos.ui.view.screen.followlist.FollowListViewModel
+import com.example.foos.ui.view.screen.followlist.FollowListViewModelImpl
 import com.example.foos.ui.view.screen.home.HomeScreen
 import com.example.foos.ui.view.screen.home.HomeViewModelImpl
 import com.example.foos.ui.view.screen.imagedetail.ImageDetailScreen
@@ -118,7 +118,7 @@ fun ScreenNavHost(
             val followees = it.arguments?.getBoolean(SubScreen.FollowList.key(1))
             if (userId != null && followees != null) {
                 val index = if (followees) 0 else 1
-                val vm: FollowListViewModel = hiltViewModel()
+                val vm: FollowListViewModelImpl = hiltViewModel()
                 FollowListScreen(
                     viewModel = vm,
                     userId = userId,
