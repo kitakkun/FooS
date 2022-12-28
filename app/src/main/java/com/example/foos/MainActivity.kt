@@ -16,12 +16,18 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity(), CoroutineScope {
+
+    @Inject
+    lateinit var auth: FirebaseAuth
 
     @Inject
     lateinit var usersRepository: UsersRepository
@@ -33,22 +39,32 @@ class MainActivity : ComponentActivity(), CoroutineScope {
         private const val TAG = "MainActivity"
     }
 
-    private lateinit var auth: FirebaseAuth
 
     private val signIn: ActivityResultLauncher<Intent> = registerForActivityResult(
         FirebaseAuthUIActivityResultContract()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            Toast.makeText(this, getString(R.string.message_successfully_signed_in), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                getString(R.string.message_successfully_signed_in),
+                Toast.LENGTH_SHORT
+            ).show()
             auth.currentUser?.let {
                 launch {
                     if (usersRepository.fetchByUserId(userId = it.uid) == null) {
-                        usersRepository.create(DatabaseUser(userId = it.uid, username = it.displayName ?: "user", profileImage = ""))
+                        usersRepository.create(
+                            DatabaseUser(
+                                userId = it.uid,
+                                username = it.displayName ?: "user",
+                                profileImage = ""
+                            )
+                        )
                     }
                 }
             }
         } else {
-            Toast.makeText(this, getString(R.string.message_sign_in_error), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.message_sign_in_error), Toast.LENGTH_LONG)
+                .show()
             val response = result.idpResponse
             if (response == null) {
                 Log.w(TAG, "Sign in canceled")
@@ -79,8 +95,6 @@ class MainActivity : ComponentActivity(), CoroutineScope {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        auth = Firebase.auth
 
         setContent {
             AppScreen()
