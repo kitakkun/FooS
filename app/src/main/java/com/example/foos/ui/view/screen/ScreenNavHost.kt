@@ -1,5 +1,6 @@
 package com.example.foos.ui.view.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -8,9 +9,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.foos.ui.navigation.BottomSheet
 import com.example.foos.ui.navigation.MainScreen
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.navigation.navargs.StringList
+import com.example.foos.ui.view.bottomsheet.PostOptionBottomSheet
 import com.example.foos.ui.view.screen.followlist.FollowListScreen
 import com.example.foos.ui.view.screen.followlist.FollowListViewModelImpl
 import com.example.foos.ui.view.screen.home.HomeScreen
@@ -32,10 +35,13 @@ import com.example.foos.ui.view.screen.setting.SettingScreen
 import com.example.foos.ui.view.screen.setting.SettingViewModelImpl
 import com.example.foos.ui.view.screen.userprofile.UserProfileScreen
 import com.example.foos.ui.view.screen.userprofile.UserProfileViewModelImpl
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.navigation.material.bottomSheet
 
 /**
  * 画面下部ナビゲーションのNavHost
  */
+@OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 fun ScreenNavHost(
     navController: NavHostController,
@@ -47,6 +53,10 @@ fun ScreenNavHost(
         startDestination = MainScreen.Home.route,
         Modifier.padding(innerPadding)
     ) {
+        bottomSheet(BottomSheet.PostOption.routeWithParam) {
+            val postId = it.arguments?.getString(BottomSheet.PostOption.key(0)) ?: return@bottomSheet
+            PostOptionBottomSheet(postId = postId)
+        }
         composable(MainScreen.Home.route) {
             val vm: HomeViewModelImpl = hiltViewModel()
             HomeScreen(vm, navController, screenViewModel)
