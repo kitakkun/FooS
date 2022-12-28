@@ -11,6 +11,7 @@ import com.example.foos.data.domain.fetcher.post.FetchPostsUserReactedByUserIdUs
 import com.example.foos.data.domain.fetcher.post.FetchPostsWithMediaByUserIdUseCase
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.UsersRepository
+import com.example.foos.ui.navigation.BottomSheet
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.navigation.navargs.StringList
 import com.example.foos.ui.state.component.PostItemUiState
@@ -268,6 +269,8 @@ class UserProfileViewModelImpl @Inject constructor(
     }
 
     override fun onMoreVertClick(postId: String) {
-        /* TODO */
+        viewModelScope.launch {
+            _navEvent.emit(BottomSheet.PostOption.route(postId))
+        }
     }
 }
