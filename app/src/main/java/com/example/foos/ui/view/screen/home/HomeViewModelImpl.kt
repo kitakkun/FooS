@@ -125,7 +125,7 @@ class HomeViewModelImpl @Inject constructor(
 
     override fun onMoreVertClick(postId: String) {
         viewModelScope.launch {
-            BottomSheet.PostOption.route(postId)
+            _navEvent.emit(BottomSheet.PostOption.route(postId))
         }
     }
 }
