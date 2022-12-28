@@ -1,5 +1,6 @@
 package com.example.foos.di
 
+import com.example.foos.data.domain.DeletePostByPostIdUseCase
 import com.example.foos.data.domain.FetchReactionsByUserIdUseCase
 import com.example.foos.data.domain.fetcher.follow.FetchFollowStateUseCase
 import com.example.foos.data.domain.fetcher.post.*
@@ -68,5 +69,10 @@ object UseCaseModule {
     @Provides
     fun provideFetchFollowStateUseCase(): FetchFollowStateUseCase = FetchFollowStateUseCase(
         provideFollowRepository()
+    )
+
+    @Provides
+    fun provideDeletePostByPostIdUseCase(): DeletePostByPostIdUseCase = DeletePostByPostIdUseCase(
+        providePostsRepository()
     )
 }
