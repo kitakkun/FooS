@@ -113,6 +113,7 @@ fun UserProfileScreen(
                                         onContentClick = { viewModel.onContentClick(it) },
                                         onUserIconClick = { viewModel.onUserIconClick(it) },
                                         onAppearLastItem = { viewModel.fetchOlderPosts() },
+                                        onMoreVertClick = viewModel::onMoreVertClick,
                                     )
                                 }
                             },
@@ -142,6 +143,7 @@ fun UserProfileScreen(
                                         onContentClick = { viewModel.onContentClick(it) },
                                         onUserIconClick = { viewModel.onUserIconClick(it) },
                                         onAppearLastItem = { viewModel.fetchOlderUserReactedPosts() },
+                                        onMoreVertClick = viewModel::onMoreVertClick,
                                     )
                                 }
                             },

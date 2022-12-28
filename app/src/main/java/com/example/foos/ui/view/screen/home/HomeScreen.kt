@@ -67,7 +67,8 @@ fun HomeScreen(
         onImageClick = { imageUrls, clickedUrl -> viewModel.onImageClick(imageUrls, clickedUrl) },
         onUserIconClick = { viewModel.onUserIconClick(it) },
         onRefresh = { viewModel.onRefresh() },
-        onContentClick = { viewModel.onContentClick(it) }
+        onContentClick = { viewModel.onContentClick(it) },
+        onMoreVertClick = viewModel::onMoreVertClick,
     )
 
 }
@@ -82,9 +83,9 @@ private fun HomeUI(
     onContentClick: (String) -> Unit,
     onImageClick: (List<String>, String) -> Unit,
     onAppearLastItem: () -> Unit,
-    onPostCreateButtonClick: () -> Unit
+    onPostCreateButtonClick: () -> Unit,
+    onMoreVertClick: (String) -> Unit,
 ) {
-
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing),
         onRefresh = onRefresh
@@ -99,7 +100,8 @@ private fun HomeUI(
                     onUserIconClick = { onUserIconClick(it) },
                     onContentClick = { onContentClick(it) },
                     onImageClick = { imageUrls, clickedUrl -> onImageClick(imageUrls, clickedUrl) },
-                    onAppearLastItem = { onAppearLastItem() }
+                    onAppearLastItem = { onAppearLastItem() },
+                    onMoreVertClick = onMoreVertClick,
                 )
             }
             RoundIconActionButton(
@@ -124,7 +126,8 @@ private fun HomeUIPreview() {
             onContentClick = {},
             onImageClick = { _, _ -> },
             onAppearLastItem = {},
-            onPostCreateButtonClick = {}
+            onPostCreateButtonClick = {},
+            onMoreVertClick = {},
         )
     }
 }

@@ -170,7 +170,8 @@ class UserProfileViewModelImpl @Inject constructor(
             val posts = fetchPostsUserReactedByUserIdUseCase(uiState.value.userId).map {
                 PostItemUiState.convert(it)
             }
-            _uiState.value = uiState.value.copy(isLoadingUserReactedPosts = false, userReactedPosts = posts)
+            _uiState.value =
+                uiState.value.copy(isLoadingUserReactedPosts = false, userReactedPosts = posts)
         }
     }
 
@@ -264,5 +265,9 @@ class UserProfileViewModelImpl @Inject constructor(
                 )
             }
         }
+    }
+
+    override fun onMoreVertClick(postId: String) {
+        /* TODO */
     }
 }

@@ -10,7 +10,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -43,9 +42,10 @@ import java.util.*
 @Composable
 fun PostItem(
     uiState: PostItemUiState,
-    onUserIconClick: (String) -> Unit = { },
-    onContentClick: (String) -> Unit = { },
-    onImageClick: (List<String>, String) -> Unit = { _, _ -> },
+    onUserIconClick: (String) -> Unit,
+    onContentClick: (String) -> Unit,
+    onImageClick: (List<String>, String) -> Unit,
+    onMoreVertClick: (String) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -56,14 +56,22 @@ fun PostItem(
         Spacer(modifier = Modifier.width(paddingMedium))
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                HorizontalUserIdentityText(username = uiState.username, userId = uiState.userId, modifier = Modifier.weight(1f))
+                HorizontalUserIdentityText(
+                    username = uiState.username,
+                    userId = uiState.userId,
+                    modifier = Modifier.weight(1f)
+                )
                 Text(
                     text = "・${uiState.formattedCreatedAtText}",
                     style = MaterialTheme.typography.subtitle1,
                     fontWeight = FontWeight.Light,
                 )
-                IconButton(onClick = { /*TODO*/ }, Modifier.size(16.dp)) {
-                    Icon(imageVector = Icons.Default.MoreVert, contentDescription = null, tint = MaterialTheme.colors.onSurface)
+                IconButton(onClick = { onMoreVertClick(uiState.postId) }, Modifier.size(16.dp)) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.onSurface
+                    )
                 }
             }
             Text(
@@ -91,7 +99,13 @@ private fun PostItemPreview() {
         createdAt = Date()
     )
     FooSTheme {
-        PostItem(uiState = uiState)
+        PostItem(
+            uiState = uiState,
+            onUserIconClick = {},
+            onContentClick = {},
+            onImageClick = { _, _ -> },
+            onMoreVertClick = {},
+        )
     }
 }
 

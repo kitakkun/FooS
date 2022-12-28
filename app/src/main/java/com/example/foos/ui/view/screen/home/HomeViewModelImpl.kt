@@ -122,5 +122,7 @@ class HomeViewModelImpl @Inject constructor(
         }
     }
 
-
+    override fun onMoreVertClick(postId: String) {
+        /* TODO */
+    }
 }

@@ -28,6 +28,7 @@ fun PostItemList(
     onContentClick: (String) -> Unit = { },
     onImageClick: (List<String>, String) -> Unit = { _, _ -> },
     onAppearLastItem: (Int) -> Unit = {},
+    onMoreVertClick: (String) -> Unit,
 ) {
     listState.OnAppearLastItem(onAppearLastItem = onAppearLastItem)
 
@@ -36,7 +37,13 @@ fun PostItemList(
         modifier = Modifier.fillMaxSize(),
     ) {
         items(uiStates) { post ->
-            PostItem(post, onUserIconClick, onContentClick, onImageClick)
+            PostItem(
+                uiState = post,
+                onUserIconClick = onUserIconClick,
+                onContentClick = onContentClick,
+                onImageClick = onImageClick,
+                onMoreVertClick = onMoreVertClick,
+            )
             Divider(thickness = 1.dp, color = Color.LightGray)
         }
     }

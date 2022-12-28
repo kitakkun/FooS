@@ -24,4 +24,5 @@ interface UserProfileViewModel {
     fun fetchOlderPosts()
     fun fetchOlderMediaPosts()
     fun fetchOlderUserReactedPosts()
+    fun onMoreVertClick(postId: String)
 }
