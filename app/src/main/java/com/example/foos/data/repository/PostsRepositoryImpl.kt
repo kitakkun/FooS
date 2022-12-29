@@ -170,7 +170,6 @@ class PostsRepositoryImpl @Inject constructor(
      * 投稿を削除します
      */
     override suspend fun deletePost(postId: String) {
-        /* TODO: 自分の投稿以外消せなくする */
         database.collection(COLLECTION).document(postId).delete()
     }
 
