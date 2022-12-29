@@ -1,26 +1,31 @@
 package com.example.foos.ui.view.screen
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
 import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.component.navigation.ScreenBottomNavBar
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.navigation.material.ModalBottomSheetLayout
+import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 
 /**
  * アプリ画面のコンポーザブル（アプリ全体のエントリポイント）
  */
+@OptIn(ExperimentalMaterialNavigationApi::class)
 @Preview
 @Composable
 fun AppScreen() {
 
-    val navController = rememberNavController()
+    val bottomSheetNavigator = rememberBottomSheetNavigator()
+    val navController = rememberNavController(bottomSheetNavigator)
     val screenViewModel: ScreenViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
@@ -36,15 +41,20 @@ fun AppScreen() {
     }
 
     FooSTheme {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            backgroundColor = MaterialTheme.colors.background,
-            bottomBar = {
-                ScreenBottomNavBar(
-                    navController,
-                    onClick = { screen -> screenViewModel.navigate(screen.route) }
-                )
-            }
-        ) { innerPadding -> ScreenNavHost(navController, screenViewModel, innerPadding) }
+        ModalBottomSheetLayout(
+            bottomSheetNavigator = bottomSheetNavigator,
+            scrimColor = Color.Black.copy(alpha = 0.4f)
+        ) {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                backgroundColor = MaterialTheme.colors.background,
+                bottomBar = {
+                    ScreenBottomNavBar(
+                        navController,
+                        onClick = { screen -> screenViewModel.navigate(screen.route) }
+                    )
+                }
+            ) { innerPadding -> ScreenNavHost(navController, screenViewModel, innerPadding) }
+        }
     }
 }

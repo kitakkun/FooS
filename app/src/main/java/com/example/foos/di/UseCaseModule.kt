@@ -1,8 +1,10 @@
 package com.example.foos.di
 
+import com.example.foos.data.domain.DeletePostByPostIdUseCase
 import com.example.foos.data.domain.FetchReactionsByUserIdUseCase
 import com.example.foos.data.domain.fetcher.follow.FetchFollowStateUseCase
 import com.example.foos.data.domain.fetcher.post.*
+import com.example.foos.di.FirebaseModule.provideFirebaseAuthInstance
 import com.example.foos.di.RepositoryModule.provideFollowRepository
 import com.example.foos.di.RepositoryModule.providePostsRepository
 import com.example.foos.di.RepositoryModule.provideReactionsRepository
@@ -68,5 +70,11 @@ object UseCaseModule {
     @Provides
     fun provideFetchFollowStateUseCase(): FetchFollowStateUseCase = FetchFollowStateUseCase(
         provideFollowRepository()
+    )
+
+    @Provides
+    fun provideDeletePostByPostIdUseCase(): DeletePostByPostIdUseCase = DeletePostByPostIdUseCase(
+        postsRepository = providePostsRepository(),
+        firebaseAuth = provideFirebaseAuthInstance()
     )
 }

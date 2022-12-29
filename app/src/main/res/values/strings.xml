@@ -35,4 +35,5 @@
     <string name="request_permission">Request Permission</string>
     <string name="message_successfully_signed_in">Successfully signed in.</string>
     <string name="message_sign_in_error">There was an error signing in.</string>
+    <string name="delete_post">Delete post</string>
 </resources>

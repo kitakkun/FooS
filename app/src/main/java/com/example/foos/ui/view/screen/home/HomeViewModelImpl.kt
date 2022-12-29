@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foos.data.domain.fetcher.post.FetchPostsUseCase
+import com.example.foos.ui.navigation.BottomSheet
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.navigation.navargs.StringList
 import com.example.foos.ui.state.component.PostItemUiState
@@ -122,5 +123,9 @@ class HomeViewModelImpl @Inject constructor(
         }
     }
 
-
+    override fun onMoreVertClick(postId: String) {
+        viewModelScope.launch {
+            _navEvent.emit(BottomSheet.PostOption.route(postId))
+        }
+    }
 }

@@ -11,6 +11,7 @@ import com.example.foos.data.domain.fetcher.post.FetchPostsUserReactedByUserIdUs
 import com.example.foos.data.domain.fetcher.post.FetchPostsWithMediaByUserIdUseCase
 import com.example.foos.data.repository.FollowRepository
 import com.example.foos.data.repository.UsersRepository
+import com.example.foos.ui.navigation.BottomSheet
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.navigation.navargs.StringList
 import com.example.foos.ui.state.component.PostItemUiState
@@ -170,7 +171,8 @@ class UserProfileViewModelImpl @Inject constructor(
             val posts = fetchPostsUserReactedByUserIdUseCase(uiState.value.userId).map {
                 PostItemUiState.convert(it)
             }
-            _uiState.value = uiState.value.copy(isLoadingUserReactedPosts = false, userReactedPosts = posts)
+            _uiState.value =
+                uiState.value.copy(isLoadingUserReactedPosts = false, userReactedPosts = posts)
         }
     }
 
@@ -263,6 +265,12 @@ class UserProfileViewModelImpl @Inject constructor(
                     userReactedPosts = (uiState.value.userReactedPosts + posts).distinct()
                 )
             }
+        }
+    }
+
+    override fun onMoreVertClick(postId: String) {
+        viewModelScope.launch {
+            _navEvent.emit(BottomSheet.PostOption.route(postId))
         }
     }
 }
