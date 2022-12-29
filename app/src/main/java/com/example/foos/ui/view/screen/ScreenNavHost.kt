@@ -55,7 +55,7 @@ fun ScreenNavHost(
     ) {
         bottomSheet(BottomSheet.PostOption.routeWithParam) {
             val postId = it.arguments?.getString(BottomSheet.PostOption.key(0)) ?: return@bottomSheet
-            PostOptionBottomSheet(postId = postId)
+            PostOptionBottomSheet(navController = navController, postId = postId)
         }
         composable(MainScreen.Home.route) {
             val vm: HomeViewModelImpl = hiltViewModel()
