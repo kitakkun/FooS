@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.component.dialog
+package com.github.kitakkun.foos.customview.composable.dialog
 
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
