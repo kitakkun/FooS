@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui
+package com.github.kitakkun.foos.customview.preview
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
@@ -6,7 +6,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.kitakkun.foos.ui.theme.FooSTheme
+import com.github.kitakkun.foos.customview.theme.FooSTheme
 
 @Composable
 fun PreviewContainer(

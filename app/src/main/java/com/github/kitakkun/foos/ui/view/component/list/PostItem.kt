@@ -24,10 +24,10 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.github.kitakkun.foos.ui.PreviewContainer
+import com.github.kitakkun.foos.customview.preview.PreviewContainer
+import com.github.kitakkun.foos.customview.theme.FooSTheme
 import com.github.kitakkun.foos.ui.constants.paddingMedium
 import com.github.kitakkun.foos.ui.state.component.PostItemUiState
-import com.github.kitakkun.foos.ui.theme.FooSTheme
 import com.github.kitakkun.foos.ui.view.component.HorizontalUserIdentityText
 import com.github.kitakkun.foos.ui.view.component.MaxSizeLoadingIndicator
 import com.github.kitakkun.foos.ui.view.component.UserIcon

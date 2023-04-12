@@ -16,7 +16,7 @@ import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.github.kitakkun.foos.R
-import com.github.kitakkun.foos.ui.PreviewContainer
+import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.ui.state.component.MenuItemUiState
 import com.github.kitakkun.foos.ui.view.component.UserIcon
 import com.github.kitakkun.foos.ui.view.component.dialog.ConfirmAlertDialog

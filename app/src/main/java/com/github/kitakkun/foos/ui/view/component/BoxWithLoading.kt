@@ -7,7 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
-import com.github.kitakkun.foos.ui.PreviewContainer
+import com.github.kitakkun.foos.customview.preview.PreviewContainer
 
 @Composable
 fun BoxWithLoading(

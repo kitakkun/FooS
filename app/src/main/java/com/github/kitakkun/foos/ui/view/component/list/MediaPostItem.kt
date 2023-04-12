@@ -9,7 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.github.kitakkun.foos.ui.PreviewContainer
+import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.ui.state.component.PostItemUiState
 import com.github.kitakkun.foos.ui.view.component.MaxSizeLoadingIndicator
 

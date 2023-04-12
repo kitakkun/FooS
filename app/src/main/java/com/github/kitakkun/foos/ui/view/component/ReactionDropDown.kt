@@ -14,7 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.github.kitakkun.foos.R
-import com.github.kitakkun.foos.ui.PreviewContainer
+import com.github.kitakkun.foos.customview.preview.PreviewContainer
 
 /**
  * Reactionを行うためのドロップダウン

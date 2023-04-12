@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.R
-import com.github.kitakkun.foos.ui.PreviewContainer
+import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.ui.state.screen.followlist.FollowListScreenUiState
 import com.github.kitakkun.foos.ui.state.screen.followlist.UserItemUiState
 import com.github.kitakkun.foos.ui.view.component.list.UserList

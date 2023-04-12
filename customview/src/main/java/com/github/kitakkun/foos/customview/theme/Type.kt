@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.theme
+package com.github.kitakkun.foos.customview.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

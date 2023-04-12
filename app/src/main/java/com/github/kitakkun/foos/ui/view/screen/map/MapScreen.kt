@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.R
-import com.github.kitakkun.foos.ui.PreviewContainer
+import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.ui.constants.paddingMedium
 import com.github.kitakkun.foos.ui.constants.paddingSmall
 import com.github.kitakkun.foos.ui.state.component.PostItemUiState

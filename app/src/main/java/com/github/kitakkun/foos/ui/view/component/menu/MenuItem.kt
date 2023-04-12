@@ -1,7 +1,6 @@
 package com.github.kitakkun.foos.ui.view.component.menu
 
 import androidx.compose.foundation.clickable
-import com.github.kitakkun.foos.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -13,10 +12,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.github.kitakkun.foos.ui.PreviewContainer
+import com.github.kitakkun.foos.R
+import com.github.kitakkun.foos.customview.preview.PreviewContainer
+import com.github.kitakkun.foos.customview.theme.FooSTheme
 import com.github.kitakkun.foos.ui.constants.paddingMedium
 import com.github.kitakkun.foos.ui.state.component.MenuItemUiState
-import com.github.kitakkun.foos.ui.theme.FooSTheme
 
 /**
  * メニューアイテム
