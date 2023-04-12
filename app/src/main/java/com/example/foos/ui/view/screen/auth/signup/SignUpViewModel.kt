@@ -42,6 +42,7 @@ class SignUpViewModel @Inject constructor(
         try {
             val email = Email(_uiState.value.email)
             val password = Password(_uiState.value.password)
+            _uiState.value = _uiState.value.copy(isLoading = true)
             val result = usersRepository.create(email, password)
             when (result) {
                 is Ok -> {
@@ -53,6 +54,8 @@ class SignUpViewModel @Inject constructor(
             }
         } catch (e: Throwable) {
             Log.e("SignUpViewModel", "signUp: ", e)
+        } finally {
+            _uiState.value = _uiState.value.copy(isLoading = false)
         }
     }
 

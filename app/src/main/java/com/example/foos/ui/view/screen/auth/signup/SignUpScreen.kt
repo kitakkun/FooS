@@ -1,7 +1,6 @@
 package com.example.foos.ui.view.screen.auth.signup
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.ClickableText
@@ -24,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.theme.LinkBlue
+import com.example.foos.ui.view.component.BoxWithLoading
 
 @Composable
 fun SignUpScreen(
@@ -72,7 +72,8 @@ fun SignUpUI(
             pop()
         }
     }
-    Box(
+    BoxWithLoading(
+        isLoading = uiState.isLoading,
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
