@@ -54,7 +54,13 @@ fun AppScreen() {
                         onClick = { screen -> screenViewModel.navigate(screen.route) }
                     )
                 }
-            ) { innerPadding -> ScreenNavHost(navController, screenViewModel, innerPadding) }
+            ) { innerPadding ->
+                ScreenNavHost(
+                    navController = navController,
+                    screenViewModel = screenViewModel,
+                    innerPadding = innerPadding
+                )
+            }
         }
     }
 }
