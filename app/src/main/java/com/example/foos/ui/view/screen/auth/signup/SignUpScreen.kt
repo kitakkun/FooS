@@ -32,7 +32,10 @@ fun SignUpScreen(
 ) {
     LaunchedEffect(Unit) {
         viewModel.navEvent.collect {
-            navController.navigate(it)
+            navController.navigate(it) {
+                popUpTo(it) { inclusive = true }
+                launchSingleTop = true
+            }
         }
     }
 
