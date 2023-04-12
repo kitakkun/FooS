@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.navigation
+package com.github.kitakkun.foos.common.navigation
 
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType

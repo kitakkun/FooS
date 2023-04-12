@@ -5,10 +5,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.kitakkun.foos.common.navigation.BottomSheet
 import com.github.kitakkun.foos.common.navigation.StringList
 import com.github.kitakkun.foos.common.navigation.SubScreen
 import com.github.kitakkun.foos.data.domain.fetcher.post.FetchPostsUseCase
-import com.github.kitakkun.foos.ui.navigation.BottomSheet
 import com.github.kitakkun.foos.ui.state.component.PostItemUiState
 import com.github.kitakkun.foos.ui.state.screen.home.HomeScreenUiState
 import com.google.gson.Gson
