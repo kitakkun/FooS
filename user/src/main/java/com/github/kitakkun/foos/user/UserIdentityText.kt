@@ -13,6 +13,35 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 
 @Composable
+fun VerticalUserIdentityText(
+    username: String,
+    userId: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+    ) {
+        UsernameText(username = username)
+        UserIdText(userId = userId)
+    }
+}
+
+@Composable
+fun HorizontalUserIdentityText(
+    username: String,
+    userId: String,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier,
+    ) {
+        UsernameText(username = username)
+        UserIdText(userId = userId)
+    }
+}
+
+@Composable
 private fun UsernameText(
     username: String,
     modifier: Modifier = Modifier
@@ -40,35 +69,6 @@ private fun UserIdText(
         overflow = TextOverflow.Ellipsis,
         modifier = modifier
     )
-}
-
-@Composable
-fun VerticalUserIdentityText(
-    username: String,
-    userId: String,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-    ) {
-        UsernameText(username = username)
-        UserIdText(userId = userId)
-    }
-}
-
-@Composable
-fun HorizontalUserIdentityText(
-    username: String,
-    userId: String,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier,
-    ) {
-        UsernameText(username = username)
-        UserIdText(userId = userId)
-    }
 }
 
 @Preview
