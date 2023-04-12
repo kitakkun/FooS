@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.component
+package com.github.kitakkun.foos.user.auth
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
@@ -12,8 +12,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
+import com.github.kitakkun.foos.user.R
 
 @Composable
 fun EmailTextField(

@@ -24,8 +24,8 @@ import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.customview.composable.loading.BoxWithLoading
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.customview.theme.LinkBlue
-import com.github.kitakkun.foos.ui.view.component.EmailTextField
-import com.github.kitakkun.foos.ui.view.component.PasswordTextField
+import com.github.kitakkun.foos.user.auth.EmailTextField
+import com.github.kitakkun.foos.user.auth.PasswordTextField
 
 @Composable
 fun SignUpScreen(
