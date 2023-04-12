@@ -1,7 +1,14 @@
 package com.example.foos.data.repository
 
+import android.util.Log
 import com.example.foos.data.model.database.DatabaseUser
+import com.example.foos.data.model.user.Email
+import com.example.foos.data.model.user.Password
 import com.example.foos.util.join
+import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.Ok
+import com.github.michaelbull.result.Result
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -11,10 +18,12 @@ import javax.inject.Inject
  */
 class UsersRepositoryImpl @Inject constructor(
     private val database: FirebaseFirestore,
+    private val firebaseAuth: FirebaseAuth,
 ) : UsersRepository {
 
     companion object {
         private const val COLLECTION = "users"
+        private const val TAG = "UsersRepository"
     }
 
     override suspend fun fetchByUserIds(userIds: List<String>): List<DatabaseUser> =
@@ -24,6 +33,27 @@ class UsersRepositoryImpl @Inject constructor(
         else database.collection(COLLECTION)
             .whereIn("userId", userIds.toSet().toList())
             .get().await().toObjects(DatabaseUser::class.java)
+
+    override suspend fun create(email: Email, password: Password): Result<DatabaseUser, Throwable> {
+        try {
+            val result =
+                firebaseAuth.createUserWithEmailAndPassword(email.value, password.value).await()
+            val user = result.user ?: return Err(Throwable("failed to create user."))
+            val databaseUser = DatabaseUser(
+                userId = user.uid,
+                username = user.displayName ?: "user",
+                profileImage = "",
+            )
+            database.collection(COLLECTION)
+                .document(databaseUser.userId)
+                .set(databaseUser).await()
+            Log.d(TAG, "Successfully created user.")
+            return Ok(databaseUser)
+        } catch (e: Throwable) {
+            Log.d(TAG, "Failed to create user.")
+            return Err(e)
+        }
+    }
 
     override suspend fun create(databaseUser: DatabaseUser) {
         database.collection(COLLECTION)

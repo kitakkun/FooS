@@ -19,11 +19,13 @@ object RepositoryModule {
      */
     @Provides
     @Singleton
-    fun providePostsRepository(): PostsRepository = PostsRepositoryImpl(provideFireStoreInstance(), provideFirebaseStorageInstance())
+    fun providePostsRepository(): PostsRepository =
+        PostsRepositoryImpl(provideFireStoreInstance(), provideFirebaseStorageInstance())
 
     @Provides
     @Singleton
-    fun provideUsersRepository(): UsersRepository = UsersRepositoryImpl(provideFireStoreInstance())
+    fun provideUsersRepository(): UsersRepository =
+        UsersRepositoryImpl(provideFireStoreInstance(), provideFirebaseAuthInstance())
 
     @Provides
     @Singleton
