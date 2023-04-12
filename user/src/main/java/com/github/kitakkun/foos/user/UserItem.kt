@@ -44,12 +44,10 @@ fun UserItem(
                 UserIcon(url = uiState.profileImage)
                 Spacer(modifier = Modifier.width(paddingMedium))
                 Column {
-                    Row {
-                        VerticalUserIdentityText(
-                            username = uiState.username,
-                            userId = uiState.userId,
-                        )
-                    }
+                    VerticalUserIdentityText(
+                        username = uiState.username,
+                        userId = uiState.userId,
+                    )
                     Spacer(modifier = Modifier.height(paddingMedium))
                     Text(text = uiState.bio)
                 }
