@@ -6,8 +6,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.foos.R
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.state.screen.reaction.ReactionItemUiState
-import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.component.MaxSizeLoadingIndicator
 import com.example.foos.ui.view.component.list.ReactionItemList
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -56,28 +56,26 @@ fun ReactionUI(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview
 @Composable
-private fun ReactionUIPreview() {
-    FooSTheme {
-        val list = mutableListOf<ReactionItemUiState>()
-        repeat(10) { i ->
-            list.add(
-                ReactionItemUiState(
-                    username = "username$i",
-                    reaction = stringResource(id = R.string.emoji_like),
-                    postContent = "post content $i...",
-                    userIcon = ""
-                )
+private fun ReactionUIPreview() = PreviewContainer {
+    val list = mutableListOf<ReactionItemUiState>()
+    repeat(10) { i ->
+        list.add(
+            ReactionItemUiState(
+                username = "username$i",
+                reaction = stringResource(id = R.string.emoji_like),
+                postContent = "post content $i...",
+                userIcon = ""
             )
-        }
-        ReactionUI(
-            reactions = list,
-            isRefreshing = false,
-            isLoading = false,
-            onRefresh = {},
-            onUserIconClick = {},
-            onContentClick = {}
         )
     }
+    ReactionUI(
+        reactions = list,
+        isRefreshing = false,
+        isLoading = false,
+        onRefresh = {},
+        onUserIconClick = {},
+        onContentClick = {}
+    )
 }

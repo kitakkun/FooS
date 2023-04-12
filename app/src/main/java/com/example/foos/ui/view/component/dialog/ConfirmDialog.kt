@@ -5,7 +5,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.foos.ui.theme.FooSTheme
+import com.example.foos.ui.PreviewContainer
 
 /**
  * ユーザ操作の確認用アラートダイアログ
@@ -36,13 +36,11 @@ fun ConfirmAlertDialog(
 
 @Preview
 @Composable
-private fun ConfirmAlertDialogPreview() {
-    FooSTheme {
-        ConfirmAlertDialog(
-            title = "Title",
-            message = "some message",
-            confirmButtonText = "OK",
-            dismissButtonText = "Cancel",
-        )
-    }
+private fun ConfirmAlertDialogPreview() = PreviewContainer {
+    ConfirmAlertDialog(
+        title = "Title",
+        message = "some message",
+        confirmButtonText = "OK",
+        dismissButtonText = "Cancel",
+    )
 }

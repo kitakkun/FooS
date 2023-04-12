@@ -7,6 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.theme.FooSTheme
 
 @Composable
@@ -35,9 +36,9 @@ fun RoundButton(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun RoundButtonPreview() {
+private fun RoundButtonPreview() = PreviewContainer {
     FooSTheme {
         RoundButton(onClick = { }) {
             Text("Round")
@@ -45,9 +46,9 @@ private fun RoundButtonPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun RoundButtonOutlinedPreview() {
+private fun RoundButtonOutlinedPreview() = PreviewContainer {
     FooSTheme {
         RoundButton(onClick = { }, outlined = true) {
             Text("Outlined")

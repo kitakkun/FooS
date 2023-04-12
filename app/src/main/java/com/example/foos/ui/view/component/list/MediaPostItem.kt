@@ -7,11 +7,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.state.component.PostItemUiState
-import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.component.MaxSizeLoadingIndicator
 
 @Composable
@@ -36,10 +35,8 @@ fun MediaPostItem(
     )
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun MediaPostItemPreview() {
-    FooSTheme {
-        MediaPostItem(uiState = PostItemUiState.Default)
-    }
+private fun MediaPostItemPreview() = PreviewContainer {
+    MediaPostItem(uiState = PostItemUiState.Default)
 }

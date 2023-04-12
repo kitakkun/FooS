@@ -11,7 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.foos.ui.theme.FooSTheme
+import com.example.foos.ui.PreviewContainer
 
 @Composable
 private fun UsernameText(
@@ -83,18 +83,14 @@ fun HorizontalUserIdentityText(
     Text(text = annotatedText, modifier = modifier, overflow = TextOverflow.Ellipsis, maxLines = 1)
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun VerticalUserIdentityTextPreview() {
-    FooSTheme {
-        VerticalUserIdentityText(username = "username", userId = "userId")
-    }
+private fun VerticalUserIdentityTextPreview() = PreviewContainer {
+    VerticalUserIdentityText(username = "username", userId = "userId")
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun HorizontalUserIdentityTextPreview() {
-    FooSTheme {
-        HorizontalUserIdentityText(username = "username", userId = "userId")
-    }
+private fun HorizontalUserIdentityTextPreview() = PreviewContainer {
+    HorizontalUserIdentityText(username = "username", userId = "userId")
 }

@@ -7,7 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.foos.R
-import com.example.foos.ui.theme.FooSTheme
+import com.example.foos.ui.PreviewContainer
 
 /**
  * フォローボタン
@@ -19,9 +19,8 @@ fun FollowButton(
     following: Boolean,
     onClick: () -> Unit = {},
 ) {
-    val text =
-        if (following) stringResource(id = R.string.following)
-        else stringResource(id = R.string.follow)
+    val text = if (following) stringResource(id = R.string.following)
+    else stringResource(id = R.string.follow)
     RoundButton(onClick = onClick, outlined = following) {
         Text(text = text)
     }
@@ -29,14 +28,10 @@ fun FollowButton(
 
 @Preview
 @Composable
-private fun FollowButtonPreview() {
+private fun FollowButtonPreview() = PreviewContainer {
     val followingFlag = remember {
         mutableStateOf(false)
     }
-    FooSTheme {
-        FollowButton(
-            following = followingFlag.value,
-            onClick = { followingFlag.value = !followingFlag.value }
-        )
-    }
+    FollowButton(following = followingFlag.value,
+        onClick = { followingFlag.value = !followingFlag.value })
 }

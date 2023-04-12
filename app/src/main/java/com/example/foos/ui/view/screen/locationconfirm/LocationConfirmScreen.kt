@@ -18,9 +18,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.foos.R
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.navigation.SubScreen
-import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -156,16 +156,14 @@ private fun LocationConfirmUI(
     }
 }
 
-@Preview(showSystemUi = true, showBackground = true)
+@Preview
 @Composable
-private fun LocationConfirmUIPreview() {
-    FooSTheme {
-        LocationConfirmUI(
-            locationName = "LocationName",
-            location = LatLng(122.0, 154.0),
-            onCancel = {},
-            onProceed = {},
-            onLocationNameUpdated = {}
-        )
-    }
+private fun LocationConfirmUIPreview() = PreviewContainer {
+    LocationConfirmUI(
+        locationName = "LocationName",
+        location = LatLng(122.0, 154.0),
+        onCancel = {},
+        onProceed = {},
+        onLocationNameUpdated = {}
+    )
 }

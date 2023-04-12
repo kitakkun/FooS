@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.constants.paddingLarge
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.component.PostItemUiState
@@ -148,9 +149,9 @@ fun AttachedImagesDisplay(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun PostDetailPreview() {
+private fun PostDetailPreview() = PreviewContainer {
     FooSTheme {
         val uiState = PostItemUiState.Default.copy(
             username = "username",

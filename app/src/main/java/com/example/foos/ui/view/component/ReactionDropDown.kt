@@ -14,6 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.foos.R
+import com.example.foos.ui.PreviewContainer
 
 /**
  * Reactionを行うためのドロップダウン
@@ -58,6 +59,6 @@ fun ReactionDropdown(
 
 @Preview
 @Composable
-private fun ReactionDropdownPreview() {
+private fun ReactionDropdownPreview() = PreviewContainer {
     ReactionDropdown(expanded = true, onDismissRequest = { }, onReactionClicked = {})
 }

@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.foos.R
+import com.example.foos.ui.PreviewContainer
 
 /**
  * リアクション追加用ボタン
@@ -58,8 +59,8 @@ fun ReactionButton(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun ReactionButtonPreview() {
+private fun ReactionButtonPreview() = PreviewContainer {
     ReactionButton(onReactionClicked = {}, onReactionRemoved = { }, myReaction = null)
 }

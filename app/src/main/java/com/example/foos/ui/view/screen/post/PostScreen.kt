@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.foos.R
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.component.PostItemUiState
 import com.example.foos.ui.theme.FooSTheme
@@ -261,30 +262,26 @@ private fun ToolBar(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun TopRowPreview() {
-    FooSTheme {
-        TopRow(confirmText = "Confirm", onCancel = { }, onConfirm = { })
-    }
+private fun TopRowPreview() = PreviewContainer {
+    TopRow(confirmText = "Confirm", onCancel = { }, onConfirm = { })
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun ToolBarPreview() {
-    FooSTheme {
-        ToolBar(
-            haveAccessToFile = true,
-            haveAccessToLocation = true,
-            onAddImage = { },
-            onAddLocation = { }
-        )
-    }
+private fun ToolBarPreview() = PreviewContainer {
+    ToolBar(
+        haveAccessToFile = true,
+        haveAccessToLocation = true,
+        onAddImage = { },
+        onAddLocation = { }
+    )
 }
 
-@Preview(showSystemUi = true, showBackground = true)
+@Preview
 @Composable
-private fun PostUIPreview() {
+private fun PostUIPreview() = PreviewContainer {
     FooSTheme {
         PostUI(
             uiState = PostItemUiState.Default,
@@ -300,4 +297,3 @@ private fun PostUIPreview() {
         )
     }
 }
-

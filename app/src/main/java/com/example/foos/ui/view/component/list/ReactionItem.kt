@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.foos.R
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.constants.paddingSmall
 import com.example.foos.ui.state.screen.reaction.ReactionItemUiState
@@ -47,9 +48,9 @@ fun ReactionItem(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun ReactionItemPreview() {
+private fun ReactionItemPreview() = PreviewContainer {
     val uiState = ReactionItemUiState(
         username = "username",
         userIcon = "",

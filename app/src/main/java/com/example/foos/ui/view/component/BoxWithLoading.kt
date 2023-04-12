@@ -7,6 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
+import com.example.foos.ui.PreviewContainer
 
 @Composable
 fun BoxWithLoading(
@@ -32,7 +33,7 @@ fun BoxWithLoading(
 
 @Preview
 @Composable
-private fun BoxWithLoadingPreview() {
+private fun BoxWithLoadingPreview() = PreviewContainer {
     BoxWithLoading(
         isLoading = true,
     ) {
@@ -41,7 +42,7 @@ private fun BoxWithLoadingPreview() {
 
 @Preview
 @Composable
-private fun BoxWithNonLoadingPreview() {
+private fun BoxWithNonLoadingPreview() = PreviewContainer {
     BoxWithLoading(
         isLoading = false,
     ) {

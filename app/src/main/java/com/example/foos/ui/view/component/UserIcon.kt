@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.foos.R
-import com.example.foos.ui.theme.FooSTheme
+import com.example.foos.ui.PreviewContainer
 
 /**
  * ユーザーアイコン
@@ -46,8 +46,6 @@ fun UserIcon(
 
 @Preview
 @Composable
-private fun UserIconPreview() {
-    FooSTheme {
-        UserIcon(url = "")
-    }
+private fun UserIconPreview() = PreviewContainer {
+    UserIcon(url = "")
 }

@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
@@ -20,7 +19,6 @@ import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
  * アプリ画面のコンポーザブル（アプリ全体のエントリポイント）
  */
 @OptIn(ExperimentalMaterialNavigationApi::class)
-@Preview
 @Composable
 fun AppScreen() {
 

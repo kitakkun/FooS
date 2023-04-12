@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.foos.R
-import com.example.foos.ui.theme.FooSTheme
+import com.example.foos.ui.PreviewContainer
 
 /**
  * アニメーション付き
@@ -137,18 +137,14 @@ fun LocationAttachment(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun ImageAttachmentPreview() {
-    FooSTheme {
-        ImageAttachment(imageUrl = "", onCloseButtonClick = {})
-    }
+private fun ImageAttachmentPreview() = PreviewContainer {
+    ImageAttachment(imageUrl = "", onCloseButtonClick = {})
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun LocationAttachmentPreview() {
-    FooSTheme {
-        LocationAttachment(onCloseButtonClick = {})
-    }
+private fun LocationAttachmentPreview() = PreviewContainer {
+    LocationAttachment(onCloseButtonClick = {})
 }

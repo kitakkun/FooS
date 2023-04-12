@@ -13,6 +13,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.foos.R
+import com.example.foos.ui.PreviewContainer
 
 @Composable
 fun EmailTextField(
@@ -38,7 +39,7 @@ fun EmailTextField(
 
 @Preview
 @Composable
-private fun EmptyEmailTextFieldPreview() {
+private fun EmptyEmailTextFieldPreview() = PreviewContainer {
     EmailTextField(
         email = "",
         onEmailChange = {},
@@ -47,7 +48,7 @@ private fun EmptyEmailTextFieldPreview() {
 
 @Preview
 @Composable
-private fun NonEmptyEmailTextFieldPreview() {
+private fun NonEmptyEmailTextFieldPreview() = PreviewContainer {
     EmailTextField(
         email = "example@example.com",
         onEmailChange = {},

@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.foos.R
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.component.MenuItemUiState
 import com.example.foos.ui.theme.FooSTheme
@@ -48,9 +49,9 @@ fun MenuItem(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun MenuItemPreview() {
+private fun MenuItemPreview() = PreviewContainer {
     val uiState = MenuItemUiState(
         icon = R.drawable.ic_account_circle,
         text = R.string.account_settings
