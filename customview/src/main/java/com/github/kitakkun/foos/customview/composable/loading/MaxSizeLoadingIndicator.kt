@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.component
+package com.github.kitakkun.foos.customview.composable.loading
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

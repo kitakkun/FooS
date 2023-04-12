@@ -20,9 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.R
+import com.github.kitakkun.foos.customview.composable.loading.BoxWithLoading
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.customview.theme.LinkBlue
-import com.github.kitakkun.foos.ui.view.component.BoxWithLoading
 import com.github.kitakkun.foos.ui.view.component.EmailTextField
 import com.github.kitakkun.foos.ui.view.component.PasswordTextField
 
