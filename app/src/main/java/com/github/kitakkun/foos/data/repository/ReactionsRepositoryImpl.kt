@@ -1,7 +1,7 @@
 package com.github.kitakkun.foos.data.repository
 
+import com.github.kitakkun.foos.common.ext.join
 import com.github.kitakkun.foos.data.model.database.DatabaseReaction
-import com.github.kitakkun.foos.util.join
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query

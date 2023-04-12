@@ -1,6 +1,6 @@
 package com.github.kitakkun.foos.user.repository
 
-import com.github.kitakkun.foos.user.join
+import com.github.kitakkun.foos.common.ext.join
 import com.github.kitakkun.foos.user.model.DatabaseFollow
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
