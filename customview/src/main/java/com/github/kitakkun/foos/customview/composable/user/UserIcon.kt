@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.user
+package com.github.kitakkun.foos.customview.composable.user
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
@@ -31,7 +31,6 @@ fun UserIcon(
         model = ImageRequest.Builder(LocalContext.current)
             .data(url)
             .crossfade(true)
-            .placeholder(R.drawable.ic_account_circle)
             .build(),
         contentScale = ContentScale.Crop,
         contentDescription = null,
