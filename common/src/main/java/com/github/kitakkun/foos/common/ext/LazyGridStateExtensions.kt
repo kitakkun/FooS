@@ -1,8 +1,6 @@
-package com.github.kitakkun.foos.ui.view.component.extensions
+package com.github.kitakkun.foos.common.ext
 
 
-import android.util.Log
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.*
 import kotlinx.coroutines.flow.filter

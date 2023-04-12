@@ -7,8 +7,8 @@ import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.github.kitakkun.foos.common.ext.OnAppearLastItem
 import com.github.kitakkun.foos.ui.state.screen.followlist.UserItemUiState
-import com.github.kitakkun.foos.ui.view.component.extensions.OnAppearLastItem
 
 @Composable
 fun UserList(

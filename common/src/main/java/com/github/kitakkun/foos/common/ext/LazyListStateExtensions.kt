@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.component.extensions
+package com.github.kitakkun.foos.common.ext
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.*
