@@ -79,6 +79,42 @@ private fun VerticalUserIdentityTextPreview() = PreviewContainer {
 
 @Preview
 @Composable
+private fun LongUsernameVerticalUserIdentityTextPreview() = PreviewContainer {
+    VerticalUserIdentityText(
+        username = "very long long long long long long long long long username",
+        userId = "userId"
+    )
+}
+
+@Preview
+@Composable
+private fun LongUserIdVerticalUserIdentityTextPreview() = PreviewContainer {
+    VerticalUserIdentityText(
+        username = "username",
+        userId = "very long long long long long long long long long long long long userId"
+    )
+}
+
+@Preview
+@Composable
 private fun HorizontalUserIdentityTextPreview() = PreviewContainer {
     HorizontalUserIdentityText(username = "username", userId = "userId")
+}
+
+@Preview
+@Composable
+private fun LongUsernameHorizontalUserIdentityTextPreview() = PreviewContainer {
+    HorizontalUserIdentityText(
+        username = "very long long long long long long long long long username",
+        userId = "userId"
+    )
+}
+
+@Preview
+@Composable
+private fun LongUserIdHorizontalUserIdentityTextPreview() = PreviewContainer {
+    HorizontalUserIdentityText(
+        username = "username",
+        userId = "very long long long long long long long long long userId"
+    )
 }
