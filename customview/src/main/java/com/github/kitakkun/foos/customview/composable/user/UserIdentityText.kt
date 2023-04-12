@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.user
+package com.github.kitakkun.foos.customview.composable.user
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

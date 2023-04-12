@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.common.const.paddingMedium
+import com.github.kitakkun.foos.customview.composable.user.VerticalUserIdentityText
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.ui.view.component.MaxSizeLoadingIndicator
 import com.github.kitakkun.foos.ui.view.component.list.MediaPostGrid
@@ -21,7 +22,6 @@ import com.github.kitakkun.foos.ui.view.component.list.PostItemList
 import com.github.kitakkun.foos.user.FollowButton
 import com.github.kitakkun.foos.user.FollowInfo
 import com.github.kitakkun.foos.user.UserIcon
-import com.github.kitakkun.foos.user.VerticalUserIdentityText
 import com.google.accompanist.pager.*
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState

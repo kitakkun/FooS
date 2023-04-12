@@ -10,6 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.kitakkun.foos.common.const.paddingMedium
+import com.github.kitakkun.foos.customview.composable.user.VerticalUserIdentityText
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 
 @Composable
