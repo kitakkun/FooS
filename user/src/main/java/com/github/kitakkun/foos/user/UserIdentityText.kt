@@ -1,17 +1,45 @@
 package com.github.kitakkun.foos.user
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
+
+@Composable
+fun VerticalUserIdentityText(
+    username: String,
+    userId: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+    ) {
+        UsernameText(username = username)
+        UserIdText(userId = userId)
+    }
+}
+
+@Composable
+fun HorizontalUserIdentityText(
+    username: String,
+    userId: String,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier,
+    ) {
+        UsernameText(username = username)
+        UserIdText(userId = userId)
+    }
+}
 
 @Composable
 private fun UsernameText(
@@ -22,6 +50,7 @@ private fun UsernameText(
         text = username,
         maxLines = 1,
         style = MaterialTheme.typography.subtitle1,
+        overflow = TextOverflow.Ellipsis, /* 他のUIコンポーネントが押し出される問題の修正 */
         fontWeight = FontWeight.Bold,
         modifier = modifier
     )
@@ -42,47 +71,6 @@ private fun UserIdText(
     )
 }
 
-@Composable
-fun VerticalUserIdentityText(
-    username: String,
-    userId: String,
-    modifier: Modifier = Modifier,
-    before: @Composable () -> Unit = {},
-    after: @Composable () -> Unit = {},
-) {
-    Column(
-        modifier = modifier
-    ) {
-        before()
-        UsernameText(username = username)
-        UserIdText(userId = userId)
-        after()
-    }
-}
-
-@Composable
-fun HorizontalUserIdentityText(
-    username: String,
-    userId: String,
-    modifier: Modifier = Modifier,
-) {
-    val usernameStyle = MaterialTheme.typography.subtitle1.copy(
-        fontWeight = FontWeight.Bold,
-    ).toSpanStyle()
-    val userIdStyle = MaterialTheme.typography.subtitle1.copy(
-        fontWeight = FontWeight.Light
-    ).toSpanStyle()
-
-    val annotatedText = remember(username, userId) {
-        buildAnnotatedString {
-            withStyle(usernameStyle) { append(username) }
-            withStyle(userIdStyle) { append(" @$userId") }
-        }
-    }
-
-    Text(text = annotatedText, modifier = modifier, overflow = TextOverflow.Ellipsis, maxLines = 1)
-}
-
 @Preview
 @Composable
 private fun VerticalUserIdentityTextPreview() = PreviewContainer {
@@ -91,6 +79,42 @@ private fun VerticalUserIdentityTextPreview() = PreviewContainer {
 
 @Preview
 @Composable
+private fun LongUsernameVerticalUserIdentityTextPreview() = PreviewContainer {
+    VerticalUserIdentityText(
+        username = "very long long long long long long long long long username",
+        userId = "userId"
+    )
+}
+
+@Preview
+@Composable
+private fun LongUserIdVerticalUserIdentityTextPreview() = PreviewContainer {
+    VerticalUserIdentityText(
+        username = "username",
+        userId = "very long long long long long long long long long long long long userId"
+    )
+}
+
+@Preview
+@Composable
 private fun HorizontalUserIdentityTextPreview() = PreviewContainer {
     HorizontalUserIdentityText(username = "username", userId = "userId")
+}
+
+@Preview
+@Composable
+private fun LongUsernameHorizontalUserIdentityTextPreview() = PreviewContainer {
+    HorizontalUserIdentityText(
+        username = "very long long long long long long long long long username",
+        userId = "userId"
+    )
+}
+
+@Preview
+@Composable
+private fun LongUserIdHorizontalUserIdentityTextPreview() = PreviewContainer {
+    HorizontalUserIdentityText(
+        username = "username",
+        userId = "very long long long long long long long long long userId"
+    )
 }
