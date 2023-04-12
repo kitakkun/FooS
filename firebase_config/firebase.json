@@ -1,7 +1,4 @@
 {
-  "database": {
-    "rules": "database.rules.json"
-  },
   "storage": {
     "rules": "storage.rules"
   },
@@ -9,14 +6,19 @@
     "auth": {
       "port": 9099
     },
-    "database": {
-      "port": 9000
-    },
     "storage": {
       "port": 9199
     },
     "ui": {
       "enabled": true
-    }
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "singleProjectMode": true
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
   }
 }
