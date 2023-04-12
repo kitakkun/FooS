@@ -13,3 +13,5 @@ val BrownDark = Color(0xFF4b2c20)
 val Yellow = Color(0xFFffe480)
 val YellowLight = Color(0xFFffffb1)
 val YellowDark = Color(0xFFcab251)
+
+val LinkBlue = Color(0xFF2196F3)
