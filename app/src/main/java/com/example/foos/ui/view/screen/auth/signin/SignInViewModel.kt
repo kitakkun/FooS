@@ -58,4 +58,8 @@ class SignInViewModel @Inject constructor(
     fun navigateToSignUp() {
         _navEvent.tryEmit(SubScreen.Auth.SignUp.route)
     }
+
+    fun togglePasswordVisibility() {
+        _uiState.value = uiState.value.copy(isPasswordVisible = !uiState.value.isPasswordVisible)
+    }
 }

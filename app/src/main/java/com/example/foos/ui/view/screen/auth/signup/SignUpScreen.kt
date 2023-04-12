@@ -7,7 +7,6 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -24,6 +23,8 @@ import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.theme.LinkBlue
 import com.example.foos.ui.view.component.BoxWithLoading
+import com.example.foos.ui.view.component.EmailTextField
+import com.example.foos.ui.view.component.PasswordTextField
 
 @Composable
 fun SignUpScreen(
@@ -45,6 +46,7 @@ fun SignUpScreen(
         onPasswordChange = viewModel::updatePassword,
         onSignInClick = viewModel::navigateToSignIn,
         onSignUpClick = viewModel::signUp,
+        onPasswordVisibilityIconClick = viewModel::togglePasswordVisibility,
     )
 }
 
@@ -53,6 +55,7 @@ fun SignUpUI(
     uiState: SignUpUiState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
+    onPasswordVisibilityIconClick: () -> Unit,
     onSignInClick: () -> Unit,
     onSignUpClick: () -> Unit,
 ) {
@@ -85,8 +88,16 @@ fun SignUpUI(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text(text = stringResource(id = R.string.app_name), style = MaterialTheme.typography.h4)
-            TextField(value = uiState.email, onValueChange = onEmailChange)
-            TextField(value = uiState.password, onValueChange = onPasswordChange)
+            EmailTextField(
+                email = uiState.email,
+                onEmailChange = onEmailChange
+            )
+            PasswordTextField(
+                isPasswordVisible = uiState.isPasswordVisible,
+                password = uiState.password,
+                onPasswordChange = onPasswordChange,
+                onVisibilityIconClick = onPasswordVisibilityIconClick,
+            )
             Button(onClick = onSignUpClick) {
                 Text(text = stringResource(id = R.string.sign_up))
             }
@@ -114,5 +125,6 @@ private fun SignUpUIPreview() {
         onPasswordChange = {},
         onSignInClick = {},
         onSignUpClick = {},
+        onPasswordVisibilityIconClick = {},
     )
 }
