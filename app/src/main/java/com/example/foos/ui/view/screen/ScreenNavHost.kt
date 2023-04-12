@@ -1,6 +1,5 @@
 package com.example.foos.ui.view.screen
 
-import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -9,11 +8,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import com.example.foos.ui.navigation.BottomSheet
 import com.example.foos.ui.navigation.MainScreen
 import com.example.foos.ui.navigation.SubScreen
 import com.example.foos.ui.navigation.navargs.StringList
 import com.example.foos.ui.view.bottomsheet.PostOptionBottomSheet
+import com.example.foos.ui.view.screen.auth.signin.SignInScreen
+import com.example.foos.ui.view.screen.auth.signup.SignUpScreen
 import com.example.foos.ui.view.screen.followlist.FollowListScreen
 import com.example.foos.ui.view.screen.followlist.FollowListViewModelImpl
 import com.example.foos.ui.view.screen.home.HomeScreen
@@ -46,16 +48,29 @@ import com.google.accompanist.navigation.material.bottomSheet
 fun ScreenNavHost(
     navController: NavHostController,
     screenViewModel: ScreenViewModel,
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    startDestination: String = SubScreen.Auth.route,
 ) {
     NavHost(
         navController = navController,
-        startDestination = MainScreen.Home.route,
+        startDestination = startDestination,
         Modifier.padding(innerPadding)
     ) {
         bottomSheet(BottomSheet.PostOption.routeWithParam) {
-            val postId = it.arguments?.getString(BottomSheet.PostOption.key(0)) ?: return@bottomSheet
+            val postId =
+                it.arguments?.getString(BottomSheet.PostOption.key(0)) ?: return@bottomSheet
             PostOptionBottomSheet(navController = navController, postId = postId)
+        }
+        navigation(
+            startDestination = SubScreen.Auth.SignIn.route,
+            route = SubScreen.Auth.route
+        ) {
+            composable(SubScreen.Auth.SignIn.route) {
+                SignInScreen(viewModel = hiltViewModel(), navController = navController)
+            }
+            composable(SubScreen.Auth.SignUp.route) {
+                SignUpScreen(viewModel = hiltViewModel(), navController = navController)
+            }
         }
         composable(MainScreen.Home.route) {
             val vm: HomeViewModelImpl = hiltViewModel()

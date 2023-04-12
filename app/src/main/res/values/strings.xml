@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">FooS</string>
     <string name="home">HOME</string>
     <string name="map">MAP</string>
@@ -36,4 +36,11 @@
     <string name="message_successfully_signed_in">Successfully signed in.</string>
     <string name="message_sign_in_error">There was an error signing in.</string>
     <string name="delete_post">Delete post</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="dont_have_account">Don\'t have an account?</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="example_email">example@example.com</string>
 </resources>

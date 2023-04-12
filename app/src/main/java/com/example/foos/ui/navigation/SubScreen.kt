@@ -91,5 +91,9 @@ sealed class SubScreen(
         )
     )
 
+    object Auth : SubScreen("auth") {
+        object SignIn : SubScreen("sign_in")
+        object SignUp : SubScreen("sign_up")
+    }
 
 }

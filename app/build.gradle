@@ -141,4 +141,10 @@ dependencies {
 
     // navigation bottom sheet destinations
     implementation "com.google.accompanist:accompanist-navigation-material:0.26.4-beta"
+
+    // kotlin-result
+    implementation "com.michael-bull.kotlin-result:kotlin-result:1.1.17"
+
+    // material3 icons
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
 }
