@@ -11,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.github.kitakkun.foos.common.const.paddingLarge
 import com.github.kitakkun.foos.common.ext.OnAppearLastItem
-import com.github.kitakkun.foos.ui.constants.paddingLarge
 import com.github.kitakkun.foos.ui.state.component.PostItemUiState
 
 /**

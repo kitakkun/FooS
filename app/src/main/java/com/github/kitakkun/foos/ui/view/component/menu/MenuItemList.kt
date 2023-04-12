@@ -9,8 +9,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.github.kitakkun.foos.ui.constants.paddingMedium
-import com.github.kitakkun.foos.ui.constants.paddingSmall
+import com.github.kitakkun.foos.common.const.paddingMedium
+import com.github.kitakkun.foos.common.const.paddingSmall
 import com.github.kitakkun.foos.ui.state.component.MenuItemUiState
 
 /**

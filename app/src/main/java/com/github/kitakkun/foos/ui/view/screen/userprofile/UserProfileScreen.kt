@@ -13,8 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.R
+import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
-import com.github.kitakkun.foos.ui.constants.paddingMedium
 import com.github.kitakkun.foos.ui.view.component.FollowInfo
 import com.github.kitakkun.foos.ui.view.component.MaxSizeLoadingIndicator
 import com.github.kitakkun.foos.ui.view.component.UserIcon

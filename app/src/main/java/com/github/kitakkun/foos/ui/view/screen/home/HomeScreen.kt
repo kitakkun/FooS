@@ -12,8 +12,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import com.github.kitakkun.foos.common.const.paddingLarge
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
-import com.github.kitakkun.foos.ui.constants.paddingLarge
 import com.github.kitakkun.foos.ui.navigation.MainScreen
 import com.github.kitakkun.foos.ui.state.screen.home.HomeScreenUiState
 import com.github.kitakkun.foos.ui.view.component.MaxSizeLoadingIndicator

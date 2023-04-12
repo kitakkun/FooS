@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.constants
+package com.github.kitakkun.foos.common.const
 
 import androidx.compose.ui.unit.dp
 

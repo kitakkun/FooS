@@ -11,10 +11,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.kitakkun.foos.R
+import com.github.kitakkun.foos.common.const.paddingMedium
+import com.github.kitakkun.foos.common.const.paddingSmall
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.customview.theme.FooSTheme
-import com.github.kitakkun.foos.ui.constants.paddingMedium
-import com.github.kitakkun.foos.ui.constants.paddingSmall
 import com.github.kitakkun.foos.ui.state.screen.reaction.ReactionItemUiState
 import com.github.kitakkun.foos.ui.view.component.UserIcon
 
