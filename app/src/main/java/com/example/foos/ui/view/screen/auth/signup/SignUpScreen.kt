@@ -10,6 +10,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,11 +21,32 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.theme.LinkBlue
 
 @Composable
 fun SignUpScreen(
+    viewModel: SignUpViewModel,
+    navController: NavController,
+) {
+    LaunchedEffect(Unit) {
+        viewModel.navEvent.collect {
+            navController.navigate(it)
+        }
+    }
+
+    SignUpUI(
+        uiState = viewModel.uiState.value,
+        onEmailChange = viewModel::updateEmail,
+        onPasswordChange = viewModel::updatePassword,
+        onSignInClick = viewModel::navigateToSignIn,
+        onSignUpClick = viewModel::signUp,
+    )
+}
+
+@Composable
+fun SignUpUI(
     uiState: SignUpUiState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
@@ -81,8 +103,8 @@ fun SignUpScreen(
 
 @Preview
 @Composable
-private fun SignUpScreenPreview() {
-    SignUpScreen(
+private fun SignUpUIPreview() {
+    SignUpUI(
         uiState = SignUpUiState(),
         onEmailChange = {},
         onPasswordChange = {},
