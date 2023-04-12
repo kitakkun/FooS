@@ -1,10 +1,10 @@
-package com.github.kitakkun.foos.data.repository
+package com.github.kitakkun.foos.user.repository
 
 import android.util.Log
-import com.github.kitakkun.foos.data.model.database.DatabaseUser
-import com.github.kitakkun.foos.data.model.user.Email
-import com.github.kitakkun.foos.data.model.user.Password
-import com.github.kitakkun.foos.util.join
+import com.github.kitakkun.foos.user.join
+import com.github.kitakkun.foos.user.model.DatabaseUser
+import com.github.kitakkun.foos.user.model.Email
+import com.github.kitakkun.foos.user.model.Password
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result

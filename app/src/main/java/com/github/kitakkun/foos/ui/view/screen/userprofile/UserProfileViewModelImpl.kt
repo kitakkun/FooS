@@ -10,12 +10,12 @@ import com.github.kitakkun.foos.data.domain.fetcher.post.FetchPostsByUserIdUseCa
 import com.github.kitakkun.foos.data.domain.fetcher.post.FetchPostsUserReactedByUserIdUseCase
 import com.github.kitakkun.foos.data.domain.fetcher.post.FetchPostsWithMediaByUserIdUseCase
 import com.github.kitakkun.foos.data.repository.FollowRepository
-import com.github.kitakkun.foos.data.repository.UsersRepository
 import com.github.kitakkun.foos.ui.navigation.BottomSheet
 import com.github.kitakkun.foos.ui.navigation.SubScreen
 import com.github.kitakkun.foos.ui.navigation.navargs.StringList
 import com.github.kitakkun.foos.ui.state.component.PostItemUiState
 import com.github.kitakkun.foos.ui.state.screen.userprofile.UserProfileScreenUiState
+import com.github.kitakkun.foos.user.repository.UsersRepository
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson

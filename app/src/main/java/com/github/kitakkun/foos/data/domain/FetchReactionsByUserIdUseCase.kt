@@ -3,7 +3,7 @@ package com.github.kitakkun.foos.data.domain
 import com.github.kitakkun.foos.data.model.Reaction
 import com.github.kitakkun.foos.data.repository.PostsRepository
 import com.github.kitakkun.foos.data.repository.ReactionsRepository
-import com.github.kitakkun.foos.data.repository.UsersRepository
+import com.github.kitakkun.foos.user.repository.UsersRepository
 
 /**
  * 該当のユーザに関連するリアクションを取得

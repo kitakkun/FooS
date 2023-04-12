@@ -5,11 +5,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kitakkun.foos.data.model.user.Email
-import com.github.kitakkun.foos.data.model.user.Password
-import com.github.kitakkun.foos.data.repository.UsersRepository
 import com.github.kitakkun.foos.ui.navigation.MainScreen
 import com.github.kitakkun.foos.ui.navigation.SubScreen
+import com.github.kitakkun.foos.user.model.Email
+import com.github.kitakkun.foos.user.model.Password
+import com.github.kitakkun.foos.user.repository.UsersRepository
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.data.model.user
+package com.github.kitakkun.foos.user.model
 
 data class Email(
     val value: String,

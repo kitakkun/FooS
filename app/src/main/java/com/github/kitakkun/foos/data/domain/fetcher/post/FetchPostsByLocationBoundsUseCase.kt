@@ -3,7 +3,7 @@ package com.github.kitakkun.foos.data.domain.fetcher.post
 import com.github.kitakkun.foos.data.model.Post
 import com.github.kitakkun.foos.data.repository.PostsRepository
 import com.github.kitakkun.foos.data.repository.ReactionsRepository
-import com.github.kitakkun.foos.data.repository.UsersRepository
+import com.github.kitakkun.foos.user.repository.UsersRepository
 import com.google.android.gms.maps.model.LatLngBounds
 import javax.inject.Inject
 

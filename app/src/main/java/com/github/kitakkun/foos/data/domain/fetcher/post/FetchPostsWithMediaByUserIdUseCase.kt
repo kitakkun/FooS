@@ -4,7 +4,7 @@ import com.github.kitakkun.foos.data.model.Post
 import com.github.kitakkun.foos.data.repository.PostsRepository
 import com.github.kitakkun.foos.data.repository.PostsRepositoryImpl
 import com.github.kitakkun.foos.data.repository.ReactionsRepository
-import com.github.kitakkun.foos.data.repository.UsersRepository
+import com.github.kitakkun.foos.user.repository.UsersRepository
 import java.util.*
 import javax.inject.Inject
 

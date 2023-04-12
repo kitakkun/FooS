@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kitakkun.foos.data.domain.fetcher.follow.FetchFollowStateUseCase
 import com.github.kitakkun.foos.data.repository.FollowRepository
-import com.github.kitakkun.foos.data.repository.UsersRepository
 import com.github.kitakkun.foos.ui.navigation.SubScreen
 import com.github.kitakkun.foos.ui.state.screen.followlist.FollowListScreenUiState
 import com.github.kitakkun.foos.ui.state.screen.followlist.UserItemUiState
+import com.github.kitakkun.foos.user.repository.UsersRepository
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

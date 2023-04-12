@@ -2,7 +2,7 @@ package com.github.kitakkun.foos.data.model
 
 import com.github.kitakkun.foos.data.model.database.DatabasePost
 import com.github.kitakkun.foos.data.model.database.DatabaseReaction
-import com.github.kitakkun.foos.data.model.database.DatabaseUser
+import com.github.kitakkun.foos.user.model.DatabaseUser
 
 /**
  * 各データがまとまったリアクションデータ
