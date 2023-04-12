@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.component
+package com.github.kitakkun.foos.user
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -13,7 +13,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 

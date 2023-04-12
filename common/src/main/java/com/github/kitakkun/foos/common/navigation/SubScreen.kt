@@ -1,9 +1,8 @@
-package com.github.kitakkun.foos.ui.navigation
+package com.github.kitakkun.foos.common.navigation
 
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.github.kitakkun.foos.ui.navigation.navargs.StringListType
 
 /**
  * サブスクリーン（メインメニューのスクリーンから呼ばれる）
@@ -52,7 +51,9 @@ sealed class SubScreen(
     object ImageDetail : SubScreen(
         route = "image_detail",
         arguments = listOf(
-            navArgument("imageUrls") { type = StringListType },
+            navArgument("imageUrls") {
+                type = StringListType
+            },
             navArgument("clickedImageIndex") { type = NavType.StringType }
         )
     )

@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.state.screen.followlist
+package com.github.kitakkun.foos.user
 
 data class UserItemUiState(
     val clientUserId: String,

@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.component
+package com.github.kitakkun.foos.user
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme

@@ -1,10 +1,6 @@
 <resources>
     <string name="app_name">FooS</string>
-    <string name="home">HOME</string>
-    <string name="map">MAP</string>
     <string name="title_activity_sign_in">SignInActivity</string>
-    <string name="reaction">REACTIONS</string>
-    <string name="setting">SETTINGS</string>
     <string name="post">POST</string>
     <string name="account_settings">Account Settings</string>
     <string name="privacy_settings">Privacy Settings</string>
@@ -15,10 +11,6 @@
     <string name="emoji_like">&#10084;</string>
     <string name="emoji_fire">&#128293;</string>
     <string name="emoji_yummy">&#128523;</string>
-    <string name="following">Following</string>
-    <string name="followers">Followers</string>
-    <string name="follow">Follow</string>
-    <string name="edit_profile">Edit profile</string>
     <string name="tab_posts">Posts</string>
     <string name="tab_media">Media</string>
     <string name="tab_reactions">Reactions</string>
@@ -27,7 +19,6 @@
     <string name="confirm_location">Confirm the Location</string>
     <string name="location_attached">Location Data</string>
     <string name="specify_location_alert_message">Please specify the restaurant\'s name.</string>
-    <string name="follows_you">follows you</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="send">Send</string>
@@ -39,6 +30,7 @@
     <string name="sign_in">Sign in</string>
     <string name="sign_up">Sign up</string>
     <string name="dont_have_account">Don\'t have an account?</string>
+    <string name="edit_profile">Edit profile</string>
     <string name="already_have_account">Already have an account?</string>
     <string name="email">Email</string>
     <string name="password">Password</string>

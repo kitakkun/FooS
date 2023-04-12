@@ -19,8 +19,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.common.const.paddingMedium
+import com.github.kitakkun.foos.common.navigation.SubScreen
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
-import com.github.kitakkun.foos.ui.navigation.SubScreen
 import com.github.kitakkun.foos.ui.view.screen.ScreenViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng

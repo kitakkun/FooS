@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.followlist
+package com.github.kitakkun.foos.user.followlist
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,11 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
-import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
-import com.github.kitakkun.foos.ui.state.screen.followlist.FollowListScreenUiState
-import com.github.kitakkun.foos.ui.state.screen.followlist.UserItemUiState
-import com.github.kitakkun.foos.ui.view.component.list.UserList
+import com.github.kitakkun.foos.user.R
+import com.github.kitakkun.foos.user.UserItemUiState
+import com.github.kitakkun.foos.user.UserList
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 

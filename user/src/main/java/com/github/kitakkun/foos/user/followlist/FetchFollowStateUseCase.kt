@@ -1,7 +1,6 @@
-package com.github.kitakkun.foos.data.domain.fetcher.follow
+package com.github.kitakkun.foos.user.followlist
 
-import com.github.kitakkun.foos.data.model.FollowState
-import com.github.kitakkun.foos.data.repository.FollowRepository
+import com.github.kitakkun.foos.user.repository.FollowRepository
 import javax.inject.Inject
 
 class FetchFollowStateUseCase @Inject constructor(

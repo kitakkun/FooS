@@ -2,13 +2,13 @@ package com.github.kitakkun.foos.di
 
 import com.github.kitakkun.foos.data.domain.DeletePostByPostIdUseCase
 import com.github.kitakkun.foos.data.domain.FetchReactionsByUserIdUseCase
-import com.github.kitakkun.foos.data.domain.fetcher.follow.FetchFollowStateUseCase
 import com.github.kitakkun.foos.data.domain.fetcher.post.*
 import com.github.kitakkun.foos.di.FirebaseModule.provideFirebaseAuthInstance
 import com.github.kitakkun.foos.di.RepositoryModule.provideFollowRepository
 import com.github.kitakkun.foos.di.RepositoryModule.providePostsRepository
 import com.github.kitakkun.foos.di.RepositoryModule.provideReactionsRepository
 import com.github.kitakkun.foos.di.RepositoryModule.provideUsersRepository
+import com.github.kitakkun.foos.user.followlist.FetchFollowStateUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,0 +1,7 @@
+<resources>
+    <string name="following">Following</string>
+    <string name="followers">Followers</string>
+    <string name="follow">Follow</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="follows_you">follows you</string>
+</resources>

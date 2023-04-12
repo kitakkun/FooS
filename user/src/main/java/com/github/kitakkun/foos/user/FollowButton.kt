@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.component.button
+package com.github.kitakkun.foos.user
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.kitakkun.foos.R
+import com.github.kitakkun.foos.customview.composable.button.RoundButton
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 
 /**

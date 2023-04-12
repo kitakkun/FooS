@@ -18,10 +18,10 @@ import com.canhub.cropper.options
 import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.ui.state.component.MenuItemUiState
-import com.github.kitakkun.foos.ui.view.component.UserIcon
 import com.github.kitakkun.foos.ui.view.component.dialog.ConfirmAlertDialog
 import com.github.kitakkun.foos.ui.view.component.menu.MenuItemList
 import com.github.kitakkun.foos.ui.view.screen.ScreenViewModel
+import com.github.kitakkun.foos.user.UserIcon
 
 @Composable
 fun SettingScreen(viewModel: SettingViewModel, screenViewModel: ScreenViewModel) {

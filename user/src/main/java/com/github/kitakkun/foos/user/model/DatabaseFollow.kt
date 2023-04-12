@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.data.model.database
+package com.github.kitakkun.foos.user.model
 
 import com.google.firebase.firestore.ServerTimestamp
 import java.util.*

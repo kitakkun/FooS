@@ -28,9 +28,9 @@ import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.customview.theme.FooSTheme
 import com.github.kitakkun.foos.ui.state.component.PostItemUiState
-import com.github.kitakkun.foos.ui.view.component.HorizontalUserIdentityText
 import com.github.kitakkun.foos.ui.view.component.MaxSizeLoadingIndicator
-import com.github.kitakkun.foos.ui.view.component.UserIcon
+import com.github.kitakkun.foos.user.HorizontalUserIdentityText
+import com.github.kitakkun.foos.user.UserIcon
 import java.util.*
 
 /**

@@ -7,9 +7,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.kitakkun.foos.common.navigation.SubScreen
 import com.github.kitakkun.foos.data.model.database.DatabasePost
 import com.github.kitakkun.foos.data.repository.PostsRepository
-import com.github.kitakkun.foos.ui.navigation.SubScreen
 import com.github.kitakkun.foos.ui.state.component.PostItemUiState
 import com.github.kitakkun.foos.util.FileUtils.getRealPath
 import com.google.android.gms.maps.model.LatLng

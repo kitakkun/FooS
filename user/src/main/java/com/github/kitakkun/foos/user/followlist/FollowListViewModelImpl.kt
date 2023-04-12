@@ -1,15 +1,13 @@
-package com.github.kitakkun.foos.ui.view.screen.followlist
+package com.github.kitakkun.foos.user.followlist
 
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kitakkun.foos.data.domain.fetcher.follow.FetchFollowStateUseCase
-import com.github.kitakkun.foos.data.repository.FollowRepository
-import com.github.kitakkun.foos.ui.navigation.SubScreen
-import com.github.kitakkun.foos.ui.state.screen.followlist.FollowListScreenUiState
-import com.github.kitakkun.foos.ui.state.screen.followlist.UserItemUiState
+import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.user.UserItemUiState
+import com.github.kitakkun.foos.user.repository.FollowRepository
 import com.github.kitakkun.foos.user.repository.UsersRepository
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel

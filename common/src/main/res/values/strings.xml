@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home">HOME</string>
+    <string name="map">MAP</string>
+    <string name="reaction">REACTIONS</string>
+    <string name="setting">SETTINGS</string>
+</resources>

@@ -13,7 +13,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.github.kitakkun.foos.ui.navigation.MainScreen
+import com.github.kitakkun.foos.common.navigation.MainScreen
 
 /**
  * 画面下部のナビゲーションバー

@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.component.list
+package com.github.kitakkun.foos.user
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,13 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
-import com.github.kitakkun.foos.ui.state.screen.followlist.UserItemUiState
-import com.github.kitakkun.foos.ui.view.component.UserIcon
-import com.github.kitakkun.foos.ui.view.component.VerticalUserIdentityText
-import com.github.kitakkun.foos.ui.view.component.button.FollowButton
 
 @Composable
 fun UserItem(

@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.component.button
+package com.github.kitakkun.foos.customview.composable.button
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button

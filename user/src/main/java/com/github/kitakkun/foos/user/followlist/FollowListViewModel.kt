@@ -1,7 +1,6 @@
-package com.github.kitakkun.foos.ui.view.screen.followlist
+package com.github.kitakkun.foos.user.followlist
 
 import androidx.compose.runtime.State
-import com.github.kitakkun.foos.ui.state.screen.followlist.FollowListScreenUiState
 import kotlinx.coroutines.flow.SharedFlow
 
 interface FollowListViewModel {

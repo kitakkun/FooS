@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.component
+package com.github.kitakkun.foos.user
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
@@ -13,7 +13,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 
 /**

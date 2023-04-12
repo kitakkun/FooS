@@ -16,7 +16,7 @@ import com.github.kitakkun.foos.common.const.paddingSmall
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.customview.theme.FooSTheme
 import com.github.kitakkun.foos.ui.state.screen.reaction.ReactionItemUiState
-import com.github.kitakkun.foos.ui.view.component.UserIcon
+import com.github.kitakkun.foos.user.UserIcon
 
 /**
  * リアクションリストのアイテム

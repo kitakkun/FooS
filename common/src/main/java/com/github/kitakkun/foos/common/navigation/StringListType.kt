@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.navigation.navargs
+package com.github.kitakkun.foos.common.navigation
 
 import android.os.Bundle
 import android.os.Parcelable

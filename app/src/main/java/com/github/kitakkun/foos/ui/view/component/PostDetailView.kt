@@ -28,6 +28,8 @@ import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.customview.theme.FooSTheme
 import com.github.kitakkun.foos.ui.state.component.PostItemUiState
+import com.github.kitakkun.foos.user.UserIcon
+import com.github.kitakkun.foos.user.VerticalUserIdentityText
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.ktx.auth
