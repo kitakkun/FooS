@@ -47,16 +47,12 @@ fun VerticalUserIdentityText(
     username: String,
     userId: String,
     modifier: Modifier = Modifier,
-    before: @Composable () -> Unit = {},
-    after: @Composable () -> Unit = {},
 ) {
     Column(
         modifier = modifier
     ) {
-        before()
         UsernameText(username = username)
         UserIdText(userId = userId)
-        after()
     }
 }
 
