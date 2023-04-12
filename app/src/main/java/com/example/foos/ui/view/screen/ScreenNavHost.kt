@@ -48,11 +48,12 @@ import com.google.accompanist.navigation.material.bottomSheet
 fun ScreenNavHost(
     navController: NavHostController,
     screenViewModel: ScreenViewModel,
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    startDestination: String = SubScreen.Auth.route,
 ) {
     NavHost(
         navController = navController,
-        startDestination = MainScreen.Home.route,
+        startDestination = startDestination,
         Modifier.padding(innerPadding)
     ) {
         bottomSheet(BottomSheet.PostOption.routeWithParam) {
