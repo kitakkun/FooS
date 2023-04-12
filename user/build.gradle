@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.github.kitakkun.user'
+    namespace 'com.github.kitakkun.foos.user'
     compileSdk 33
 
     defaultConfig {
