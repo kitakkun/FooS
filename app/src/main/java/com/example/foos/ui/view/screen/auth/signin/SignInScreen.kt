@@ -1,4 +1,4 @@
-package com.example.foos.ui.view.screen.auth
+package com.example.foos.ui.view.screen.auth.signin
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
