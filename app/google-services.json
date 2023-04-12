@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "523683218910",
+    "firebase_url": "https://foos-bdebd-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "foos-bdebd",
     "storage_bucket": "foos-bdebd.appspot.com"
   },
@@ -10,6 +11,51 @@
         "mobilesdk_app_id": "1:523683218910:android:769485bbd46bacb8b5094f",
         "android_client_info": {
           "package_name": "com.example.foos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "523683218910-1tj4t92elp1tj7f8udkgoa51kec9unvh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.foos",
+            "certificate_hash": "67d9a784dc353108cc665676ef38aa1678e8b06c"
+          }
+        },
+        {
+          "client_id": "523683218910-55lvdnvn16vkuq9a8bqqj8a8o5geman9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.foos",
+            "certificate_hash": "c1130668b5498a35455aff4a1189b85033e562bb"
+          }
+        },
+        {
+          "client_id": "523683218910-b15tphqenqbnlg4h42gd4ji1p0kl7l8n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2SUhns-h03YIuRJQ2Rtqn8lWhQplsE0g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "523683218910-b15tphqenqbnlg4h42gd4ji1p0kl7l8n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:523683218910:android:96773c2a19c2faeab5094f",
+        "android_client_info": {
+          "package_name": "com.github.kitakkun.foos"
         }
       },
       "oauth_client": [
