@@ -12,7 +12,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.foos"
+        applicationId "com.github.kitakkun.foos"
         minSdk 26
         targetSdk 32
         versionCode 1

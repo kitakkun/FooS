@@ -1,4 +1,4 @@
-package com.example.foos
+package com.github.kitakkun.foos
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

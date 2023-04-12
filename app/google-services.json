@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:523683218910:android:769485bbd46bacb8b5094f",
         "android_client_info": {
-          "package_name": "com.example.foos"
+          "package_name": "com.github.kitakkun.foos"
         }
       },
       "oauth_client": [
