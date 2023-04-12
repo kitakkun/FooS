@@ -1,0 +1,12 @@
+plugins {
+    id 'com.android.library'
+}
+
+apply from: "../gradle/project_common.gradle"
+
+android {
+    namespace 'com.github.kitakkun.foos.common'
+}
+
+dependencies {
+}

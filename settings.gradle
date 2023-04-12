@@ -19,3 +19,4 @@ rootProject.name = "FooS"
 include ':app'
 include ':user'
 include ':customview'
+include ':common'
