@@ -1,1 +1,17 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+apply plugin: 'com.google.gms.google-services'  // Google Services plugin
+
 apply from: "../gradle/project_common.gradle"
+
+android {
+    namespace "com.github.kitakkun.foos"
+    defaultConfig {
+        applicationId "com.github.kitakkun.foos"
+    }
+}
+
+dependencies {
+    implementation project(":user")
+    implementation project(":customview")
+}

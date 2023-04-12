@@ -1,8 +1,5 @@
-apply plugin: 'com.android.application'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jetbrains.kotlin.android'
-apply plugin: 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
-apply plugin: 'com.google.gms.google-services'  // Google Services plugin
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'kotlin-parcelize'
 
@@ -10,7 +7,6 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.github.kitakkun.foos"
         minSdk 26
         targetSdk 33
         versionCode 1
@@ -49,7 +45,6 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
-
     signingConfigs {
         debug {
             storeFile file('./debug.keystore')
