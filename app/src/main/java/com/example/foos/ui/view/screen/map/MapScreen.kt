@@ -19,11 +19,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foos.R
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.constants.paddingSmall
 import com.example.foos.ui.state.component.PostItemUiState
 import com.example.foos.ui.state.screen.map.MapScreenUiState
-import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.component.PostDetailView
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
@@ -225,18 +225,16 @@ private fun MapDeniedView(
 }
 
 @OptIn(ExperimentalMaterialApi::class)
-@Preview(showBackground = true, showSystemUi = true)
+@Preview
 @Composable
-private fun MapUIPreview() {
-    FooSTheme {
-        MapUI(
-            uiState = MapScreenUiState.Default,
-            bottomSheetScaffoldState = rememberBottomSheetScaffoldState(),
-            hasLocationPermission = false,
-            cameraPositionState = rememberCameraPositionState(),
-            onLoad = {},
-            onBubbleClick = {},
-            onLocationRequestButtonClick = {}
-        )
-    }
+private fun MapUIPreview() = PreviewContainer {
+    MapUI(
+        uiState = MapScreenUiState.Default,
+        bottomSheetScaffoldState = rememberBottomSheetScaffoldState(),
+        hasLocationPermission = false,
+        cameraPositionState = rememberCameraPositionState(),
+        onLoad = {},
+        onBubbleClick = {},
+        onLocationRequestButtonClick = {}
+    )
 }

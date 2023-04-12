@@ -17,6 +17,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.foos.R
+import com.example.foos.ui.PreviewContainer
 
 @Composable
 fun PasswordTextField(
@@ -53,7 +54,7 @@ fun PasswordTextField(
 
 @Preview
 @Composable
-private fun EmptyPasswordTextFieldPreview() {
+private fun EmptyPasswordTextFieldPreview() = PreviewContainer {
     PasswordTextField(
         password = "",
         onPasswordChange = {},
@@ -64,7 +65,7 @@ private fun EmptyPasswordTextFieldPreview() {
 
 @Preview
 @Composable
-private fun VisiblePasswordTextFieldPreview() {
+private fun VisiblePasswordTextFieldPreview() = PreviewContainer {
     PasswordTextField(
         password = "password",
         onPasswordChange = {},
@@ -75,7 +76,7 @@ private fun VisiblePasswordTextFieldPreview() {
 
 @Preview
 @Composable
-private fun InVisiblePasswordTextFieldPreview() {
+private fun InVisiblePasswordTextFieldPreview() = PreviewContainer {
     PasswordTextField(
         password = "password",
         onPasswordChange = {},

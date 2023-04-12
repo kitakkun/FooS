@@ -21,7 +21,7 @@ fun PreviewContainer(
 
 @Preview
 @Composable
-private fun ThemeAppliedPreviewContainerPreview() {
+private fun ThemeAppliedPreviewContainerPreview() = PreviewContainer {
     PreviewContainer {
         Column {
             Text(text = "Theme applied")
@@ -34,7 +34,7 @@ private fun ThemeAppliedPreviewContainerPreview() {
 
 @Preview
 @Composable
-private fun NonThemeAppliedPreview() {
+private fun NonThemeAppliedPreview() = PreviewContainer {
     Column {
         Text(text = "Theme not applied")
         Button(onClick = { }) {

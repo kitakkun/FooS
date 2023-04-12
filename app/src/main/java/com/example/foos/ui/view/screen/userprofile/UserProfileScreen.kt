@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foos.R
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.view.component.FollowInfo
 import com.example.foos.ui.view.component.MaxSizeLoadingIndicator
@@ -252,8 +253,8 @@ fun UserProfileView(
 
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview
 @Composable
-fun UserProfilePreview() {
+fun UserProfilePreview() = PreviewContainer {
     UserProfileView("username", "userId", "users biography...", "", 120, 50, false)
 }

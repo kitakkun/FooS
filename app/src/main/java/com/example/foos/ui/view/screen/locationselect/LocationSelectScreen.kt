@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.foos.R
-import com.example.foos.ui.theme.FooSTheme
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
@@ -129,17 +129,15 @@ private fun LocationSelectUI(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview
 @Composable
-private fun LocationSelectUIPreview() {
-    FooSTheme {
-        val cameraPositionState = rememberCameraPositionState()
-        LocationSelectUI(
-            cameraPositionState = cameraPositionState,
-            pinLocation = null,
-            onCancel = { },
-            onConfirm = { },
-            onMapClick = { },
-        )
-    }
+private fun LocationSelectUIPreview() = PreviewContainer {
+    val cameraPositionState = rememberCameraPositionState()
+    LocationSelectUI(
+        cameraPositionState = cameraPositionState,
+        pinLocation = null,
+        onCancel = { },
+        onConfirm = { },
+        onMapClick = { },
+    )
 }

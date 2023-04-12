@@ -16,6 +16,7 @@ import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.example.foos.R
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.state.component.MenuItemUiState
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.dialog.ConfirmAlertDialog
@@ -104,9 +105,9 @@ private fun SettingUI(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview
 @Composable
-private fun SettingUIPreview() {
+private fun SettingUIPreview() = PreviewContainer {
     SettingUI(
         uiState = SettingUiState.Default.copy(username = "username"),
         onUserIconClick = {},

@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.foos.ui.theme.FooSTheme
+import com.example.foos.ui.PreviewContainer
 
 @Composable
 fun BoxScope.RoundIconActionButton(
@@ -28,15 +28,13 @@ fun BoxScope.RoundIconActionButton(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview
 @Composable
-private fun RoundIconActionButtonPreview() {
-    FooSTheme {
-        Box() {
-            RoundIconActionButton(
-                icon = Icons.Filled.Add,
-                onClick = {}
-            )
-        }
+private fun RoundIconActionButtonPreview() = PreviewContainer {
+    Box {
+        RoundIconActionButton(
+            icon = Icons.Filled.Add,
+            onClick = {}
+        )
     }
 }

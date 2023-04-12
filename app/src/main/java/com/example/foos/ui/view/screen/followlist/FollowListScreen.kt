@@ -13,9 +13,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.foos.R
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.state.screen.followlist.FollowListScreenUiState
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
-import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.component.list.UserList
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
@@ -134,50 +134,48 @@ private fun MyTabRow(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun FollowListUIPreview() {
-    FooSTheme {
-        val dummyUserList = mutableListOf<UserItemUiState>()
-        repeat(10) { i ->
-            dummyUserList.add(
-                UserItemUiState.Default.copy(
-                    username = "username$i",
-                    userId = "userid$i"
-                )
+private fun FollowListUIPreview() = PreviewContainer {
+    val dummyUserList = mutableListOf<UserItemUiState>()
+    repeat(10) { i ->
+        dummyUserList.add(
+            UserItemUiState.Default.copy(
+                username = "username$i",
+                userId = "userid$i"
             )
-        }
-        var uiState by remember {
-            mutableStateOf(
-                FollowListScreenUiState(
-                    followees = dummyUserList, followers = dummyUserList,
-                )
-            )
-        }
-        FollowListUI(
-            uiState = uiState,
-            initialPage = 0,
-            fetchFollowee = { },
-            fetchFollower = { },
-            onItemClicked = { },
-            onFollowButtonClicked = { userId ->
-                uiState = uiState.copy(
-                    followers = uiState.followers.map {
-                        if (it.userId == userId) {
-                            it.copy(following = !it.following)
-                        } else {
-                            it
-                        }
-                    },
-                    followees = uiState.followers.map {
-                        if (it.userId == userId) {
-                            it.copy(following = !it.following)
-                        } else {
-                            it
-                        }
-                    }
-                )
-            }
         )
     }
+    var uiState by remember {
+        mutableStateOf(
+            FollowListScreenUiState(
+                followees = dummyUserList, followers = dummyUserList,
+            )
+        )
+    }
+    FollowListUI(
+        uiState = uiState,
+        initialPage = 0,
+        fetchFollowee = { },
+        fetchFollower = { },
+        onItemClicked = { },
+        onFollowButtonClicked = { userId ->
+            uiState = uiState.copy(
+                followers = uiState.followers.map {
+                    if (it.userId == userId) {
+                        it.copy(following = !it.following)
+                    } else {
+                        it
+                    }
+                },
+                followees = uiState.followers.map {
+                    if (it.userId == userId) {
+                        it.copy(following = !it.following)
+                    } else {
+                        it
+                    }
+                }
+            )
+        }
+    )
 }

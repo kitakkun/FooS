@@ -12,10 +12,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.constants.paddingLarge
 import com.example.foos.ui.navigation.MainScreen
 import com.example.foos.ui.state.screen.home.HomeScreenUiState
-import com.example.foos.ui.theme.FooSTheme
 import com.example.foos.ui.view.component.MaxSizeLoadingIndicator
 import com.example.foos.ui.view.component.button.RoundIconActionButton
 import com.example.foos.ui.view.component.list.PostItemList
@@ -113,21 +113,19 @@ private fun HomeUI(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview
 @Composable
-private fun HomeUIPreview() {
-    FooSTheme {
-        HomeUI(
-            uiState = HomeScreenUiState.Default,
-            listState = rememberLazyListState(),
-            isLoadingPosts = false,
-            onRefresh = {},
-            onUserIconClick = {},
-            onContentClick = {},
-            onImageClick = { _, _ -> },
-            onAppearLastItem = {},
-            onPostCreateButtonClick = {},
-            onMoreVertClick = {},
-        )
-    }
+private fun HomeUIPreview() = PreviewContainer {
+    HomeUI(
+        uiState = HomeScreenUiState.Default,
+        listState = rememberLazyListState(),
+        isLoadingPosts = false,
+        onRefresh = {},
+        onUserIconClick = {},
+        onContentClick = {},
+        onImageClick = { _, _ -> },
+        onAppearLastItem = {},
+        onPostCreateButtonClick = {},
+        onMoreVertClick = {},
+    )
 }

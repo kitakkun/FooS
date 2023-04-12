@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.example.foos.ui.theme.FooSTheme
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.view.component.MaxSizeLoadingIndicator
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
@@ -128,10 +128,8 @@ private fun FullSizeImage(
     }
 }
 
-@Preview(showSystemUi = true, showBackground = true)
+@Preview
 @Composable
-private fun ImageDetailUIPreview() {
-    FooSTheme {
-        ImageDetailUI(lazyListState = rememberLazyListState(), imageUrls = listOf(), onBack = {})
-    }
+private fun ImageDetailUIPreview() = PreviewContainer {
+    ImageDetailUI(lazyListState = rememberLazyListState(), imageUrls = listOf(), onBack = {})
 }

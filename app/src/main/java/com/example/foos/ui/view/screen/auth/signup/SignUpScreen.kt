@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foos.R
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.theme.LinkBlue
 import com.example.foos.ui.view.component.BoxWithLoading
 import com.example.foos.ui.view.component.EmailTextField
@@ -118,7 +119,7 @@ fun SignUpUI(
 
 @Preview
 @Composable
-private fun SignUpUIPreview() {
+private fun SignUpUIPreview() = PreviewContainer {
     SignUpUI(
         uiState = SignUpUiState(),
         onEmailChange = {},

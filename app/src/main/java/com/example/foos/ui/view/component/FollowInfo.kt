@@ -14,6 +14,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.foos.R
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.constants.paddingMedium
 
 /**
@@ -62,8 +63,8 @@ fun FollowInfo(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun FollowInfoPreview() {
+private fun FollowInfoPreview() = PreviewContainer {
     FollowInfo(followeeNum = 10, followerNum = 20)
 }

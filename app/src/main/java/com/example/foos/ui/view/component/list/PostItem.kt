@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.component.PostItemUiState
 import com.example.foos.ui.theme.FooSTheme
@@ -86,9 +87,9 @@ fun PostItem(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun PostItemPreview() {
+private fun PostItemPreview() = PreviewContainer {
     val uiState = PostItemUiState(
         userIcon = "",
         username = "username",

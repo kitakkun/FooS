@@ -10,12 +10,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.foos.R
+import com.example.foos.ui.PreviewContainer
 import com.example.foos.ui.constants.paddingMedium
 import com.example.foos.ui.state.screen.followlist.UserItemUiState
-import com.example.foos.ui.theme.FooSTheme
-import com.example.foos.ui.view.component.button.FollowButton
 import com.example.foos.ui.view.component.UserIcon
 import com.example.foos.ui.view.component.VerticalUserIdentityText
+import com.example.foos.ui.view.component.button.FollowButton
 
 @Composable
 fun UserItem(
@@ -67,9 +67,9 @@ fun UserItem(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-fun UserItemPreview() {
+fun UserItemPreview() = PreviewContainer {
     val uiState = UserItemUiState(
         clientUserId = "clientUserId",
         username = "username",
@@ -79,7 +79,5 @@ fun UserItemPreview() {
         following = true,
         followingYou = true,
     )
-    FooSTheme {
-        UserItem(uiState = uiState, onFollowButtonClicked = {}, onItemClicked = {})
-    }
+    UserItem(uiState = uiState, onFollowButtonClicked = {}, onItemClicked = {})
 }
