@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.auth.signin
+package com.github.kitakkun.foos.user.auth.signin
 
 import android.app.Application
 import android.widget.Toast
@@ -6,8 +6,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.user.R
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

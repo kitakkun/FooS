@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.auth.signup
+package com.github.kitakkun.foos.user.auth.signup
 
 data class SignUpUiState(
     val email: String = "",

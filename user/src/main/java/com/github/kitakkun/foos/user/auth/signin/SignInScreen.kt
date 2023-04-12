@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.auth.signin
+package com.github.kitakkun.foos.user.auth.signin
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,10 +19,10 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.customview.composable.loading.BoxWithLoading
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.customview.theme.LinkBlue
+import com.github.kitakkun.foos.user.R
 import com.github.kitakkun.foos.user.auth.EmailTextField
 import com.github.kitakkun.foos.user.auth.PasswordTextField
 

@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name">FooS</string>
     <string name="following">Following</string>
     <string name="followers">Followers</string>
     <string name="follow">Follow</string>
@@ -7,4 +8,9 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="example_email">example@example.com</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="dont_have_account">Don\'t have an account?</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="message_sign_in_error">There was an error signing in.</string>
 </resources>

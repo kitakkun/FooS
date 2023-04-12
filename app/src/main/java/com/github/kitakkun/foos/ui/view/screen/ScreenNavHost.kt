@@ -14,8 +14,6 @@ import com.github.kitakkun.foos.common.navigation.StringList
 import com.github.kitakkun.foos.common.navigation.SubScreen
 import com.github.kitakkun.foos.ui.navigation.BottomSheet
 import com.github.kitakkun.foos.ui.view.bottomsheet.PostOptionBottomSheet
-import com.github.kitakkun.foos.ui.view.screen.auth.signin.SignInScreen
-import com.github.kitakkun.foos.ui.view.screen.auth.signup.SignUpScreen
 import com.github.kitakkun.foos.ui.view.screen.home.HomeScreen
 import com.github.kitakkun.foos.ui.view.screen.home.HomeViewModelImpl
 import com.github.kitakkun.foos.ui.view.screen.imagedetail.ImageDetailScreen
@@ -35,6 +33,8 @@ import com.github.kitakkun.foos.ui.view.screen.setting.SettingScreen
 import com.github.kitakkun.foos.ui.view.screen.setting.SettingViewModelImpl
 import com.github.kitakkun.foos.ui.view.screen.userprofile.UserProfileScreen
 import com.github.kitakkun.foos.ui.view.screen.userprofile.UserProfileViewModelImpl
+import com.github.kitakkun.foos.user.auth.signin.SignInScreen
+import com.github.kitakkun.foos.user.auth.signup.SignUpScreen
 import com.github.kitakkun.foos.user.followlist.FollowListScreen
 import com.github.kitakkun.foos.user.followlist.FollowListViewModelImpl
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
