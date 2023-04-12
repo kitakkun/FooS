@@ -1,8 +1,13 @@
 package com.example.foos.ui.view.screen.auth.signin
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -14,11 +19,32 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.foos.R
 import com.example.foos.ui.theme.LinkBlue
+import com.example.foos.ui.view.component.BoxWithLoading
 
 @Composable
 fun SignInScreen(
+    viewModel: SignInViewModel,
+    navController: NavController,
+) {
+    SignInUI(
+        uiState = viewModel.uiState.value,
+        onEmailChange = viewModel::updateEmail,
+        onPasswordChange = viewModel::updatePassword,
+        onSignInClick = viewModel::signIn,
+        onSignUpClick = {
+            navController.navigate("sign_up") {
+                popUpTo("sign_up") { inclusive = true }
+                launchSingleTop = true
+            }
+        },
+    )
+}
+
+@Composable
+fun SignInUI(
     uiState: SignInUiState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
@@ -44,7 +70,8 @@ fun SignInScreen(
             pop()
         }
     }
-    Box(
+    BoxWithLoading(
+        isLoading = uiState.isLoading,
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
@@ -76,7 +103,7 @@ fun SignInScreen(
 @Preview
 @Composable
 private fun AuthScreenPreview() {
-    SignInScreen(
+    SignInUI(
         uiState = SignInUiState(),
         onEmailChange = {},
         onPasswordChange = {},
