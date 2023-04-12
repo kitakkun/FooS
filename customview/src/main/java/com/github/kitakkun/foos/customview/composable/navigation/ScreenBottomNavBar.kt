@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.component.navigation
+package com.github.kitakkun.foos.customview.composable.navigation
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.BottomNavigation
