@@ -15,4 +15,5 @@ dependencies {
     implementation project(":user")
     implementation project(":customview")
     implementation project(":common")
+    implementation project(":post")
 }
