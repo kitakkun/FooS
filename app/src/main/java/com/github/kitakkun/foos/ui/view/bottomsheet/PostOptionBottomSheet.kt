@@ -7,7 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.ui.state.component.MenuItemUiState
-import com.github.kitakkun.foos.ui.view.component.menu.MenuItem
+import com.github.kitakkun.foos.user.setting.MenuItem
 
 @Composable
 fun PostOptionBottomSheet(

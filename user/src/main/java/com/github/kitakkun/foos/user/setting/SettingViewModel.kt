@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.setting
+package com.github.kitakkun.foos.user.setting
 
 import androidx.compose.runtime.State
 import com.canhub.cropper.CropImageView

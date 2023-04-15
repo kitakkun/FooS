@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.setting
+package com.github.kitakkun.foos.user.setting
 
 import android.graphics.Bitmap
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -15,13 +15,13 @@ import androidx.compose.ui.unit.sp
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
-import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.customview.composable.dialog.ConfirmAlertDialog
 import com.github.kitakkun.foos.customview.composable.user.UserIcon
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.ui.state.component.MenuItemUiState
 import com.github.kitakkun.foos.ui.view.component.menu.MenuItemList
+import com.github.kitakkun.foos.user.R
 
 @Composable
 fun SettingScreen(viewModel: SettingViewModel, screenViewModel: ScreenViewModel) {

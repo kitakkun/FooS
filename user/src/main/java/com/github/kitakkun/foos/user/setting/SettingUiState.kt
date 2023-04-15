@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.setting
+package com.github.kitakkun.foos.user.setting
 
 data class SettingUiState(
     val username: String,

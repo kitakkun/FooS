@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.common.const.paddingSmall
 import com.github.kitakkun.foos.ui.state.component.MenuItemUiState
+import com.github.kitakkun.foos.user.setting.MenuItem
 
 /**
  * メニューリスト

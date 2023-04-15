@@ -30,14 +30,14 @@ import com.github.kitakkun.foos.ui.view.screen.map.MapViewModelImpl
 import com.github.kitakkun.foos.ui.view.screen.postdetail.PostDetailViewModelImpl
 import com.github.kitakkun.foos.ui.view.screen.reaction.ReactionScreen
 import com.github.kitakkun.foos.ui.view.screen.reaction.ReactionViewModelImpl
-import com.github.kitakkun.foos.ui.view.screen.setting.SettingScreen
-import com.github.kitakkun.foos.ui.view.screen.setting.SettingViewModelImpl
 import com.github.kitakkun.foos.user.auth.signin.SignInScreen
 import com.github.kitakkun.foos.user.auth.signup.SignUpScreen
 import com.github.kitakkun.foos.user.followlist.FollowListScreen
 import com.github.kitakkun.foos.user.followlist.FollowListViewModelImpl
 import com.github.kitakkun.foos.user.profile.UserProfileScreen
 import com.github.kitakkun.foos.user.profile.UserProfileViewModelImpl
+import com.github.kitakkun.foos.user.setting.SettingScreen
+import com.github.kitakkun.foos.user.setting.SettingViewModelImpl
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.bottomSheet
 
