@@ -21,9 +21,9 @@ import androidx.navigation.NavController
 import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.common.const.paddingSmall
+import com.github.kitakkun.foos.customview.composable.post.PostDetailView
+import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
-import com.github.kitakkun.foos.ui.state.component.PostItemUiState
-import com.github.kitakkun.foos.ui.view.component.PostDetailView
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
@@ -192,7 +192,9 @@ fun Map(
             iconGenerator.setContentView(imageView)
             if (post.latitude != null && post.longitude != null) {
                 Marker(
-                    state = MarkerState(position = LatLng(post.latitude, post.longitude)),
+                    state = MarkerState(
+                        position = LatLng(post.latitude as Double, post.longitude as Double)
+                    ),
                     icon = BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon()),
                     onClick = {
                         onBubbleClick(post)

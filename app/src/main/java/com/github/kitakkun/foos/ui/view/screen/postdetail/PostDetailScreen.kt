@@ -3,7 +3,7 @@ package com.github.kitakkun.foos.ui.view.screen.postdetail
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavController
-import com.github.kitakkun.foos.ui.view.component.PostDetailView
+import com.github.kitakkun.foos.customview.composable.post.PostDetailView
 
 @Composable
 fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavController, postId: String) {

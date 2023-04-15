@@ -9,8 +9,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kitakkun.foos.common.model.DatabasePost
 import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 import com.github.kitakkun.foos.data.repository.PostsRepository
-import com.github.kitakkun.foos.ui.state.component.PostItemUiState
 import com.github.kitakkun.foos.util.FileUtils.getRealPath
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.ktx.auth

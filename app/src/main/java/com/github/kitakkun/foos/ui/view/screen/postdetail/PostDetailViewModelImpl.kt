@@ -5,9 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kitakkun.foos.common.model.DatabaseReaction
+import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 import com.github.kitakkun.foos.data.domain.fetcher.post.FetchPostByPostIdUseCase
 import com.github.kitakkun.foos.data.repository.ReactionsRepository
-import com.github.kitakkun.foos.ui.state.component.PostItemUiState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel

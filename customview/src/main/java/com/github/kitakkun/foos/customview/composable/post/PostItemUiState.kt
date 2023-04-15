@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.state.component
+package com.github.kitakkun.foos.customview.composable.post
 
 import com.github.kitakkun.foos.common.model.DatabaseReaction
 import com.github.kitakkun.foos.common.model.Post

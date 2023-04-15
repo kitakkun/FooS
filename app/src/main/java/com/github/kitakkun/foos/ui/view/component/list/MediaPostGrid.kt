@@ -13,7 +13,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.github.kitakkun.foos.common.const.paddingLarge
 import com.github.kitakkun.foos.common.ext.OnAppearLastItem
-import com.github.kitakkun.foos.ui.state.component.PostItemUiState
+import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 
 /**
  * プロフィール画面の画像コンテンツベースの投稿グリッドビュー

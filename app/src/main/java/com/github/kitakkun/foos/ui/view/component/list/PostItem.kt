@@ -26,11 +26,11 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndicator
+import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 import com.github.kitakkun.foos.customview.composable.user.HorizontalUserIdentityText
 import com.github.kitakkun.foos.customview.composable.user.UserIcon
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.customview.theme.FooSTheme
-import com.github.kitakkun.foos.ui.state.component.PostItemUiState
 import java.util.*
 
 /**

@@ -3,7 +3,7 @@ package com.github.kitakkun.foos.ui.view.screen.post
 import android.content.Context
 import android.net.Uri
 import androidx.compose.runtime.State
-import com.github.kitakkun.foos.ui.state.component.PostItemUiState
+import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.SharedFlow
 

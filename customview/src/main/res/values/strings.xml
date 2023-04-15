@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="emoji_like">&#10084;</string>
+    <string name="emoji_fire">&#128293;</string>
+    <string name="emoji_yummy">&#128523;</string>
+</resources>

@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.github.kitakkun.foos.common.ext.OnAppearLastItem
-import com.github.kitakkun.foos.ui.state.component.PostItemUiState
+import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 
 /**
  * 投稿のリスト

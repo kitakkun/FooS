@@ -1,6 +1,6 @@
 package com.github.kitakkun.foos.ui.view.screen.userprofile
 
-import com.github.kitakkun.foos.ui.state.component.PostItemUiState
+import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 
 /**
  * ユーザプロフィール画面のUI状態
