@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.map
+package com.github.kitakkun.foos.ui.screen.map
 
 import android.Manifest
 import android.annotation.SuppressLint

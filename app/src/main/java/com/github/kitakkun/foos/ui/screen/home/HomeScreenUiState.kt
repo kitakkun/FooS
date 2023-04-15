@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.home
+package com.github.kitakkun.foos.ui.screen.home
 
 import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 

@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.home
+package com.github.kitakkun.foos.ui.screen.home
 
 import android.net.Uri
 import androidx.compose.runtime.State

@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen
+package com.github.kitakkun.foos.ui.screen
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*

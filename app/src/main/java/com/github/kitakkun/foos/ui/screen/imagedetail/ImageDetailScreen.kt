@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.imagedetail
+package com.github.kitakkun.foos.ui.screen.imagedetail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

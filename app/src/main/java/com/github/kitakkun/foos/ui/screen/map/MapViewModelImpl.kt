@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.map
+package com.github.kitakkun.foos.ui.screen.map
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

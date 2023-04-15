@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.postdetail
+package com.github.kitakkun.foos.ui.screen.postdetail
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

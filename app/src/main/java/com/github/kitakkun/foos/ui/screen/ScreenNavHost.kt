@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen
+package com.github.kitakkun.foos.ui.screen
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -23,13 +23,13 @@ import com.github.kitakkun.foos.post.create.locationselect.LocationSelectViewMod
 import com.github.kitakkun.foos.post.postdetail.PostDetailScreen
 import com.github.kitakkun.foos.post.reaction.ReactionScreen
 import com.github.kitakkun.foos.post.reaction.ReactionViewModelImpl
-import com.github.kitakkun.foos.ui.view.bottomsheet.PostOptionBottomSheet
-import com.github.kitakkun.foos.ui.view.screen.home.HomeScreen
-import com.github.kitakkun.foos.ui.view.screen.home.HomeViewModelImpl
-import com.github.kitakkun.foos.ui.view.screen.imagedetail.ImageDetailScreen
-import com.github.kitakkun.foos.ui.view.screen.map.MapScreen
-import com.github.kitakkun.foos.ui.view.screen.map.MapViewModelImpl
-import com.github.kitakkun.foos.ui.view.screen.postdetail.PostDetailViewModelImpl
+import com.github.kitakkun.foos.ui.bottomsheet.PostOptionBottomSheet
+import com.github.kitakkun.foos.ui.screen.home.HomeScreen
+import com.github.kitakkun.foos.ui.screen.home.HomeViewModelImpl
+import com.github.kitakkun.foos.ui.screen.imagedetail.ImageDetailScreen
+import com.github.kitakkun.foos.ui.screen.map.MapScreen
+import com.github.kitakkun.foos.ui.screen.map.MapViewModelImpl
+import com.github.kitakkun.foos.ui.screen.postdetail.PostDetailViewModelImpl
 import com.github.kitakkun.foos.user.auth.signin.SignInScreen
 import com.github.kitakkun.foos.user.auth.signup.SignUpScreen
 import com.github.kitakkun.foos.user.followlist.FollowListScreen

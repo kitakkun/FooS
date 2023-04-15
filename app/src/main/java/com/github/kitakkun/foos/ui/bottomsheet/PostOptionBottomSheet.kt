@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.bottomsheet
+package com.github.kitakkun.foos.ui.bottomsheet
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
