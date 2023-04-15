@@ -1,7 +1,6 @@
 package com.github.kitakkun.foos.ui.view.screen.userprofile
 
 import androidx.compose.runtime.State
-import com.github.kitakkun.foos.ui.state.screen.userprofile.UserProfileScreenUiState
 import kotlinx.coroutines.flow.SharedFlow
 
 interface UserProfileViewModel {

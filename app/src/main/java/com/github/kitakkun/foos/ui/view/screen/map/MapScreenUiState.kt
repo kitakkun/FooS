@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.state.screen.map
+package com.github.kitakkun.foos.ui.view.screen.map
 
 import com.github.kitakkun.foos.ui.state.component.PostItemUiState
 

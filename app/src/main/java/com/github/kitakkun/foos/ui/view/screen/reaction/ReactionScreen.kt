@@ -8,7 +8,6 @@ import androidx.navigation.NavController
 import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndicator
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
-import com.github.kitakkun.foos.ui.state.screen.reaction.ReactionItemUiState
 import com.github.kitakkun.foos.ui.view.component.list.ReactionItemList
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState

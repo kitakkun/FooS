@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.state.screen.postdetail
+package com.github.kitakkun.foos.ui.view.screen.postdetail
 
 import com.github.kitakkun.foos.ui.state.component.PostItemUiState
 

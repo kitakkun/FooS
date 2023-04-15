@@ -13,7 +13,6 @@ import com.github.kitakkun.foos.data.domain.fetcher.post.FetchPostsByUserIdUseCa
 import com.github.kitakkun.foos.data.domain.fetcher.post.FetchPostsUserReactedByUserIdUseCase
 import com.github.kitakkun.foos.data.domain.fetcher.post.FetchPostsWithMediaByUserIdUseCase
 import com.github.kitakkun.foos.ui.state.component.PostItemUiState
-import com.github.kitakkun.foos.ui.state.screen.userprofile.UserProfileScreenUiState
 import com.github.kitakkun.foos.user.repository.FollowRepository
 import com.github.kitakkun.foos.user.repository.UsersRepository
 import com.google.firebase.auth.ktx.auth

@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.state.screen.userprofile
+package com.github.kitakkun.foos.ui.view.screen.userprofile
 
 import com.github.kitakkun.foos.ui.state.component.PostItemUiState
 

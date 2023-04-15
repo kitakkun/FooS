@@ -23,7 +23,6 @@ import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.common.const.paddingSmall
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.ui.state.component.PostItemUiState
-import com.github.kitakkun.foos.ui.state.screen.map.MapScreenUiState
 import com.github.kitakkun.foos.ui.view.component.PostDetailView
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus

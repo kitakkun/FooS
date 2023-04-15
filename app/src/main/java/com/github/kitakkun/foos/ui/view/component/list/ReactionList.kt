@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.github.kitakkun.foos.common.const.paddingMedium
-import com.github.kitakkun.foos.ui.state.screen.reaction.ReactionItemUiState
+import com.github.kitakkun.foos.ui.view.screen.reaction.ReactionItemUiState
 
 @Composable
 fun ReactionItemList(

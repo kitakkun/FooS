@@ -5,8 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kitakkun.foos.data.domain.FetchReactionsByUserIdUseCase
-import com.github.kitakkun.foos.ui.state.screen.reaction.ReactionItemUiState
-import com.github.kitakkun.foos.ui.state.screen.reaction.ReactionScreenUiState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel

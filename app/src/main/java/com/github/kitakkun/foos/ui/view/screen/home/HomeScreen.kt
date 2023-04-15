@@ -17,7 +17,6 @@ import com.github.kitakkun.foos.common.navigation.MainScreen
 import com.github.kitakkun.foos.customview.composable.button.RoundIconActionButton
 import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndicator
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
-import com.github.kitakkun.foos.ui.state.screen.home.HomeScreenUiState
 import com.github.kitakkun.foos.ui.view.component.list.PostItemList
 import com.github.kitakkun.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh

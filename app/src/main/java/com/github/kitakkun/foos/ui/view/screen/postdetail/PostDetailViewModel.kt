@@ -1,7 +1,6 @@
 package com.github.kitakkun.foos.ui.view.screen.postdetail
 
 import androidx.compose.runtime.State
-import com.github.kitakkun.foos.ui.state.screen.postdetail.PostDetailScreenUiState
 
 interface PostDetailViewModel {
     val uiState: State<PostDetailScreenUiState>

@@ -1,7 +1,6 @@
 package com.github.kitakkun.foos.ui.view.screen.home
 
 import androidx.compose.runtime.State
-import com.github.kitakkun.foos.ui.state.screen.home.HomeScreenUiState
 import kotlinx.coroutines.flow.SharedFlow
 
 interface HomeViewModel {
