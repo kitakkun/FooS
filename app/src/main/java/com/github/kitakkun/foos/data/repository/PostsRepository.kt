@@ -1,7 +1,7 @@
 package com.github.kitakkun.foos.data.repository
 
 import android.content.Context
-import com.github.kitakkun.foos.data.model.database.DatabasePost
+import com.github.kitakkun.foos.common.model.DatabasePost
 import com.google.android.gms.maps.model.LatLngBounds
 import java.util.*
 

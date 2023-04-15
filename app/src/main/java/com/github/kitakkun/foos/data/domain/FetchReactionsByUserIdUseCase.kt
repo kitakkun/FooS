@@ -1,6 +1,6 @@
 package com.github.kitakkun.foos.data.domain
 
-import com.github.kitakkun.foos.data.model.Reaction
+import com.github.kitakkun.foos.common.model.Reaction
 import com.github.kitakkun.foos.data.repository.PostsRepository
 import com.github.kitakkun.foos.data.repository.ReactionsRepository
 import com.github.kitakkun.foos.user.repository.UsersRepository

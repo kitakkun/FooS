@@ -1,6 +1,6 @@
 package com.github.kitakkun.foos.ui.state.screen.reaction
 
-import com.github.kitakkun.foos.data.model.Reaction
+import com.github.kitakkun.foos.common.model.Reaction
 
 data class ReactionScreenUiState(
     val reactions: List<ReactionItemUiState>,

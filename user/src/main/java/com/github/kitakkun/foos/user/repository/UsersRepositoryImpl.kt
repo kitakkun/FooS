@@ -2,7 +2,7 @@ package com.github.kitakkun.foos.user.repository
 
 import android.util.Log
 import com.github.kitakkun.foos.common.ext.join
-import com.github.kitakkun.foos.user.model.DatabaseUser
+import com.github.kitakkun.foos.common.model.DatabaseUser
 import com.github.kitakkun.foos.user.model.Email
 import com.github.kitakkun.foos.user.model.Password
 import com.github.michaelbull.result.Err

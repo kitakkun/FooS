@@ -1,7 +1,7 @@
 package com.github.kitakkun.foos.ui.state.component
 
-import com.github.kitakkun.foos.data.model.Post
-import com.github.kitakkun.foos.data.model.database.DatabaseReaction
+import com.github.kitakkun.foos.common.model.DatabaseReaction
+import com.github.kitakkun.foos.common.model.Post
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter

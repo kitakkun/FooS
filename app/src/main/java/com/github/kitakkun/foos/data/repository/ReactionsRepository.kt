@@ -1,6 +1,6 @@
 package com.github.kitakkun.foos.data.repository
 
-import com.github.kitakkun.foos.data.model.database.DatabaseReaction
+import com.github.kitakkun.foos.common.model.DatabaseReaction
 import java.util.*
 
 interface ReactionsRepository {

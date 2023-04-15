@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import com.github.kitakkun.foos.common.ext.join
-import com.github.kitakkun.foos.data.model.database.DatabasePost
+import com.github.kitakkun.foos.common.model.DatabasePost
 import com.github.kitakkun.foos.util.ImageConverter
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.firebase.firestore.FieldValue
@@ -128,7 +128,7 @@ class PostsRepositoryImpl @Inject constructor(
             .whereLessThanOrEqualTo("longitude", bounds.northeast.longitude)
             .whereGreaterThanOrEqualTo("longitude", bounds.southwest.longitude)
             .get().await().toObjects(DatabasePost::class.java).filter {
-                it.latitude!! <= bounds.northeast.latitude && it.latitude >= bounds.southwest.latitude
+                it.latitude!! <= bounds.northeast.latitude && it.latitude as Double >= bounds.southwest.latitude
             }
 
     /**

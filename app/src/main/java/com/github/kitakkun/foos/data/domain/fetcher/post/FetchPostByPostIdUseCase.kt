@@ -1,6 +1,6 @@
 package com.github.kitakkun.foos.data.domain.fetcher.post
 
-import com.github.kitakkun.foos.data.model.Post
+import com.github.kitakkun.foos.common.model.Post
 import com.github.kitakkun.foos.data.repository.PostsRepository
 import com.github.kitakkun.foos.data.repository.ReactionsRepository
 import com.github.kitakkun.foos.user.repository.UsersRepository

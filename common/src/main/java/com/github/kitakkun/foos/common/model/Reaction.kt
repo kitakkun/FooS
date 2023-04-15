@@ -1,8 +1,4 @@
-package com.github.kitakkun.foos.data.model
-
-import com.github.kitakkun.foos.data.model.database.DatabasePost
-import com.github.kitakkun.foos.data.model.database.DatabaseReaction
-import com.github.kitakkun.foos.user.model.DatabaseUser
+package com.github.kitakkun.foos.common.model
 
 /**
  * 各データがまとまったリアクションデータ
