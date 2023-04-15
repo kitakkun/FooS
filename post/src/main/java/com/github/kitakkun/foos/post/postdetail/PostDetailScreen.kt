@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.postdetail
+package com.github.kitakkun.foos.post.postdetail
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
