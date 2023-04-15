@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.post
+package com.github.kitakkun.foos.post.create
 
 import android.content.Context
 import android.net.Uri

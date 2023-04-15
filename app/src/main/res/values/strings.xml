@@ -17,7 +17,6 @@
     <string name="specify_location_alert_message">Please specify the restaurant\'s name.</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
-    <string name="send">Send</string>
     <string name="permission_request_message">Please give the permission.</string>
     <string name="request_permission">Request Permission</string>
     <string name="message_successfully_signed_in">Successfully signed in.</string>

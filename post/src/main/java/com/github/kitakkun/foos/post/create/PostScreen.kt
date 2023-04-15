@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.post
+package com.github.kitakkun.foos.post.create
 
 import android.Manifest
 import android.util.Log
@@ -12,23 +12,23 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.PinDrop
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
-import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.const.paddingMedium
+import com.github.kitakkun.foos.customview.composable.post.ImageAttachment
+import com.github.kitakkun.foos.customview.composable.post.LocationAttachment
 import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.customview.theme.FooSTheme
-import com.github.kitakkun.foos.ui.view.component.ImageAttachment
-import com.github.kitakkun.foos.ui.view.component.LocationAttachment
+import com.github.kitakkun.foos.post.R
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
@@ -254,7 +254,7 @@ private fun ToolBar(
             onClick = onAddLocation
         ) {
             Icon(
-                painterResource(R.drawable.ic_pin_drop),
+                imageVector = Icons.Default.PinDrop,
                 tint = MaterialTheme.colors.onSurface.copy(alpha = if (haveAccessToLocation) 1f else 0.4f),
                 contentDescription = "Add location",
             )
