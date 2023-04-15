@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.userprofile
+package com.github.kitakkun.foos.user.userprofile
 
 import androidx.compose.runtime.State
 import kotlinx.coroutines.flow.SharedFlow

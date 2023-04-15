@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.userprofile
+package com.github.kitakkun.foos.user.userprofile
 
 import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 

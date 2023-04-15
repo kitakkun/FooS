@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.component.list
+package com.github.kitakkun.foos.user.userprofile
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

@@ -13,4 +13,7 @@
     <string name="dont_have_account">Don\'t have an account?</string>
     <string name="already_have_account">Already have an account?</string>
     <string name="message_sign_in_error">There was an error signing in.</string>
+    <string name="tab_posts">Posts</string>
+    <string name="tab_media">Media</string>
+    <string name="tab_reactions">Reactions</string>
 </resources>

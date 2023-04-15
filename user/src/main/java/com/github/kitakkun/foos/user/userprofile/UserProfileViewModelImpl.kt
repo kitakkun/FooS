@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.userprofile
+package com.github.kitakkun.foos.user.userprofile
 
 import android.net.Uri
 import android.util.Log
