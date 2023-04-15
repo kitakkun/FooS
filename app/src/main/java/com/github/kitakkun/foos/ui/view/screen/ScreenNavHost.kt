@@ -18,13 +18,13 @@ import com.github.kitakkun.foos.post.create.PostScreen
 import com.github.kitakkun.foos.post.create.PostViewModelImpl
 import com.github.kitakkun.foos.post.create.locationconfirm.LocationConfirmScreen
 import com.github.kitakkun.foos.post.create.locationconfirm.LocationConfirmViewModelImpl
+import com.github.kitakkun.foos.post.create.locationselect.LocationSelectScreen
+import com.github.kitakkun.foos.post.create.locationselect.LocationSelectViewModelImpl
 import com.github.kitakkun.foos.post.postdetail.PostDetailScreen
 import com.github.kitakkun.foos.ui.view.bottomsheet.PostOptionBottomSheet
 import com.github.kitakkun.foos.ui.view.screen.home.HomeScreen
 import com.github.kitakkun.foos.ui.view.screen.home.HomeViewModelImpl
 import com.github.kitakkun.foos.ui.view.screen.imagedetail.ImageDetailScreen
-import com.github.kitakkun.foos.ui.view.screen.locationselect.LocationSelectScreen
-import com.github.kitakkun.foos.ui.view.screen.locationselect.LocationSelectViewModelImpl
 import com.github.kitakkun.foos.ui.view.screen.map.MapScreen
 import com.github.kitakkun.foos.ui.view.screen.map.MapViewModelImpl
 import com.github.kitakkun.foos.ui.view.screen.postdetail.PostDetailViewModelImpl

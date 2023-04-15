@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.locationselect
+package com.github.kitakkun.foos.post.create.locationselect
 
 import com.google.android.gms.maps.model.LatLng
 
