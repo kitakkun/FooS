@@ -1,6 +1,6 @@
 package com.github.kitakkun.foos.data.domain
 
-import com.github.kitakkun.foos.data.repository.PostsRepository
+import com.github.kitakkun.foos.common.repository.PostsRepository
 import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 

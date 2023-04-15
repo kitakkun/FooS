@@ -1,6 +1,9 @@
 package com.github.kitakkun.foos.di
 
-import com.github.kitakkun.foos.data.repository.*
+import com.github.kitakkun.foos.common.repository.PostsRepository
+import com.github.kitakkun.foos.common.repository.PostsRepositoryImpl
+import com.github.kitakkun.foos.common.repository.ReactionsRepository
+import com.github.kitakkun.foos.common.repository.ReactionsRepositoryImpl
 import com.github.kitakkun.foos.di.FirebaseModule.provideFireStoreInstance
 import com.github.kitakkun.foos.di.FirebaseModule.provideFirebaseAuthInstance
 import com.github.kitakkun.foos.di.FirebaseModule.provideFirebaseStorageInstance

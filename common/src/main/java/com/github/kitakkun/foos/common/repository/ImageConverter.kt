@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.util
+package com.github.kitakkun.foos.common.repository
 
 import android.graphics.Bitmap
 import kotlin.math.min

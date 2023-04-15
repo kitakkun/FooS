@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.data.repository
+package com.github.kitakkun.foos.common.repository
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import com.github.kitakkun.foos.common.ext.join
 import com.github.kitakkun.foos.common.model.DatabasePost
-import com.github.kitakkun.foos.util.ImageConverter
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore

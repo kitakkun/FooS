@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.data.repository
+package com.github.kitakkun.foos.common.repository
 
 import android.content.Context
 import com.github.kitakkun.foos.common.model.DatabasePost

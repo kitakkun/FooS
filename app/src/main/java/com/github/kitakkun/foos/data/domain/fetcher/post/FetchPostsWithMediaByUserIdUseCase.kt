@@ -1,9 +1,9 @@
 package com.github.kitakkun.foos.data.domain.fetcher.post
 
 import com.github.kitakkun.foos.common.model.Post
-import com.github.kitakkun.foos.data.repository.PostsRepository
-import com.github.kitakkun.foos.data.repository.PostsRepositoryImpl
-import com.github.kitakkun.foos.data.repository.ReactionsRepository
+import com.github.kitakkun.foos.common.repository.PostsRepository
+import com.github.kitakkun.foos.common.repository.PostsRepositoryImpl
+import com.github.kitakkun.foos.common.repository.ReactionsRepository
 import com.github.kitakkun.foos.user.repository.UsersRepository
 import java.util.*
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.data.repository
+package com.github.kitakkun.foos.common.repository
 
 import com.github.kitakkun.foos.common.model.DatabaseReaction
 import java.util.*
