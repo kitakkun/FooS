@@ -1,9 +1,9 @@
-package com.github.kitakkun.foos.data.domain
+package com.github.kitakkun.foos.common.usecase
 
 import com.github.kitakkun.foos.common.model.Reaction
 import com.github.kitakkun.foos.common.repository.PostsRepository
 import com.github.kitakkun.foos.common.repository.ReactionsRepository
-import com.github.kitakkun.foos.user.repository.UsersRepository
+import com.github.kitakkun.foos.common.repository.UsersRepository
 
 /**
  * 該当のユーザに関連するリアクションを取得

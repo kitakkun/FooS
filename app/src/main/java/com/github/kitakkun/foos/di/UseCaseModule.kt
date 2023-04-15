@@ -1,8 +1,6 @@
 package com.github.kitakkun.foos.di
 
-import com.github.kitakkun.foos.data.domain.DeletePostByPostIdUseCase
-import com.github.kitakkun.foos.data.domain.FetchReactionsByUserIdUseCase
-import com.github.kitakkun.foos.data.domain.fetcher.post.*
+import com.github.kitakkun.foos.common.usecase.*
 import com.github.kitakkun.foos.di.FirebaseModule.provideFirebaseAuthInstance
 import com.github.kitakkun.foos.di.RepositoryModule.provideFollowRepository
 import com.github.kitakkun.foos.di.RepositoryModule.providePostsRepository

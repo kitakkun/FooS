@@ -4,8 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.kitakkun.foos.common.usecase.FetchPostsByLocationBoundsUseCase
 import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
-import com.github.kitakkun.foos.data.domain.fetcher.post.FetchPostsByLocationBoundsUseCase
 import com.google.android.gms.maps.model.LatLngBounds
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

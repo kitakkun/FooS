@@ -2,8 +2,8 @@ package com.github.kitakkun.foos.ui.view.bottomsheet
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kitakkun.foos.data.domain.DeletePostByPostIdUseCase
-import com.github.kitakkun.foos.data.domain.fetcher.post.FetchPostByPostIdUseCase
+import com.github.kitakkun.foos.common.usecase.DeletePostByPostIdUseCase
+import com.github.kitakkun.foos.common.usecase.FetchPostByPostIdUseCase
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

@@ -1,25 +1,27 @@
-package com.github.kitakkun.foos.data.domain.fetcher.post
+package com.github.kitakkun.foos.common.usecase
 
 import com.github.kitakkun.foos.common.model.Post
 import com.github.kitakkun.foos.common.repository.PostsRepository
+import com.github.kitakkun.foos.common.repository.PostsRepositoryImpl
 import com.github.kitakkun.foos.common.repository.ReactionsRepository
-import com.github.kitakkun.foos.user.repository.UsersRepository
-import com.google.android.gms.maps.model.LatLngBounds
+import com.github.kitakkun.foos.common.repository.UsersRepository
+import java.util.*
 import javax.inject.Inject
 
 /**
- * 位置情報の範囲から投稿をフェッチするユースケース
+ * フィルタなしで投稿をフェッチするユースケース
  */
-class FetchPostsByLocationBoundsUseCase @Inject constructor(
+class FetchPostsUseCase @Inject constructor(
     private val postsRepository: PostsRepository,
     private val usersRepository: UsersRepository,
     private val reactionsRepository: ReactionsRepository,
 ) {
 
-    suspend operator fun invoke(bounds: LatLngBounds): List<Post> {
-        val dbPosts = postsRepository.fetchByLatLngBounds(bounds)
+    suspend operator fun invoke(start: Date? = null, end: Date? = null): List<Post> {
+        val dbPosts = postsRepository.fetch(start, end, PostsRepositoryImpl.DEFAULT_LOAD_LIMIT)
         val dbUsers = usersRepository.fetchByUserIds(dbPosts.map { it.userId })
         val dbReactions = reactionsRepository.fetchByPostIds(dbPosts.map { it.postId })
+
         return dbPosts.mapNotNull { post ->
             val user = dbUsers.find { it.userId == post.userId }
             val reactions = dbReactions.filter { it.postId == post.postId }
@@ -31,5 +33,7 @@ class FetchPostsByLocationBoundsUseCase @Inject constructor(
                 )
             }
         }
+
     }
+
 }

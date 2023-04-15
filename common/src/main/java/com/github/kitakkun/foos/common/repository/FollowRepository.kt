@@ -1,6 +1,6 @@
-package com.github.kitakkun.foos.user.repository
+package com.github.kitakkun.foos.common.repository
 
-import com.github.kitakkun.foos.user.model.DatabaseFollow
+import com.github.kitakkun.foos.common.model.DatabaseFollow
 
 interface FollowRepository {
 

@@ -6,9 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.common.repository.FollowRepository
+import com.github.kitakkun.foos.common.repository.UsersRepository
 import com.github.kitakkun.foos.user.UserItemUiState
-import com.github.kitakkun.foos.user.repository.FollowRepository
-import com.github.kitakkun.foos.user.repository.UsersRepository
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

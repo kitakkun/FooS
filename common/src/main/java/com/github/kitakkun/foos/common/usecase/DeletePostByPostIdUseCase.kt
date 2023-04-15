@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.data.domain
+package com.github.kitakkun.foos.common.usecase
 
 import com.github.kitakkun.foos.common.repository.PostsRepository
 import com.google.firebase.auth.FirebaseAuth

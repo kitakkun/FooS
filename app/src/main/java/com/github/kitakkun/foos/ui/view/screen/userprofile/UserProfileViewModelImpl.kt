@@ -9,12 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.github.kitakkun.foos.common.navigation.BottomSheet
 import com.github.kitakkun.foos.common.navigation.StringList
 import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.common.repository.FollowRepository
+import com.github.kitakkun.foos.common.repository.UsersRepository
+import com.github.kitakkun.foos.common.usecase.FetchPostsByUserIdUseCase
+import com.github.kitakkun.foos.common.usecase.FetchPostsUserReactedByUserIdUseCase
+import com.github.kitakkun.foos.common.usecase.FetchPostsWithMediaByUserIdUseCase
 import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
-import com.github.kitakkun.foos.data.domain.fetcher.post.FetchPostsByUserIdUseCase
-import com.github.kitakkun.foos.data.domain.fetcher.post.FetchPostsUserReactedByUserIdUseCase
-import com.github.kitakkun.foos.data.domain.fetcher.post.FetchPostsWithMediaByUserIdUseCase
-import com.github.kitakkun.foos.user.repository.FollowRepository
-import com.github.kitakkun.foos.user.repository.UsersRepository
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson

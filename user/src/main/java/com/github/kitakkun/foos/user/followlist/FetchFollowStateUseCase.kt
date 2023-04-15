@@ -1,6 +1,6 @@
 package com.github.kitakkun.foos.user.followlist
 
-import com.github.kitakkun.foos.user.repository.FollowRepository
+import com.github.kitakkun.foos.common.repository.FollowRepository
 import javax.inject.Inject
 
 class FetchFollowStateUseCase @Inject constructor(

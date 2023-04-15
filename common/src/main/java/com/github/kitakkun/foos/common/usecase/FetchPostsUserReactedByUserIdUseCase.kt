@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.data.domain.fetcher.post
+package com.github.kitakkun.foos.common.usecase
 
 import com.github.kitakkun.foos.common.model.Post
 import com.github.kitakkun.foos.common.repository.ReactionsRepository

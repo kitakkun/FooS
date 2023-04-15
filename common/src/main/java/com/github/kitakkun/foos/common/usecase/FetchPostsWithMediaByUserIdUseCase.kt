@@ -1,32 +1,32 @@
-package com.github.kitakkun.foos.data.domain.fetcher.post
+package com.github.kitakkun.foos.common.usecase
 
 import com.github.kitakkun.foos.common.model.Post
 import com.github.kitakkun.foos.common.repository.PostsRepository
 import com.github.kitakkun.foos.common.repository.PostsRepositoryImpl
 import com.github.kitakkun.foos.common.repository.ReactionsRepository
-import com.github.kitakkun.foos.user.repository.UsersRepository
+import com.github.kitakkun.foos.common.repository.UsersRepository
 import java.util.*
 import javax.inject.Inject
 
-/**
- * ユーザIDを元に投稿をフェッチするユースケース
- */
-class FetchPostsByUserIdUseCase @Inject constructor(
+class FetchPostsWithMediaByUserIdUseCase @Inject constructor(
     private val postsRepository: PostsRepository,
     private val usersRepository: UsersRepository,
     private val reactionsRepository: ReactionsRepository,
 ) {
 
-    suspend operator fun invoke(userId: String, end: Date = Date()): List<Post> {
+    suspend operator fun invoke(
+        userId: String,
+        start: Date? = null,
+        end: Date? = null
+    ): List<Post> {
         val dbUser = usersRepository.fetchByUserId(userId)
-        val dbPosts = postsRepository.fetchByUserId(
+        val dbPosts = postsRepository.fetchPostsWithMediaByUserId(
             userId,
-            null,
+            start,
             end,
             PostsRepositoryImpl.DEFAULT_LOAD_LIMIT
         )
-        val dbReactions = dbPosts.map { it.postId }.let { reactionsRepository.fetchByPostIds(it) }
-
+        val dbReactions = reactionsRepository.fetchByPostIds(dbPosts.map { it.postId })
         return dbPosts.mapNotNull { post ->
             val reactions = dbReactions.filter { it.postId == post.postId }
             dbUser?.let {

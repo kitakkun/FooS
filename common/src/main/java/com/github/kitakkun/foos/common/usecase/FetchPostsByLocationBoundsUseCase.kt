@@ -1,38 +1,32 @@
-package com.github.kitakkun.foos.data.domain.fetcher.post
+package com.github.kitakkun.foos.common.usecase
 
 import com.github.kitakkun.foos.common.model.Post
 import com.github.kitakkun.foos.common.repository.PostsRepository
-import com.github.kitakkun.foos.common.repository.PostsRepositoryImpl
 import com.github.kitakkun.foos.common.repository.ReactionsRepository
-import com.github.kitakkun.foos.user.repository.UsersRepository
-import java.util.*
+import com.github.kitakkun.foos.common.repository.UsersRepository
+import com.google.android.gms.maps.model.LatLngBounds
 import javax.inject.Inject
 
-class FetchPostsWithMediaByUserIdUseCase @Inject constructor(
+/**
+ * 位置情報の範囲から投稿をフェッチするユースケース
+ */
+class FetchPostsByLocationBoundsUseCase @Inject constructor(
     private val postsRepository: PostsRepository,
     private val usersRepository: UsersRepository,
     private val reactionsRepository: ReactionsRepository,
 ) {
 
-    suspend operator fun invoke(
-        userId: String,
-        start: Date? = null,
-        end: Date? = null
-    ): List<Post> {
-        val dbUser = usersRepository.fetchByUserId(userId)
-        val dbPosts = postsRepository.fetchPostsWithMediaByUserId(
-            userId,
-            start,
-            end,
-            PostsRepositoryImpl.DEFAULT_LOAD_LIMIT
-        )
+    suspend operator fun invoke(bounds: LatLngBounds): List<Post> {
+        val dbPosts = postsRepository.fetchByLatLngBounds(bounds)
+        val dbUsers = usersRepository.fetchByUserIds(dbPosts.map { it.userId })
         val dbReactions = reactionsRepository.fetchByPostIds(dbPosts.map { it.postId })
         return dbPosts.mapNotNull { post ->
+            val user = dbUsers.find { it.userId == post.userId }
             val reactions = dbReactions.filter { it.postId == post.postId }
-            dbUser?.let {
+            user?.let {
                 Post(
                     post = post,
-                    user = dbUser,
+                    user = user,
                     reaction = reactions,
                 )
             }
