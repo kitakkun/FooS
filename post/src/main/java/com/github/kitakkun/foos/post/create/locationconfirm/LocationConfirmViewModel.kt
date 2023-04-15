@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.locationconfirm
+package com.github.kitakkun.foos.post.create.locationconfirm
 
 import kotlinx.coroutines.flow.SharedFlow
 

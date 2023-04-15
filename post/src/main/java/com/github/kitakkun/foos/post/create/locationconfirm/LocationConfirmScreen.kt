@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.locationconfirm
+package com.github.kitakkun.foos.post.create.locationconfirm
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
@@ -17,11 +17,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.common.navigation.SubScreen
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
+import com.github.kitakkun.foos.post.R
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*

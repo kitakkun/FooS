@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.locationconfirm
+package com.github.kitakkun.foos.post.create.locationconfirm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

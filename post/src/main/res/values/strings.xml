@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="send">Send</string>
+    <string name="confirm_location">Confirm the Location</string>
+    <string name="location_attached">Location Data</string>
+    <string name="specify_location_alert_message">Please specify the restaurant\'s name.</string>
+    <string name="enter_location_name_message">Enter the restaurant\'s name.</string>
 </resources>
