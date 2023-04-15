@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.component.list
+package com.github.kitakkun.foos.customview.composable.post
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -26,7 +26,6 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndicator
-import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 import com.github.kitakkun.foos.customview.composable.user.HorizontalUserIdentityText
 import com.github.kitakkun.foos.customview.composable.user.UserIcon
 import com.github.kitakkun.foos.customview.preview.PreviewContainer

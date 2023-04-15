@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.component.list
+package com.github.kitakkun.foos.customview.composable.post
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.github.kitakkun.foos.common.ext.OnAppearLastItem
-import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 
 /**
  * 投稿のリスト
