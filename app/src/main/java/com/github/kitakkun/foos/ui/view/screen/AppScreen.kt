@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
+import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.customview.composable.navigation.ScreenBottomNavBar
 import com.github.kitakkun.foos.customview.theme.FooSTheme
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi

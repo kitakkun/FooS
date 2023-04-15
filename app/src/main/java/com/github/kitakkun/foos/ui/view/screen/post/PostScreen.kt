@@ -22,13 +22,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.R
+import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.customview.theme.FooSTheme
 import com.github.kitakkun.foos.ui.view.component.ImageAttachment
 import com.github.kitakkun.foos.ui.view.component.LocationAttachment
-import com.github.kitakkun.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState

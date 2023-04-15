@@ -12,13 +12,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.const.paddingLarge
 import com.github.kitakkun.foos.common.navigation.MainScreen
 import com.github.kitakkun.foos.customview.composable.button.RoundIconActionButton
 import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndicator
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.ui.view.component.list.PostItemList
-import com.github.kitakkun.foos.ui.view.screen.ScreenViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.launch

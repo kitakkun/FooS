@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.data.shared
+package com.github.kitakkun.foos.common
 
 import com.google.android.gms.maps.model.LatLng
 

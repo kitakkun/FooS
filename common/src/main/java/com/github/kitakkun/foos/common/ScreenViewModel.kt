@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen
+package com.github.kitakkun.foos.common
 
 import android.app.Activity
 import android.content.Context
@@ -6,7 +6,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kitakkun.foos.data.shared.PostCreateSharedData
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
