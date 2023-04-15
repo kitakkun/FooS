@@ -21,6 +21,8 @@ import com.github.kitakkun.foos.post.create.locationconfirm.LocationConfirmViewM
 import com.github.kitakkun.foos.post.create.locationselect.LocationSelectScreen
 import com.github.kitakkun.foos.post.create.locationselect.LocationSelectViewModelImpl
 import com.github.kitakkun.foos.post.postdetail.PostDetailScreen
+import com.github.kitakkun.foos.post.reaction.ReactionScreen
+import com.github.kitakkun.foos.post.reaction.ReactionViewModelImpl
 import com.github.kitakkun.foos.ui.view.bottomsheet.PostOptionBottomSheet
 import com.github.kitakkun.foos.ui.view.screen.home.HomeScreen
 import com.github.kitakkun.foos.ui.view.screen.home.HomeViewModelImpl
@@ -28,8 +30,6 @@ import com.github.kitakkun.foos.ui.view.screen.imagedetail.ImageDetailScreen
 import com.github.kitakkun.foos.ui.view.screen.map.MapScreen
 import com.github.kitakkun.foos.ui.view.screen.map.MapViewModelImpl
 import com.github.kitakkun.foos.ui.view.screen.postdetail.PostDetailViewModelImpl
-import com.github.kitakkun.foos.ui.view.screen.reaction.ReactionScreen
-import com.github.kitakkun.foos.ui.view.screen.reaction.ReactionViewModelImpl
 import com.github.kitakkun.foos.user.auth.signin.SignInScreen
 import com.github.kitakkun.foos.user.auth.signup.SignUpScreen
 import com.github.kitakkun.foos.user.followlist.FollowListScreen

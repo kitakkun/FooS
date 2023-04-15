@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.component.list
+package com.github.kitakkun.foos.post.reaction
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.github.kitakkun.foos.common.const.paddingMedium
-import com.github.kitakkun.foos.ui.view.screen.reaction.ReactionItemUiState
 
 @Composable
 fun ReactionItemList(

@@ -1,13 +1,13 @@
-package com.github.kitakkun.foos.ui.view.screen.reaction
+package com.github.kitakkun.foos.post.reaction
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import com.github.kitakkun.foos.customview.R
 import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndicator
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
-import com.github.kitakkun.foos.ui.view.component.list.ReactionItemList
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
@@ -62,7 +62,7 @@ private fun ReactionUIPreview() = PreviewContainer {
         list.add(
             ReactionItemUiState(
                 username = "username$i",
-                reaction = stringResource(id = com.github.kitakkun.foos.customview.R.string.emoji_like),
+                reaction = stringResource(id = R.string.emoji_like),
                 postContent = "post content $i...",
                 userIcon = ""
             )

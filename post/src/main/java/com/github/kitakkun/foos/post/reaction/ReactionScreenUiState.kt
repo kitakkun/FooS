@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.reaction
+package com.github.kitakkun.foos.post.reaction
 
 import com.github.kitakkun.foos.common.model.Reaction
 

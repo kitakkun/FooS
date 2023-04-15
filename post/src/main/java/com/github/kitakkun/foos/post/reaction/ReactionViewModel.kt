@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.screen.reaction
+package com.github.kitakkun.foos.post.reaction
 
 import androidx.compose.runtime.State
 
