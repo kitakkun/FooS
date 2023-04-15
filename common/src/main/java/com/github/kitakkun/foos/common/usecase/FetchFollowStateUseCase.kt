@@ -1,5 +1,6 @@
-package com.github.kitakkun.foos.user.followlist
+package com.github.kitakkun.foos.common.usecase
 
+import com.github.kitakkun.foos.common.model.FollowState
 import com.github.kitakkun.foos.common.repository.FollowRepository
 import javax.inject.Inject
 

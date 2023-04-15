@@ -1,9 +1,9 @@
-package com.github.kitakkun.foos.di
+package com.github.kitakkun.foos.common.di
 
+import com.github.kitakkun.foos.common.di.FirebaseModule.provideFireStoreInstance
+import com.github.kitakkun.foos.common.di.FirebaseModule.provideFirebaseAuthInstance
+import com.github.kitakkun.foos.common.di.FirebaseModule.provideFirebaseStorageInstance
 import com.github.kitakkun.foos.common.repository.*
-import com.github.kitakkun.foos.di.FirebaseModule.provideFireStoreInstance
-import com.github.kitakkun.foos.di.FirebaseModule.provideFirebaseAuthInstance
-import com.github.kitakkun.foos.di.FirebaseModule.provideFirebaseStorageInstance
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

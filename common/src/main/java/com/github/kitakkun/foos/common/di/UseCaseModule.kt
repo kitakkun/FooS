@@ -1,12 +1,11 @@
-package com.github.kitakkun.foos.di
+package com.github.kitakkun.foos.common.di
 
+import com.github.kitakkun.foos.common.di.FirebaseModule.provideFirebaseAuthInstance
+import com.github.kitakkun.foos.common.di.RepositoryModule.provideFollowRepository
+import com.github.kitakkun.foos.common.di.RepositoryModule.providePostsRepository
+import com.github.kitakkun.foos.common.di.RepositoryModule.provideReactionsRepository
+import com.github.kitakkun.foos.common.di.RepositoryModule.provideUsersRepository
 import com.github.kitakkun.foos.common.usecase.*
-import com.github.kitakkun.foos.di.FirebaseModule.provideFirebaseAuthInstance
-import com.github.kitakkun.foos.di.RepositoryModule.provideFollowRepository
-import com.github.kitakkun.foos.di.RepositoryModule.providePostsRepository
-import com.github.kitakkun.foos.di.RepositoryModule.provideReactionsRepository
-import com.github.kitakkun.foos.di.RepositoryModule.provideUsersRepository
-import com.github.kitakkun.foos.user.followlist.FetchFollowStateUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

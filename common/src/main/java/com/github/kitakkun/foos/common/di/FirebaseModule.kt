@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.di
+package com.github.kitakkun.foos.common.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
