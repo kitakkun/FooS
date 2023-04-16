@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.screen.postdetail
+package com.github.kitakkun.foos.post.postdetail
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -8,8 +8,6 @@ import com.github.kitakkun.foos.common.model.DatabaseReaction
 import com.github.kitakkun.foos.common.repository.ReactionsRepository
 import com.github.kitakkun.foos.common.usecase.FetchPostByPostIdUseCase
 import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
-import com.github.kitakkun.foos.post.postdetail.PostDetailScreenUiState
-import com.github.kitakkun.foos.post.postdetail.PostDetailViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -22,6 +22,7 @@ import com.github.kitakkun.foos.post.create.locationselect.LocationSelectScreen
 import com.github.kitakkun.foos.post.create.locationselect.LocationSelectViewModelImpl
 import com.github.kitakkun.foos.post.imagedetail.ImageDetailScreen
 import com.github.kitakkun.foos.post.postdetail.PostDetailScreen
+import com.github.kitakkun.foos.post.postdetail.PostDetailViewModelImpl
 import com.github.kitakkun.foos.post.reaction.ReactionScreen
 import com.github.kitakkun.foos.post.reaction.ReactionViewModelImpl
 import com.github.kitakkun.foos.post.timeline.HomeScreen
@@ -29,7 +30,6 @@ import com.github.kitakkun.foos.post.timeline.HomeViewModelImpl
 import com.github.kitakkun.foos.ui.bottomsheet.PostOptionBottomSheet
 import com.github.kitakkun.foos.ui.screen.map.MapScreen
 import com.github.kitakkun.foos.ui.screen.map.MapViewModelImpl
-import com.github.kitakkun.foos.ui.screen.postdetail.PostDetailViewModelImpl
 import com.github.kitakkun.foos.user.auth.signin.SignInScreen
 import com.github.kitakkun.foos.user.auth.signup.SignUpScreen
 import com.github.kitakkun.foos.user.followlist.FollowListScreen
