@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.screen.home
+package com.github.kitakkun.foos.post.timeline
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

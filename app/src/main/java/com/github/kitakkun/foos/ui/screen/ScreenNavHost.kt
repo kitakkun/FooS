@@ -24,9 +24,9 @@ import com.github.kitakkun.foos.post.imagedetail.ImageDetailScreen
 import com.github.kitakkun.foos.post.postdetail.PostDetailScreen
 import com.github.kitakkun.foos.post.reaction.ReactionScreen
 import com.github.kitakkun.foos.post.reaction.ReactionViewModelImpl
+import com.github.kitakkun.foos.post.timeline.HomeScreen
+import com.github.kitakkun.foos.post.timeline.HomeViewModelImpl
 import com.github.kitakkun.foos.ui.bottomsheet.PostOptionBottomSheet
-import com.github.kitakkun.foos.ui.screen.home.HomeScreen
-import com.github.kitakkun.foos.ui.screen.home.HomeViewModelImpl
 import com.github.kitakkun.foos.ui.screen.map.MapScreen
 import com.github.kitakkun.foos.ui.screen.map.MapViewModelImpl
 import com.github.kitakkun.foos.ui.screen.postdetail.PostDetailViewModelImpl

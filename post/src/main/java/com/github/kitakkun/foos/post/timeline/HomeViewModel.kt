@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.screen.home
+package com.github.kitakkun.foos.post.timeline
 
 import androidx.compose.runtime.State
 import kotlinx.coroutines.flow.SharedFlow

@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.screen.home
+package com.github.kitakkun.foos.post.timeline
 
 import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 
