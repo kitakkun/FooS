@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">FooS</string>
+    <string name="following">Following</string>
+    <string name="followers">Followers</string>
+    <string name="follow">Follow</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="follows_you">follows you</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="example_email">example@example.com</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="dont_have_account">Don\'t have an account?</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="message_sign_in_error">There was an error signing in.</string>
+    <string name="tab_posts">Posts</string>
+    <string name="tab_media">Media</string>
+    <string name="tab_reactions">Reactions</string>
+    <string name="account_settings">Account Settings</string>
+    <string name="privacy_settings">Privacy Settings</string>
+    <string name="log_out">Log out</string>
+    <string name="log_out_confirm_title">You are about to log out</string>
+    <string name="log_out_confirm_message">Are you sure?</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+</resources>

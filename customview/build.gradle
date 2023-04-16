@@ -1,0 +1,10 @@
+apply plugin: 'com.android.library'
+apply from: "../gradle/project_common.gradle"
+
+android {
+    namespace "com.github.kitakkun.foos.customview"
+}
+
+dependencies {
+    implementation project(':common')
+}
