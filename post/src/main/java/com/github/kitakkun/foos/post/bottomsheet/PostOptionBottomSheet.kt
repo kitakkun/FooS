@@ -1,13 +1,13 @@
-package com.github.kitakkun.foos.ui.bottomsheet
+package com.github.kitakkun.foos.post.bottomsheet
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.github.kitakkun.foos.R
-import com.github.kitakkun.foos.ui.state.component.MenuItemUiState
-import com.github.kitakkun.foos.user.setting.MenuItem
+import com.github.kitakkun.foos.customview.composable.menu.MenuItem
+import com.github.kitakkun.foos.customview.composable.menu.MenuItemUiState
+import com.github.kitakkun.foos.post.R
 
 @Composable
 fun PostOptionBottomSheet(

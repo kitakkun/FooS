@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.view.component.menu
+package com.github.kitakkun.foos.customview.composable.menu
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -11,8 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.common.const.paddingSmall
-import com.github.kitakkun.foos.ui.state.component.MenuItemUiState
-import com.github.kitakkun.foos.user.setting.MenuItem
 
 /**
  * メニューリスト

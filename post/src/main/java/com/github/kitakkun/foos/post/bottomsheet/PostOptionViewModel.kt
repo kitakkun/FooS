@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.bottomsheet
+package com.github.kitakkun.foos.post.bottomsheet
 
 import kotlinx.coroutines.flow.SharedFlow
 

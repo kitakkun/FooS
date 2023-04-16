@@ -17,10 +17,10 @@ import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.customview.composable.dialog.ConfirmAlertDialog
+import com.github.kitakkun.foos.customview.composable.menu.MenuItemList
+import com.github.kitakkun.foos.customview.composable.menu.MenuItemUiState
 import com.github.kitakkun.foos.customview.composable.user.UserIcon
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
-import com.github.kitakkun.foos.ui.state.component.MenuItemUiState
-import com.github.kitakkun.foos.ui.view.component.menu.MenuItemList
 import com.github.kitakkun.foos.user.R
 
 @Composable

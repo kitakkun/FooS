@@ -14,6 +14,7 @@ import com.github.kitakkun.foos.common.navigation.BottomSheet
 import com.github.kitakkun.foos.common.navigation.MainScreen
 import com.github.kitakkun.foos.common.navigation.StringList
 import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.post.bottomsheet.PostOptionBottomSheet
 import com.github.kitakkun.foos.post.create.PostScreen
 import com.github.kitakkun.foos.post.create.PostViewModelImpl
 import com.github.kitakkun.foos.post.create.locationconfirm.LocationConfirmScreen
@@ -27,7 +28,6 @@ import com.github.kitakkun.foos.post.reaction.ReactionScreen
 import com.github.kitakkun.foos.post.reaction.ReactionViewModelImpl
 import com.github.kitakkun.foos.post.timeline.HomeScreen
 import com.github.kitakkun.foos.post.timeline.HomeViewModelImpl
-import com.github.kitakkun.foos.ui.bottomsheet.PostOptionBottomSheet
 import com.github.kitakkun.foos.ui.screen.map.MapScreen
 import com.github.kitakkun.foos.ui.screen.map.MapViewModelImpl
 import com.github.kitakkun.foos.user.auth.signin.SignInScreen

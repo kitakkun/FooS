@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.bottomsheet
+package com.github.kitakkun.foos.post.bottomsheet
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

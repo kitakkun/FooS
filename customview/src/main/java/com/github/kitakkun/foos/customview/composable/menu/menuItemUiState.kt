@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.state.component
+package com.github.kitakkun.foos.customview.composable.menu
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
