@@ -11,7 +11,7 @@ import com.github.kitakkun.foos.common.navigation.BottomSheet
 import com.github.kitakkun.foos.common.navigation.SubScreen
 import com.github.kitakkun.foos.post.bottomsheet.PostOptionBottomSheet
 import com.github.kitakkun.foos.ui.navgraph.mainGraph
-import com.github.kitakkun.foos.ui.navgraph.subGraph
+import com.github.kitakkun.foos.ui.navgraph.postGraph
 import com.github.kitakkun.foos.user.userGraph
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.bottomSheet
@@ -38,7 +38,7 @@ fun ScreenNavHost(
             PostOptionBottomSheet(navController = navController, postId = postId)
         }
         mainGraph(navController, screenViewModel)
-        subGraph(navController, screenViewModel)
+        postGraph(navController, screenViewModel)
         userGraph(navController)
     }
 }
