@@ -26,7 +26,7 @@ class FollowListViewModelImpl @Inject constructor(
     private val fetchFollowStateUseCase: FetchFollowStateUseCase,
 ) : ViewModel(), FollowListViewModel {
 
-    private var _uiState = mutableStateOf(FollowListScreenUiState(listOf(), listOf()))
+    private var _uiState = mutableStateOf(FollowListScreenUiState())
     override val uiState: State<FollowListScreenUiState> = _uiState
 
     private var _navEvent = MutableSharedFlow<String>()

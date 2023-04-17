@@ -69,11 +69,11 @@ class FollowRepositoryImpl @Inject constructor(
     /**
      * フォロー関係を作成
      */
-    override suspend fun create(follower: String, followee: String) {
-        if (followee == auth.uid) {
+    override suspend fun create(from: String, to: String) {
+        if (to == auth.uid) {
             return
         }
-        val entry = DatabaseFollow(follower = follower, followee = followee)
+        val entry = DatabaseFollow(follower = from, followee = to)
         val document = database.collection(COLLECTION).document()
         document.set(entry).await()
         document.update("createdAt", FieldValue.serverTimestamp()).await()
@@ -82,13 +82,23 @@ class FollowRepositoryImpl @Inject constructor(
     /**
      * フォロー関係を削除
      */
-    override suspend fun delete(follower: String, followee: String) {
+    override suspend fun delete(from: String, to: String) {
         val documents = database.collection(COLLECTION)
-            .whereEqualTo("follower", follower)
-            .whereEqualTo("followee", followee)
+            .whereEqualTo("follower", from)
+            .whereEqualTo("followee", to)
             .get().await().documents
         documents.forEach {
             it.reference.delete()
         }
     }
+
+    override suspend fun fetchFollowerCount(userId: String): Int =
+        database.collection(COLLECTION)
+            .whereEqualTo("followee", userId)
+            .get().await().size()
+
+    override suspend fun fetchFollowingCount(userId: String): Int =
+        database.collection(COLLECTION)
+            .whereEqualTo("follower", userId)
+            .get().await().size()
 }

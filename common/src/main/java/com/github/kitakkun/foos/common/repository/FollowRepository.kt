@@ -29,7 +29,10 @@ interface FollowRepository {
      */
     suspend fun fetchByFolloweeIds(followeeIds: List<String>): List<DatabaseFollow>
 
-    suspend fun create(follower: String, followee: String)
+    suspend fun create(from: String, to: String)
 
-    suspend fun delete(follower: String, followee: String)
+    suspend fun delete(from: String, to: String)
+
+    suspend fun fetchFollowerCount(userId: String): Int
+    suspend fun fetchFollowingCount(userId: String): Int
 }
