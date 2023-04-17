@@ -31,7 +31,7 @@ class UsersRepositoryImpl @Inject constructor(
         else if (userIds.size > 10)
             userIds.chunked(10).map { fetchByUserIds(it) }.join()
         else database.collection(COLLECTION)
-            .whereIn("userId", userIds.toSet().toList())
+            .whereIn("id", userIds.toSet().toList())
             .get().await().toObjects(DatabaseUser::class.java)
 
     override suspend fun create(email: Email, password: Password): Result<DatabaseUser, Throwable> {
@@ -66,7 +66,7 @@ class UsersRepositoryImpl @Inject constructor(
      */
     override suspend fun fetchByUserId(userId: String): DatabaseUser? {
         val databaseUserData = database.collection(COLLECTION)
-            .whereEqualTo("userId", userId)
+            .whereEqualTo("id", userId)
             .get().await().toObjects(DatabaseUser::class.java)
         return if (databaseUserData.size > 0) {
             databaseUserData[0]
@@ -82,7 +82,7 @@ class UsersRepositoryImpl @Inject constructor(
         val document = database.collection(COLLECTION)
             .document(databaseUser.id)
         val updates = hashMapOf<String, Any>(
-            "username" to databaseUser.name,
+            "name" to databaseUser.name,
             "profileImage" to databaseUser.profileImage
         )
         document.update(updates).await()
