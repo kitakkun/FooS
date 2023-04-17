@@ -10,7 +10,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.navigation.BottomSheet
-import com.github.kitakkun.foos.common.navigation.MainScreen
 import com.github.kitakkun.foos.common.navigation.StringList
 import com.github.kitakkun.foos.common.navigation.SubScreen
 import com.github.kitakkun.foos.post.bottomsheet.PostOptionBottomSheet
@@ -23,19 +22,12 @@ import com.github.kitakkun.foos.post.create.locationselect.LocationSelectViewMod
 import com.github.kitakkun.foos.post.imagedetail.ImageDetailScreen
 import com.github.kitakkun.foos.post.postdetail.PostDetailScreen
 import com.github.kitakkun.foos.post.postdetail.PostDetailViewModelImpl
-import com.github.kitakkun.foos.post.reaction.ReactionScreen
-import com.github.kitakkun.foos.post.reaction.ReactionViewModelImpl
-import com.github.kitakkun.foos.post.timeline.HomeScreen
-import com.github.kitakkun.foos.post.timeline.HomeViewModelImpl
-import com.github.kitakkun.foos.ui.screen.map.MapScreen
-import com.github.kitakkun.foos.ui.screen.map.MapViewModelImpl
+import com.github.kitakkun.foos.ui.navgraph.mainNavGraph
 import com.github.kitakkun.foos.user.auth.authNavGraph
 import com.github.kitakkun.foos.user.followlist.FollowListScreen
 import com.github.kitakkun.foos.user.followlist.FollowListViewModelImpl
 import com.github.kitakkun.foos.user.profile.UserProfileScreen
 import com.github.kitakkun.foos.user.profile.UserProfileViewModelImpl
-import com.github.kitakkun.foos.user.setting.SettingScreen
-import com.github.kitakkun.foos.user.setting.SettingViewModelImpl
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.bottomSheet
 
@@ -61,22 +53,7 @@ fun ScreenNavHost(
             PostOptionBottomSheet(navController = navController, postId = postId)
         }
         authNavGraph(navController)
-        composable(MainScreen.Home.route) {
-            val vm: HomeViewModelImpl = hiltViewModel()
-            HomeScreen(vm, navController, screenViewModel)
-        }
-        composable(MainScreen.Map.route) {
-            val vm: MapViewModelImpl = hiltViewModel()
-            MapScreen(vm, navController)
-        }
-        composable(MainScreen.Reaction.route) {
-            val vm: ReactionViewModelImpl = hiltViewModel()
-            ReactionScreen(vm, navController)
-        }
-        composable(MainScreen.Setting.route) {
-            val vm: SettingViewModelImpl = hiltViewModel()
-            SettingScreen(vm, screenViewModel)
-        }
+        mainNavGraph(navController, screenViewModel)
         composable(SubScreen.PostCreate.route) {
             val vm: PostViewModelImpl = hiltViewModel()
             PostScreen(vm, navController, screenViewModel)
