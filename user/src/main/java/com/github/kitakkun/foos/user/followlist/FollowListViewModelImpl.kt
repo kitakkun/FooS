@@ -9,7 +9,7 @@ import com.github.kitakkun.foos.common.navigation.SubScreen
 import com.github.kitakkun.foos.common.repository.FollowRepository
 import com.github.kitakkun.foos.common.repository.UsersRepository
 import com.github.kitakkun.foos.common.usecase.FetchFollowStateUseCase
-import com.github.kitakkun.foos.user.UserItemUiState
+import com.github.kitakkun.foos.user.composable.UserItemUiState
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -53,18 +53,18 @@ class FollowListViewModelImpl @Inject constructor(
                 val followState = myFollowStates.find { it.otherId == followeeId }
                 if (user == null || followState == null) null
                 else UserItemUiState(
-                    isClientUser = user.id == clientId,
-                    username = user.name,
-                    profileImage = user.profileImage,
-                    userId = user.id,
+                    isFollowButtonVisible = user.id == clientId,
+                    name = user.name,
+                    profileImageUrl = user.profileImage,
+                    id = user.id,
                     // TODO: ユーザのデータベースデータの拡張とフォロー関係の取得
-                    bio = "BIO",
-                    following = followState.following,
-                    followingYou = followState.followed,
+                    biography = "BIO",
+                    isFollowedByClient = followState.following,
+                    isFollowsYouVisible = followState.followed,
                 )
             }
             _uiState.value =
-                uiState.value.copy(followees = (uiState.value.followees + userItems).distinct())
+                uiState.value.copy(followingUsers = (uiState.value.followingUsers + userItems).distinct())
         }
     }
 
@@ -83,14 +83,14 @@ class FollowListViewModelImpl @Inject constructor(
                 val followState = myFollowStates.find { it.otherId == followerId }
                 if (user == null || followState == null) null
                 else UserItemUiState(
-                    isClientUser = user.id == clientId,
-                    username = user.name,
-                    profileImage = user.profileImage,
-                    userId = user.id,
+                    isFollowButtonVisible = user.id == clientId,
+                    name = user.name,
+                    profileImageUrl = user.profileImage,
+                    id = user.id,
                     // TODO: ユーザのデータベースデータの拡張とフォロー関係の取得
-                    bio = "BIO",
-                    following = followState.following,
-                    followingYou = followState.followed,
+                    biography = "BIO",
+                    isFollowedByClient = followState.following,
+                    isFollowsYouVisible = followState.followed,
                 )
             }
             _uiState.value =

@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.github.kitakkun.foos.common.ext.OnAppearLastItem
+import com.github.kitakkun.foos.user.composable.UserItem
+import com.github.kitakkun.foos.user.composable.UserItemUiState
 
 @Composable
 fun UserList(
@@ -24,8 +26,8 @@ fun UserList(
         items(uiStates) {
             UserItem(
                 uiState = it,
-                onItemClicked = { onItemClicked(it.userId) },
-                onFollowButtonClicked = { onFollowButtonClicked(it.userId) },
+                onClick = { onItemClicked(it.id) },
+                onFollowButtonClicked = { onFollowButtonClicked(it.id) },
             )
             Divider(thickness = 1.dp, color = Color.LightGray)
         }

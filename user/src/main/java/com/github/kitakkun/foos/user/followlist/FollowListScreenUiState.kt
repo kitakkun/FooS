@@ -1,8 +1,15 @@
 package com.github.kitakkun.foos.user.followlist
 
-import com.github.kitakkun.foos.user.UserItemUiState
+import com.github.kitakkun.foos.user.composable.UserItemUiState
 
 data class FollowListScreenUiState(
-    val followers: List<UserItemUiState>,
-    val followees: List<UserItemUiState>,
-)
+    val followers: List<UserItemUiState> = emptyList(),
+    val followingUsers: List<UserItemUiState> = emptyList(),
+) {
+    companion object {
+        fun buildTestData() = FollowListScreenUiState(
+            followers = List(6) { UserItemUiState.buildTestData() },
+            followingUsers = List(4) { UserItemUiState.buildTestData() }
+        )
+    }
+}

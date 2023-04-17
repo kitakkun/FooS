@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.user
+package com.github.kitakkun.foos.user.composable
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,21 +13,23 @@ import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.customview.composable.user.UserIcon
 import com.github.kitakkun.foos.customview.composable.user.VerticalUserIdentityText
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
+import com.github.kitakkun.foos.user.FollowButton
+import com.github.kitakkun.foos.user.R
 
 @Composable
 fun UserItem(
     uiState: UserItemUiState,
     modifier: Modifier = Modifier,
-    onItemClicked: () -> Unit,
+    onClick: () -> Unit,
     onFollowButtonClicked: () -> Unit,
 ) {
     Column(
         modifier = modifier
             .padding(paddingMedium)
             .fillMaxWidth()
-            .clickable { onItemClicked() },
+            .clickable { onClick() },
     ) {
-        if (uiState.followingYou) {
+        if (uiState.isFollowsYouVisible) {
             Text(
                 text = stringResource(R.string.follows_you),
                 style = MaterialTheme.typography.caption,
@@ -41,21 +43,21 @@ fun UserItem(
             Row(
                 modifier = Modifier.weight(1f)
             ) {
-                UserIcon(url = uiState.profileImage)
+                UserIcon(url = uiState.profileImageUrl)
                 Spacer(modifier = Modifier.width(paddingMedium))
                 Column {
                     VerticalUserIdentityText(
-                        username = uiState.username,
-                        userId = uiState.userId,
+                        username = uiState.name,
+                        userId = uiState.id,
                     )
                     Spacer(modifier = Modifier.height(paddingMedium))
-                    Text(text = uiState.bio)
+                    Text(text = uiState.biography)
                 }
             }
-            if (uiState.isClientUser) {
+            if (uiState.isFollowButtonVisible) {
                 FollowButton(
                     onClick = onFollowButtonClicked,
-                    isFollowing = uiState.following
+                    isFollowing = uiState.isFollowedByClient,
                 )
             }
         }
@@ -65,14 +67,9 @@ fun UserItem(
 @Preview
 @Composable
 fun UserItemPreview() = PreviewContainer {
-    val uiState = UserItemUiState(
-        isClientUser = false,
-        username = "username",
-        userId = "userId",
-        profileImage = "",
-        bio = "some interesting biography...",
-        following = true,
-        followingYou = true,
+    UserItem(
+        uiState = UserItemUiState.buildTestData(),
+        onClick = {},
+        onFollowButtonClicked = {},
     )
-    UserItem(uiState = uiState, onFollowButtonClicked = {}, onItemClicked = {})
 }
