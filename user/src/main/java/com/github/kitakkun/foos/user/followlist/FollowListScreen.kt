@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.user.R
-import com.github.kitakkun.foos.user.UserItemUiState
 import com.github.kitakkun.foos.user.UserList
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
@@ -29,7 +28,6 @@ fun FollowListScreen(
     userId: String,
     initialPage: Int = 0
 ) {
-
     // ナビゲーションイベントの処理
     LaunchedEffect(Unit) {
         viewModel.navEvent.collect {
@@ -42,14 +40,13 @@ fun FollowListScreen(
     FollowListUI(
         uiState = uiState,
         initialPage = initialPage,
-        fetchFollowee = { viewModel.fetchFollowees(userId) },
-        fetchFollower = { viewModel.fetchFollowers(userId) },
+        fetchFollowee = { viewModel.fetchFollowingUsers(userId) },
+        fetchFollower = { viewModel.fetchFollowerUsers(userId) },
         onItemClicked = { viewModel.navigateToUserProfile(it) },
         onFollowButtonClicked = { /* TODO: フォロー状態の更新 */ }
     )
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun FollowListUI(
     uiState: FollowListScreenUiState,
@@ -83,7 +80,7 @@ private fun FollowListUI(
                         fetchFollowee()
                     }
                     UserList(
-                        uiStates = uiState.followees,
+                        uiStates = uiState.followingUsers,
                         onAppearLastItem = { fetchFollowee() },
                         onItemClicked = onItemClicked,
                         onFollowButtonClicked = onFollowButtonClicked
@@ -136,45 +133,12 @@ private fun MyTabRow(
 @Preview
 @Composable
 private fun FollowListUIPreview() = PreviewContainer {
-    val dummyUserList = mutableListOf<UserItemUiState>()
-    repeat(10) { i ->
-        dummyUserList.add(
-            UserItemUiState.Default.copy(
-                username = "username$i",
-                userId = "userid$i"
-            )
-        )
-    }
-    var uiState by remember {
-        mutableStateOf(
-            FollowListScreenUiState(
-                followees = dummyUserList, followers = dummyUserList,
-            )
-        )
-    }
     FollowListUI(
-        uiState = uiState,
+        uiState = FollowListScreenUiState.buildTestData(),
         initialPage = 0,
         fetchFollowee = { },
         fetchFollower = { },
         onItemClicked = { },
-        onFollowButtonClicked = { userId ->
-            uiState = uiState.copy(
-                followers = uiState.followers.map {
-                    if (it.userId == userId) {
-                        it.copy(following = !it.following)
-                    } else {
-                        it
-                    }
-                },
-                followees = uiState.followers.map {
-                    if (it.userId == userId) {
-                        it.copy(following = !it.following)
-                    } else {
-                        it
-                    }
-                }
-            )
-        }
+        onFollowButtonClicked = { },
     )
 }

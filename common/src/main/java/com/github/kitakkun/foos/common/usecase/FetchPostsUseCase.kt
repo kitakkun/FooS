@@ -23,7 +23,7 @@ class FetchPostsUseCase @Inject constructor(
         val dbReactions = reactionsRepository.fetchByPostIds(dbPosts.map { it.postId })
 
         return dbPosts.mapNotNull { post ->
-            val user = dbUsers.find { it.userId == post.userId }
+            val user = dbUsers.find { it.id == post.userId }
             val reactions = dbReactions.filter { it.postId == post.postId }
             user?.let {
                 Post(

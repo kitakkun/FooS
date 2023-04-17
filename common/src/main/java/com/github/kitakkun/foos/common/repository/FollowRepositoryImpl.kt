@@ -1,7 +1,6 @@
 package com.github.kitakkun.foos.common.repository
 
-import com.github.kitakkun.foos.common.ext.join
-import com.github.kitakkun.foos.common.model.DatabaseFollow
+import com.github.kitakkun.foos.common.model.FollowGraph
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -20,75 +19,66 @@ class FollowRepositoryImpl @Inject constructor(
         private const val COLLECTION = "follows"
     }
 
-    override suspend fun fetch(followee: String, follower: String): DatabaseFollow? {
+    override suspend fun createFollowGraph(from: String, to: String) {
+        if (from != auth.uid) return
+        if (to == auth.uid) return
+        database.collection(COLLECTION).document().apply {
+            val entry = FollowGraph(from = from, to = to)
+            set(entry).await()
+            update("createdAt", FieldValue.serverTimestamp()).await()
+        }
+    }
+
+    override suspend fun deleteFollowGraph(from: String, to: String) {
         database.collection(COLLECTION)
-            .whereEqualTo("followee", followee)
-            .whereEqualTo("follower", follower)
-            .limit(1)
-            .get().await().toObjects(DatabaseFollow::class.java).apply {
-                return if (size > 0) get(0) else null
+            .whereEqualTo("from", from)
+            .whereEqualTo("to", to)
+            .get().await().forEach {
+                it.reference.delete()
             }
     }
 
-    /**
-     * followeeのユーザIDでフォローデータをフィルタしてフェッチ
-     */
-    override suspend fun fetchByFolloweeId(followeeId: String): List<DatabaseFollow> =
+    override suspend fun fetchFollowerUserIds(userId: String): List<String> =
         database.collection(COLLECTION)
-            .whereEqualTo("followee", followeeId)
-            .get().await().toObjects(DatabaseFollow::class.java)
+            .whereEqualTo("to", userId)
+            .get().await()
+            .toObjects(FollowGraph::class.java)
+            .mapNotNull { it.from }
 
-    override suspend fun fetchByFollowerId(followerId: String): List<DatabaseFollow> =
+    override suspend fun fetchFollowingUserIds(userId: String): List<String> =
         database.collection(COLLECTION)
-            .whereEqualTo("follower", followerId)
-            .get().await().toObjects(DatabaseFollow::class.java)
+            .whereEqualTo("from", userId)
+            .get().await()
+            .toObjects(FollowGraph::class.java)
+            .mapNotNull { it.from }
 
-    /**
-     * 各フォロイーのユーザIDをfolloweeに含むデータベースエントリをフェッチ
-     */
-    override suspend fun fetchByFolloweeIds(followeeIds: List<String>): List<DatabaseFollow> =
-        if (followeeIds.isEmpty()) listOf()
-        else if (followeeIds.size > 10)
-            followeeIds.chunked(10).map { fetchByFolloweeIds(it) }.join()
-        else database.collection(COLLECTION)
-            .whereIn("followee", followeeIds)
-            .get().await().toObjects(DatabaseFollow::class.java)
+    override suspend fun fetch(from: String, to: String): FollowGraph? =
+        database.collection(COLLECTION)
+            .whereEqualTo("to", to)
+            .whereEqualTo("from", from)
+            .limit(1)
+            .get().await().toObjects(FollowGraph::class.java)
+            .firstOrNull()
 
-    /**
-     * 各フォロワーのユーザIDをfollowerに含むデータベースエントリをフェッチ
-     */
-    override suspend fun fetchByFollowerIds(followerIds: List<String>): List<DatabaseFollow> =
-        if (followerIds.size > 10) {
-            followerIds.chunked(10).map { fetchByFolloweeIds(it) }.join()
-        } else {
-            database.collection(COLLECTION)
-                .whereIn("follower", followerIds)
-                .get().await().toObjects(DatabaseFollow::class.java)
-        }
+    override suspend fun fetchFollowerCount(userId: String): Int =
+        database.collection(COLLECTION)
+            .whereEqualTo("to", userId)
+            .get().await().size()
 
-    /**
-     * フォロー関係を作成
-     */
-    override suspend fun create(follower: String, followee: String) {
-        if (followee == auth.uid) {
-            return
-        }
-        val entry = DatabaseFollow(follower = follower, followee = followee)
-        val document = database.collection(COLLECTION).document()
-        document.set(entry).await()
-        document.update("createdAt", FieldValue.serverTimestamp()).await()
-    }
+    override suspend fun fetchFollowingCount(userId: String): Int =
+        database.collection(COLLECTION)
+            .whereEqualTo("from", userId)
+            .get().await().size()
 
-    /**
-     * フォロー関係を削除
-     */
-    override suspend fun delete(follower: String, followee: String) {
-        val documents = database.collection(COLLECTION)
-            .whereEqualTo("follower", follower)
-            .whereEqualTo("followee", followee)
-            .get().await().documents
-        documents.forEach {
-            it.reference.delete()
-        }
-    }
+    @Deprecated("Use fetchFollowerUserIds instead")
+    override suspend fun fetchByFolloweeId(followeeId: String): List<FollowGraph> =
+        database.collection(COLLECTION)
+            .whereEqualTo("to", followeeId)
+            .get().await().toObjects(FollowGraph::class.java)
+
+    @Deprecated("Use fetchFollowingUserIds instead")
+    override suspend fun fetchByFollowerId(followerId: String): List<FollowGraph> =
+        database.collection(COLLECTION)
+            .whereEqualTo("from", followerId)
+            .get().await().toObjects(FollowGraph::class.java)
 }

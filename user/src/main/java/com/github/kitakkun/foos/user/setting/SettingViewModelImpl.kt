@@ -27,7 +27,7 @@ class SettingViewModelImpl @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val user = usersRepository.fetchByUserId(Firebase.auth.uid.toString()) ?: return@launch
             _uiState.value = _uiState.value.copy(
-                username = user.username,
+                username = user.name,
                 profileImage = user.profileImage
             )
         }

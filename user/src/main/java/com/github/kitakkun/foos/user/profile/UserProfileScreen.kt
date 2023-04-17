@@ -19,7 +19,6 @@ import com.github.kitakkun.foos.customview.composable.user.UserIcon
 import com.github.kitakkun.foos.customview.composable.user.VerticalUserIdentityText
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.user.FollowButton
-import com.github.kitakkun.foos.user.FollowInfo
 import com.github.kitakkun.foos.user.R
 import com.google.accompanist.pager.*
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -42,7 +41,7 @@ fun UserProfileScreen(
 
     LaunchedEffect(Unit) {
         launch {
-            viewModel.fetchUserInfo(
+            viewModel.fetchProfileInfo(
                 userId = userId,
                 onFinished = {
                     viewModel.fetchInitialPosts()
@@ -73,16 +72,16 @@ fun UserProfileScreen(
             state = nestedScrollViewState,
             header = {
                 UserProfileView(
-                    username = uiState.username,
-                    userId = uiState.userId,
+                    username = uiState.name,
+                    userId = uiState.id,
                     bio = "biography (not available for now)",
-                    profileImage = uiState.userIcon,
+                    profileImage = uiState.profileImageUrl,
                     followerNum = uiState.followerCount,
-                    followeeNum = uiState.followeeCount,
-                    onFollowingTextClick = { viewModel.navigateToFolloweeList(userId = uiState.userId) },
-                    onFollowersTextClick = { viewModel.navigateToFollowerList(userId = uiState.userId) },
-                    onFollowButtonClick = { viewModel.onFollowButtonClick() },
-                    following = uiState.following,
+                    followeeNum = uiState.followCount,
+                    onFollowingTextClick = { viewModel.navigateToFollowingUsersList(userId = uiState.id) },
+                    onFollowersTextClick = { viewModel.navigateToFollowerUsersList(userId = uiState.id) },
+                    onFollowButtonClick = { viewModel.toggleFollowState() },
+                    following = uiState.isFollowedByClientUser,
                 )
             },
             content = {
@@ -105,15 +104,15 @@ fun UserProfileScreen(
                                     PostItemList(
                                         uiStates = uiState.posts,
                                         onImageClick = { imageUrls, clickedImageUrl ->
-                                            viewModel.onImageClick(
+                                            viewModel.openImageDetailView(
                                                 imageUrls,
                                                 clickedImageUrl
                                             )
                                         },
-                                        onContentClick = { viewModel.onContentClick(it) },
-                                        onUserIconClick = { viewModel.onUserIconClick(it) },
+                                        onContentClick = { viewModel.navigateToPostDetail(it) },
+                                        onUserIconClick = { viewModel.navigateToUserProfile(it) },
                                         onAppearLastItem = { viewModel.fetchOlderPosts() },
-                                        onMoreVertClick = viewModel::onMoreVertClick,
+                                        onMoreVertClick = viewModel::showPostOptions,
                                     )
                                 }
                             },
@@ -123,7 +122,7 @@ fun UserProfileScreen(
                                 } else {
                                     MediaPostGrid(
                                         uiStates = uiState.mediaPosts,
-                                        onContentClick = { viewModel.onContentClick(it) },
+                                        onContentClick = { viewModel.navigateToPostDetail(it) },
                                         onAppearLastItem = { viewModel.fetchOlderMediaPosts() },
                                     )
                                 }
@@ -133,17 +132,17 @@ fun UserProfileScreen(
                                     MaxSizeLoadingIndicator()
                                 } else {
                                     PostItemList(
-                                        uiStates = uiState.userReactedPosts,
+                                        uiStates = uiState.reactedPosts,
                                         onImageClick = { imageUrls, clickedImageUrl ->
-                                            viewModel.onImageClick(
+                                            viewModel.openImageDetailView(
                                                 imageUrls,
                                                 clickedImageUrl
                                             )
                                         },
-                                        onContentClick = { viewModel.onContentClick(it) },
-                                        onUserIconClick = { viewModel.onUserIconClick(it) },
-                                        onAppearLastItem = { viewModel.fetchOlderUserReactedPosts() },
-                                        onMoreVertClick = viewModel::onMoreVertClick,
+                                        onContentClick = { viewModel.navigateToPostDetail(it) },
+                                        onUserIconClick = { viewModel.navigateToUserProfile(it) },
+                                        onAppearLastItem = { viewModel.fetchOlderReactedPosts() },
+                                        onMoreVertClick = viewModel::showPostOptions,
                                     )
                                 }
                             },
@@ -235,16 +234,16 @@ fun UserProfileView(
                     Text(text = stringResource(id = R.string.edit_profile))
                 }
             } else {
-                FollowButton(onClick = onFollowButtonClick, following = following)
+                FollowButton(onClick = onFollowButtonClick, isFollowing = following)
             }
         }
         Spacer(Modifier.height(paddingMedium))
         VerticalUserIdentityText(username = username, userId = userId)
         Spacer(Modifier.height(paddingMedium))
         Text(bio)
-        FollowInfo(
-            followerNum = followerNum,
-            followeeNum = followeeNum,
+        FollowInfoRow(
+            followCount = followerNum,
+            followerCount = followeeNum,
             onFollowingTextClick = onFollowingTextClick,
             onFollowersTextClick = onFollowersTextClick,
         )

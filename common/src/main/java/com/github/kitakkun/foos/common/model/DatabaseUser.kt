@@ -2,16 +2,16 @@ package com.github.kitakkun.foos.common.model
 
 /**
  * ユーザーのデータベース上のデータ
- * @param userId ユーザID
- * @param username ユーザ名
+ * @param id ユーザID
+ * @param name ユーザ名
  * @param profileImage プロフィール画像のURL
  */
 data class DatabaseUser(
-    val userId: String,
-    val username: String,
+    val id: String,
+    val name: String,
     val profileImage: String,
 ) {
     constructor() : this(
-        userId = "", username = "", profileImage = ""
+        id = "", name = "", profileImage = ""
     )
 }

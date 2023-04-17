@@ -23,7 +23,7 @@ data class ReactionItemUiState(
 
         fun convert(reaction: Reaction): ReactionItemUiState =
             ReactionItemUiState(
-                username = reaction.user.username,
+                username = reaction.user.name,
                 userIcon = reaction.user.profileImage,
                 postContent = reaction.post.content,
                 reaction = reaction.reaction.reaction
