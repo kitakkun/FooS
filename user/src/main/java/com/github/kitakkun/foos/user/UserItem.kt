@@ -52,7 +52,7 @@ fun UserItem(
                     Text(text = uiState.bio)
                 }
             }
-            if (uiState.userId != uiState.clientUserId) {
+            if (uiState.isClientUser) {
                 FollowButton(
                     onClick = onFollowButtonClicked,
                     following = uiState.following
@@ -66,7 +66,7 @@ fun UserItem(
 @Composable
 fun UserItemPreview() = PreviewContainer {
     val uiState = UserItemUiState(
-        clientUserId = "clientUserId",
+        isClientUser = false,
         username = "username",
         userId = "userId",
         profileImage = "",

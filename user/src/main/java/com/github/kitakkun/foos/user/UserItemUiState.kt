@@ -1,7 +1,7 @@
 package com.github.kitakkun.foos.user
 
 data class UserItemUiState(
-    val clientUserId: String,
+    val isClientUser: Boolean = false,
     val username: String,
     val userId: String,
     val profileImage: String,
@@ -11,7 +11,7 @@ data class UserItemUiState(
 ) {
     companion object {
         val Default = UserItemUiState(
-            clientUserId = "xxxxxx",
+            isClientUser = false,
             username = "username",
             userId = "userId",
             profileImage = "",

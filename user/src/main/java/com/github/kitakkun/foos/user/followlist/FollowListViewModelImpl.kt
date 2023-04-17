@@ -53,7 +53,7 @@ class FollowListViewModelImpl @Inject constructor(
                 val followState = myFollowStates.find { it.otherId == followeeId }
                 if (user == null || followState == null) null
                 else UserItemUiState(
-                    clientUserId = clientId,
+                    isClientUser = user.userId == clientId,
                     username = user.username,
                     profileImage = user.profileImage,
                     userId = user.userId,
@@ -83,7 +83,7 @@ class FollowListViewModelImpl @Inject constructor(
                 val followState = myFollowStates.find { it.otherId == followerId }
                 if (user == null || followState == null) null
                 else UserItemUiState(
-                    clientUserId = clientId,
+                    isClientUser = user.userId == clientId,
                     username = user.username,
                     profileImage = user.profileImage,
                     userId = user.userId,
