@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.emoji2.bundled.BundledEmojiCompatConfig
 import androidx.emoji2.text.EmojiCompat
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.BuildConfig
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
