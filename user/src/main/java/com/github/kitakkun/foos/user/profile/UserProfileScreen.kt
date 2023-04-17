@@ -19,7 +19,6 @@ import com.github.kitakkun.foos.customview.composable.user.UserIcon
 import com.github.kitakkun.foos.customview.composable.user.VerticalUserIdentityText
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.user.FollowButton
-import com.github.kitakkun.foos.user.FollowInfoRow
 import com.github.kitakkun.foos.user.R
 import com.google.accompanist.pager.*
 import com.google.accompanist.swiperefresh.SwipeRefresh

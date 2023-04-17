@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.user
+package com.github.kitakkun.foos.user.profile
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
+import com.github.kitakkun.foos.user.R
 
 @Composable
 fun FollowInfoRow(
