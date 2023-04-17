@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndicator
@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun ImageDetailScreen(
-    navController: NavHostController,
+    navController: NavController,
     imageUrls: List<String>,
     initialIndex: Int
 ) {
