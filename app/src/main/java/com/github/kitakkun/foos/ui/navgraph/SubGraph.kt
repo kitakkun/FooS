@@ -11,26 +11,12 @@ import com.github.kitakkun.foos.post.create.postCreateGraph
 import com.github.kitakkun.foos.post.imagedetail.ImageDetailScreen
 import com.github.kitakkun.foos.post.postdetail.PostDetailScreen
 import com.github.kitakkun.foos.post.postdetail.PostDetailViewModelImpl
-import com.github.kitakkun.foos.user.followlist.FollowListScreen
-import com.github.kitakkun.foos.user.followlist.FollowListViewModelImpl
-import com.github.kitakkun.foos.user.profile.UserProfileScreen
-import com.github.kitakkun.foos.user.profile.UserProfileViewModelImpl
 
 fun NavGraphBuilder.subGraph(
     navController: NavController,
     screenViewModel: ScreenViewModel,
 ) {
     postCreateGraph(navController, screenViewModel)
-    composable(
-        SubScreen.UserProfile.routeWithParam,
-        SubScreen.UserProfile.arguments,
-    ) {
-        val userId = it.arguments?.getString(SubScreen.UserProfile.key(0))
-        userId?.let {
-            val vm: UserProfileViewModelImpl = hiltViewModel()
-            UserProfileScreen(vm, navController, userId)
-        }
-    }
     composable(
         SubScreen.PostDetail.routeWithParam,
         SubScreen.PostDetail.arguments,
@@ -53,23 +39,6 @@ fun NavGraphBuilder.subGraph(
                 navController = navController,
                 imageUrls = imageUrls.value,
                 initialIndex = clickedImageIndex.toInt(),
-            )
-        }
-    }
-    composable(
-        SubScreen.FollowList.routeWithParam,
-        SubScreen.FollowList.arguments,
-    ) {
-        val userId = it.arguments?.getString(SubScreen.FollowList.key(0))
-        val followees = it.arguments?.getBoolean(SubScreen.FollowList.key(1))
-        if (userId != null && followees != null) {
-            val index = if (followees) 0 else 1
-            val vm: FollowListViewModelImpl = hiltViewModel()
-            FollowListScreen(
-                viewModel = vm,
-                userId = userId,
-                initialPage = index,
-                navController = navController
             )
         }
     }
