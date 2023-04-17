@@ -9,7 +9,7 @@ import com.github.kitakkun.foos.common.navigation.SubScreen
 import com.github.kitakkun.foos.user.auth.signin.SignInScreen
 import com.github.kitakkun.foos.user.auth.signup.SignUpScreen
 
-fun NavGraphBuilder.authNavGraph(navController: NavController) =
+fun NavGraphBuilder.authGraph(navController: NavController) =
     navigation(
         startDestination = SubScreen.Auth.SignIn.route,
         route = SubScreen.Auth.route

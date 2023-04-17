@@ -15,7 +15,7 @@ import com.github.kitakkun.foos.ui.screen.map.MapViewModelImpl
 import com.github.kitakkun.foos.user.setting.SettingScreen
 import com.github.kitakkun.foos.user.setting.SettingViewModelImpl
 
-fun NavGraphBuilder.mainNavGraph(
+fun NavGraphBuilder.mainGraph(
     navController: NavController,
     screenViewModel: ScreenViewModel,
 ) {

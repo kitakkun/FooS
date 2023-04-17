@@ -22,7 +22,7 @@ import com.github.kitakkun.foos.user.followlist.FollowListViewModelImpl
 import com.github.kitakkun.foos.user.profile.UserProfileScreen
 import com.github.kitakkun.foos.user.profile.UserProfileViewModelImpl
 
-fun NavGraphBuilder.subNavGraph(
+fun NavGraphBuilder.subGraph(
     navController: NavController,
     screenViewModel: ScreenViewModel,
 ) {
