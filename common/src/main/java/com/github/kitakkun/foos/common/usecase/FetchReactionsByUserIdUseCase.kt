@@ -20,7 +20,7 @@ class FetchReactionsByUserIdUseCase constructor(
         val users = usersRepository.fetchByUserIds(reactions.map { it.from })
         return reactions.mapNotNull { reaction ->
             val post = posts.find { it.postId == reaction.postId }
-            val user = users.find { it.userId == reaction.from }
+            val user = users.find { it.id == reaction.from }
             if (post == null || user == null) {
                 null
             } else {

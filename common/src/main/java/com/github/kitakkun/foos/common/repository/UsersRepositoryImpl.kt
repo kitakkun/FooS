@@ -40,12 +40,12 @@ class UsersRepositoryImpl @Inject constructor(
                 firebaseAuth.createUserWithEmailAndPassword(email.value, password.value).await()
             val user = result.user ?: return Err(Throwable("failed to create user."))
             val databaseUser = DatabaseUser(
-                userId = user.uid,
-                username = user.displayName ?: "user",
+                id = user.uid,
+                name = user.displayName ?: "user",
                 profileImage = "",
             )
             database.collection(COLLECTION)
-                .document(databaseUser.userId)
+                .document(databaseUser.id)
                 .set(databaseUser).await()
             Log.d(TAG, "Successfully created user.")
             return Ok(databaseUser)
@@ -57,7 +57,7 @@ class UsersRepositoryImpl @Inject constructor(
 
     override suspend fun create(databaseUser: DatabaseUser) {
         database.collection(COLLECTION)
-            .document(databaseUser.userId)
+            .document(databaseUser.id)
             .set(databaseUser).await()
     }
 
@@ -80,9 +80,9 @@ class UsersRepositoryImpl @Inject constructor(
      */
     override suspend fun update(databaseUser: DatabaseUser) {
         val document = database.collection(COLLECTION)
-            .document(databaseUser.userId)
+            .document(databaseUser.id)
         val updates = hashMapOf<String, Any>(
-            "username" to databaseUser.username,
+            "username" to databaseUser.name,
             "profileImage" to databaseUser.profileImage
         )
         document.update(updates).await()

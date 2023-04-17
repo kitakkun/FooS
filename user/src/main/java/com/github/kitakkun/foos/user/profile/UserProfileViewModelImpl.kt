@@ -195,9 +195,9 @@ class UserProfileViewModelImpl @Inject constructor(
             val user = usersRepository.fetchByUserId(userId)
             user?.let {
                 _uiState.value = uiState.value.copy(
-                    userId = user.userId,
+                    userId = user.id,
                     userIcon = user.profileImage,
-                    username = user.username,
+                    username = user.name,
                     followeeCount = followees.size,
                     followerCount = followers.size,
                     following = followers.map { followInfo -> followInfo.follower }

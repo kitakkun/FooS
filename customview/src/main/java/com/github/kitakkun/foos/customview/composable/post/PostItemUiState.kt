@@ -78,13 +78,13 @@ data class PostItemUiState(
             return PostItemUiState(
                 postId = post.post.postId,
                 userIcon = post.user.profileImage,
-                username = post.user.username,
+                username = post.user.name,
                 longitude = post.post.longitude,
                 latitude = post.post.latitude,
                 createdAt = post.post.createdAt,
                 content = post.post.content,
                 attachedImages = post.post.attachedImages,
-                userId = post.user.userId,
+                userId = post.user.id,
                 reactions = post.reaction,
             )
         }

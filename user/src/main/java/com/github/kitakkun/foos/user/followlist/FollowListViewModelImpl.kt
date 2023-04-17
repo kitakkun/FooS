@@ -49,14 +49,14 @@ class FollowListViewModelImpl @Inject constructor(
             val myFollowStates = fetchFollowStateUseCase(clientId, followees)
             // UIStateの作成
             val userItems = followees.mapNotNull { followeeId ->
-                val user = users.find { it.userId == followeeId }
+                val user = users.find { it.id == followeeId }
                 val followState = myFollowStates.find { it.otherId == followeeId }
                 if (user == null || followState == null) null
                 else UserItemUiState(
-                    isClientUser = user.userId == clientId,
-                    username = user.username,
+                    isClientUser = user.id == clientId,
+                    username = user.name,
                     profileImage = user.profileImage,
-                    userId = user.userId,
+                    userId = user.id,
                     // TODO: ユーザのデータベースデータの拡張とフォロー関係の取得
                     bio = "BIO",
                     following = followState.following,
@@ -79,14 +79,14 @@ class FollowListViewModelImpl @Inject constructor(
             val myFollowStates = fetchFollowStateUseCase(clientId, followers)
             // UIStateの作成
             val userItems = followers.mapNotNull { followerId ->
-                val user = users.find { it.userId == followerId }
+                val user = users.find { it.id == followerId }
                 val followState = myFollowStates.find { it.otherId == followerId }
                 if (user == null || followState == null) null
                 else UserItemUiState(
-                    isClientUser = user.userId == clientId,
-                    username = user.username,
+                    isClientUser = user.id == clientId,
+                    username = user.name,
                     profileImage = user.profileImage,
-                    userId = user.userId,
+                    userId = user.id,
                     // TODO: ユーザのデータベースデータの拡張とフォロー関係の取得
                     bio = "BIO",
                     following = followState.following,
