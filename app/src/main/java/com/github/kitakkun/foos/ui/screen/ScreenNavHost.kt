@@ -8,7 +8,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
 import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.navigation.BottomSheet
 import com.github.kitakkun.foos.common.navigation.MainScreen
@@ -30,8 +29,7 @@ import com.github.kitakkun.foos.post.timeline.HomeScreen
 import com.github.kitakkun.foos.post.timeline.HomeViewModelImpl
 import com.github.kitakkun.foos.ui.screen.map.MapScreen
 import com.github.kitakkun.foos.ui.screen.map.MapViewModelImpl
-import com.github.kitakkun.foos.user.auth.signin.SignInScreen
-import com.github.kitakkun.foos.user.auth.signup.SignUpScreen
+import com.github.kitakkun.foos.user.auth.authNavGraph
 import com.github.kitakkun.foos.user.followlist.FollowListScreen
 import com.github.kitakkun.foos.user.followlist.FollowListViewModelImpl
 import com.github.kitakkun.foos.user.profile.UserProfileScreen
@@ -62,17 +60,7 @@ fun ScreenNavHost(
                 it.arguments?.getString(BottomSheet.PostOption.key(0)) ?: return@bottomSheet
             PostOptionBottomSheet(navController = navController, postId = postId)
         }
-        navigation(
-            startDestination = SubScreen.Auth.SignIn.route,
-            route = SubScreen.Auth.route
-        ) {
-            composable(SubScreen.Auth.SignIn.route) {
-                SignInScreen(viewModel = hiltViewModel(), navController = navController)
-            }
-            composable(SubScreen.Auth.SignUp.route) {
-                SignUpScreen(viewModel = hiltViewModel(), navController = navController)
-            }
-        }
+        authNavGraph(navController)
         composable(MainScreen.Home.route) {
             val vm: HomeViewModelImpl = hiltViewModel()
             HomeScreen(vm, navController, screenViewModel)
