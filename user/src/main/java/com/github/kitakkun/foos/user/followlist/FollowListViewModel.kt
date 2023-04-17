@@ -7,6 +7,6 @@ interface FollowListViewModel {
     val uiState: State<FollowListScreenUiState>
     val navEvent: SharedFlow<String>
     fun navigateToUserProfile(userId: String)
-    fun fetchFollowees(userId: String)
-    fun fetchFollowers(userId: String)
+    fun fetchFollowingUsers(userId: String)
+    fun fetchFollowerUsers(userId: String)
 }

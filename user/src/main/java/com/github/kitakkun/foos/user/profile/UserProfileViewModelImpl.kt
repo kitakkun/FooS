@@ -50,11 +50,11 @@ class UserProfileViewModelImpl @Inject constructor(
             val clientUserId = Firebase.auth.uid ?: return@launch
             val profileUserId = uiState.value.id
             when (following) {
-                true -> followRepository.delete(
+                true -> followRepository.deleteFollowGraph(
                     from = clientUserId,
                     to = profileUserId,
                 )
-                false -> followRepository.create(
+                false -> followRepository.createFollowGraph(
                     from = clientUserId,
                     to = profileUserId,
                 )
@@ -178,7 +178,7 @@ class UserProfileViewModelImpl @Inject constructor(
                     name = user.name,
                     followCount = followees.size,
                     followerCount = followers.size,
-                    isFollowedByClientUser = followers.map { followInfo -> followInfo.follower }
+                    isFollowedByClientUser = followers.map { followInfo -> followInfo.from }
                         .contains(Firebase.auth.uid.toString())
                 )
             }

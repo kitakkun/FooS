@@ -40,8 +40,8 @@ fun FollowListScreen(
     FollowListUI(
         uiState = uiState,
         initialPage = initialPage,
-        fetchFollowee = { viewModel.fetchFollowees(userId) },
-        fetchFollower = { viewModel.fetchFollowers(userId) },
+        fetchFollowee = { viewModel.fetchFollowingUsers(userId) },
+        fetchFollower = { viewModel.fetchFollowerUsers(userId) },
         onItemClicked = { viewModel.navigateToUserProfile(it) },
         onFollowButtonClicked = { /* TODO: フォロー状態の更新 */ }
     )

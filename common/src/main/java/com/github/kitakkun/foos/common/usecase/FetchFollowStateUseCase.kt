@@ -7,23 +7,22 @@ import javax.inject.Inject
 class FetchFollowStateUseCase @Inject constructor(
     private val followRepository: FollowRepository,
 ) {
-
     suspend operator fun invoke(from: String, to: String): FollowState {
-        val followed = followRepository.fetch(followee = from, follower = to) != null
-        val following = followRepository.fetch(followee = to, follower = from) != null
+        val followingToUser = followRepository.fetch(from = from, to = to) != null
+        val followedByToUser = followRepository.fetch(from = to, to = from) != null
         return FollowState(
             selfId = from,
             otherId = to,
-            following = following,
-            followed = followed,
+            following = followingToUser,
+            followed = followedByToUser,
         )
     }
 
     suspend operator fun invoke(from: String, to: List<String>): List<FollowState> {
         // fromのユーザのフォロワー
-        val followers = followRepository.fetchByFolloweeId(from).map { it.follower }
+        val followers = followRepository.fetchFollowerUserIds(from)
         // fromのユーザのフォロイー
-        val followings = followRepository.fetchByFollowerId(from).map { it.followee }
+        val followings = followRepository.fetchFollowingUserIds(from)
 
         return to.map {
             FollowState(

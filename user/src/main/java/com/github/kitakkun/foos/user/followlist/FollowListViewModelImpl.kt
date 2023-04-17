@@ -38,11 +38,11 @@ class FollowListViewModelImpl @Inject constructor(
         }
     }
 
-    override fun fetchFollowees(userId: String) {
+    override fun fetchFollowingUsers(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val clientId = auth.uid ?: return@launch
             // プロフィール画面のユーザのフォロイーをフェッチ
-            val followees = followRepository.fetchByFollowerId(userId).map { it.followee }
+            val followees = followRepository.fetchByFollowerId(userId).map { it.to }
             // フォロイーのユーザ情報をフェッチ
             val users = usersRepository.fetchByUserIds(followees)
             // 各フォロイーと自分とのフォロー関係をフェッチ
@@ -68,11 +68,11 @@ class FollowListViewModelImpl @Inject constructor(
         }
     }
 
-    override fun fetchFollowers(userId: String) {
+    override fun fetchFollowerUsers(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val clientId = auth.uid ?: return@launch
             // プロフィール画面のユーザのフォロワーをフェッチ
-            val followers = followRepository.fetchByFolloweeId(userId).map { it.follower }
+            val followers = followRepository.fetchByFolloweeId(userId).map { it.from }
             // フォロワーのユーザ情報をフェッチ
             val users = usersRepository.fetchByUserIds(followers)
             // 各フォロワーと自分とのフォロー関係をフェッチ
