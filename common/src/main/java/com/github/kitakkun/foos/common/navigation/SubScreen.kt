@@ -62,6 +62,9 @@ sealed class SubScreen(
      * 投稿作成画面
      */
     object PostCreate : SubScreen("post_create") {
+
+        object Edit : SubScreen("post_edit")
+
         /**
          * 位置情報選択画面
          */

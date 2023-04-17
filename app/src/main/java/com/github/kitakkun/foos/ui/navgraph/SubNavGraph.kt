@@ -4,6 +4,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.navigation.StringList
 import com.github.kitakkun.foos.common.navigation.SubScreen
@@ -25,17 +26,22 @@ fun NavGraphBuilder.subNavGraph(
     navController: NavController,
     screenViewModel: ScreenViewModel,
 ) {
-    composable(SubScreen.PostCreate.route) {
-        val vm: PostViewModelImpl = hiltViewModel()
-        PostScreen(vm, navController, screenViewModel)
-    }
-    composable(SubScreen.PostCreate.LocationSelect.route) {
-        val vm: LocationSelectViewModelImpl = hiltViewModel()
-        LocationSelectScreen(vm, navController, screenViewModel)
-    }
-    composable(SubScreen.PostCreate.LocationConfirm.route) {
-        val vm: LocationConfirmViewModelImpl = hiltViewModel()
-        LocationConfirmScreen(vm, navController, screenViewModel)
+    navigation(
+        route = SubScreen.PostCreate.route,
+        startDestination = SubScreen.PostCreate.Edit.route,
+    ) {
+        composable(SubScreen.PostCreate.Edit.route) {
+            val vm: PostViewModelImpl = hiltViewModel()
+            PostScreen(vm, navController, screenViewModel)
+        }
+        composable(SubScreen.PostCreate.LocationSelect.route) {
+            val vm: LocationSelectViewModelImpl = hiltViewModel()
+            LocationSelectScreen(vm, navController, screenViewModel)
+        }
+        composable(SubScreen.PostCreate.LocationConfirm.route) {
+            val vm: LocationConfirmViewModelImpl = hiltViewModel()
+            LocationConfirmScreen(vm, navController, screenViewModel)
+        }
     }
     composable(
         SubScreen.UserProfile.routeWithParam,
