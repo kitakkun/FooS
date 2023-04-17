@@ -9,10 +9,10 @@ import androidx.navigation.compose.NavHost
 import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.navigation.BottomSheet
 import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.navigation.mainGraph
 import com.github.kitakkun.foos.post.bottomsheet.PostOptionBottomSheet
-import com.github.kitakkun.foos.ui.navgraph.mainGraph
-import com.github.kitakkun.foos.ui.navgraph.postGraph
-import com.github.kitakkun.foos.user.userGraph
+import com.github.kitakkun.foos.post.navigation.postGraph
+import com.github.kitakkun.foos.user.navigation.userGraph
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.bottomSheet
 

@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.user
+package com.github.kitakkun.foos.user.navigation
 
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController

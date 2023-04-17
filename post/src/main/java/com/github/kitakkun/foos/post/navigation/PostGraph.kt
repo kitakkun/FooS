@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.ui.navgraph
+package com.github.kitakkun.foos.post.navigation
 
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
