@@ -235,7 +235,7 @@ fun UserProfileView(
                     Text(text = stringResource(id = R.string.edit_profile))
                 }
             } else {
-                FollowButton(onClick = onFollowButtonClick, following = following)
+                FollowButton(onClick = onFollowButtonClick, isFollowing = following)
             }
         }
         Spacer(Modifier.height(paddingMedium))

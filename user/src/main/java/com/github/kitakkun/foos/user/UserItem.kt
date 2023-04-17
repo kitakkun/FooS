@@ -55,7 +55,7 @@ fun UserItem(
             if (uiState.isClientUser) {
                 FollowButton(
                     onClick = onFollowButtonClicked,
-                    following = uiState.following
+                    isFollowing = uiState.following
                 )
             }
         }

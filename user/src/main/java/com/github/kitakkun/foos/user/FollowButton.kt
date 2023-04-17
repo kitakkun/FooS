@@ -2,8 +2,6 @@ package com.github.kitakkun.foos.user
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.kitakkun.foos.customview.composable.button.RoundButton
@@ -11,27 +9,41 @@ import com.github.kitakkun.foos.customview.preview.PreviewContainer
 
 /**
  * フォローボタン
- * @param following フォロー状態
+ * @param isFollowing フォロー状態
  * @param onClick ボタンクリック時のイベント
  */
 @Composable
 fun FollowButton(
-    following: Boolean,
+    isFollowing: Boolean,
     onClick: () -> Unit = {},
 ) {
-    val text = if (following) stringResource(id = R.string.following)
-    else stringResource(id = R.string.follow)
-    RoundButton(onClick = onClick, outlined = following) {
-        Text(text = text)
+    RoundButton(
+        onClick = onClick,
+        outlined = isFollowing
+    ) {
+        Text(
+            text = when (isFollowing) {
+                true -> stringResource(id = R.string.following)
+                false -> stringResource(id = R.string.follow)
+            }
+        )
     }
 }
 
 @Preview
 @Composable
 private fun FollowButtonPreview() = PreviewContainer {
-    val followingFlag = remember {
-        mutableStateOf(false)
-    }
-    FollowButton(following = followingFlag.value,
-        onClick = { followingFlag.value = !followingFlag.value })
+    FollowButton(
+        isFollowing = false,
+        onClick = {}
+    )
+}
+
+@Preview
+@Composable
+private fun FollowingButtonPreview() = PreviewContainer {
+    FollowButton(
+        isFollowing = true,
+        onClick = {}
+    )
 }
