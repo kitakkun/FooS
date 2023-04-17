@@ -21,7 +21,9 @@ import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
  */
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
-fun AppScreen() {
+fun AppScreen(
+    startDestination: String,
+) {
 
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     val navController = rememberNavController(bottomSheetNavigator)
@@ -49,7 +51,7 @@ fun AppScreen() {
                 backgroundColor = MaterialTheme.colors.background,
                 bottomBar = {
                     ScreenBottomNavBar(
-                        navController,
+                        navController = navController,
                         onClick = { screen -> screenViewModel.navigate(screen.route) }
                     )
                 }
@@ -57,6 +59,7 @@ fun AppScreen() {
                 ScreenNavHost(
                     navController = navController,
                     screenViewModel = screenViewModel,
+                    startDestination = startDestination,
                     innerPadding = innerPadding
                 )
             }

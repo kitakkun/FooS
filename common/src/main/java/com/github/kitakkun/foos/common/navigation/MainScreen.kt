@@ -14,7 +14,11 @@ sealed class MainScreen(
 ) {
 
     companion object {
-        val screens = listOf(Home, Map, Reaction, Setting)
+        // need by lazy to avoid null pointer exception
+        // references:
+        // - https://stackoverflow.com/questions/54940944/initializing-companion-object-after-inner-objects/55010004
+        // - https://youtrack.jetbrains.com/issue/KT-8970/Object-is-uninitialized-null-when-accessed-from-static-context-ex.-companion-object-with-initialization-loop
+        val screens by lazy { listOf(Home, Map, Reaction, Setting) }
     }
 
     object Home : MainScreen(
