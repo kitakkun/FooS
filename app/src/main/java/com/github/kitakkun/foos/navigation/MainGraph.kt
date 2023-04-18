@@ -23,7 +23,7 @@ fun NavGraphBuilder.mainGraph(
             )
         }
         composable(ScreenRouter.Main.Map) {
-            MapScreen(navController = navController)
+            MapScreen()
         }
         composable(ScreenRouter.Main.Reaction) {
             ReactionScreen(navController = navController)
