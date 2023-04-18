@@ -7,15 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kitakkun.foos.common.model.Email
 import com.github.kitakkun.foos.common.model.Password
-import com.github.kitakkun.foos.common.navigation.ScreenRouter
-import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.common.repository.UsersRepository
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,16 +19,12 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val usersRepository: UsersRepository,
 ) : ViewModel() {
-
     companion object {
         private const val TAG = "SignUpViewModel"
     }
 
     private var _uiState = mutableStateOf(SignUpUiState())
     val uiState: State<SignUpUiState> = _uiState
-
-    private var _navEvent = MutableSharedFlow<String>()
-    val navEvent = _navEvent.asSharedFlow()
 
     fun updateEmail(email: String) {
         _uiState.value = _uiState.value.copy(email = email)
@@ -60,14 +52,6 @@ class SignUpViewModel @Inject constructor(
         } catch (e: Throwable) {
             Log.e(TAG, "signUp: ", e)
         }
-    }
-
-    private fun navigateToHome() = viewModelScope.launch(Dispatchers.IO) {
-        _navEvent.emit(ScreenRouter.Main.Home.route)
-    }
-
-    fun navigateToSignIn() = viewModelScope.launch(Dispatchers.IO) {
-        _navEvent.emit(UserScreenRouter.Auth.SignIn.route)
     }
 
     fun togglePasswordVisibility() {

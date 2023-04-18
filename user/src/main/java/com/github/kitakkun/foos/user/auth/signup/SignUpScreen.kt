@@ -8,7 +8,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,34 +19,27 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.github.kitakkun.foos.common.ext.navigateToSingleScreen
+import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.customview.composable.loading.BoxWithLoading
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.customview.theme.LinkBlue
 import com.github.kitakkun.foos.user.R
 import com.github.kitakkun.foos.user.auth.EmailTextField
 import com.github.kitakkun.foos.user.auth.PasswordTextField
-import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpScreen(
     viewModel: SignUpViewModel,
     navController: NavController,
 ) {
-    LaunchedEffect(Unit) {
-        launch {
-            viewModel.navEvent.collect {
-                navController.navigate(it) {
-                    launchSingleTop = true
-                }
-            }
-        }
-    }
-
     SignUpUI(
         uiState = viewModel.uiState.value,
         onEmailChange = viewModel::updateEmail,
         onPasswordChange = viewModel::updatePassword,
-        onSignInClick = viewModel::navigateToSignIn,
+        onSignInClick = {
+            navController.navigateToSingleScreen(UserScreenRouter.Auth.SignIn)
+        },
         onSignUpClick = viewModel::signUp,
         onPasswordVisibilityIconClick = viewModel::togglePasswordVisibility,
     )

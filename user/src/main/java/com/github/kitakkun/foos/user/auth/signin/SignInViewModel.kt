@@ -8,8 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -24,9 +22,6 @@ class SignInViewModel @Inject constructor(
 
     private val _uiState = mutableStateOf(SignInUiState())
     val uiState: State<SignInUiState> = _uiState
-
-    private val _navEvent = MutableSharedFlow<String>()
-    val navEvent = _navEvent.asSharedFlow()
 
     fun updateEmail(email: String) {
         _uiState.value = uiState.value.copy(email = email)
