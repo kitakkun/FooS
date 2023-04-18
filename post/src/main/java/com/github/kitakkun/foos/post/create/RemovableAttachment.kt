@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.customview.composable.post
+package com.github.kitakkun.foos.post.create
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState

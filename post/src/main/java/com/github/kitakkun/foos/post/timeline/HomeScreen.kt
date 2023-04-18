@@ -19,9 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.const.paddingLarge
-import com.github.kitakkun.foos.common.navigation.ScreenRouter
+import com.github.kitakkun.foos.common.navigation.PostScreenRouter
 import com.github.kitakkun.foos.customview.composable.button.RoundIconActionButton
 import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndicator
 import com.github.kitakkun.foos.customview.composable.post.PostItemList
@@ -38,7 +37,6 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     viewModel: HomeViewModelImpl = hiltViewModel(),
     navController: NavController,
-    screenViewModel: ScreenViewModel
 ) {
 
     val uiState = viewModel.uiState.value
@@ -61,18 +59,15 @@ fun HomeScreen(
             }
         }
         launch {
-            // Bottomナビゲーションでホームがクリックされたらトップへスクロール
-            screenViewModel.navRoute.collect {
-                if (it == ScreenRouter.Main.Home.route) {
-                    listState.animateScrollToItem(0, 0)
-                }
-            }
+            // Bottomナビゲーションでホームがクリックされたらトップへスクロール(いったんなし）
         }
     }
 
     HomeUI(
         uiState = uiState, listState = listState,
-        onPostCreateButtonClick = { viewModel.onPostCreateButtonClick() },
+        onPostCreateButtonClick = {
+            navController.navigate(PostScreenRouter.PostCreate.route)
+        },
         isLoadingPosts = false, /* TODO: ロードインディケータの適切な制御 */
         onAppearLastItem = { viewModel.fetchOlderPosts() },
         onImageClick = { imageUrls, clickedUrl -> viewModel.onImageClick(imageUrls, clickedUrl) },
@@ -81,7 +76,6 @@ fun HomeScreen(
         onContentClick = { viewModel.onContentClick(it) },
         onMoreVertClick = viewModel::onMoreVertClick,
     )
-
 }
 
 @OptIn(ExperimentalMaterialApi::class)

@@ -9,12 +9,11 @@ import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.ext.composable
 import com.github.kitakkun.foos.common.navigation.PostScreenRouter
 import com.github.kitakkun.foos.common.navigation.StringList
-import com.github.kitakkun.foos.post.create.PostScreen
-import com.github.kitakkun.foos.post.create.PostViewModelImpl
+import com.github.kitakkun.foos.post.create.PostCreateViewModel
+import com.github.kitakkun.foos.post.create.PostEditScreen
+import com.github.kitakkun.foos.post.create.PostModule.providePostCreateViewModel
 import com.github.kitakkun.foos.post.create.locationconfirm.LocationConfirmScreen
-import com.github.kitakkun.foos.post.create.locationconfirm.LocationConfirmViewModelImpl
 import com.github.kitakkun.foos.post.create.locationselect.LocationSelectScreen
-import com.github.kitakkun.foos.post.create.locationselect.LocationSelectViewModelImpl
 import com.github.kitakkun.foos.post.imagedetail.ImageDetailScreen
 import com.github.kitakkun.foos.post.postdetail.PostDetailScreen
 import com.github.kitakkun.foos.post.postdetail.PostDetailViewModelImpl
@@ -36,17 +35,24 @@ private fun NavGraphBuilder.postCreateGraph(
         route = PostScreenRouter.PostCreate.route,
         startDestination = PostScreenRouter.PostCreate.Edit.route,
     ) {
+        val viewModel: PostCreateViewModel = providePostCreateViewModel()
         composable(PostScreenRouter.PostCreate.Edit.route) {
-            val vm: PostViewModelImpl = hiltViewModel()
-            PostScreen(vm, navController, screenViewModel)
+            PostEditScreen(
+                viewModel = viewModel,
+                navController = navController,
+            )
         }
         composable(PostScreenRouter.PostCreate.LocationSelect) {
-            val vm: LocationSelectViewModelImpl = hiltViewModel()
-            LocationSelectScreen(vm, navController, screenViewModel)
+            LocationSelectScreen(
+                viewModel = viewModel,
+                navController = navController,
+            )
         }
         composable(PostScreenRouter.PostCreate.LocationConfirm) {
-            val vm: LocationConfirmViewModelImpl = hiltViewModel()
-            LocationConfirmScreen(vm, navController, screenViewModel)
+            LocationConfirmScreen(
+                viewModel = viewModel,
+                navController = navController
+            )
         }
     }
 }

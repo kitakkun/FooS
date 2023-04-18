@@ -22,7 +22,6 @@ fun NavGraphBuilder.mainGraph(
         composable(ScreenRouter.Main.Home) {
             HomeScreen(
                 navController = navController,
-                screenViewModel = screenViewModel
             )
         }
         composable(ScreenRouter.Main.Map) {
