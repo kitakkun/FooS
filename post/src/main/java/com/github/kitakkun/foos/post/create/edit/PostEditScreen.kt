@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.post.create
+package com.github.kitakkun.foos.post.create.edit
 
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -27,6 +27,9 @@ import com.github.kitakkun.foos.common.navigation.PostScreenRouter
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.customview.theme.FooSTheme
 import com.github.kitakkun.foos.post.R
+import com.github.kitakkun.foos.post.create.ImageAttachment
+import com.github.kitakkun.foos.post.create.LocationAttachment
+import com.github.kitakkun.foos.post.create.PostCreateViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState

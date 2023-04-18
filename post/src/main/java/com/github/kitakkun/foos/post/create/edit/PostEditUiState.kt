@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.post.create
+package com.github.kitakkun.foos.post.create.edit
 
 import com.google.android.gms.maps.model.LatLng
 

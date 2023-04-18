@@ -10,8 +10,8 @@ import com.github.kitakkun.foos.common.ext.composable
 import com.github.kitakkun.foos.common.navigation.PostScreenRouter
 import com.github.kitakkun.foos.common.navigation.StringList
 import com.github.kitakkun.foos.post.create.PostCreateViewModel
-import com.github.kitakkun.foos.post.create.PostEditScreen
 import com.github.kitakkun.foos.post.create.PostModule.providePostCreateViewModel
+import com.github.kitakkun.foos.post.create.edit.PostEditScreen
 import com.github.kitakkun.foos.post.create.locationconfirm.LocationConfirmScreen
 import com.github.kitakkun.foos.post.create.locationselect.LocationSelectScreen
 import com.github.kitakkun.foos.post.imagedetail.ImageDetailScreen

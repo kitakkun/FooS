@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.github.kitakkun.foos.common.model.DatabasePost
 import com.github.kitakkun.foos.common.repository.PostsRepository
+import com.github.kitakkun.foos.post.create.edit.PostEditUiState
 import com.github.kitakkun.foos.util.FileUtils.getRealPath
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
