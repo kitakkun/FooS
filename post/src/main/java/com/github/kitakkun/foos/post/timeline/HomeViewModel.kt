@@ -22,6 +22,10 @@ class HomeViewModel @Inject constructor(
     private val fetchPostsUseCase: FetchPostsUseCase,
 ) : ViewModel() {
 
+    companion object {
+        private const val TAG = "HomeViewModel"
+    }
+
     private var mutableUiState = MutableStateFlow(HomeScreenUiState.Default)
     val uiState = mutableUiState.asStateFlow()
 
@@ -36,10 +40,10 @@ class HomeViewModel @Inject constructor(
     fun fetchInitialPosts() {
         viewModelScope.launch(Dispatchers.IO) {
             mutableUiState.update { it.copy(isLoading = true) }
-            Log.d("SIZE", fetchPostsUseCase().size.toString())
             val posts = fetchPostsUseCase().map { post ->
                 PostItemUiState.convert(post)
             }
+            Log.d(TAG, "fetchInitialPosts: $posts")
             mutableUiState.update {
                 it.copy(isLoading = false, posts = (posts + uiState.value.posts).distinct())
             }
