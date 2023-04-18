@@ -1,15 +1,21 @@
 package com.github.kitakkun.foos.post.reaction
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.customview.R
 import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndicator
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun ReactionScreen(viewModel: ReactionViewModel, navController: NavController) {
@@ -31,6 +37,7 @@ fun ReactionScreen(viewModel: ReactionViewModel, navController: NavController) {
 
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ReactionUI(
     reactions: List<ReactionItemUiState>,
@@ -40,8 +47,15 @@ fun ReactionUI(
     onUserIconClick: (String) -> Unit,
     onContentClick: (String) -> Unit
 ) {
-    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isRefreshing)
-    SwipeRefresh(state = swipeRefreshState, onRefresh = onRefresh) {
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = onRefresh
+    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(state = pullRefreshState)
+    ) {
         if (isLoading) {
             MaxSizeLoadingIndicator()
         } else {
@@ -51,6 +65,11 @@ fun ReactionUI(
                 onContentClick = onContentClick,
             )
         }
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter),
+        )
     }
 }
 
