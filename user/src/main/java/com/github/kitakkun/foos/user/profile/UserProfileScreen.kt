@@ -1,8 +1,15 @@
 package com.github.kitakkun.foos.user.profile
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -20,16 +27,13 @@ import com.github.kitakkun.foos.customview.composable.user.VerticalUserIdentityT
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.user.FollowButton
 import com.github.kitakkun.foos.user.R
-import com.google.accompanist.pager.*
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import moe.tlaster.nestedscrollview.VerticalNestedScrollView
 import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun UserProfileScreen(
     viewModel: UserProfileViewModel,
@@ -60,14 +64,24 @@ fun UserProfileScreen(
 
     // this layout produce buggy scroll if we don't use jetpack compose alpha02 or above.
     // nestedScroll's bug exists until alpha01.
-    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing)
-    SwipeRefresh(state = swipeRefreshState, onRefresh = {
-        when (pagerState.currentPage) {
-            0 -> viewModel.refreshPosts()
-            1 -> viewModel.refreshMediaPosts()
-            else -> viewModel.refreshReactedPosts()
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = uiState.isRefreshing,
+        onRefresh = {
+            when (pagerState.currentPage) {
+                0 -> viewModel.refreshPosts()
+                1 -> viewModel.refreshMediaPosts()
+                else -> viewModel.refreshReactedPosts()
+            }
         }
-    }) {
+    )
+    Box(
+        modifier = Modifier.pullRefresh(state = pullRefreshState)
+    ) {
+        PullRefreshIndicator(
+            state = pullRefreshState,
+            refreshing = uiState.isRefreshing,
+            modifier = Modifier.align(Alignment.TopCenter),
+        )
         VerticalNestedScrollView(
             state = nestedScrollViewState,
             header = {
@@ -82,6 +96,7 @@ fun UserProfileScreen(
                     onFollowersTextClick = { viewModel.navigateToFollowerUsersList(userId = uiState.id) },
                     onFollowButtonClick = { viewModel.toggleFollowState() },
                     following = uiState.isFollowedByClientUser,
+                    onEditButtonClick = {},
                 )
             },
             content = {
@@ -154,7 +169,7 @@ fun UserProfileScreen(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun MyTabRow(
     pagerState: PagerState,
@@ -164,28 +179,23 @@ private fun MyTabRow(
     TabRow(
         modifier = Modifier.fillMaxWidth(),
         selectedTabIndex = pagerState.currentPage,
-        // Override the indicator, using the provided pagerTabIndicatorOffset modifier
-        indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
-                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-            )
+        tabs = {
+            tabList.forEachIndexed { index, title ->
+                Tab(
+                    text = { Text(title) },
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    },
+                )
+            }
         }
-    ) {
-        tabList.forEachIndexed { index, title ->
-            Tab(
-                text = { Text(title) },
-                selected = pagerState.currentPage == index,
-                onClick = {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(index)
-                    }
-                },
-            )
-        }
-    }
+    )
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun MyPager(
     pagerState: PagerState,
@@ -194,7 +204,7 @@ private fun MyPager(
 ) {
     HorizontalPager(
         state = pagerState,
-        count = pageCount,
+        pageCount = pageCount,
         modifier = Modifier.fillMaxHeight(),
         verticalAlignment = Alignment.Top
     ) { page: Int ->
@@ -215,10 +225,10 @@ fun UserProfileView(
     followerNum: Int,
     followeeNum: Int,
     following: Boolean,
-    onFollowingTextClick: () -> Unit = {},
-    onFollowersTextClick: () -> Unit = {},
-    onFollowButtonClick: () -> Unit = {},
-    onEditButtonClick: () -> Unit = {},
+    onFollowingTextClick: () -> Unit,
+    onFollowersTextClick: () -> Unit,
+    onFollowButtonClick: () -> Unit,
+    onEditButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -254,5 +264,17 @@ fun UserProfileView(
 @Preview
 @Composable
 fun UserProfilePreview() = PreviewContainer {
-    UserProfileView("username", "userId", "users biography...", "", 120, 50, false)
+    UserProfileView(
+        username = "username",
+        userId = "userId",
+        bio = "users biography...",
+        profileImage = "",
+        followerNum = 120,
+        followeeNum = 50,
+        following = false,
+        onFollowingTextClick = {},
+        onFollowersTextClick = {},
+        onFollowButtonClick = {},
+        onEditButtonClick = {},
+    )
 }

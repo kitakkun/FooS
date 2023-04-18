@@ -115,13 +115,8 @@ dependencies {
 
     // accompanist
     def accompanist_version = "0.31.0-alpha"
-    // horizontal pager
-    implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
-    implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
     // navigation bottom sheet destinations
     implementation "com.google.accompanist:accompanist-navigation-material:$accompanist_version"
-    // swipeRefresh
-    implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
     implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
     // If using insets-ui
     implementation "com.google.accompanist:accompanist-insets-ui:$accompanist_version"

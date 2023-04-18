@@ -1,10 +1,13 @@
 package com.github.kitakkun.foos.user.followlist
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,7 +18,6 @@ import androidx.navigation.NavController
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.user.R
 import com.github.kitakkun.foos.user.UserList
-import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
 /**
@@ -47,6 +49,7 @@ fun FollowListScreen(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FollowListUI(
     uiState: FollowListScreenUiState,
@@ -70,7 +73,7 @@ private fun FollowListUI(
 
         HorizontalPager(
             state = pagerState,
-            count = tabTitles.size,
+            pageCount = tabTitles.size,
             modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.Top
         ) { page: Int ->
@@ -102,7 +105,7 @@ private fun FollowListUI(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun MyTabRow(
     pagerState: PagerState,
@@ -110,11 +113,7 @@ private fun MyTabRow(
 ) {
     val coroutineScope = rememberCoroutineScope()
     TabRow(
-        selectedTabIndex = pagerState.currentPage, indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
-                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-            )
-        }
+        selectedTabIndex = pagerState.currentPage
     ) {
         tabTitles.forEachIndexed { index, title ->
             Tab(

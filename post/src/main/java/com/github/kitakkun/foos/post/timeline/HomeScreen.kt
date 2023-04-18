@@ -5,10 +5,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -19,8 +24,6 @@ import com.github.kitakkun.foos.customview.composable.button.RoundIconActionButt
 import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndicator
 import com.github.kitakkun.foos.customview.composable.post.PostItemList
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.launch
 
 /**
@@ -72,6 +75,7 @@ fun HomeScreen(
 
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun HomeUI(
     uiState: HomeScreenUiState,
@@ -85,30 +89,38 @@ private fun HomeUI(
     onPostCreateButtonClick: () -> Unit,
     onMoreVertClick: (String) -> Unit,
 ) {
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing),
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = uiState.isRefreshing,
         onRefresh = onRefresh
+    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(state = pullRefreshState)
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            if (isLoadingPosts) {
-                MaxSizeLoadingIndicator()
-            } else {
-                PostItemList(
-                    listState = listState,
-                    uiStates = uiState.posts,
-                    onUserIconClick = { onUserIconClick(it) },
-                    onContentClick = { onContentClick(it) },
-                    onImageClick = { imageUrls, clickedUrl -> onImageClick(imageUrls, clickedUrl) },
-                    onAppearLastItem = { onAppearLastItem() },
-                    onMoreVertClick = onMoreVertClick,
-                )
-            }
-            RoundIconActionButton(
-                icon = Icons.Filled.Add,
-                onClick = onPostCreateButtonClick,
-                modifier = Modifier.padding(paddingLarge)
+        if (isLoadingPosts) {
+            MaxSizeLoadingIndicator()
+        } else {
+            PostItemList(
+                listState = listState,
+                uiStates = uiState.posts,
+                onUserIconClick = { onUserIconClick(it) },
+                onContentClick = { onContentClick(it) },
+                onImageClick = { imageUrls, clickedUrl -> onImageClick(imageUrls, clickedUrl) },
+                onAppearLastItem = { onAppearLastItem() },
+                onMoreVertClick = onMoreVertClick,
             )
         }
+        RoundIconActionButton(
+            icon = Icons.Filled.Add,
+            onClick = onPostCreateButtonClick,
+            modifier = Modifier.padding(paddingLarge)
+        )
+        PullRefreshIndicator(
+            refreshing = uiState.isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 
