@@ -6,10 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.ext.navigateToSingleScreen
 import com.github.kitakkun.foos.common.navigation.ScreenRouter
 import com.github.kitakkun.foos.customview.composable.navigation.ScreenBottomNavBar
@@ -27,7 +25,6 @@ fun AppScreen(
     startDestination: String,
 ) {
     val bottomSheetNavigator = rememberBottomSheetNavigator()
-    val screenViewModel: ScreenViewModel = hiltViewModel()
     val navController = rememberNavController(bottomSheetNavigator)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
@@ -60,7 +57,6 @@ fun AppScreen(
             ) { innerPadding ->
                 ScreenNavHost(
                     navController = navController,
-                    screenViewModel = screenViewModel,
                     startDestination = startDestination,
                     innerPadding = innerPadding
                 )

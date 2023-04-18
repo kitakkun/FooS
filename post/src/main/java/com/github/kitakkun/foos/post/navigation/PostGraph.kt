@@ -5,7 +5,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.ext.composable
 import com.github.kitakkun.foos.common.navigation.PostScreenRouter
 import com.github.kitakkun.foos.common.navigation.StringList
@@ -18,19 +17,13 @@ import com.github.kitakkun.foos.post.imagedetail.ImageDetailScreen
 import com.github.kitakkun.foos.post.postdetail.PostDetailScreen
 import com.github.kitakkun.foos.post.postdetail.PostDetailViewModelImpl
 
-fun NavGraphBuilder.postGraph(
-    navController: NavController,
-    screenViewModel: ScreenViewModel,
-) {
-    postCreateGraph(navController, screenViewModel)
+fun NavGraphBuilder.postGraph(navController: NavController) {
+    postCreateGraph(navController)
     postDetailGraph(navController)
     imageDetailGraph(navController)
 }
 
-private fun NavGraphBuilder.postCreateGraph(
-    navController: NavController,
-    screenViewModel: ScreenViewModel,
-) {
+private fun NavGraphBuilder.postCreateGraph(navController: NavController) {
     navigation(
         route = PostScreenRouter.PostCreate.route,
         startDestination = PostScreenRouter.PostCreate.Edit.route,

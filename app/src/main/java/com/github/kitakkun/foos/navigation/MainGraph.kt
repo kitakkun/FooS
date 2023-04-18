@@ -3,7 +3,6 @@ package com.github.kitakkun.foos.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
-import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.ext.composable
 import com.github.kitakkun.foos.common.navigation.ScreenRouter
 import com.github.kitakkun.foos.post.reaction.ReactionScreen
@@ -13,7 +12,6 @@ import com.github.kitakkun.foos.user.setting.SettingScreen
 
 fun NavGraphBuilder.mainGraph(
     navController: NavController,
-    screenViewModel: ScreenViewModel,
 ) {
     navigation(
         route = ScreenRouter.Main.route,
@@ -33,7 +31,6 @@ fun NavGraphBuilder.mainGraph(
         composable(ScreenRouter.Main.Setting) {
             SettingScreen(
                 navController = navController,
-                screenViewModel = screenViewModel
             )
         }
     }

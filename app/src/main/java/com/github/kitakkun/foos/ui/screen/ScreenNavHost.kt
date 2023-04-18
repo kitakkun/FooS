@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.navigation.BottomSheet
 import com.github.kitakkun.foos.navigation.mainGraph
 import com.github.kitakkun.foos.post.bottomsheet.PostOptionBottomSheet
@@ -22,7 +21,6 @@ import com.google.accompanist.navigation.material.bottomSheet
 @Composable
 fun ScreenNavHost(
     navController: NavHostController,
-    screenViewModel: ScreenViewModel,
     innerPadding: PaddingValues,
     startDestination: String,
 ) {
@@ -36,8 +34,8 @@ fun ScreenNavHost(
                 it.arguments?.getString(BottomSheet.PostOption.key(0)) ?: return@bottomSheet
             PostOptionBottomSheet(navController = navController, postId = postId)
         }
-        mainGraph(navController, screenViewModel)
-        postGraph(navController, screenViewModel)
+        mainGraph(navController)
+        postGraph(navController)
         userGraph(navController)
     }
 }

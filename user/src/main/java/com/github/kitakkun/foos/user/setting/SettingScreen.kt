@@ -16,7 +16,6 @@ import androidx.navigation.NavController
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
-import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.ext.navigateToSingleScreen
 import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.customview.composable.dialog.ConfirmAlertDialog
@@ -30,9 +29,8 @@ import com.github.kitakkun.foos.user.R
 fun SettingScreen(
     viewModel: SettingViewModelImpl = hiltViewModel(),
     navController: NavController,
-    screenViewModel: ScreenViewModel,
 ) {
-    val uiState = viewModel.uiState.value
+    val uiState by viewModel.uiState.collectAsState()
 
     val cropImage = rememberLauncherForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
@@ -60,11 +58,10 @@ fun SettingScreen(
             )
         },
         onLogOut = {
-            screenViewModel.logOut()
+            viewModel.logOut()
             navController.navigateToSingleScreen(UserScreenRouter.Auth)
         }
     )
-
 }
 
 @Composable
