@@ -86,7 +86,10 @@ fun PostEditScreen(
         onCancel = {
             navController.navigateUp()
         },
-        onConfirm = { viewModel.post(context) },
+        onConfirm = {
+            viewModel.post(context)
+            navController.navigateUp()
+        },
         onPostTextUpdate = { viewModel.updateContentText(it) }
     )
 
