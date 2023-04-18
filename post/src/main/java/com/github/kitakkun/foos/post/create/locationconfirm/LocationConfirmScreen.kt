@@ -1,6 +1,5 @@
 package com.github.kitakkun.foos.post.create.locationconfirm
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,71 +9,46 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.const.paddingMedium
-import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.common.navigation.PostScreenRouter
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.post.R
+import com.github.kitakkun.foos.post.create.PostCreateViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
-import kotlinx.coroutines.launch
 
 @Composable
 fun LocationConfirmScreen(
-    viewModel: LocationConfirmViewModel,
+    viewModel: PostCreateViewModel,
     navController: NavController,
-    sharedViewModel: ScreenViewModel,
 ) {
+    val uiState by viewModel.uiState.collectAsState()
 
-    var locationName by remember {
-        mutableStateOf("")
-    }
-    val location = sharedViewModel.postCreateSharedData.value.location ?: return
-    val context = LocalContext.current
-
-    // キャンセル時のイベント（前の画面に戻る）
     LaunchedEffect(Unit) {
-        launch {
-            viewModel.cancelEvent.collect {
-                navController.navigateUp()
-            }
-        }
-        launch {
-            // 完了時のイベント（投稿画面へ戻る）
-            viewModel.completeEvent.collect {
-                if (locationName.isEmpty()) {
-                    Toast.makeText(
-                        context, context.getString(R.string.specify_location_alert_message),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@collect
-                }
-                sharedViewModel.updatePostCreateSharedData(location, locationName)
-                navController.navigate(SubScreen.PostCreate.route) {
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        inclusive = true
-                    }
-                }
-            }
+        if (uiState.location == null) {
+            navController.navigateUp()
         }
     }
 
     LocationConfirmUI(
-        location = location,
-        locationName = locationName,
-        onCancel = { viewModel.backToPrevScreen() },
-        onProceed = { viewModel.completeStep() },
+        location = uiState.location ?: LatLng(0.0, 0.0),
+        locationName = uiState.locationName ?: "",
+        onCancel = {
+            navController.navigateUp()
+        },
+        onProceed = {
+            navController.navigate(PostScreenRouter.PostCreate.route) {
+                popUpTo(PostScreenRouter.PostCreate.route) { inclusive = true }
+            }
+        },
         onLocationNameUpdated = {
-            locationName = it
-            sharedViewModel.updatePostCreateSharedData(location, it)
+            viewModel.updateLocationName(it)
         }
     )
 }

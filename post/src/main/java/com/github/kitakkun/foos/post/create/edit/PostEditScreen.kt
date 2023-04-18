@@ -1,7 +1,6 @@
-package com.github.kitakkun.foos.post.create
+package com.github.kitakkun.foos.post.create.edit
 
 import android.Manifest
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -14,25 +13,26 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PinDrop
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.const.paddingMedium
-import com.github.kitakkun.foos.customview.composable.post.ImageAttachment
-import com.github.kitakkun.foos.customview.composable.post.LocationAttachment
-import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
+import com.github.kitakkun.foos.common.navigation.PostScreenRouter
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.customview.theme.FooSTheme
 import com.github.kitakkun.foos.post.R
+import com.github.kitakkun.foos.post.create.ImageAttachment
+import com.github.kitakkun.foos.post.create.LocationAttachment
+import com.github.kitakkun.foos.post.create.PostCreateViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
-import kotlinx.coroutines.launch
 
 /**
  * 投稿画面のコンポーザブル
@@ -40,37 +40,11 @@ import kotlinx.coroutines.launch
  */
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun PostScreen(
-    viewModel: PostViewModel,
+fun PostEditScreen(
+    viewModel: PostCreateViewModel = hiltViewModel(),
     navController: NavController,
-    sharedViewModel: ScreenViewModel,
 ) {
-
-    val location = sharedViewModel.postCreateSharedData.value.location
-    val locationName = sharedViewModel.postCreateSharedData.value.locationName
-
-    val locationAttached = location != null && locationName != null
-    Log.d("LOCATION", locationAttached.toString())
-
-    if (locationAttached) {
-        viewModel.applyLocationData(location!!, locationName!!)
-    }
-
-    LaunchedEffect(Unit) {
-        launch {
-            viewModel.navEvent.collect {
-                navController.navigate(it)
-            }
-        }
-        launch {
-            viewModel.navUpEvent.collect {
-                navController.navigateUp()
-            }
-        }
-    }
-
-    val uiState = viewModel.uiState.value
-
+    val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
     val launcher = rememberLauncherForActivityResult(
@@ -87,9 +61,9 @@ fun PostScreen(
         permission = Manifest.permission.ACCESS_FINE_LOCATION
     )
 
-    PostUI(
+    PostEditUI(
         uiState = uiState,
-        onImageAttachmentRemove = { viewModel.onImageAttachmentRemove(it) },
+        onImageAttachmentRemove = { viewModel.removeImageAttachment(it) },
         onAddImage = {
             if (filePermissionState.status == PermissionStatus.Granted) {
                 launcher.launch("image/*")
@@ -99,27 +73,31 @@ fun PostScreen(
         },
         onAddLocation = {
             if (locationPermissionState.status == PermissionStatus.Granted) {
-                viewModel.navigateToLocationSelect()
+                navController.navigate(PostScreenRouter.PostCreate.LocationSelect.route)
             } else {
                 locationPermissionState.launchPermissionRequest()
             }
         },
         onLocationAttachmentRemove = {
-            viewModel.onLocationRemove()
-            sharedViewModel.updatePostCreateSharedData(null, null)
+            viewModel.removeLocationData()
         },
         haveAccessToFile = filePermissionState.status == PermissionStatus.Granted,
         haveAccessToLocation = locationPermissionState.status == PermissionStatus.Granted,
-        onCancel = { viewModel.onCancel() },
-        onConfirm = { viewModel.post() },
-        onPostTextUpdate = { viewModel.onTextFieldUpdated(it) }
+        onCancel = {
+            navController.navigateUp()
+        },
+        onConfirm = {
+            viewModel.post(context)
+            navController.navigateUp()
+        },
+        onPostTextUpdate = { viewModel.updateContentText(it) }
     )
 
 }
 
 @Composable
-private fun PostUI(
-    uiState: PostItemUiState,
+private fun PostEditUI(
+    uiState: PostEditUiState,
     onCancel: () -> Unit,
     onConfirm: () -> Unit,
     onAddImage: () -> Unit,
@@ -132,14 +110,14 @@ private fun PostUI(
 ) {
     Scaffold(
         topBar = {
-            TopRow(
+            PostEditTopAppBar(
                 onCancel = onCancel,
                 onConfirm = onConfirm,
                 confirmText = stringResource(R.string.send)
             )
         },
         bottomBar = {
-            ToolBar(
+            PostEditBottomToolBar(
                 onAddImage = onAddImage,
                 onAddLocation = onAddLocation,
                 haveAccessToFile = haveAccessToFile,
@@ -156,8 +134,8 @@ private fun PostUI(
                 modifier = Modifier.weight(1f)
             )
             Attachments(
-                attachedImages = uiState.attachedImages,
-                locationAttached = uiState.latitude != null,
+                attachedImages = uiState.attachedImageUrls,
+                locationAttached = uiState.location?.latitude != null,
                 onImageAttachmentRemove = onImageAttachmentRemove,
                 onLocationRemove = onLocationAttachmentRemove,
             )
@@ -167,7 +145,7 @@ private fun PostUI(
 
 @Composable
 private fun ContentEditor(
-    uiState: PostItemUiState,
+    uiState: PostEditUiState,
     onTextUpdate: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -208,7 +186,7 @@ fun Attachments(
 }
 
 @Composable
-private fun TopRow(
+private fun PostEditTopAppBar(
     confirmText: String,
     onCancel: () -> Unit,
     onConfirm: () -> Unit
@@ -232,7 +210,7 @@ private fun TopRow(
 }
 
 @Composable
-private fun ToolBar(
+private fun PostEditBottomToolBar(
     haveAccessToFile: Boolean,
     haveAccessToLocation: Boolean,
     onAddImage: () -> Unit,
@@ -265,13 +243,13 @@ private fun ToolBar(
 @Preview
 @Composable
 private fun TopRowPreview() = PreviewContainer {
-    TopRow(confirmText = "Confirm", onCancel = { }, onConfirm = { })
+    PostEditTopAppBar(confirmText = "Confirm", onCancel = { }, onConfirm = { })
 }
 
 @Preview
 @Composable
 private fun ToolBarPreview() = PreviewContainer {
-    ToolBar(
+    PostEditBottomToolBar(
         haveAccessToFile = true,
         haveAccessToLocation = true,
         onAddImage = { },
@@ -283,8 +261,8 @@ private fun ToolBarPreview() = PreviewContainer {
 @Composable
 private fun PostUIPreview() = PreviewContainer {
     FooSTheme {
-        PostUI(
-            uiState = PostItemUiState.Default,
+        PostEditUI(
+            uiState = PostEditUiState(),
             onCancel = { },
             onConfirm = { },
             onAddImage = { },

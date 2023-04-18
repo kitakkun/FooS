@@ -20,7 +20,6 @@ class UsersRepositoryImpl @Inject constructor(
     private val database: FirebaseFirestore,
     private val firebaseAuth: FirebaseAuth,
 ) : UsersRepository {
-
     companion object {
         private const val COLLECTION = "users"
         private const val TAG = "UsersRepository"

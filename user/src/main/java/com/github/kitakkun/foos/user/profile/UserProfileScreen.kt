@@ -1,5 +1,6 @@
 package com.github.kitakkun.foos.user.profile
 
+import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -10,9 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,6 +19,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.common.const.paddingMedium
+import com.github.kitakkun.foos.common.navigation.BottomSheetRouter
+import com.github.kitakkun.foos.common.navigation.PostScreenRouter
+import com.github.kitakkun.foos.common.navigation.StringList
+import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndicator
 import com.github.kitakkun.foos.customview.composable.post.PostItemList
 import com.github.kitakkun.foos.customview.composable.user.UserIcon
@@ -29,6 +32,7 @@ import com.github.kitakkun.foos.user.FollowButton
 import com.github.kitakkun.foos.user.R
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import moe.tlaster.nestedscrollview.VerticalNestedScrollView
 import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
@@ -40,8 +44,7 @@ fun UserProfileScreen(
     navController: NavController,
     userId: String
 ) {
-
-    val uiState = viewModel.uiState.value
+    val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
         launch {
@@ -53,9 +56,6 @@ fun UserProfileScreen(
                     viewModel.fetchInitialReactedPosts()
                 }
             )
-        }
-        viewModel.navEvent.collect {
-            navController.navigate(it)
         }
     }
 
@@ -92,8 +92,16 @@ fun UserProfileScreen(
                     profileImage = uiState.profileImageUrl,
                     followerNum = uiState.followerCount,
                     followeeNum = uiState.followCount,
-                    onFollowingTextClick = { viewModel.navigateToFollowingUsersList(userId = uiState.id) },
-                    onFollowersTextClick = { viewModel.navigateToFollowerUsersList(userId = uiState.id) },
+                    onFollowingTextClick = {
+                        navController.navigate(
+                            UserScreenRouter.FollowList.routeWithArgs(userId, true.toString())
+                        )
+                    },
+                    onFollowersTextClick = {
+                        navController.navigate(
+                            UserScreenRouter.FollowList.routeWithArgs(userId, false.toString())
+                        )
+                    },
                     onFollowButtonClick = { viewModel.toggleFollowState() },
                     following = uiState.isFollowedByClientUser,
                     onEditButtonClick = {},
@@ -119,15 +127,29 @@ fun UserProfileScreen(
                                     PostItemList(
                                         uiStates = uiState.posts,
                                         onImageClick = { imageUrls, clickedImageUrl ->
-                                            viewModel.openImageDetailView(
-                                                imageUrls,
-                                                clickedImageUrl
+                                            navController.navigate(
+                                                PostScreenRouter.Detail.ImageDetail.routeWithArgs(
+                                                    Uri.encode(Gson().toJson(StringList(imageUrls))),
+                                                    clickedImageUrl
+                                                )
                                             )
                                         },
-                                        onContentClick = { viewModel.navigateToPostDetail(it) },
-                                        onUserIconClick = { viewModel.navigateToUserProfile(it) },
+                                        onContentClick = {
+                                            navController.navigate(
+                                                PostScreenRouter.Detail.PostDetail.routeWithArgs(it)
+                                            )
+                                        },
+                                        onUserIconClick = {
+                                            navController.navigate(
+                                                UserScreenRouter.UserProfile.routeWithArgs(it)
+                                            )
+                                        },
                                         onAppearLastItem = { viewModel.fetchOlderPosts() },
-                                        onMoreVertClick = viewModel::showPostOptions,
+                                        onMoreVertClick = {
+                                            navController.navigate(
+                                                BottomSheetRouter.PostOption.route(it)
+                                            )
+                                        },
                                     )
                                 }
                             },
@@ -137,7 +159,11 @@ fun UserProfileScreen(
                                 } else {
                                     MediaPostGrid(
                                         uiStates = uiState.mediaPosts,
-                                        onContentClick = { viewModel.navigateToPostDetail(it) },
+                                        onContentClick = {
+                                            navController.navigate(
+                                                PostScreenRouter.Detail.PostDetail.routeWithArgs(it)
+                                            )
+                                        },
                                         onAppearLastItem = { viewModel.fetchOlderMediaPosts() },
                                     )
                                 }
@@ -149,15 +175,29 @@ fun UserProfileScreen(
                                     PostItemList(
                                         uiStates = uiState.reactedPosts,
                                         onImageClick = { imageUrls, clickedImageUrl ->
-                                            viewModel.openImageDetailView(
-                                                imageUrls,
-                                                clickedImageUrl
+                                            navController.navigate(
+                                                PostScreenRouter.Detail.ImageDetail.routeWithArgs(
+                                                    Uri.encode(Gson().toJson(StringList(imageUrls))),
+                                                    clickedImageUrl
+                                                )
                                             )
                                         },
-                                        onContentClick = { viewModel.navigateToPostDetail(it) },
-                                        onUserIconClick = { viewModel.navigateToUserProfile(it) },
+                                        onContentClick = {
+                                            navController.navigate(
+                                                PostScreenRouter.Detail.PostDetail.routeWithArgs(it)
+                                            )
+                                        },
+                                        onUserIconClick = {
+                                            navController.navigate(
+                                                UserScreenRouter.UserProfile.routeWithArgs(it)
+                                            )
+                                        },
                                         onAppearLastItem = { viewModel.fetchOlderReactedPosts() },
-                                        onMoreVertClick = viewModel::showPostOptions,
+                                        onMoreVertClick = {
+                                            navController.navigate(
+                                                BottomSheetRouter.PostOption.route(it)
+                                            )
+                                        },
                                     )
                                 }
                             },

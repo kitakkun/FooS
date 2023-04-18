@@ -14,9 +14,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
-import com.github.kitakkun.foos.common.ScreenViewModel
+import com.github.kitakkun.foos.common.navigation.PostScreenRouter
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.post.R
+import com.github.kitakkun.foos.post.create.PostCreateViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
@@ -24,31 +25,15 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
-import kotlinx.coroutines.launch
 
 @SuppressLint("MissingPermission")
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun LocationSelectScreen(
-    viewModel: LocationSelectViewModel,
+    viewModel: PostCreateViewModel,
     navController: NavController,
-    sharedViewModel: ScreenViewModel,
 ) {
-
-    val uiState = viewModel.uiState.value
-
-    LaunchedEffect(Unit) {
-        launch {
-            viewModel.navToNextEvent.collect {
-                navController.navigate(it)
-            }
-        }
-        launch {
-            viewModel.cancelNavEvent.collect {
-                navController.navigateUp()
-            }
-        }
-    }
+    val uiState by viewModel.uiState.collectAsState()
 
     val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
         LocalContext.current
@@ -71,15 +56,16 @@ fun LocationSelectScreen(
 
     LocationSelectUI(
         cameraPositionState = cameraPositionState,
-        pinLocation = uiState.pinPosition,
-        onCancel = { viewModel.cancel() },
-        onConfirm = { viewModel.navigateToConfirmScreen() },
+        pinLocation = uiState.location,
+        onCancel = {
+            viewModel.removeLocationData()
+            navController.navigateUp()
+        },
+        onConfirm = {
+            navController.navigate(PostScreenRouter.PostCreate.LocationConfirm.route)
+        },
         onMapClick = {
-            sharedViewModel.updatePostCreateSharedData(
-                location = it,
-                locationName = null
-            )
-            viewModel.updatePinPosition(it)
+            viewModel.setLocation(it)
         }
     )
 }

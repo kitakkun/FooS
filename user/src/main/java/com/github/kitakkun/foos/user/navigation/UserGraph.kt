@@ -3,15 +3,15 @@ package com.github.kitakkun.foos.user.navigation
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.common.ext.composable
+import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.user.auth.signin.SignInScreen
 import com.github.kitakkun.foos.user.auth.signup.SignUpScreen
 import com.github.kitakkun.foos.user.followlist.FollowListScreen
-import com.github.kitakkun.foos.user.followlist.FollowListViewModelImpl
+import com.github.kitakkun.foos.user.followlist.FollowListViewModel
 import com.github.kitakkun.foos.user.profile.UserProfileScreen
-import com.github.kitakkun.foos.user.profile.UserProfileViewModelImpl
+import com.github.kitakkun.foos.user.profile.UserProfileViewModel
 
 fun NavGraphBuilder.userGraph(navController: NavController) {
     authGraph(navController)
@@ -21,41 +21,35 @@ fun NavGraphBuilder.userGraph(navController: NavController) {
 
 private fun NavGraphBuilder.authGraph(navController: NavController) {
     navigation(
-        startDestination = SubScreen.Auth.SignIn.route,
-        route = SubScreen.Auth.route
+        route = UserScreenRouter.Auth.route,
+        startDestination = UserScreenRouter.Auth.SignIn.route,
     ) {
-        composable(SubScreen.Auth.SignIn.route) {
+        composable(UserScreenRouter.Auth.SignIn) {
             SignInScreen(viewModel = hiltViewModel(), navController = navController)
         }
-        composable(SubScreen.Auth.SignUp.route) {
+        composable(UserScreenRouter.Auth.SignUp) {
             SignUpScreen(viewModel = hiltViewModel(), navController = navController)
         }
     }
 }
 
 private fun NavGraphBuilder.profileGraph(navController: NavController) {
-    composable(
-        SubScreen.UserProfile.routeWithParam,
-        SubScreen.UserProfile.arguments,
-    ) {
-        val userId = it.arguments?.getString(SubScreen.UserProfile.key(0))
-        userId?.let {
-            val vm: UserProfileViewModelImpl = hiltViewModel()
-            UserProfileScreen(vm, navController, userId)
-        }
+    composable(UserScreenRouter.UserProfile) {
+        val arguments = UserScreenRouter.UserProfile.resolveArguments(it)
+        val userId = arguments[0] as String? ?: return@composable
+        val vm: UserProfileViewModel = hiltViewModel()
+        UserProfileScreen(vm, navController, userId)
     }
 }
 
 private fun NavGraphBuilder.followGraph(navController: NavController) {
-    composable(
-        SubScreen.FollowList.routeWithParam,
-        SubScreen.FollowList.arguments,
-    ) {
-        val userId = it.arguments?.getString(SubScreen.FollowList.key(0))
-        val followees = it.arguments?.getBoolean(SubScreen.FollowList.key(1))
+    composable(UserScreenRouter.FollowList) {
+        val arguments = UserScreenRouter.FollowList.resolveArguments(it)
+        val userId = arguments[0] as String?
+        val followees = arguments[1] as Boolean?
         if (userId != null && followees != null) {
             val index = if (followees) 0 else 1
-            val vm: FollowListViewModelImpl = hiltViewModel()
+            val vm: FollowListViewModel = hiltViewModel()
             FollowListScreen(
                 viewModel = vm,
                 userId = userId,

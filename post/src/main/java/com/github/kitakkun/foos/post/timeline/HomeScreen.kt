@@ -1,5 +1,6 @@
 package com.github.kitakkun.foos.post.timeline
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,68 +12,70 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.const.paddingLarge
-import com.github.kitakkun.foos.common.navigation.MainScreen
+import com.github.kitakkun.foos.common.navigation.BottomSheetRouter
+import com.github.kitakkun.foos.common.navigation.PostScreenRouter
+import com.github.kitakkun.foos.common.navigation.StringList
+import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.customview.composable.button.RoundIconActionButton
 import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndicator
 import com.github.kitakkun.foos.customview.composable.post.PostItemList
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
-import kotlinx.coroutines.launch
+import com.google.firebase.auth.FirebaseAuth
+import com.google.gson.Gson
 
-/**
- * ホーム画面のコンポーザブル。ユーザーの投稿をリストで表示。
- * @param viewModel スクリーンに対応するViewModel
- * @param navController 画面遷移用のNavController
- */
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel,
+    viewModel: HomeViewModel = hiltViewModel(),
     navController: NavController,
-    screenViewModel: ScreenViewModel
 ) {
-
-    val uiState = viewModel.uiState.value
+    val uiState by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
 
-    LaunchedEffect(Unit) {
-        launch {
-            // 初回起動時の投稿フェッチ
-            viewModel.fetchInitialPosts()
-        }
-        launch {
-            viewModel.navEvent.collect {
-                navController.navigate(it)
-            }
-        }
-        launch {
-            // Bottomナビゲーションでホームがクリックされたらトップへスクロール
-            screenViewModel.navRoute.collect {
-                if (it == MainScreen.Home.route) {
-                    listState.animateScrollToItem(0, 0)
-                }
-            }
+    DisposableEffect(FirebaseAuth.getInstance().currentUser) {
+        onDispose {
+            viewModel.dispose()
         }
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.fetchInitialPosts()
+        // TODO: Bottomナビゲーションでホームがクリックされたらトップへスクロール(いったんなし）
+    }
+
     HomeUI(
-        uiState = uiState, listState = listState,
-        onPostCreateButtonClick = { viewModel.onPostCreateButtonClick() },
+        uiState = uiState,
+        listState = listState,
+        onPostCreateButtonClick = {
+            navController.navigate(PostScreenRouter.PostCreate.route)
+        },
         isLoadingPosts = false, /* TODO: ロードインディケータの適切な制御 */
         onAppearLastItem = { viewModel.fetchOlderPosts() },
-        onImageClick = { imageUrls, clickedUrl -> viewModel.onImageClick(imageUrls, clickedUrl) },
-        onUserIconClick = { viewModel.onUserIconClick(it) },
-        onRefresh = { viewModel.onRefresh() },
-        onContentClick = { viewModel.onContentClick(it) },
-        onMoreVertClick = viewModel::onMoreVertClick,
+        onImageClick = { imageUrls, clickedImageUrl ->
+            navController.navigate(
+                PostScreenRouter.Detail.ImageDetail.routeWithArgs(
+                    Uri.encode(Gson().toJson(StringList(imageUrls))),
+                    imageUrls.indexOf(clickedImageUrl).toString()
+                )
+            )
+        },
+        onUserIconClick = { userId ->
+            navController.navigate(UserScreenRouter.UserProfile.routeWithArgs(userId))
+        },
+        onRefresh = { viewModel.refreshPosts() },
+        onContentClick = {
+            navController.navigate(PostScreenRouter.Detail.PostDetail.routeWithArgs(it))
+        },
+        onMoreVertClick = { postId ->
+            navController.navigate(BottomSheetRouter.PostOption.route(postId))
+        }
     )
-
 }
 
 @OptIn(ExperimentalMaterialApi::class)

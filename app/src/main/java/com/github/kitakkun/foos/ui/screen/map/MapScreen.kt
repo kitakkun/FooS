@@ -17,7 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.common.const.paddingSmall
@@ -46,15 +46,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterialApi::class)
 @SuppressLint("MissingPermission")
 @Composable
-fun MapScreen(viewModel: MapViewModel, navController: NavController) {
-
-    val uiState = viewModel.uiState.value
-
-    LaunchedEffect(Unit) {
-        viewModel.navEvent.collect {
-            navController.navigate(it)
-        }
-    }
+fun MapScreen(
+    viewModel: MapViewModel = hiltViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsState()
 
     val locationPermissionState =
         rememberPermissionState(permission = Manifest.permission.ACCESS_FINE_LOCATION)

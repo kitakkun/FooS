@@ -6,9 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.github.kitakkun.foos.common.ScreenViewModel
-import com.github.kitakkun.foos.common.navigation.BottomSheet
-import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.common.navigation.BottomSheetRouter
 import com.github.kitakkun.foos.navigation.mainGraph
 import com.github.kitakkun.foos.post.bottomsheet.PostOptionBottomSheet
 import com.github.kitakkun.foos.post.navigation.postGraph
@@ -23,22 +21,21 @@ import com.google.accompanist.navigation.material.bottomSheet
 @Composable
 fun ScreenNavHost(
     navController: NavHostController,
-    screenViewModel: ScreenViewModel,
     innerPadding: PaddingValues,
-    startDestination: String = SubScreen.Auth.route,
+    startDestination: String,
 ) {
     NavHost(
         navController = navController,
         startDestination = startDestination,
         Modifier.padding(innerPadding)
     ) {
-        bottomSheet(BottomSheet.PostOption.routeWithParam) {
+        bottomSheet(BottomSheetRouter.PostOption.routeWithArgs) {
             val postId =
-                it.arguments?.getString(BottomSheet.PostOption.key(0)) ?: return@bottomSheet
+                it.arguments?.getString(BottomSheetRouter.PostOption.key(0)) ?: return@bottomSheet
             PostOptionBottomSheet(navController = navController, postId = postId)
         }
-        mainGraph(navController, screenViewModel)
-        postGraph(navController, screenViewModel)
+        mainGraph(navController)
+        postGraph(navController)
         userGraph(navController)
     }
 }

@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.user.R
 import com.github.kitakkun.foos.user.UserList
@@ -30,21 +31,18 @@ fun FollowListScreen(
     userId: String,
     initialPage: Int = 0
 ) {
-    // ナビゲーションイベントの処理
-    LaunchedEffect(Unit) {
-        viewModel.navEvent.collect {
-            navController.navigate(it)
-        }
-    }
-
-    val uiState = viewModel.uiState.value
+    val uiState by viewModel.uiState.collectAsState()
 
     FollowListUI(
         uiState = uiState,
         initialPage = initialPage,
         fetchFollowee = { viewModel.fetchFollowingUsers(userId) },
         fetchFollower = { viewModel.fetchFollowerUsers(userId) },
-        onItemClicked = { viewModel.navigateToUserProfile(it) },
+        onItemClicked = {
+            navController.navigate(
+                UserScreenRouter.UserProfile.routeWithArgs(it)
+            )
+        },
         onFollowButtonClicked = { /* TODO: フォロー状態の更新 */ }
     )
 }

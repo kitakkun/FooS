@@ -1,39 +1,44 @@
 package com.github.kitakkun.foos.user.setting
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canhub.cropper.CropImageView
 import com.github.kitakkun.foos.common.repository.UsersRepository
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModelImpl @Inject constructor(
+    private val firebaseAuth: FirebaseAuth,
     private val usersRepository: UsersRepository
-) : ViewModel(), SettingViewModel {
+) : ViewModel() {
 
-    private var _uiState = mutableStateOf(SettingUiState("", ""))
-    override val uiState: State<SettingUiState> = _uiState
+    private var mutableUiState = MutableStateFlow(SettingUiState("", ""))
+    val uiState = mutableUiState.asStateFlow()
 
-    override fun fetchUserData() {
+    fun fetchUserData() {
         viewModelScope.launch(Dispatchers.IO) {
             val user = usersRepository.fetchByUserId(Firebase.auth.uid.toString()) ?: return@launch
-            _uiState.value = _uiState.value.copy(
-                username = user.name,
-                profileImage = user.profileImage
-            )
+            mutableUiState.update {
+                it.copy(
+                    username = user.name,
+                    profileImage = user.profileImage
+                )
+            }
         }
     }
 
-    override fun onCropImageSucceeded(result: CropImageView.CropResult) {
+    fun onCropImageSucceeded(result: CropImageView.CropResult) {
         viewModelScope.launch(Dispatchers.IO) {
             result.uriContent?.let {
                 val ref =
@@ -53,7 +58,11 @@ class SettingViewModelImpl @Inject constructor(
         }
     }
 
-    override fun onCropImageFailed(result: CropImageView.CropResult) {
+    fun onCropImageFailed(result: CropImageView.CropResult) {
         result.error?.printStackTrace()
+    }
+
+    fun logOut() {
+        firebaseAuth.signOut()
     }
 }

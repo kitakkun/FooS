@@ -7,15 +7,17 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
-import com.github.kitakkun.foos.common.ScreenViewModel
+import com.github.kitakkun.foos.common.ext.navigateToSingleScreen
+import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.customview.composable.dialog.ConfirmAlertDialog
 import com.github.kitakkun.foos.customview.composable.menu.MenuItemList
 import com.github.kitakkun.foos.customview.composable.menu.MenuItemUiState
@@ -24,17 +26,21 @@ import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.user.R
 
 @Composable
-fun SettingScreen(viewModel: SettingViewModel, screenViewModel: ScreenViewModel) {
+fun SettingScreen(
+    viewModel: SettingViewModelImpl = hiltViewModel(),
+    navController: NavController,
+) {
+    val uiState by viewModel.uiState.collectAsState()
 
-    val uiState = viewModel.uiState.value
-    viewModel.fetchUserData()
-
-    val context = LocalContext.current
     val cropImage = rememberLauncherForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
             viewModel.fetchUserData()
             viewModel.onCropImageSucceeded(result)
         } else viewModel.onCropImageFailed(result)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchUserData()
     }
 
     SettingUI(
@@ -52,11 +58,10 @@ fun SettingScreen(viewModel: SettingViewModel, screenViewModel: ScreenViewModel)
             )
         },
         onLogOut = {
-            screenViewModel.logOut()
-            screenViewModel.recreateActivity(context)
+            viewModel.logOut()
+            navController.navigateToSingleScreen(UserScreenRouter.Auth)
         }
     )
-
 }
 
 @Composable
@@ -96,7 +101,10 @@ private fun SettingUI(
                 message = stringResource(id = R.string.log_out_confirm_message),
                 confirmButtonText = stringResource(id = R.string.dialog_ok),
                 dismissButtonText = stringResource(id = R.string.dialog_cancel),
-                onConfirmed = onLogOut,
+                onConfirmed = {
+                    logOutRequest = false
+                    onLogOut()
+                },
                 onDismissed = { logOutRequest = false }
             )
         }
