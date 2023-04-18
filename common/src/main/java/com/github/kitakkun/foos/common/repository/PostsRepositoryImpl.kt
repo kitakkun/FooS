@@ -7,6 +7,7 @@ import android.net.Uri
 import com.github.kitakkun.foos.common.ext.join
 import com.github.kitakkun.foos.common.model.DatabasePost
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -32,16 +33,33 @@ class PostsRepositoryImpl @Inject constructor(
         private const val COLLECTION = "posts"
     }
 
+    private val cancellationTokenSources: MutableList<CancellationTokenSource> = mutableListOf()
+
+    private fun issueQueryWithCancelToken(
+        query: Query,
+    ) {
+        val cancellationTokenSource = CancellationTokenSource()
+        cancellationTokenSources.add(cancellationTokenSource)
+
+    }
+
     /**
      * 作成日時以外フィルタなしの通常のフェッチ
      */
-    override suspend fun fetch(start: Date?, end: Date?, count: Long?): List<DatabasePost> =
-        database.collection(COLLECTION)
+    override suspend fun fetch(start: Date?, end: Date?, count: Long?): List<DatabasePost> {
+//        val cancellationTokenSource = CancellationTokenSource()
+//        cancellationTokenSources.add(cancellationTokenSource)
+        val result = database.collection(COLLECTION)
             .orderBy("createdAt", Query.Direction.DESCENDING)
             .let { if (start != null) it.whereGreaterThanOrEqualTo("createdAt", start) else it }
             .let { if (end != null) it.whereLessThanOrEqualTo("createdAt", end) else it }
             .let { if (count != null) it.limit(count) else it }
-            .get().await().toObjects(DatabasePost::class.java)
+            .get()
+            .await()
+            .toObjects(DatabasePost::class.java)
+//        cancellationTokenSources.remove(cancellationTokenSource)
+        return result
+    }
 
     /**
      * ユーザIDでフィルタしてフェッチ

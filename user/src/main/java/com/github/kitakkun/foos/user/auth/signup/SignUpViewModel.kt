@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kitakkun.foos.common.model.Email
 import com.github.kitakkun.foos.common.model.Password
-import com.github.kitakkun.foos.common.navigation.MainScreen
-import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.common.navigation.ScreenRouter
+import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.common.repository.UsersRepository
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
@@ -23,6 +23,10 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val usersRepository: UsersRepository,
 ) : ViewModel() {
+
+    companion object {
+        private const val TAG = "SignUpViewModel"
+    }
 
     private var _uiState = mutableStateOf(SignUpUiState())
     val uiState: State<SignUpUiState> = _uiState
@@ -44,27 +48,26 @@ class SignUpViewModel @Inject constructor(
             val password = Password(_uiState.value.password)
             _uiState.value = _uiState.value.copy(isLoading = true)
             val result = usersRepository.create(email, password)
+            _uiState.value = _uiState.value.copy(isLoading = false)
             when (result) {
                 is Ok -> {
-                    navigateToHome()
+                    Log.d(TAG, "signUp: Success.")
                 }
                 is Err -> {
-                    Log.e("SignUpViewModel", "signUp: ", result.error)
+                    Log.e(TAG, "signUp: ", result.error)
                 }
             }
         } catch (e: Throwable) {
-            Log.e("SignUpViewModel", "signUp: ", e)
-        } finally {
-            _uiState.value = _uiState.value.copy(isLoading = false)
+            Log.e(TAG, "signUp: ", e)
         }
     }
 
     private fun navigateToHome() = viewModelScope.launch(Dispatchers.IO) {
-        _navEvent.emit(MainScreen.Home.route)
+        _navEvent.emit(ScreenRouter.Main.Home.route)
     }
 
     fun navigateToSignIn() = viewModelScope.launch(Dispatchers.IO) {
-        _navEvent.emit(SubScreen.Auth.SignIn.route)
+        _navEvent.emit(UserScreenRouter.Auth.SignIn.route)
     }
 
     fun togglePasswordVisibility() {

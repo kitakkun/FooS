@@ -12,18 +12,21 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.const.paddingLarge
-import com.github.kitakkun.foos.common.navigation.MainScreen
+import com.github.kitakkun.foos.common.navigation.ScreenRouter
 import com.github.kitakkun.foos.customview.composable.button.RoundIconActionButton
 import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndicator
 import com.github.kitakkun.foos.customview.composable.post.PostItemList
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 /**
@@ -33,13 +36,19 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel,
+    viewModel: HomeViewModelImpl = hiltViewModel(),
     navController: NavController,
     screenViewModel: ScreenViewModel
 ) {
 
     val uiState = viewModel.uiState.value
     val listState = rememberLazyListState()
+
+    DisposableEffect(FirebaseAuth.getInstance().currentUser) {
+        onDispose {
+            viewModel.dispose()
+        }
+    }
 
     LaunchedEffect(Unit) {
         launch {
@@ -54,7 +63,7 @@ fun HomeScreen(
         launch {
             // Bottomナビゲーションでホームがクリックされたらトップへスクロール
             screenViewModel.navRoute.collect {
-                if (it == MainScreen.Home.route) {
+                if (it == ScreenRouter.Main.Home.route) {
                     listState.animateScrollToItem(0, 0)
                 }
             }

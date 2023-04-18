@@ -19,7 +19,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.github.kitakkun.foos.common.ScreenViewModel
 import com.github.kitakkun.foos.common.const.paddingMedium
-import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.common.navigation.PostScreenRouter
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.post.R
 import com.google.android.gms.maps.model.CameraPosition
@@ -58,7 +58,7 @@ fun LocationConfirmScreen(
                     return@collect
                 }
                 sharedViewModel.updatePostCreateSharedData(location, locationName)
-                navController.navigate(SubScreen.PostCreate.route) {
+                navController.navigate(PostScreenRouter.PostCreate.route) {
                     popUpTo(navController.graph.findStartDestination().id) {
                         inclusive = true
                     }

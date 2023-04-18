@@ -1,14 +1,14 @@
 package com.github.kitakkun.foos.user.profile
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kitakkun.foos.common.navigation.BottomSheet
+import com.github.kitakkun.foos.common.navigation.PostScreenRouter
 import com.github.kitakkun.foos.common.navigation.StringList
-import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.common.repository.FollowRepository
 import com.github.kitakkun.foos.common.repository.UsersRepository
 import com.github.kitakkun.foos.common.usecase.FetchPostsByUserIdUseCase
@@ -71,35 +71,34 @@ class UserProfileViewModelImpl @Inject constructor(
 
     override fun navigateToFollowerUsersList(userId: String) {
         viewModelScope.launch {
-            _navEvent.emit(SubScreen.FollowList.route(userId, false.toString()))
+            _navEvent.emit(UserScreenRouter.FollowList.routeWithArgs(userId, false.toString()))
         }
     }
 
     override fun navigateToFollowingUsersList(userId: String) {
         viewModelScope.launch {
-            Log.d("NAV", SubScreen.FollowList.route(userId, true.toString()))
-            _navEvent.emit(SubScreen.FollowList.route(userId, true.toString()))
+            _navEvent.emit(UserScreenRouter.FollowList.routeWithArgs(userId, true.toString()))
         }
     }
 
     override fun navigateToUserProfile(userId: String) {
         viewModelScope.launch {
             if (userId != uiState.value.id) {
-                _navEvent.emit(SubScreen.UserProfile.route(userId))
+                _navEvent.emit(UserScreenRouter.UserProfile.routeWithArgs(userId))
             }
         }
     }
 
     override fun navigateToPostDetail(postId: String) {
         viewModelScope.launch {
-            _navEvent.emit(SubScreen.PostDetail.route(postId))
+            _navEvent.emit(PostScreenRouter.Detail.PostDetail.routeWithArgs(postId))
         }
     }
 
     override fun openImageDetailView(imageUrls: List<String>, clickedImageUrl: String) {
         viewModelScope.launch {
             _navEvent.emit(
-                SubScreen.ImageDetail.route(
+                PostScreenRouter.Detail.ImageDetail.routeWithArgs(
                     Uri.encode(Gson().toJson(StringList(imageUrls))),
                     imageUrls.indexOf(clickedImageUrl).toString(),
                 )

@@ -19,6 +19,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.github.kitakkun.foos.common.ext.navigateToSingleScreen
+import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.customview.composable.loading.BoxWithLoading
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.customview.theme.LinkBlue
@@ -38,10 +40,7 @@ fun SignInScreen(
         onPasswordVisibilityIconClick = viewModel::togglePasswordVisibility,
         onSignInClick = viewModel::signIn,
         onSignUpClick = {
-            navController.navigate("sign_up") {
-                popUpTo("sign_up") { inclusive = true }
-                launchSingleTop = true
-            }
+            navController.navigateToSingleScreen(UserScreenRouter.Auth.SignUp)
         },
     )
 }

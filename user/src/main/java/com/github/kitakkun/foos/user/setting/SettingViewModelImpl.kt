@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.canhub.cropper.CropImageView
 import com.github.kitakkun.foos.common.repository.UsersRepository
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -17,6 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModelImpl @Inject constructor(
+    private val firebaseAuth: FirebaseAuth,
     private val usersRepository: UsersRepository
 ) : ViewModel(), SettingViewModel {
 

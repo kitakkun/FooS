@@ -4,7 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.common.navigation.PostScreenRouter
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -39,7 +39,7 @@ class LocationSelectViewModelImpl @Inject constructor() : ViewModel(), LocationS
 
     override fun navigateToConfirmScreen() {
         viewModelScope.launch {
-            _navEvent.emit(SubScreen.PostCreate.LocationConfirm.route)
+            _navEvent.emit(PostScreenRouter.PostCreate.LocationConfirm.route)
         }
     }
 }

@@ -8,7 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kitakkun.foos.common.model.DatabasePost
-import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.common.navigation.PostScreenRouter
 import com.github.kitakkun.foos.common.repository.PostsRepository
 import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 import com.github.kitakkun.foos.util.FileUtils.getRealPath
@@ -87,7 +87,7 @@ class PostViewModelImpl @Inject constructor(
      */
     override fun navigateToLocationSelect() {
         viewModelScope.launch {
-            _navEvent.emit(SubScreen.PostCreate.LocationSelect.route)
+            _navEvent.emit(PostScreenRouter.PostCreate.LocationSelect.route)
         }
     }
 

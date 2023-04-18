@@ -6,7 +6,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.user.R
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -56,7 +56,7 @@ class SignInViewModel @Inject constructor(
     }
 
     fun navigateToSignUp() {
-        _navEvent.tryEmit(SubScreen.Auth.SignUp.route)
+        _navEvent.tryEmit(UserScreenRouter.Auth.SignUp.route)
     }
 
     fun togglePasswordVisibility() {

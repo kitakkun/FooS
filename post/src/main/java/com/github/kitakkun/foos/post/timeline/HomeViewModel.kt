@@ -14,4 +14,5 @@ interface HomeViewModel {
     fun fetchInitialPosts()
     fun fetchOlderPosts()
     fun onMoreVertClick(postId: String)
+    fun dispose()
 }

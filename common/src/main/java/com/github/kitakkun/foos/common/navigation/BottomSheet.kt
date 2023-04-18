@@ -19,7 +19,7 @@ sealed class BottomSheet(
     /**
      * パラメータを考慮したナビゲーションルートを作成
      */
-    val routeWithParam: String
+    val routeWithArgs: String
         get() = route + arguments.map { it.name }.joinToString(separator = "") { "/{$it}" }
 
     /**

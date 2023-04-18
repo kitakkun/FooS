@@ -26,6 +26,7 @@ import com.github.kitakkun.foos.customview.theme.LinkBlue
 import com.github.kitakkun.foos.user.R
 import com.github.kitakkun.foos.user.auth.EmailTextField
 import com.github.kitakkun.foos.user.auth.PasswordTextField
+import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpScreen(
@@ -33,10 +34,11 @@ fun SignUpScreen(
     navController: NavController,
 ) {
     LaunchedEffect(Unit) {
-        viewModel.navEvent.collect {
-            navController.navigate(it) {
-                popUpTo(it) { inclusive = true }
-                launchSingleTop = true
+        launch {
+            viewModel.navEvent.collect {
+                navController.navigate(it) {
+                    launchSingleTop = true
+                }
             }
         }
     }

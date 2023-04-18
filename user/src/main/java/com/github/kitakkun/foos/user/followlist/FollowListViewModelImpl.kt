@@ -5,7 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.common.repository.FollowRepository
 import com.github.kitakkun.foos.common.repository.UsersRepository
 import com.github.kitakkun.foos.common.usecase.FetchFollowStateUseCase
@@ -34,7 +34,7 @@ class FollowListViewModelImpl @Inject constructor(
 
     override fun navigateToUserProfile(userId: String) {
         viewModelScope.launch {
-            _navEvent.emit("${SubScreen.UserProfile.route}/$userId")
+            _navEvent.emit(UserScreenRouter.UserProfile.routeWithArgs(userId))
         }
     }
 

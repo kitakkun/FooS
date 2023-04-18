@@ -1,18 +1,21 @@
 package com.github.kitakkun.foos.post.timeline
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kitakkun.foos.common.navigation.BottomSheet
+import com.github.kitakkun.foos.common.navigation.PostScreenRouter
 import com.github.kitakkun.foos.common.navigation.StringList
-import com.github.kitakkun.foos.common.navigation.SubScreen
+import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.common.usecase.FetchPostsUseCase
 import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
@@ -38,7 +41,7 @@ class HomeViewModelImpl @Inject constructor(
      */
     override fun onPostCreateButtonClick() {
         viewModelScope.launch {
-            _navEvent.emit(SubScreen.PostCreate.route)
+            _navEvent.emit(PostScreenRouter.PostCreate.route)
         }
     }
 
@@ -48,7 +51,7 @@ class HomeViewModelImpl @Inject constructor(
      */
     override fun onUserIconClick(userId: String) {
         viewModelScope.launch {
-            _navEvent.emit("${SubScreen.UserProfile.route}/$userId")
+            _navEvent.emit(UserScreenRouter.UserProfile.routeWithArgs(userId))
         }
     }
 
@@ -58,19 +61,14 @@ class HomeViewModelImpl @Inject constructor(
      */
     override fun onContentClick(postId: String) {
         viewModelScope.launch {
-            _navEvent.emit(SubScreen.PostDetail.route(postId))
+            _navEvent.emit(PostScreenRouter.Detail.PostDetail.routeWithArgs(postId))
         }
     }
 
-    /**
-     * 投稿コンテンツの画像クリック時のイベント
-     * @param uiState クリックされた画像を持つ投稿のUI状態
-     * @param clickedImageUrl クリックされた画像のURL
-     */
     override fun onImageClick(imageUrls: List<String>, clickedImageUrl: String) {
         viewModelScope.launch {
             _navEvent.emit(
-                SubScreen.ImageDetail.route(
+                PostScreenRouter.Detail.ImageDetail.routeWithArgs(
                     Uri.encode(Gson().toJson(StringList(imageUrls))),
                     imageUrls.indexOf(clickedImageUrl).toString()
                 ),
@@ -95,6 +93,7 @@ class HomeViewModelImpl @Inject constructor(
     override fun fetchInitialPosts() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = uiState.value.copy(isLoading = true)
+            Log.d("SIZE", fetchPostsUseCase().size.toString())
             val posts = fetchPostsUseCase().map { post ->
                 PostItemUiState.convert(post)
             }
@@ -126,5 +125,14 @@ class HomeViewModelImpl @Inject constructor(
         viewModelScope.launch {
             _navEvent.emit(BottomSheet.PostOption.route(postId))
         }
+    }
+
+    override fun dispose() {
+        viewModelScope.cancel()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("HomeViewModel", "onCleared")
     }
 }

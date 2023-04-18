@@ -1,56 +1,120 @@
 package com.github.kitakkun.foos.customview.composable.navigation
 
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.painterResource
+import androidx.compose.animation.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.PinDrop
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import com.github.kitakkun.foos.common.navigation.MainScreen
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.github.kitakkun.foos.common.navigation.ScreenRouter
+import com.github.kitakkun.foos.customview.preview.PreviewContainer
 
-/**
- * 画面下部のナビゲーションバー
- */
 @Composable
 fun ScreenBottomNavBar(
-    navController: NavHostController,
-    onClick: (MainScreen) -> Unit
+    isVisible: Boolean,
+    currentRoute: String?,
+    onHomeClick: () -> Unit,
+    onMapsClick: () -> Unit,
+    onReactionsClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-    if (MainScreen.screens.map { it.route }.contains(currentDestination?.route)) {
-        BottomNavigation {
-            MainScreen.screens.forEach { screen ->
-                MyBottomNavigationItem(
-                    mainScreen = screen,
-                    onClick = onClick,
-                    currentDestination = currentDestination,
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+        exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
+    ) {
+        BottomNavigation(
+            modifier = modifier
+                .clip(
+                    RoundedCornerShape(
+                        topStart = 16.dp,
+                        topEnd = 16.dp
+                    ),
                 )
-            }
+        ) {
+            MyBottomNavigationItem(
+                icon = Icons.Default.Home,
+                label = stringResource(id = com.github.kitakkun.foos.common.R.string.home),
+                isSelected = currentRoute == ScreenRouter.Main.Home.route,
+                onClick = onHomeClick,
+            )
+            MyBottomNavigationItem(
+                icon = Icons.Default.PinDrop,
+                label = stringResource(id = com.github.kitakkun.foos.common.R.string.map),
+                isSelected = currentRoute == ScreenRouter.Main.Map.route,
+                onClick = onMapsClick,
+            )
+            MyBottomNavigationItem(
+                icon = Icons.Default.Favorite,
+                label = stringResource(id = com.github.kitakkun.foos.common.R.string.reaction),
+                isSelected = currentRoute == ScreenRouter.Main.Reaction.route,
+                onClick = onReactionsClick,
+            )
+            MyBottomNavigationItem(
+                icon = Icons.Default.Settings,
+                label = stringResource(id = com.github.kitakkun.foos.common.R.string.setting),
+                isSelected = currentRoute == ScreenRouter.Main.Setting.route,
+                onClick = onSettingsClick,
+            )
         }
     }
 }
 
-/**
- * 画面下部ナビゲーションバーの項目
- */
 @Composable
 private fun RowScope.MyBottomNavigationItem(
-    mainScreen: MainScreen,
-    currentDestination: NavDestination?,
-    onClick: (MainScreen) -> Unit,
+    icon: ImageVector,
+    label: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
 ) {
     BottomNavigationItem(
-        label = { Text(text = stringResource(id = mainScreen.stringId)) },
-        icon = { Icon(painterResource(mainScreen.iconId), null) },
-        selected = currentDestination?.hierarchy?.any { it.route == mainScreen.route } == true,
-        onClick = { onClick.invoke(mainScreen) }
+        label = {
+            Text(text = label)
+        },
+        icon = {
+            Icon(
+                imageVector = icon,
+                contentDescription = null
+            )
+        },
+        selected = isSelected,
+        onClick = onClick,
     )
+}
+
+@Preview
+@Composable
+private fun ScreenBottomNavBarPreview() = PreviewContainer {
+    var isVisible by remember { mutableStateOf(true) }
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(text = "Toggle")
+            Switch(checked = isVisible, onCheckedChange = { isVisible = it })
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        ScreenBottomNavBar(
+            isVisible = isVisible,
+            currentRoute = ScreenRouter.Main.Home.route,
+            onHomeClick = {},
+            onMapsClick = {},
+            onReactionsClick = {},
+            onSettingsClick = {},
+        )
+    }
 }
