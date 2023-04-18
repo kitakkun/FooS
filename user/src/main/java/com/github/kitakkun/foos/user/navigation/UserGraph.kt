@@ -9,7 +9,7 @@ import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.user.auth.signin.SignInScreen
 import com.github.kitakkun.foos.user.auth.signup.SignUpScreen
 import com.github.kitakkun.foos.user.followlist.FollowListScreen
-import com.github.kitakkun.foos.user.followlist.FollowListViewModelImpl
+import com.github.kitakkun.foos.user.followlist.FollowListViewModel
 import com.github.kitakkun.foos.user.profile.UserProfileScreen
 import com.github.kitakkun.foos.user.profile.UserProfileViewModel
 
@@ -49,7 +49,7 @@ private fun NavGraphBuilder.followGraph(navController: NavController) {
         val followees = arguments[1] as Boolean?
         if (userId != null && followees != null) {
             val index = if (followees) 0 else 1
-            val vm: FollowListViewModelImpl = hiltViewModel()
+            val vm: FollowListViewModel = hiltViewModel()
             FollowListScreen(
                 viewModel = vm,
                 userId = userId,
