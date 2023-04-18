@@ -11,7 +11,7 @@ import com.github.kitakkun.foos.user.auth.signup.SignUpScreen
 import com.github.kitakkun.foos.user.followlist.FollowListScreen
 import com.github.kitakkun.foos.user.followlist.FollowListViewModelImpl
 import com.github.kitakkun.foos.user.profile.UserProfileScreen
-import com.github.kitakkun.foos.user.profile.UserProfileViewModelImpl
+import com.github.kitakkun.foos.user.profile.UserProfileViewModel
 
 fun NavGraphBuilder.userGraph(navController: NavController) {
     authGraph(navController)
@@ -37,7 +37,7 @@ private fun NavGraphBuilder.profileGraph(navController: NavController) {
     composable(UserScreenRouter.UserProfile) {
         val arguments = UserScreenRouter.UserProfile.resolveArguments(it)
         val userId = arguments[0] as String? ?: return@composable
-        val vm: UserProfileViewModelImpl = hiltViewModel()
+        val vm: UserProfileViewModel = hiltViewModel()
         UserProfileScreen(vm, navController, userId)
     }
 }

@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.github.kitakkun.foos.common.navigation.BottomSheet
+import com.github.kitakkun.foos.common.navigation.BottomSheetRouter
 import com.github.kitakkun.foos.navigation.mainGraph
 import com.github.kitakkun.foos.post.bottomsheet.PostOptionBottomSheet
 import com.github.kitakkun.foos.post.navigation.postGraph
@@ -29,9 +29,9 @@ fun ScreenNavHost(
         startDestination = startDestination,
         Modifier.padding(innerPadding)
     ) {
-        bottomSheet(BottomSheet.PostOption.routeWithArgs) {
+        bottomSheet(BottomSheetRouter.PostOption.routeWithArgs) {
             val postId =
-                it.arguments?.getString(BottomSheet.PostOption.key(0)) ?: return@bottomSheet
+                it.arguments?.getString(BottomSheetRouter.PostOption.key(0)) ?: return@bottomSheet
             PostOptionBottomSheet(navController = navController, postId = postId)
         }
         mainGraph(navController)

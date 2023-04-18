@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.common.const.paddingLarge
-import com.github.kitakkun.foos.common.navigation.BottomSheet
+import com.github.kitakkun.foos.common.navigation.BottomSheetRouter
 import com.github.kitakkun.foos.common.navigation.PostScreenRouter
 import com.github.kitakkun.foos.common.navigation.StringList
 import com.github.kitakkun.foos.common.navigation.UserScreenRouter
@@ -73,7 +73,7 @@ fun HomeScreen(
             navController.navigate(PostScreenRouter.Detail.PostDetail.routeWithArgs(it))
         },
         onMoreVertClick = { postId ->
-            navController.navigate(BottomSheet.PostOption.route(postId))
+            navController.navigate(BottomSheetRouter.PostOption.route(postId))
         }
     )
 }

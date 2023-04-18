@@ -4,7 +4,7 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
-sealed class BottomSheet(
+sealed class BottomSheetRouter(
     val route: String,
     val arguments: List<NamedNavArgument> = listOf()
 ) {
@@ -32,7 +32,7 @@ sealed class BottomSheet(
         return route + params.toList().joinToString(separator = "") { "/$it" }
     }
 
-    object PostOption : BottomSheet(
+    object PostOption : BottomSheetRouter(
         route = "post_option",
         arguments = listOf(
             navArgument("postId") {
