@@ -5,9 +5,7 @@ import com.github.kitakkun.foos.common.navigation.ScreenRouter
 
 fun NavController.navigateToSingleScreen(screenRouter: ScreenRouter) {
     navigate(screenRouter.route) {
-        popUpTo(screenRouter.route) {
-            inclusive = true
-        }
+        popUpTo(screenRouter.route)
         launchSingleTop = true
     }
 }

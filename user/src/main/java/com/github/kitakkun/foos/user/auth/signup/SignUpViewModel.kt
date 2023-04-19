@@ -13,6 +13,7 @@ import com.github.michaelbull.result.Ok
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,25 +35,35 @@ class SignUpViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(password = password)
     }
 
-    fun signUp() = viewModelScope.launch(Dispatchers.IO) {
-        try {
-            val email = Email(_uiState.value.email)
-            val password = Password(_uiState.value.password)
-            _uiState.value = _uiState.value.copy(isLoading = true)
-            val result = usersRepository.create(email, password)
-            _uiState.value = _uiState.value.copy(isLoading = false)
-            when (result) {
-                is Ok -> {
-                    Log.d(TAG, "signUp: Success.")
+    fun signUp(onComplete: suspend (success: Boolean) -> Unit) =
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val email = Email(_uiState.value.email)
+                val password = Password(_uiState.value.password)
+                _uiState.value = _uiState.value.copy(isLoading = true)
+                val result = usersRepository.create(email, password)
+                _uiState.value = _uiState.value.copy(isLoading = false)
+                when (result) {
+                    is Ok -> {
+                        Log.d(TAG, "signUp: Success.")
+                        withContext(Dispatchers.Main) {
+                            onComplete(true)
+                        }
+                    }
+                    is Err -> {
+                        Log.e(TAG, "signUp: ", result.error)
+                        withContext(Dispatchers.Main) {
+                            onComplete(false)
+                        }
+                    }
                 }
-                is Err -> {
-                    Log.e(TAG, "signUp: ", result.error)
+            } catch (e: Throwable) {
+                Log.e(TAG, "signUp: ", e)
+                withContext(Dispatchers.Main) {
+                    onComplete(false)
                 }
             }
-        } catch (e: Throwable) {
-            Log.e(TAG, "signUp: ", e)
         }
-    }
 
     fun togglePasswordVisibility() {
         _uiState.value = _uiState.value.copy(isPasswordVisible = !_uiState.value.isPasswordVisible)

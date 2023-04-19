@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.common.ext.navigateToSingleScreen
+import com.github.kitakkun.foos.common.navigation.ScreenRouter
 import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.customview.composable.loading.BoxWithLoading
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
@@ -40,7 +41,13 @@ fun SignUpScreen(
         onSignInClick = {
             navController.navigateToSingleScreen(UserScreenRouter.Auth.SignIn)
         },
-        onSignUpClick = viewModel::signUp,
+        onSignUpClick = {
+            viewModel.signUp { success ->
+                if (success) {
+                    navController.navigateToSingleScreen(ScreenRouter.Main)
+                }
+            }
+        },
         onPasswordVisibilityIconClick = viewModel::togglePasswordVisibility,
     )
 }
