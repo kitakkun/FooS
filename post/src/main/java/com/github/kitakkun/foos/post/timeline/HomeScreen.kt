@@ -27,7 +27,6 @@ import com.github.kitakkun.foos.customview.composable.button.RoundIconActionButt
 import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndicator
 import com.github.kitakkun.foos.customview.composable.post.PostItemList
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
-import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 
 @Composable
@@ -37,12 +36,6 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
-
-    DisposableEffect(FirebaseAuth.getInstance().currentUser) {
-        onDispose {
-            viewModel.dispose()
-        }
-    }
 
     LaunchedEffect(Unit) {
         viewModel.fetchInitialPosts()
