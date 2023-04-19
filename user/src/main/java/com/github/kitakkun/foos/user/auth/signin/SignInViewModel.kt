@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,19 +32,26 @@ class SignInViewModel @Inject constructor(
         _uiState.value = uiState.value.copy(password = password)
     }
 
-    fun signIn() = viewModelScope.launch(Dispatchers.IO) {
-        try {
-            _uiState.value = uiState.value.copy(isLoading = true)
-            firebaseAuth.signInWithEmailAndPassword(
-                uiState.value.email,
-                uiState.value.password,
-            ).await()
-        } catch (e: Throwable) {
-            Log.e(TAG, "signIn: ", e)
-        } finally {
-            _uiState.value = uiState.value.copy(isLoading = false)
+    fun signIn(onCompleted: suspend (success: Boolean) -> Unit) =
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                _uiState.value = uiState.value.copy(isLoading = true)
+                firebaseAuth.signInWithEmailAndPassword(
+                    uiState.value.email,
+                    uiState.value.password,
+                ).await()
+                withContext(Dispatchers.Main) {
+                    onCompleted(true)
+                }
+            } catch (e: Throwable) {
+                Log.e(TAG, "signIn: ", e)
+                withContext(Dispatchers.Main) {
+                    onCompleted(false)
+                }
+            } finally {
+                _uiState.value = uiState.value.copy(isLoading = false)
+            }
         }
-    }
 
     fun togglePasswordVisibility() {
         _uiState.value = uiState.value.copy(isPasswordVisible = !uiState.value.isPasswordVisible)
