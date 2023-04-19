@@ -7,7 +7,6 @@ import com.github.kitakkun.foos.common.usecase.FetchPostsUseCase
 import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -63,9 +62,5 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    fun dispose() {
-        viewModelScope.cancel()
     }
 }
