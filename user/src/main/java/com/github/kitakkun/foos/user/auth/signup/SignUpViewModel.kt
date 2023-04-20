@@ -59,6 +59,7 @@ class SignUpViewModel @Inject constructor(
                 }
             } catch (e: Throwable) {
                 Log.e(TAG, "signUp: ", e)
+                _uiState.value = _uiState.value.copy(isLoading = false)
                 withContext(Dispatchers.Main) {
                     onComplete(false)
                 }

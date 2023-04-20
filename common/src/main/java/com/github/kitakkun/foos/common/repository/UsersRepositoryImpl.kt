@@ -35,18 +35,27 @@ class UsersRepositoryImpl @Inject constructor(
 
     override suspend fun create(email: Email, password: Password): Result<DatabaseUser, Throwable> {
         try {
+            Log.d(TAG, "Creating user...")
             val result =
                 firebaseAuth.createUserWithEmailAndPassword(email.value, password.value).await()
             val user = result.user ?: return Err(Throwable("failed to create user."))
+            Log.d(TAG, "Successfully created user.")
+            Log.d(TAG, "Creating user data...")
             val databaseUser = DatabaseUser(
                 id = user.uid,
                 name = user.displayName ?: "user",
                 profileImage = "",
             )
+            Log.d(TAG, "Creating user data... (get document)")
+            // need to call get() to avoid hang-up after re-authentication
+            database.collection(COLLECTION)
+                .document(databaseUser.id)
+                .get().await()
+            Log.d(TAG, "Creating user data... (set document)")
             database.collection(COLLECTION)
                 .document(databaseUser.id)
                 .set(databaseUser).await()
-            Log.d(TAG, "Successfully created user.")
+            Log.d(TAG, "Successfully created user data.")
             return Ok(databaseUser)
         } catch (e: Throwable) {
             Log.d(TAG, "Failed to create user.")
