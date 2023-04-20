@@ -1,5 +1,6 @@
 package com.github.kitakkun.foos.post.timeline
 
+import android.content.res.Configuration
 import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -121,6 +122,7 @@ private fun HomeUI(
 }
 
 @Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun HomeUIPreview() = PreviewContainer {
     HomeUI(
