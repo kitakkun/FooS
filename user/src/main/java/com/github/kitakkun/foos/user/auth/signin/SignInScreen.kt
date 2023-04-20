@@ -1,5 +1,6 @@
 package com.github.kitakkun.foos.user.auth.signin
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -63,9 +64,12 @@ fun SignInUI(
 ) {
     val signUpText = stringResource(id = R.string.sign_up)
     val haveAccountText = stringResource(id = R.string.dont_have_account)
+    val haveAccountTextColor = MaterialTheme.colors.onBackground
     val signUpNavigateText = remember {
         buildAnnotatedString {
-            append(haveAccountText)
+            withStyle(style = SpanStyle(color = haveAccountTextColor)) {
+                append(haveAccountText)
+            }
             append(" ")
             // make SignUp text clickable by using annotation.
             pushStringAnnotation(tag = "SignUp", annotation = signUpText)
@@ -119,6 +123,7 @@ fun SignInUI(
 }
 
 @Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun SignInScreenPreview() = PreviewContainer {
     SignInUI(
