@@ -1,10 +1,6 @@
 package com.github.kitakkun.foos.user.auth
 
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -26,29 +22,30 @@ fun PasswordTextField(
     onPasswordChange: (String) -> Unit,
     onVisibilityIconClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isError: Boolean = false,
+    errorMessage: String? = null,
 ) {
-    OutlinedTextField(
+    TextFieldWithError(
         value = password,
         onValueChange = onPasswordChange,
+        label = stringResource(id = R.string.password),
+        trailingIcon = when (isPasswordVisible) {
+            true -> Icons.Default.Visibility
+            false -> Icons.Default.VisibilityOff
+        },
+        modifier = modifier,
+        isError = isError,
+        errorMessage = errorMessage,
+        singleLine = true,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done,
         ),
-        label = { Text(text = stringResource(id = R.string.password)) },
-        trailingIcon = {
-            val icon = when (isPasswordVisible) {
-                true -> Icons.Default.Visibility
-                false -> Icons.Default.VisibilityOff
-            }
-            IconButton(onClick = onVisibilityIconClick) {
-                Icon(imageVector = icon, contentDescription = null)
-            }
-        },
         visualTransformation = when (isPasswordVisible) {
             true -> VisualTransformation.None
             false -> PasswordVisualTransformation()
         },
-        modifier = modifier,
+        onClickTrailingIcon = onVisibilityIconClick,
     )
 }
 
