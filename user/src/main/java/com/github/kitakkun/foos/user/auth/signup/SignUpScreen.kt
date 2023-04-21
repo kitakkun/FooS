@@ -1,10 +1,7 @@
 package com.github.kitakkun.foos.user.auth.signup
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -127,6 +124,7 @@ fun SignUpUI(
                 onEmailChange = onEmailChange,
                 isError = uiState.isEmailErrorVisible,
                 errorMessage = emailErrorMessage,
+                modifier = Modifier.widthIn(max = 300.dp)
             )
             PasswordTextField(
                 isPasswordVisible = uiState.isPasswordVisible,
@@ -135,6 +133,7 @@ fun SignUpUI(
                 onVisibilityIconClick = onPasswordVisibilityIconClick,
                 isError = uiState.isPasswordErrorVisible,
                 errorMessage = passwordErrorMessage,
+                modifier = Modifier.widthIn(max = 300.dp)
             )
             Button(onClick = onSignUpClick) {
                 Text(text = stringResource(id = R.string.sign_up))
