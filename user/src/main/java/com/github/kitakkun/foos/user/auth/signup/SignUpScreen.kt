@@ -132,7 +132,7 @@ fun SignUpUI(
                 onPasswordChange = onPasswordChange,
                 onVisibilityIconClick = onPasswordVisibilityIconClick,
                 isError = uiState.isPasswordErrorVisible,
-                errorMessage = passwordErrorMessage
+                errorMessage = passwordErrorMessage,
             )
             Button(onClick = onSignUpClick) {
                 Text(text = stringResource(id = R.string.sign_up))

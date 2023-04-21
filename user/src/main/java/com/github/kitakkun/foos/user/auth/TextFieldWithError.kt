@@ -28,7 +28,7 @@ fun TextFieldWithError(
     modifier: Modifier = Modifier,
     placeholder: String? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    isError: Boolean =false,
+    isError: Boolean = false,
     errorMessage: String? = null,
     singleLine: Boolean = true,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
