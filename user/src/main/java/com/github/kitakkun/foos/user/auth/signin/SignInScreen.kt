@@ -1,9 +1,7 @@
 package com.github.kitakkun.foos.user.auth.signin
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -92,17 +90,20 @@ fun SignInUI(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier= Modifier.fillMaxWidth(),
         ) {
             Text(text = stringResource(id = R.string.app_name), style = MaterialTheme.typography.h4)
             EmailTextField(
                 email = uiState.email,
                 onEmailChange = onEmailChange,
+                modifier = Modifier.widthIn(max = 300.dp)
             )
             PasswordTextField(
                 password = uiState.password,
                 isPasswordVisible = uiState.isPasswordVisible,
                 onPasswordChange = onPasswordChange,
                 onVisibilityIconClick = onPasswordVisibilityIconClick,
+                modifier = Modifier.widthIn(max = 300.dp)
             )
             Button(onClick = onSignInClick) {
                 Text(text = stringResource(id = R.string.sign_in))

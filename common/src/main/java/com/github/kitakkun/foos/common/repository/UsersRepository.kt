@@ -1,8 +1,8 @@
 package com.github.kitakkun.foos.common.repository
 
 import com.github.kitakkun.foos.common.model.DatabaseUser
-import com.github.kitakkun.foos.common.model.Email
-import com.github.kitakkun.foos.common.model.Password
+import com.github.kitakkun.foos.common.model.auth.Email
+import com.github.kitakkun.foos.common.model.auth.Password
 import com.github.michaelbull.result.Result
 
 interface UsersRepository {

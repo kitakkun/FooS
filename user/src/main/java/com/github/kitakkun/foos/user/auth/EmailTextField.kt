@@ -1,9 +1,6 @@
 package com.github.kitakkun.foos.user.auth
 
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.runtime.Composable
@@ -20,20 +17,22 @@ fun EmailTextField(
     email: String,
     onEmailChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    isError: Boolean = false,
+    errorMessage: String? = null
 ) {
-    OutlinedTextField(
+    TextFieldWithError(
         value = email,
         onValueChange = onEmailChange,
+        label = stringResource(id = R.string.email),
+        placeholder = stringResource(id = R.string.example_email),
+        trailingIcon = Icons.Default.Email,
+        isError = isError,
+        errorMessage = errorMessage,
+        modifier = modifier,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Next,
+            imeAction = ImeAction.Next
         ),
-        label = { Text(text = stringResource(id = R.string.email)) },
-        placeholder = { Text(text = stringResource(id = R.string.example_email)) },
-        trailingIcon = {
-            Icon(imageVector = Icons.Default.Email, contentDescription = null)
-        },
-        modifier = modifier,
     )
 }
 
@@ -52,5 +51,16 @@ private fun NonEmptyEmailTextFieldPreview() = PreviewContainer {
     EmailTextField(
         email = "example@example.com",
         onEmailChange = {},
+    )
+}
+
+@Preview
+@Composable
+private fun ErrorEmailTextFieldPreview() = PreviewContainer {
+    EmailTextField(
+        email = "hogehoge",
+        onEmailChange = {},
+        isError = true,
+        errorMessage = "error",
     )
 }

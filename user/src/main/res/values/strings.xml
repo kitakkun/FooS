@@ -23,4 +23,14 @@
     <string name="log_out_confirm_message">Are you sure?</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
+    <!-- email error messages -->
+    <string name="invalid_email_error_msg">Please input a valid email address.</string>
+    <string name="blank_email_error_msg">Email cannot be blank.</string>
+    <!-- password error messages -->>
+    <string name="blank_password_error_msg">Password cannot be blank.</string>
+    <string name="too_short_password_error_msg">Password must be at least %d characters long.</string>
+    <string name="too_long_password_error_msg">Password must be less than %d characters long.</string>
+    <string name="no_numeric_character_password_error_msg">Password must contain at least one number.</string>
+    <string name="no_alphabetic_character_password_error_msg">Password must contain at least one alphabetic letter.</string>
+    <string name="contain_invalid_character_password_error_msg">This password contains characters that cannot be used.</string>
 </resources>
