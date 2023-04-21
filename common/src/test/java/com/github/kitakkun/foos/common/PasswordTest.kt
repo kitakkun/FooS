@@ -1,7 +1,7 @@
 package com.github.kitakkun.foos.common
 
-import com.github.kitakkun.foos.common.model.InvalidPasswordException
-import com.github.kitakkun.foos.common.model.Password
+import com.github.kitakkun.foos.common.model.auth.InvalidPasswordException
+import com.github.kitakkun.foos.common.model.auth.Password
 import org.junit.Assert.assertThrows
 import org.junit.Test
 

@@ -5,10 +5,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kitakkun.foos.common.model.Email
-import com.github.kitakkun.foos.common.model.InvalidEmailException
-import com.github.kitakkun.foos.common.model.InvalidPasswordException
-import com.github.kitakkun.foos.common.model.Password
+import com.github.kitakkun.foos.common.model.auth.Email
+import com.github.kitakkun.foos.common.model.auth.InvalidEmailException
+import com.github.kitakkun.foos.common.model.auth.InvalidPasswordException
+import com.github.kitakkun.foos.common.model.auth.Password
 import com.github.kitakkun.foos.common.repository.UsersRepository
 import com.github.kitakkun.foos.user.auth.EmailError
 import com.github.kitakkun.foos.user.auth.PasswordError

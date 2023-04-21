@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.common.model
+package com.github.kitakkun.foos.common.model.auth
 
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
