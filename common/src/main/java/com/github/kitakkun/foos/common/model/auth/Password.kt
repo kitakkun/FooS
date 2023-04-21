@@ -28,11 +28,11 @@ data class Password(
 
     init {
         if (value.isBlank()) throw InvalidPasswordException.Blank()
+        if (value.any { it !in availableCharacters }) throw InvalidPasswordException.ContainInvalidCharacter()
         if (value.length < MIN_LENGTH) throw InvalidPasswordException.TooShort()
         if (value.length > MAX_LENGTH) throw InvalidPasswordException.TooLong()
         if (!value.contains(Regex("\\d"))) throw InvalidPasswordException.NoNumericCharacter()
         if (!value.contains(Regex("[a-zA-Z]"))) throw InvalidPasswordException.NoAlphabeticCharacter()
-        if (value.any { it !in availableCharacters }) throw InvalidPasswordException.ContainInvalidCharacter()
     }
 }
 
