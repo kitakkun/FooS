@@ -30,6 +30,9 @@ class FollowListViewModel(
 
     fun fetchFollowingUsers() {
         viewModelScope.launch(Dispatchers.IO) {
+            mutableUiState.update { uiState ->
+                uiState.copy(isFollowingListRefreshing = true)
+            }
             val clientId = auth.uid ?: return@launch
             val profileUserFollowingUserIds = followRepository.fetchFollowingUserIds(userId)
             val profileUserFollowingUsersInfo =
@@ -56,13 +59,17 @@ class FollowListViewModel(
                 )
             }
             mutableUiState.update { state ->
-                state.copy(followingUsers = (uiState.value.followingUsers + userItems).distinctBy { it.id })
+                state.copy(
+                    isFollowingListRefreshing = false,
+                    followingUsers = (uiState.value.followingUsers + userItems).distinctBy { it.id }
+                )
             }
         }
     }
 
     fun fetchFollowerUsers() {
         viewModelScope.launch(Dispatchers.IO) {
+            mutableUiState.update { it.copy(isFollowerListRefreshing = true) }
             val clientId = auth.uid ?: return@launch
             // プロフィール画面のユーザのフォロワーをフェッチ
             val profileUserFollowerIds = followRepository.fetchFollowerUserIds(userId)
@@ -88,7 +95,10 @@ class FollowListViewModel(
                 )
             }
             mutableUiState.update { state ->
-                state.copy(followers = (uiState.value.followers + userItems).distinctBy { it.id })
+                state.copy(
+                    isFollowerListRefreshing = false,
+                    followers = (uiState.value.followers + userItems).distinctBy { it.id }
+                )
             }
         }
     }

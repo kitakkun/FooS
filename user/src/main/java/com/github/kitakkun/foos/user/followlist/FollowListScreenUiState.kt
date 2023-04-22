@@ -6,6 +6,8 @@ data class FollowListScreenUiState(
     val followers: List<UserItemUiState> = emptyList(),
     val followingUsers: List<UserItemUiState> = emptyList(),
     val shouldShowFollowingListFirst: Boolean = true,
+    val isFollowerListRefreshing: Boolean = false,
+    val isFollowingListRefreshing: Boolean = false,
 ) {
     companion object {
         fun buildTestData() = FollowListScreenUiState(
