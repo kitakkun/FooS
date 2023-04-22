@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class FollowListViewModel(
@@ -87,6 +88,39 @@ class FollowListViewModel(
             mutableUiState.value =
                 uiState.value.copy(followers = (uiState.value.followers + userItems).distinct())
             Log.d("TAG", "fetch")
+        }
+    }
+
+    fun toggleFollowState(targetUserId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val currentUiState = uiState.value
+            val clientId = auth.uid ?: return@launch
+
+            val followedByClientUsers = (currentUiState.followers + currentUiState.followingUsers)
+                .filter { it.isFollowedByClient }
+            val isFollowedByClient = followedByClientUsers.any { it.id == targetUserId }
+
+            if (isFollowedByClient) {
+                followRepository.deleteFollowGraph(from = clientId, to = targetUserId)
+            } else {
+                followRepository.createFollowGraph(from = clientId, to = targetUserId)
+            }
+
+            val newFollowerList = currentUiState.followers.map {
+                if (it.id == targetUserId) it.copy(isFollowedByClient = !isFollowedByClient)
+                else it
+            }
+            val newFollowingList = currentUiState.followingUsers.map {
+                if (it.id == targetUserId) it.copy(isFollowedByClient = !isFollowedByClient)
+                else it
+            }
+
+            mutableUiState.update {
+                it.copy(
+                    followers = newFollowerList,
+                    followingUsers = newFollowingList
+                )
+            }
         }
     }
 }

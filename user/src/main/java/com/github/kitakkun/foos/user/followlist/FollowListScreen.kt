@@ -40,7 +40,7 @@ fun FollowListScreen(
                 UserScreenRouter.UserProfile.routeWithArgs(it)
             )
         },
-        onFollowButtonClicked = { /* TODO: フォロー状態の更新 */ }
+        onFollowButtonClicked = viewModel::toggleFollowState,
     )
 }
 
@@ -51,7 +51,7 @@ private fun FollowListUI(
     fetchFollowee: () -> Unit,
     fetchFollower: () -> Unit,
     onItemClicked: (String) -> Unit,
-    onFollowButtonClicked: (String) -> Unit,
+    onFollowButtonClicked: (userId: String) -> Unit,
 ) {
 
     val tabTitles = listOf(
