@@ -2,9 +2,8 @@ package com.github.kitakkun.foos.common.usecase
 
 import com.github.kitakkun.foos.common.repository.PostsRepository
 import com.google.firebase.auth.FirebaseAuth
-import javax.inject.Inject
 
-class DeletePostByPostIdUseCase @Inject constructor(
+class DeletePostByPostIdUseCase(
     private val postsRepository: PostsRepository,
     private val firebaseAuth: FirebaseAuth,
 ) {

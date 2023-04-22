@@ -7,12 +7,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 import java.util.*
-import javax.inject.Inject
 
 /**
  * リアクションデータの読み書きを行うためのリポジトリ
  */
-class ReactionsRepositoryImpl @Inject constructor(
+class ReactionsRepositoryImpl(
     private val database: FirebaseFirestore,
 ) : ReactionsRepository {
 

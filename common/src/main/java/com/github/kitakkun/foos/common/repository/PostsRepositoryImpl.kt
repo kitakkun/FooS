@@ -17,12 +17,11 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
-import javax.inject.Inject
 
 /**
  * 投稿内容のデータを管理するリポジトリ
  */
-class PostsRepositoryImpl @Inject constructor(
+class PostsRepositoryImpl(
     private val database: FirebaseFirestore,
     private val storage: FirebaseStorage,
 ) : PostsRepository {

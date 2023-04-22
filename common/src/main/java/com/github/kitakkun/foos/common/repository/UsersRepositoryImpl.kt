@@ -11,12 +11,11 @@ import com.github.michaelbull.result.Result
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
 /**
  * ユーザ情報を管理するリポジトリ
  */
-class UsersRepositoryImpl @Inject constructor(
+class UsersRepositoryImpl(
     private val database: FirebaseFirestore,
     private val firebaseAuth: FirebaseAuth,
 ) : UsersRepository {

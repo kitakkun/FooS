@@ -5,12 +5,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
 /**
  * フォロー状態を管理するリポジトリ
  */
-class FollowRepositoryImpl @Inject constructor(
+class FollowRepositoryImpl(
     private val auth: FirebaseAuth,
     private val database: FirebaseFirestore,
 ) : FollowRepository {

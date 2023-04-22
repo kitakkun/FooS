@@ -6,9 +6,8 @@ import com.github.kitakkun.foos.common.repository.PostsRepositoryImpl
 import com.github.kitakkun.foos.common.repository.ReactionsRepository
 import com.github.kitakkun.foos.common.repository.UsersRepository
 import java.util.*
-import javax.inject.Inject
 
-class FetchPostsWithMediaByUserIdUseCase @Inject constructor(
+class FetchPostsWithMediaByUserIdUseCase(
     private val postsRepository: PostsRepository,
     private val usersRepository: UsersRepository,
     private val reactionsRepository: ReactionsRepository,
