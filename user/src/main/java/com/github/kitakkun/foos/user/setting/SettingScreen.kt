@@ -27,7 +27,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingScreen(
-    viewModel: SettingViewModelImpl = koinViewModel(),
+    viewModel: SettingViewModel = koinViewModel(),
     navController: NavController,
 ) {
     val uiState by viewModel.uiState.collectAsState()
