@@ -7,6 +7,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import org.koin.dsl.module
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -24,4 +25,10 @@ object FirebaseModule {
     @Singleton
     fun provideFirebaseStorageInstance(): FirebaseStorage = FirebaseStorage.getInstance()
 
+}
+
+val firebaseModule = module {
+    single { FirebaseFirestore.getInstance() }
+    single { FirebaseAuth.getInstance() }
+    single { FirebaseStorage.getInstance() }
 }
