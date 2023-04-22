@@ -28,10 +28,10 @@ class FollowListViewModel(
     )
     val uiState = mutableUiState.asStateFlow()
 
-    fun fetchFollowingUsers() {
+    fun fetchFollowingUsers(isRefresh: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
             mutableUiState.update { uiState ->
-                uiState.copy(isFollowingListRefreshing = true)
+                uiState.copy(isFollowingListRefreshing = isRefresh)
             }
             val clientId = auth.uid ?: return@launch
             val profileUserFollowingUserIds = followRepository.fetchFollowingUserIds(userId)
@@ -61,15 +61,18 @@ class FollowListViewModel(
             mutableUiState.update { state ->
                 state.copy(
                     isFollowingListRefreshing = false,
-                    followingUsers = (uiState.value.followingUsers + userItems).distinctBy { it.id }
+                    followingUsers = when (isRefresh) {
+                        true -> userItems
+                        false -> (uiState.value.followingUsers + userItems).distinctBy { it.id }
+                    }
                 )
             }
         }
     }
 
-    fun fetchFollowerUsers() {
+    fun fetchFollowerUsers(isRefresh: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
-            mutableUiState.update { it.copy(isFollowerListRefreshing = true) }
+            mutableUiState.update { it.copy(isFollowerListRefreshing = isRefresh) }
             val clientId = auth.uid ?: return@launch
             // プロフィール画面のユーザのフォロワーをフェッチ
             val profileUserFollowerIds = followRepository.fetchFollowerUserIds(userId)
@@ -97,7 +100,10 @@ class FollowListViewModel(
             mutableUiState.update { state ->
                 state.copy(
                     isFollowerListRefreshing = false,
-                    followers = (uiState.value.followers + userItems).distinctBy { it.id }
+                    followers = when (isRefresh) {
+                        true -> userItems
+                        false -> (uiState.value.followers + userItems).distinctBy { it.id }
+                    }
                 )
             }
         }

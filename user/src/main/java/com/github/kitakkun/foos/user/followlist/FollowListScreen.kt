@@ -44,8 +44,8 @@ fun FollowListScreen(
 
     FollowListUI(
         uiState = uiState,
-        onRefreshFollowingUserList = viewModel::fetchFollowingUsers,
-        onRefreshFollowerUserList = viewModel::fetchFollowerUsers,
+        onRefreshFollowingUserList = { viewModel.fetchFollowingUsers(isRefresh = true) },
+        onRefreshFollowerUserList = { viewModel.fetchFollowerUsers(isRefresh = true) },
         onUserItemClicked = {
             navController.navigate(
                 UserScreenRouter.UserProfile.routeWithArgs(it)
