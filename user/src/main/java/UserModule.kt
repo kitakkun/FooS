@@ -12,6 +12,10 @@ val userModule = module {
     viewModel { SignUpViewModel(get()) }
     viewModel { SignInViewModel(get()) }
     viewModel { FollowListViewModel(get(), get(), get(), get()) }
-    viewModel { UserProfileViewModel(get(), get(), get(), get(), get()) }
+    viewModel { (userId: String) ->
+        UserProfileViewModel(
+            userId, get(), get(), get(), get(), get()
+        )
+    }
     viewModel { SettingViewModel(get(), get()) }
 }

@@ -12,6 +12,7 @@ import com.github.kitakkun.foos.user.followlist.FollowListViewModel
 import com.github.kitakkun.foos.user.profile.UserProfileScreen
 import com.github.kitakkun.foos.user.profile.UserProfileViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 fun NavGraphBuilder.userGraph(navController: NavController) {
     authGraph(navController)
@@ -37,8 +38,8 @@ private fun NavGraphBuilder.profileGraph(navController: NavController) {
     composable(UserScreenRouter.UserProfile) {
         val arguments = UserScreenRouter.UserProfile.resolveArguments(it)
         val userId = arguments[0] as String? ?: return@composable
-        val vm: UserProfileViewModel = koinViewModel()
-        UserProfileScreen(vm, navController, userId)
+        val vm: UserProfileViewModel = koinViewModel { parametersOf(userId) }
+        UserProfileScreen(vm, navController)
     }
 }
 

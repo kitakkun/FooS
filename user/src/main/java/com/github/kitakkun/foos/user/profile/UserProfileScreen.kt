@@ -42,20 +42,15 @@ import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
 fun UserProfileScreen(
     viewModel: UserProfileViewModel,
     navController: NavController,
-    userId: String
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
         launch {
-            viewModel.fetchProfileInfo(
-                userId = userId,
-                onFinished = {
-                    viewModel.fetchInitialPosts()
-                    viewModel.fetchInitialMediaPosts()
-                    viewModel.fetchInitialReactedPosts()
-                }
-            )
+            viewModel.fetchProfileInfo()
+            viewModel.fetchInitialPosts()
+            viewModel.fetchInitialMediaPosts()
+            viewModel.fetchInitialReactedPosts()
         }
     }
 
@@ -94,12 +89,12 @@ fun UserProfileScreen(
                     followeeNum = uiState.followCount,
                     onFollowingTextClick = {
                         navController.navigate(
-                            UserScreenRouter.FollowList.routeWithArgs(userId, true.toString())
+                            UserScreenRouter.FollowList.routeWithArgs(uiState.id, true.toString())
                         )
                     },
                     onFollowersTextClick = {
                         navController.navigate(
-                            UserScreenRouter.FollowList.routeWithArgs(userId, false.toString())
+                            UserScreenRouter.FollowList.routeWithArgs(uiState.id, false.toString())
                         )
                     },
                     onFollowButtonClick = { viewModel.toggleFollowState() },
