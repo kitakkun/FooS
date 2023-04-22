@@ -1,6 +1,5 @@
 apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jetbrains.kotlin.android'
-apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'kotlin-parcelize'
 
 android {
@@ -96,11 +95,6 @@ dependencies {
 
     // coil
     implementation 'io.coil-kt:coil-compose:2.3.0'
-
-    // Hilt
-    implementation "com.google.dagger:hilt-android:2.44"
-    kapt "com.google.dagger:hilt-android-compiler:2.44"
-    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
     // koin
     def koin_version = "3.4.0"
