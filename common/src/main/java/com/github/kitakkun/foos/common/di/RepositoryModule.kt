@@ -8,6 +8,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import org.koin.dsl.module
 import javax.inject.Singleton
 
 @Module
@@ -36,4 +37,11 @@ object RepositoryModule {
     @Singleton
     fun provideFollowRepository(): FollowRepository =
         FollowRepositoryImpl(provideFirebaseAuthInstance(), provideFireStoreInstance())
+}
+
+val repositoryModule = module {
+    single<PostsRepository> { PostsRepositoryImpl(get(), get()) }
+    single<UsersRepository> { UsersRepositoryImpl(get(), get()) }
+    single<ReactionsRepository> { ReactionsRepositoryImpl(get()) }
+    single<FollowRepository> { FollowRepositoryImpl(get(), get()) }
 }
