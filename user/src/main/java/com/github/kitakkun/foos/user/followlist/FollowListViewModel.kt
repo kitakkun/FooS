@@ -45,7 +45,7 @@ class FollowListViewModel(
                 val followState = myFollowStates.find { it.otherId == followeeId }
                 if (user == null || followState == null) null
                 else UserItemUiState(
-                    isFollowButtonVisible = user.id == clientId,
+                    isFollowButtonVisible = user.id != clientId,
                     name = user.name,
                     profileImageUrl = user.profileImage,
                     id = user.id,
