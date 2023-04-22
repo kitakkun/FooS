@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.kitakkun.foos.common.const.paddingMedium
 import androidx.compose.ui.unit.dp
 import com.github.kitakkun.foos.customview.composable.user.UserIcon
 import com.github.kitakkun.foos.customview.composable.user.VerticalUserIdentityText
@@ -26,7 +25,7 @@ fun UserItem(
 ) {
     Column(
         modifier = modifier
-            .padding(paddingMedium)
+            .padding(16.dp)
             .fillMaxWidth()
             .clickable { onClick() },
     ) {
@@ -45,13 +44,13 @@ fun UserItem(
                 modifier = Modifier.weight(1f)
             ) {
                 UserIcon(url = uiState.profileImageUrl)
-                Spacer(modifier = Modifier.width(paddingMedium))
+                Spacer(modifier = Modifier.width(16.dp))
                 Column {
                     VerticalUserIdentityText(
                         username = uiState.name,
                         userId = uiState.id,
                     )
-                    Spacer(modifier = Modifier.height(paddingMedium))
+                    Spacer(modifier = Modifier.height(16.dp))
                     Text(text = uiState.biography)
                 }
             }
