@@ -11,7 +11,16 @@ import org.koin.dsl.module
 val userModule = module {
     viewModel { SignUpViewModel(get()) }
     viewModel { SignInViewModel(get()) }
-    viewModel { FollowListViewModel(get(), get(), get(), get()) }
+    viewModel { (userId: String, shouldShowFollowingListFirst: Boolean) ->
+        FollowListViewModel(
+            userId = userId,
+            shouldShowFollowingListFirst = shouldShowFollowingListFirst,
+            auth = get(),
+            usersRepository = get(),
+            followRepository = get(),
+            fetchFollowStateUseCase = get()
+        )
+    }
     viewModel { (userId: String) ->
         UserProfileViewModel(
             userId, get(), get(), get(), get(), get()

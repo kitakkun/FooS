@@ -14,16 +14,22 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class FollowListViewModel(
+    private val userId: String,
+    shouldShowFollowingListFirst: Boolean,
     private val auth: FirebaseAuth,
     private val usersRepository: UsersRepository,
     private val followRepository: FollowRepository,
     private val fetchFollowStateUseCase: FetchFollowStateUseCase,
 ) : ViewModel() {
 
-    private var mutableUiState = MutableStateFlow(FollowListScreenUiState())
+    private var mutableUiState = MutableStateFlow(
+        FollowListScreenUiState(
+            shouldShowFollowingListFirst = shouldShowFollowingListFirst,
+        )
+    )
     val uiState = mutableUiState.asStateFlow()
 
-    fun fetchFollowingUsers(userId: String) {
+    fun fetchFollowingUsers() {
         viewModelScope.launch(Dispatchers.IO) {
             val clientId = auth.uid ?: return@launch
             // プロフィール画面のユーザのフォロイーをフェッチ
@@ -53,7 +59,7 @@ class FollowListViewModel(
         }
     }
 
-    fun fetchFollowerUsers(userId: String) {
+    fun fetchFollowerUsers() {
         viewModelScope.launch(Dispatchers.IO) {
             val clientId = auth.uid ?: return@launch
             // プロフィール画面のユーザのフォロワーをフェッチ

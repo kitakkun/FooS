@@ -28,16 +28,13 @@ import kotlinx.coroutines.launch
 fun FollowListScreen(
     viewModel: FollowListViewModel,
     navController: NavController,
-    userId: String,
-    initialPage: Int = 0
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     FollowListUI(
         uiState = uiState,
-        initialPage = initialPage,
-        fetchFollowee = { viewModel.fetchFollowingUsers(userId) },
-        fetchFollower = { viewModel.fetchFollowerUsers(userId) },
+        fetchFollowee = { viewModel.fetchFollowingUsers() },
+        fetchFollower = { viewModel.fetchFollowerUsers() },
         onItemClicked = {
             navController.navigate(
                 UserScreenRouter.UserProfile.routeWithArgs(it)
@@ -51,7 +48,6 @@ fun FollowListScreen(
 @Composable
 private fun FollowListUI(
     uiState: FollowListScreenUiState,
-    initialPage: Int,
     fetchFollowee: () -> Unit,
     fetchFollower: () -> Unit,
     onItemClicked: (String) -> Unit,
@@ -63,7 +59,9 @@ private fun FollowListUI(
         stringResource(id = R.string.followers)
     )
 
-    val pagerState = rememberPagerState(initialPage)
+    val pagerState = rememberPagerState(
+        initialPage = if (uiState.shouldShowFollowingListFirst) 0 else 1,
+    )
 
     Column {
 
@@ -132,7 +130,6 @@ private fun MyTabRow(
 private fun FollowListUIPreview() = PreviewContainer {
     FollowListUI(
         uiState = FollowListScreenUiState.buildTestData(),
-        initialPage = 0,
         fetchFollowee = { },
         fetchFollower = { },
         onItemClicked = { },
