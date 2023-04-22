@@ -1,6 +1,5 @@
 package com.github.kitakkun.foos.user.followlist
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kitakkun.foos.common.repository.FollowRepository
@@ -22,7 +21,6 @@ class FollowListViewModel(
     private val followRepository: FollowRepository,
     private val fetchFollowStateUseCase: FetchFollowStateUseCase,
 ) : ViewModel() {
-
     private var mutableUiState = MutableStateFlow(
         FollowListScreenUiState(
             shouldShowFollowingListFirst = shouldShowFollowingListFirst,
@@ -33,18 +31,52 @@ class FollowListViewModel(
     fun fetchFollowingUsers() {
         viewModelScope.launch(Dispatchers.IO) {
             val clientId = auth.uid ?: return@launch
-            // プロフィール画面のユーザのフォロイーをフェッチ
-            val followees = followRepository.fetchByFollowerId(userId).map { it.to }
-            // フォロイーのユーザ情報をフェッチ
-            val users = usersRepository.fetchByUserIds(followees)
-            // 各フォロイーと自分とのフォロー関係をフェッチ
-            val myFollowStates = fetchFollowStateUseCase(clientId, followees)
+            val profileUserFollowingUserIds = followRepository.fetchFollowingUserIds(userId)
+            val profileUserFollowingUsersInfo =
+                usersRepository.fetchByUserIds(profileUserFollowingUserIds)
+            val myFollowStatesToFollowingUsers =
+                fetchFollowStateUseCase(clientId, profileUserFollowingUserIds)
             // UIStateの作成
-            val userItems = followees.mapNotNull { followeeId ->
-                val user = users.find { it.id == followeeId }
-                val followState = myFollowStates.find { it.otherId == followeeId }
-                if (user == null || followState == null) null
-                else UserItemUiState(
+            val userItems = profileUserFollowingUserIds.mapNotNull { followingUserId ->
+                val userInfo =
+                    profileUserFollowingUsersInfo.find { it.id == followingUserId }
+                        ?: return@mapNotNull null
+                val followState =
+                    myFollowStatesToFollowingUsers.find { it.otherId == followingUserId }
+                        ?: return@mapNotNull null
+                UserItemUiState(
+                    isFollowButtonVisible = userInfo.id != clientId,
+                    name = userInfo.name,
+                    profileImageUrl = userInfo.profileImage,
+                    id = userInfo.id,
+                    // TODO: ユーザのデータベースデータの拡張とフォロー関係の取得
+                    biography = "BIO",
+                    isFollowedByClient = followState.following,
+                    isFollowsYouVisible = followState.followed,
+                )
+            }
+            mutableUiState.update { state ->
+                state.copy(followingUsers = (uiState.value.followingUsers + userItems).distinctBy { it.id })
+            }
+        }
+    }
+
+    fun fetchFollowerUsers() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val clientId = auth.uid ?: return@launch
+            // プロフィール画面のユーザのフォロワーをフェッチ
+            val profileUserFollowerIds = followRepository.fetchFollowerUserIds(userId)
+            // フォロワーのユーザ情報をフェッチ
+            val profileUserFollowers = usersRepository.fetchByUserIds(profileUserFollowerIds)
+            // 各フォロワーと自分とのフォロー関係をフェッチ
+            val myFollowStates = fetchFollowStateUseCase(clientId, profileUserFollowerIds)
+            // UIStateの作成
+            val userItems = profileUserFollowerIds.mapNotNull { followerId ->
+                val user =
+                    profileUserFollowers.find { it.id == followerId } ?: return@mapNotNull null
+                val followState =
+                    myFollowStates.find { it.otherId == followerId } ?: return@mapNotNull null
+                UserItemUiState(
                     isFollowButtonVisible = user.id != clientId,
                     name = user.name,
                     profileImageUrl = user.profileImage,
@@ -55,39 +87,9 @@ class FollowListViewModel(
                     isFollowsYouVisible = followState.followed,
                 )
             }
-            mutableUiState.value =
-                uiState.value.copy(followingUsers = (uiState.value.followingUsers + userItems).distinct())
-        }
-    }
-
-    fun fetchFollowerUsers() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val clientId = auth.uid ?: return@launch
-            // プロフィール画面のユーザのフォロワーをフェッチ
-            val followers = followRepository.fetchByFolloweeId(userId).map { it.from }
-            // フォロワーのユーザ情報をフェッチ
-            val users = usersRepository.fetchByUserIds(followers)
-            // 各フォロワーと自分とのフォロー関係をフェッチ
-            val myFollowStates = fetchFollowStateUseCase(clientId, followers)
-            // UIStateの作成
-            val userItems = followers.mapNotNull { followerId ->
-                val user = users.find { it.id == followerId }
-                val followState = myFollowStates.find { it.otherId == followerId }
-                if (user == null || followState == null) null
-                else UserItemUiState(
-                    isFollowButtonVisible = user.id == clientId,
-                    name = user.name,
-                    profileImageUrl = user.profileImage,
-                    id = user.id,
-                    // TODO: ユーザのデータベースデータの拡張とフォロー関係の取得
-                    biography = "BIO",
-                    isFollowedByClient = followState.following,
-                    isFollowsYouVisible = followState.followed,
-                )
+            mutableUiState.update { state ->
+                state.copy(followers = (uiState.value.followers + userItems).distinctBy { it.id })
             }
-            mutableUiState.value =
-                uiState.value.copy(followers = (uiState.value.followers + userItems).distinct())
-            Log.d("TAG", "fetch")
         }
     }
 
@@ -96,8 +98,8 @@ class FollowListViewModel(
             val currentUiState = uiState.value
             val clientId = auth.uid ?: return@launch
 
-            val followedByClientUsers = (currentUiState.followers + currentUiState.followingUsers)
-                .filter { it.isFollowedByClient }
+            val followedByClientUsers =
+                (currentUiState.followers + currentUiState.followingUsers).filter { it.isFollowedByClient }
             val isFollowedByClient = followedByClientUsers.any { it.id == targetUserId }
 
             if (isFollowedByClient) {
@@ -117,8 +119,7 @@ class FollowListViewModel(
 
             mutableUiState.update {
                 it.copy(
-                    followers = newFollowerList,
-                    followingUsers = newFollowingList
+                    followers = newFollowerList, followingUsers = newFollowingList
                 )
             }
         }
