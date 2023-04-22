@@ -33,9 +33,9 @@ fun FollowListScreen(
 
     FollowListUI(
         uiState = uiState,
-        fetchFollowee = { viewModel.fetchFollowingUsers() },
-        fetchFollower = { viewModel.fetchFollowerUsers() },
-        onItemClicked = {
+        onFetchFollowingUserList = viewModel::fetchFollowingUsers,
+        onFetchFollowerUserList = viewModel::fetchFollowerUsers,
+        onUserItemClicked = {
             navController.navigate(
                 UserScreenRouter.UserProfile.routeWithArgs(it)
             )
@@ -48,12 +48,11 @@ fun FollowListScreen(
 @Composable
 private fun FollowListUI(
     uiState: FollowListScreenUiState,
-    fetchFollowee: () -> Unit,
-    fetchFollower: () -> Unit,
-    onItemClicked: (String) -> Unit,
+    onFetchFollowingUserList: () -> Unit,
+    onFetchFollowerUserList: () -> Unit,
+    onUserItemClicked: (userId: String) -> Unit,
     onFollowButtonClicked: (userId: String) -> Unit,
 ) {
-
     val tabTitles = listOf(
         stringResource(id = R.string.following),
         stringResource(id = R.string.followers)
@@ -64,9 +63,7 @@ private fun FollowListUI(
     )
 
     Column {
-
         MyTabRow(pagerState = pagerState, tabTitles = tabTitles)
-
         HorizontalPager(
             state = pagerState,
             pageCount = tabTitles.size,
@@ -76,23 +73,23 @@ private fun FollowListUI(
             when (page) {
                 0 -> {
                     LaunchedEffect(Unit) {
-                        fetchFollowee()
+                        onFetchFollowingUserList()
                     }
                     UserList(
                         uiStates = uiState.followingUsers,
-                        onAppearLastItem = { fetchFollowee() },
-                        onItemClicked = onItemClicked,
+                        onAppearLastItem = { onFetchFollowingUserList() },
+                        onItemClicked = onUserItemClicked,
                         onFollowButtonClicked = onFollowButtonClicked
                     )
                 }
                 1 -> {
                     LaunchedEffect(Unit) {
-                        fetchFollower()
+                        onFetchFollowerUserList()
                     }
                     UserList(
                         uiStates = uiState.followers,
-                        onAppearLastItem = { fetchFollower() },
-                        onItemClicked = onItemClicked,
+                        onAppearLastItem = { onFetchFollowerUserList() },
+                        onItemClicked = onUserItemClicked,
                         onFollowButtonClicked = onFollowButtonClicked
                     )
                 }
@@ -130,9 +127,9 @@ private fun MyTabRow(
 private fun FollowListUIPreview() = PreviewContainer {
     FollowListUI(
         uiState = FollowListScreenUiState.buildTestData(),
-        fetchFollowee = { },
-        fetchFollower = { },
-        onItemClicked = { },
+        onFetchFollowingUserList = { },
+        onFetchFollowerUserList = { },
+        onUserItemClicked = { },
         onFollowButtonClicked = { },
     )
 }
