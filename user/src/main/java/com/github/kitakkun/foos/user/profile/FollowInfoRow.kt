@@ -1,10 +1,12 @@
 package com.github.kitakkun.foos.user.profile
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,8 +27,15 @@ fun FollowInfoRow(
     onFollowingTextClick: () -> Unit,
     onFollowersTextClick: () -> Unit,
 ) {
-    val numberStyle = SpanStyle(fontWeight = FontWeight.Bold)
-    val wordStyle = SpanStyle(fontWeight = FontWeight.Light, fontSize = 12.sp)
+    val numberStyle = SpanStyle(
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colors.onSurface
+    )
+    val wordStyle = SpanStyle(
+        fontWeight = FontWeight.Light,
+        fontSize = 12.sp,
+        color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+    )
 
     val followingText = buildAnnotatedString {
         withStyle(numberStyle) {
@@ -62,6 +71,7 @@ fun FollowInfoRow(
 }
 
 @Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun FollowInfoPreview() = PreviewContainer {
     FollowInfoRow(
