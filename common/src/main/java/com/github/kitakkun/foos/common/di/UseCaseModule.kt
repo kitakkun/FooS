@@ -10,6 +10,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import org.koin.dsl.module
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -74,4 +75,16 @@ object UseCaseModule {
         postsRepository = providePostsRepository(),
         firebaseAuth = provideFirebaseAuthInstance()
     )
+}
+
+val useCaseModule = module {
+    factory { FetchPostByPostIdUseCase(get(), get(), get()) }
+    factory { FetchPostsByLocationBoundsUseCase(get(), get(), get()) }
+    factory { FetchPostByDatabasePostUseCase(get(), get()) }
+    factory { FetchPostsUserReactedByUserIdUseCase(get(), get()) }
+    factory { FetchPostsWithMediaByUserIdUseCase(get(), get(), get()) }
+    factory { FetchReactionsByUserIdUseCase(get(), get(), get()) }
+    factory { FetchPostsUseCase(get(), get(), get()) }
+    factory { FetchFollowStateUseCase(get()) }
+    factory { DeletePostByPostIdUseCase(get(), get()) }
 }
