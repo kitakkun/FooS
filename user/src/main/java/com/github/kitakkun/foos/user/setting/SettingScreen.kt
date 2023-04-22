@@ -11,7 +11,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
@@ -24,10 +23,11 @@ import com.github.kitakkun.foos.customview.composable.menu.MenuItemUiState
 import com.github.kitakkun.foos.customview.composable.user.UserIcon
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.user.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingScreen(
-    viewModel: SettingViewModelImpl = hiltViewModel(),
+    viewModel: SettingViewModelImpl = koinViewModel(),
     navController: NavController,
 ) {
     val uiState by viewModel.uiState.collectAsState()
