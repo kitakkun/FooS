@@ -5,19 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kitakkun.foos.common.usecase.FetchPostsUseCase
 import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-/**
- * HomeScreenに対応するViewModel
- */
-@HiltViewModel
-class HomeViewModel @Inject constructor(
+class HomeViewModel(
     private val fetchPostsUseCase: FetchPostsUseCase,
 ) : ViewModel() {
 

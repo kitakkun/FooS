@@ -17,7 +17,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.common.const.paddingLarge
 import com.github.kitakkun.foos.common.navigation.BottomSheetRouter
@@ -29,10 +28,11 @@ import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndi
 import com.github.kitakkun.foos.customview.composable.post.PostItemList
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.google.gson.Gson
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel(),
+    viewModel: HomeViewModel = koinViewModel(),
     navController: NavController,
 ) {
     val uiState by viewModel.uiState.collectAsState()

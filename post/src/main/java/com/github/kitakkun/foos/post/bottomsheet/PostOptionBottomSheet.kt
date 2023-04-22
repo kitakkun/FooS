@@ -3,15 +3,15 @@ package com.github.kitakkun.foos.post.bottomsheet
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.customview.composable.menu.MenuItem
 import com.github.kitakkun.foos.customview.composable.menu.MenuItemUiState
 import com.github.kitakkun.foos.post.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PostOptionBottomSheet(
-    viewModel: PostOptionViewModel = hiltViewModel<PostOptionViewModelImpl>(),
+    viewModel: PostOptionViewModel = koinViewModel(),
     navController: NavController,
     postId: String,
 ) {

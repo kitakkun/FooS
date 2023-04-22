@@ -1,6 +1,5 @@
 package com.github.kitakkun.foos.post.navigation
 
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -15,7 +14,8 @@ import com.github.kitakkun.foos.post.create.locationconfirm.LocationConfirmScree
 import com.github.kitakkun.foos.post.create.locationselect.LocationSelectScreen
 import com.github.kitakkun.foos.post.imagedetail.ImageDetailScreen
 import com.github.kitakkun.foos.post.postdetail.PostDetailScreen
-import com.github.kitakkun.foos.post.postdetail.PostDetailViewModelImpl
+import com.github.kitakkun.foos.post.postdetail.PostDetailViewModel
+import org.koin.androidx.compose.koinViewModel
 
 fun NavGraphBuilder.postGraph(navController: NavController) {
     postCreateGraph(navController)
@@ -54,7 +54,7 @@ private fun NavGraphBuilder.postDetailGraph(navController: NavController) {
     composable(PostScreenRouter.Detail.PostDetail) {
         val args = PostScreenRouter.Detail.PostDetail.resolveArguments(it)
         val postId = args[0] as String
-        val vm: PostDetailViewModelImpl = hiltViewModel()
+        val vm: PostDetailViewModel = koinViewModel()
         PostDetailScreen(vm, navController, postId)
     }
 }
