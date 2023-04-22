@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class UserProfileViewModel(
+    private val userId: String,
     private val usersRepository: UsersRepository,
     private val followRepository: FollowRepository,
     private val fetchPostsByUserIdUseCase: FetchPostsByUserIdUseCase,
@@ -30,19 +31,18 @@ class UserProfileViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val following = uiState.value.isFollowedByClientUser
             val clientUserId = Firebase.auth.uid ?: return@launch
-            val profileUserId = uiState.value.id
             when (following) {
                 true -> followRepository.deleteFollowGraph(
                     from = clientUserId,
-                    to = profileUserId,
+                    to = userId,
                 )
                 false -> followRepository.createFollowGraph(
                     from = clientUserId,
-                    to = profileUserId,
+                    to = userId,
                 )
             }
-            val followCount = followRepository.fetchFollowingCount(userId = uiState.value.id)
-            val followerCount = followRepository.fetchFollowerCount(uiState.value.id)
+            val followCount = followRepository.fetchFollowingCount(userId = userId)
+            val followerCount = followRepository.fetchFollowerCount(userId = userId)
             mutableUiState.value = uiState.value.copy(
                 followerCount = followerCount,
                 followCount = followCount,
@@ -54,8 +54,7 @@ class UserProfileViewModel(
     fun fetchInitialPosts() {
         viewModelScope.launch(Dispatchers.IO) {
             mutableUiState.value = uiState.value.copy(isLoadingPosts = true)
-            val posts =
-                fetchPostsByUserIdUseCase(uiState.value.id).map { PostItemUiState.convert(it) }
+            val posts = fetchPostsByUserIdUseCase(userId).map { PostItemUiState.convert(it) }
             mutableUiState.value = uiState.value.copy(isLoadingPosts = false, posts = posts)
         }
     }
@@ -63,8 +62,7 @@ class UserProfileViewModel(
     fun refreshPosts() {
         viewModelScope.launch(Dispatchers.IO) {
             mutableUiState.value = uiState.value.copy(isRefreshing = true)
-            val posts =
-                fetchPostsByUserIdUseCase(uiState.value.id).map { PostItemUiState.convert(it) }
+            val posts = fetchPostsByUserIdUseCase(userId).map { PostItemUiState.convert(it) }
             mutableUiState.value = uiState.value.copy(isRefreshing = false, posts = posts)
         }
     }
@@ -72,7 +70,7 @@ class UserProfileViewModel(
     fun fetchInitialMediaPosts() {
         viewModelScope.launch(Dispatchers.IO) {
             mutableUiState.value = uiState.value.copy(isLoadingMediaPosts = true)
-            val posts = fetchPostsWithMediaByUserIdUseCase(uiState.value.id).map {
+            val posts = fetchPostsWithMediaByUserIdUseCase(userId).map {
                 PostItemUiState.convert(it)
             }
             mutableUiState.value =
@@ -83,7 +81,7 @@ class UserProfileViewModel(
     fun refreshMediaPosts() {
         viewModelScope.launch(Dispatchers.IO) {
             mutableUiState.value = uiState.value.copy(isRefreshing = true)
-            val posts = fetchPostsWithMediaByUserIdUseCase(uiState.value.id).map {
+            val posts = fetchPostsWithMediaByUserIdUseCase(userId).map {
                 PostItemUiState.convert(it)
             }
             mutableUiState.value = uiState.value.copy(isRefreshing = false, mediaPosts = posts)
@@ -93,7 +91,7 @@ class UserProfileViewModel(
     fun fetchInitialReactedPosts() {
         viewModelScope.launch(Dispatchers.IO) {
             mutableUiState.value = uiState.value.copy(isLoadingUserReactedPosts = true)
-            val posts = fetchPostsUserReactedByUserIdUseCase(uiState.value.id).map {
+            val posts = fetchPostsUserReactedByUserIdUseCase(userId).map {
                 PostItemUiState.convert(it)
             }
             mutableUiState.value =
@@ -104,30 +102,27 @@ class UserProfileViewModel(
     fun refreshReactedPosts() {
         viewModelScope.launch {
             mutableUiState.value = uiState.value.copy(isRefreshing = true)
-            val posts = fetchPostsUserReactedByUserIdUseCase(uiState.value.id).map {
+            val posts = fetchPostsUserReactedByUserIdUseCase(userId).map {
                 PostItemUiState.convert(it)
             }
             mutableUiState.value = uiState.value.copy(isRefreshing = false, reactedPosts = posts)
         }
     }
 
-    suspend fun fetchProfileInfo(userId: String, onFinished: suspend () -> Unit) {
+    suspend fun fetchProfileInfo() {
         viewModelScope.launch(Dispatchers.IO) {
             val followers = followRepository.fetchByFolloweeId(userId)
             val followees = followRepository.fetchByFollowerId(userId)
             val user = usersRepository.fetchByUserId(userId)
             user?.let {
-                mutableUiState.value = uiState.value.copy(
-                    id = user.id,
+                mutableUiState.value = uiState.value.copy(id = user.id,
                     profileImageUrl = user.profileImage,
                     name = user.name,
                     followCount = followees.size,
                     followerCount = followers.size,
                     isFollowedByClientUser = followers.map { followInfo -> followInfo.from }
-                        .contains(Firebase.auth.uid.toString())
-                )
+                        .contains(Firebase.auth.uid.toString()))
             }
-            onFinished()
         }
     }
 
@@ -135,7 +130,7 @@ class UserProfileViewModel(
         viewModelScope.launch {
             val oldestDate = uiState.value.posts.last().createdAt
             oldestDate?.let {
-                val posts = fetchPostsByUserIdUseCase(uiState.value.id, end = oldestDate).map {
+                val posts = fetchPostsByUserIdUseCase(userId, end = oldestDate).map {
                     PostItemUiState.convert(it)
                 }
                 mutableUiState.value =
@@ -146,12 +141,10 @@ class UserProfileViewModel(
 
     fun fetchOlderMediaPosts() {
         viewModelScope.launch(Dispatchers.IO) {
-            val lastCreatedAt =
-                uiState.value.mediaPosts.last().createdAt
+            val lastCreatedAt = uiState.value.mediaPosts.last().createdAt
             lastCreatedAt?.let {
                 val posts = fetchPostsWithMediaByUserIdUseCase(
-                    uiState.value.id,
-                    end = lastCreatedAt
+                    userId, end = lastCreatedAt
                 ).map {
                     PostItemUiState.convert(it)
                 }
@@ -165,11 +158,10 @@ class UserProfileViewModel(
     fun fetchOlderReactedPosts() {
         viewModelScope.launch(Dispatchers.IO) {
             val lastCreatedAt =
-                uiState.value.reactedPosts.last().reactions.find { it.from == uiState.value.id }?.createdAt
+                uiState.value.reactedPosts.last().reactions.find { it.from == userId }?.createdAt
             lastCreatedAt?.let {
                 val posts = fetchPostsUserReactedByUserIdUseCase(
-                    uiState.value.id,
-                    end = lastCreatedAt
+                    userId, end = lastCreatedAt
                 ).map {
                     PostItemUiState.convert(it)
                 }
