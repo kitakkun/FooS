@@ -5,14 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.github.kitakkun.foos.common.usecase.FetchPostsByLocationBoundsUseCase
 import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 import com.google.android.gms.maps.model.LatLngBounds
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class MapViewModel @Inject constructor(
+class MapViewModel(
     private val fetchPostsByLocationBoundsUseCase: FetchPostsByLocationBoundsUseCase,
 ) : ViewModel() {
     private val mutableUiState =
