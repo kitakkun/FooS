@@ -10,6 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.kitakkun.foos.common.const.paddingMedium
+import androidx.compose.ui.unit.dp
 import com.github.kitakkun.foos.customview.composable.user.UserIcon
 import com.github.kitakkun.foos.customview.composable.user.VerticalUserIdentityText
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
@@ -55,6 +56,7 @@ fun UserItem(
                 }
             }
             if (uiState.isFollowButtonVisible) {
+                Spacer(modifier = Modifier.width(16.dp))
                 FollowButton(
                     onClick = onFollowButtonClicked,
                     isFollowing = uiState.isFollowedByClient,
