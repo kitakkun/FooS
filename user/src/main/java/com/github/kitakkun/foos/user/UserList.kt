@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.github.kitakkun.foos.common.ext.OnAppearLastItem
@@ -17,11 +18,13 @@ fun UserList(
     onAppearLastItem: (Int) -> Unit,
     onItemClicked: (String) -> Unit,
     onFollowButtonClicked: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val state = rememberLazyListState()
     state.OnAppearLastItem(onAppearLastItem = onAppearLastItem)
     LazyColumn(
-        state = state
+        state = state,
+        modifier = modifier,
     ) {
         items(uiStates) {
             UserItem(

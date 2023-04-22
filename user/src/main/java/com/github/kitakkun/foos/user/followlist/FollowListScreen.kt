@@ -79,7 +79,8 @@ private fun FollowListUI(
                         uiStates = uiState.followingUsers,
                         onAppearLastItem = { onFetchFollowingUserList() },
                         onItemClicked = onUserItemClicked,
-                        onFollowButtonClicked = onFollowButtonClicked
+                        onFollowButtonClicked = onFollowButtonClicked,
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
                 1 -> {
@@ -90,7 +91,8 @@ private fun FollowListUI(
                         uiStates = uiState.followers,
                         onAppearLastItem = { onFetchFollowerUserList() },
                         onItemClicked = onUserItemClicked,
-                        onFollowButtonClicked = onFollowButtonClicked
+                        onFollowButtonClicked = onFollowButtonClicked,
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
