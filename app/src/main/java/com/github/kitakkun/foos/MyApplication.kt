@@ -7,20 +7,26 @@ import androidx.emoji2.text.EmojiCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
 @HiltAndroidApp
 class MyApplication : Application() {
-    @Inject
-    lateinit var firestore: FirebaseFirestore
-
-    @Inject
-    lateinit var firebaseAuth: FirebaseAuth
-
     override fun onCreate() {
         super.onCreate()
         val config = BundledEmojiCompatConfig(applicationContext)
         EmojiCompat.init(config)
+
+        startKoin {
+            modules(appModule)
+            androidContext(this@MyApplication)
+            androidLogger()
+        }
+
+        val firestore: FirebaseFirestore by inject()
+        val firebaseAuth: FirebaseAuth by inject()
 
         // RUNS ONLY ON DEBUG MODE
         // Firebase Emulator Settings For Testing.
