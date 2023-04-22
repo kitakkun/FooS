@@ -13,4 +13,5 @@ val useCaseModule = module {
     factory { FetchPostsUseCase(get(), get(), get()) }
     factory { FetchFollowStateUseCase(get()) }
     factory { DeletePostByPostIdUseCase(get(), get()) }
+    factory { FetchPostsByUserIdUseCase(get(), get(), get()) }
 }
