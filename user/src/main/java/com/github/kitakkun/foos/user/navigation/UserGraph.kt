@@ -1,6 +1,5 @@
 package com.github.kitakkun.foos.user.navigation
 
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.navigation
@@ -12,6 +11,7 @@ import com.github.kitakkun.foos.user.followlist.FollowListScreen
 import com.github.kitakkun.foos.user.followlist.FollowListViewModel
 import com.github.kitakkun.foos.user.profile.UserProfileScreen
 import com.github.kitakkun.foos.user.profile.UserProfileViewModel
+import org.koin.androidx.compose.koinViewModel
 
 fun NavGraphBuilder.userGraph(navController: NavController) {
     authGraph(navController)
@@ -25,10 +25,10 @@ private fun NavGraphBuilder.authGraph(navController: NavController) {
         startDestination = UserScreenRouter.Auth.SignIn.route,
     ) {
         composable(UserScreenRouter.Auth.SignIn) {
-            SignInScreen(viewModel = hiltViewModel(), navController = navController)
+            SignInScreen(viewModel = koinViewModel(), navController = navController)
         }
         composable(UserScreenRouter.Auth.SignUp) {
-            SignUpScreen(viewModel = hiltViewModel(), navController = navController)
+            SignUpScreen(viewModel = koinViewModel(), navController = navController)
         }
     }
 }
@@ -37,7 +37,7 @@ private fun NavGraphBuilder.profileGraph(navController: NavController) {
     composable(UserScreenRouter.UserProfile) {
         val arguments = UserScreenRouter.UserProfile.resolveArguments(it)
         val userId = arguments[0] as String? ?: return@composable
-        val vm: UserProfileViewModel = hiltViewModel()
+        val vm: UserProfileViewModel = koinViewModel()
         UserProfileScreen(vm, navController, userId)
     }
 }
@@ -49,7 +49,7 @@ private fun NavGraphBuilder.followGraph(navController: NavController) {
         val followees = arguments[1] as Boolean?
         if (userId != null && followees != null) {
             val index = if (followees) 0 else 1
-            val vm: FollowListViewModel = hiltViewModel()
+            val vm: FollowListViewModel = koinViewModel()
             FollowListScreen(
                 viewModel = vm,
                 userId = userId,

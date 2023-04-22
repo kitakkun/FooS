@@ -17,7 +17,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.kitakkun.foos.R
 import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.common.const.paddingSmall
@@ -35,6 +34,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.*
 import com.google.maps.android.ui.IconGenerator
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * グルメマップ画面のコンポーザブル
@@ -47,7 +47,7 @@ import kotlinx.coroutines.launch
 @SuppressLint("MissingPermission")
 @Composable
 fun MapScreen(
-    viewModel: MapViewModel = hiltViewModel(),
+    viewModel: MapViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

@@ -15,9 +15,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class PostCreateViewModel @Inject constructor(
+class PostCreateViewModel(
     private val postsRepository: PostsRepository,
     private val firebaseAuth: FirebaseAuth,
 ) : ViewModel() {

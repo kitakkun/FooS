@@ -3,12 +3,11 @@ package com.github.kitakkun.foos.common.usecase
 import com.github.kitakkun.foos.common.model.Post
 import com.github.kitakkun.foos.common.repository.ReactionsRepository
 import java.util.*
-import javax.inject.Inject
 
 /**
  * 特定のユーザがリアクションした投稿をまとめて取得するユースケース
  */
-class FetchPostsUserReactedByUserIdUseCase @Inject constructor(
+class FetchPostsUserReactedByUserIdUseCase(
     private val reactionsRepository: ReactionsRepository,
     private val fetchPostByPostIdUseCase: FetchPostByPostIdUseCase,
 ) {

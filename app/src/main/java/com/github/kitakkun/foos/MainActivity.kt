@@ -7,17 +7,14 @@ import com.github.kitakkun.foos.common.navigation.ScreenRouter
 import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.ui.screen.AppScreen
 import com.google.firebase.auth.FirebaseAuth
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-@AndroidEntryPoint
-class MainActivity : ComponentActivity() {
-    @Inject
-    lateinit var firebaseAuth: FirebaseAuth
-
+class MainActivity : ComponentActivity(), KoinComponent {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val firebaseAuth: FirebaseAuth by inject()
         setContent {
             AppScreen(
                 startDestination = when (firebaseAuth.currentUser == null) {

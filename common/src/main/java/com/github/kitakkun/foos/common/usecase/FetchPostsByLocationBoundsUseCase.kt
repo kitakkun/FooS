@@ -5,12 +5,11 @@ import com.github.kitakkun.foos.common.repository.PostsRepository
 import com.github.kitakkun.foos.common.repository.ReactionsRepository
 import com.github.kitakkun.foos.common.repository.UsersRepository
 import com.google.android.gms.maps.model.LatLngBounds
-import javax.inject.Inject
 
 /**
  * 位置情報の範囲から投稿をフェッチするユースケース
  */
-class FetchPostsByLocationBoundsUseCase @Inject constructor(
+class FetchPostsByLocationBoundsUseCase(
     private val postsRepository: PostsRepository,
     private val usersRepository: UsersRepository,
     private val reactionsRepository: ReactionsRepository,

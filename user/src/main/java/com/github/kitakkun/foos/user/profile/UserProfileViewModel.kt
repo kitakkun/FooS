@@ -10,18 +10,12 @@ import com.github.kitakkun.foos.common.usecase.FetchPostsWithMediaByUserIdUseCas
 import com.github.kitakkun.foos.customview.composable.post.PostItemUiState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-/**
- * ユーザプロフィール画面のViewModel
- */
-@HiltViewModel
-class UserProfileViewModel @Inject constructor(
+class UserProfileViewModel(
     private val usersRepository: UsersRepository,
     private val followRepository: FollowRepository,
     private val fetchPostsByUserIdUseCase: FetchPostsByUserIdUseCase,

@@ -6,7 +6,11 @@ import androidx.navigation.NavController
 import com.github.kitakkun.foos.customview.composable.post.PostDetailView
 
 @Composable
-fun PostDetailScreen(viewModel: PostDetailViewModel, navController: NavController, postId: String) {
+fun PostDetailScreen(
+    viewModel: PostDetailViewModel,
+    navController: NavController,
+    postId: String
+) {
 
     LaunchedEffect(Unit) {
         viewModel.fetch(postId)

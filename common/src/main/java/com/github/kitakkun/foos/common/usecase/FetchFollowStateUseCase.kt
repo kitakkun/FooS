@@ -2,9 +2,8 @@ package com.github.kitakkun.foos.common.usecase
 
 import com.github.kitakkun.foos.common.model.FollowState
 import com.github.kitakkun.foos.common.repository.FollowRepository
-import javax.inject.Inject
 
-class FetchFollowStateUseCase @Inject constructor(
+class FetchFollowStateUseCase(
     private val followRepository: FollowRepository,
 ) {
     suspend operator fun invoke(from: String, to: String): FollowState {

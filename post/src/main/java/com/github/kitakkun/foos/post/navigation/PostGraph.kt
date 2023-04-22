@@ -1,6 +1,5 @@
 package com.github.kitakkun.foos.post.navigation
 
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -9,13 +8,14 @@ import com.github.kitakkun.foos.common.ext.composable
 import com.github.kitakkun.foos.common.navigation.PostScreenRouter
 import com.github.kitakkun.foos.common.navigation.StringList
 import com.github.kitakkun.foos.post.create.PostCreateViewModel
-import com.github.kitakkun.foos.post.create.PostModule.providePostCreateViewModel
 import com.github.kitakkun.foos.post.create.edit.PostEditScreen
 import com.github.kitakkun.foos.post.create.locationconfirm.LocationConfirmScreen
 import com.github.kitakkun.foos.post.create.locationselect.LocationSelectScreen
 import com.github.kitakkun.foos.post.imagedetail.ImageDetailScreen
 import com.github.kitakkun.foos.post.postdetail.PostDetailScreen
-import com.github.kitakkun.foos.post.postdetail.PostDetailViewModelImpl
+import com.github.kitakkun.foos.post.postdetail.PostDetailViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.java.KoinJavaComponent.inject
 
 fun NavGraphBuilder.postGraph(navController: NavController) {
     postCreateGraph(navController)
@@ -28,7 +28,7 @@ private fun NavGraphBuilder.postCreateGraph(navController: NavController) {
         route = PostScreenRouter.PostCreate.route,
         startDestination = PostScreenRouter.PostCreate.Edit.route,
     ) {
-        val viewModel: PostCreateViewModel = providePostCreateViewModel()
+        val viewModel: PostCreateViewModel by inject(PostCreateViewModel::class.java)
         composable(PostScreenRouter.PostCreate.Edit.route) {
             PostEditScreen(
                 viewModel = viewModel,
@@ -43,8 +43,7 @@ private fun NavGraphBuilder.postCreateGraph(navController: NavController) {
         }
         composable(PostScreenRouter.PostCreate.LocationConfirm) {
             LocationConfirmScreen(
-                viewModel = viewModel,
-                navController = navController
+                viewModel = viewModel, navController = navController
             )
         }
     }
@@ -54,7 +53,7 @@ private fun NavGraphBuilder.postDetailGraph(navController: NavController) {
     composable(PostScreenRouter.Detail.PostDetail) {
         val args = PostScreenRouter.Detail.PostDetail.resolveArguments(it)
         val postId = args[0] as String
-        val vm: PostDetailViewModelImpl = hiltViewModel()
+        val vm: PostDetailViewModel = koinViewModel()
         PostDetailScreen(vm, navController, postId)
     }
 }

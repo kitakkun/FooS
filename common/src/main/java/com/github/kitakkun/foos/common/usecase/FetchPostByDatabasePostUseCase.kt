@@ -4,12 +4,11 @@ import com.github.kitakkun.foos.common.model.DatabasePost
 import com.github.kitakkun.foos.common.model.Post
 import com.github.kitakkun.foos.common.repository.ReactionsRepository
 import com.github.kitakkun.foos.common.repository.UsersRepository
-import javax.inject.Inject
 
 /**
  * DatabasePost型のデータから、Post型のデータをフェッチするユースケース
  */
-class FetchPostByDatabasePostUseCase @Inject constructor(
+class FetchPostByDatabasePostUseCase(
     private val usersRepository: UsersRepository,
     private val reactionsRepository: ReactionsRepository,
 ) {

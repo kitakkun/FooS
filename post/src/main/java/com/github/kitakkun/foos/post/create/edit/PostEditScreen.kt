@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.common.const.paddingMedium
 import com.github.kitakkun.foos.common.navigation.PostScreenRouter
@@ -33,6 +32,7 @@ import com.github.kitakkun.foos.post.create.PostCreateViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * 投稿画面のコンポーザブル
@@ -41,7 +41,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PostEditScreen(
-    viewModel: PostCreateViewModel = hiltViewModel(),
+    viewModel: PostCreateViewModel = koinViewModel(),
     navController: NavController,
 ) {
     val uiState by viewModel.uiState.collectAsState()

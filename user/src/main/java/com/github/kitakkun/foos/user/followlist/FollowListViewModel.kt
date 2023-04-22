@@ -8,15 +8,12 @@ import com.github.kitakkun.foos.common.repository.UsersRepository
 import com.github.kitakkun.foos.common.usecase.FetchFollowStateUseCase
 import com.github.kitakkun.foos.user.composable.UserItemUiState
 import com.google.firebase.auth.FirebaseAuth
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class FollowListViewModel @Inject constructor(
+class FollowListViewModel(
     private val auth: FirebaseAuth,
     private val usersRepository: UsersRepository,
     private val followRepository: FollowRepository,

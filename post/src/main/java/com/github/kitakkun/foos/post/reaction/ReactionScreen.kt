@@ -12,22 +12,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.github.kitakkun.foos.customview.R
 import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndicator
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ReactionScreen(
-    viewModel: ReactionViewModelImpl = hiltViewModel(),
+    viewModel: ReactionViewModel = koinViewModel(),
     navController: NavController
 ) {
 
     val uiState = viewModel.uiState.value
 
     LaunchedEffect(Unit) {
-        viewModel.fetchNewReactions()
+        viewModel.fetchNewReactions(indicateRefreshing = false)
     }
 
     ReactionUI(
