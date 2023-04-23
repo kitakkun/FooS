@@ -10,6 +10,7 @@ android {
     defaultConfig {
         applicationId = "com.github.kitakkun.foos"
     }
+    namespace = "com.github.kitakkun.foos"
 }
 
 dependencies {
