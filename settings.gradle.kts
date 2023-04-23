@@ -1,5 +1,3 @@
-import org.gradle.api.initialization.resolve.RepositoriesMode
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -12,12 +10,12 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
+        maven(url = "https://jitpack.io")
     }
 }
 rootProject.name = "FooS"
-include ':app'
-include ':user'
-include ':customview'
-include ':common'
-include ':post'
+include(":app")
+include(":user")
+include(":customview")
+include(":common")
+include(":post")
