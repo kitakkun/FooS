@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.common.model
+package com.github.kitakkun.foos.common.model.follow
 
 import com.google.firebase.firestore.ServerTimestamp
 import java.util.*

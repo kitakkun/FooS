@@ -36,6 +36,7 @@ class UserProfileViewModel(
                     from = clientUserId,
                     to = userId,
                 )
+
                 false -> followRepository.createFollowGraph(
                     from = clientUserId,
                     to = userId,
@@ -44,8 +45,8 @@ class UserProfileViewModel(
             val followCount = followRepository.fetchFollowingCount(userId = userId)
             val followerCount = followRepository.fetchFollowerCount(userId = userId)
             mutableUiState.value = uiState.value.copy(
-                followerCount = followerCount,
-                followCount = followCount,
+                followerCount = followerCount.toInt(),
+                followCount = followCount.toInt(),
                 isFollowedByClientUser = !following
             )
         }
@@ -111,18 +112,22 @@ class UserProfileViewModel(
 
     suspend fun fetchProfileInfo() {
         viewModelScope.launch(Dispatchers.IO) {
-            val followers = followRepository.fetchByFolloweeId(userId)
-            val followees = followRepository.fetchByFollowerId(userId)
-            val user = usersRepository.fetchByUserId(userId)
-            user?.let {
-                mutableUiState.value = uiState.value.copy(id = user.id,
-                    profileImageUrl = user.profileImage,
-                    name = user.name,
-                    followCount = followees.size,
-                    followerCount = followers.size,
-                    isFollowedByClientUser = followers.map { followInfo -> followInfo.from }
-                        .contains(Firebase.auth.uid.toString()))
-            }
+            val clientUserId = Firebase.auth.uid ?: return@launch
+            val user = usersRepository.fetchByUserId(userId) ?: return@launch
+            val followerCount = followRepository.fetchFollowingCount(userId)
+            val followingCount = followRepository.fetchFollowerCount(userId)
+            val isFollowedByClientUser = followRepository.fetchFollowGraph(
+                from = clientUserId,
+                to = userId
+            ) != null
+            mutableUiState.value = uiState.value.copy(
+                id = user.id,
+                profileImageUrl = user.profileImage,
+                name = user.name,
+                followCount = followingCount.toInt(),
+                followerCount = followerCount.toInt(),
+                isFollowedByClientUser = isFollowedByClientUser,
+            )
         }
     }
 

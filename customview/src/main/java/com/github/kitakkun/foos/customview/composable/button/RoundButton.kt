@@ -14,11 +14,13 @@ import com.github.kitakkun.foos.customview.theme.FooSTheme
 fun RoundButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     outlined: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     if (outlined) {
         OutlinedButton(
+            enabled = enabled,
             onClick = onClick,
             shape = RoundedCornerShape(50),
             modifier = modifier,

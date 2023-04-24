@@ -4,9 +4,14 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
@@ -17,14 +22,17 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.github.kitakkun.foos.common.ext.OnAppearLastItem
 import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.user.R
-import com.github.kitakkun.foos.user.UserList
-import com.github.kitakkun.foos.user.composable.UserItemUiState
+import com.github.kitakkun.foos.user.com.github.kitakkun.foos.user.followlist.FollowUserUiState
+import com.github.kitakkun.foos.user.composable.FollowUserItem
 import kotlinx.coroutines.launch
 
 /**
@@ -52,6 +60,8 @@ fun FollowListScreen(
             )
         },
         onFollowButtonClicked = viewModel::toggleFollowState,
+        onAppearLastFollowerUserItem = viewModel::fetchMoreFollowerUsers,
+        onAppearLastFollowingUserItem = viewModel::fetchMoreFollowingUsers,
     )
 }
 
@@ -63,6 +73,8 @@ private fun FollowListUI(
     onRefreshFollowerUserList: () -> Unit,
     onUserItemClicked: (userId: String) -> Unit,
     onFollowButtonClicked: (userId: String) -> Unit,
+    onAppearLastFollowingUserItem: () -> Unit,
+    onAppearLastFollowerUserItem: () -> Unit,
 ) {
     val tabTitles = listOf(
         stringResource(id = R.string.following),
@@ -86,18 +98,19 @@ private fun FollowListUI(
                     FollowUserList(
                         users = uiState.followingUsers,
                         isRefreshing = uiState.isFollowingListRefreshing,
-                        onAppearLastItem = onRefreshFollowingUserList,
+                        onAppearLastItem = onAppearLastFollowingUserItem,
                         onItemClicked = onUserItemClicked,
                         onFollowButtonClicked = onFollowButtonClicked,
                         onRefresh = onRefreshFollowingUserList,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
+
                 1 -> {
                     FollowUserList(
                         users = uiState.followers,
                         isRefreshing = uiState.isFollowerListRefreshing,
-                        onAppearLastItem = onRefreshFollowerUserList,
+                        onAppearLastItem = onAppearLastFollowerUserItem,
                         onItemClicked = onUserItemClicked,
                         onFollowButtonClicked = onFollowButtonClicked,
                         onRefresh = onRefreshFollowerUserList,
@@ -112,7 +125,7 @@ private fun FollowListUI(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun FollowUserList(
-    users: List<UserItemUiState>,
+    users: List<FollowUserUiState>,
     onAppearLastItem: () -> Unit,
     onItemClicked: (userId: String) -> Unit,
     onFollowButtonClicked: (userId: String) -> Unit,
@@ -124,16 +137,24 @@ private fun FollowUserList(
         refreshing = isRefreshing,
         onRefresh = onRefresh
     )
+    val listState = rememberLazyListState()
+    listState.OnAppearLastItem(onAppearLastItem = { onAppearLastItem() })
     Box(
         modifier = modifier.pullRefresh(state = pullRefreshState)
     ) {
-        UserList(
-            uiStates = users,
-            onAppearLastItem = { onAppearLastItem() },
-            onItemClicked = onItemClicked,
-            onFollowButtonClicked = onFollowButtonClicked,
-            modifier = Modifier.fillMaxSize()
-        )
+        LazyColumn(
+            state = listState,
+        ) {
+            items(users) { user ->
+                FollowUserItem(
+                    uiState = user,
+                    onClick = { onItemClicked.invoke(user.id) },
+                    onFollowButtonClicked = { onFollowButtonClicked.invoke(user.id) },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Divider(thickness = 1.dp, color = Color.LightGray)
+            }
+        }
         PullRefreshIndicator(
             refreshing = isRefreshing,
             state = pullRefreshState,
@@ -175,5 +196,7 @@ private fun FollowListUIPreview() = PreviewContainer {
         onRefreshFollowerUserList = { },
         onUserItemClicked = { },
         onFollowButtonClicked = { },
+        onAppearLastFollowingUserItem = { },
+        onAppearLastFollowerUserItem = { },
     )
 }
