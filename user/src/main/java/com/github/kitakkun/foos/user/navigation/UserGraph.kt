@@ -8,7 +8,6 @@ import com.github.kitakkun.foos.common.navigation.UserScreenRouter
 import com.github.kitakkun.foos.user.auth.signin.SignInScreen
 import com.github.kitakkun.foos.user.auth.signup.SignUpScreen
 import com.github.kitakkun.foos.user.followlist.FollowListScreen
-import com.github.kitakkun.foos.user.followlist.FollowListViewModel
 import com.github.kitakkun.foos.user.profile.UserProfileScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -47,17 +46,11 @@ private fun NavGraphBuilder.profileGraph(navController: NavController) {
 private fun NavGraphBuilder.followGraph(navController: NavController) {
     composable(UserScreenRouter.FollowList) {
         val arguments = UserScreenRouter.FollowList.resolveArguments(it)
-        val userId = arguments[0] as String?
-        val followees = arguments[1] as Boolean?
-        if (userId != null && followees != null) {
-            val index = if (followees) 0 else 1
-            val vm: FollowListViewModel = koinViewModel()
-            FollowListScreen(
-                viewModel = vm,
-                userId = userId,
-                initialPage = index,
-                navController = navController
-            )
-        }
+        val userId = arguments[0] as String? ?: return@composable
+        val shouldShowFollowingListFirst = arguments[1] as Boolean? ?: return@composable
+        FollowListScreen(
+            viewModel = koinViewModel { parametersOf(userId, shouldShowFollowingListFirst) },
+            navController = navController
+        )
     }
 }

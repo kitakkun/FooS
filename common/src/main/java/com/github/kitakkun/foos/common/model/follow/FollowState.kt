@@ -1,4 +1,4 @@
-package com.github.kitakkun.foos.common.model
+package com.github.kitakkun.foos.common.model.follow
 
 /**
  * 特定ユーザ2人のフォロー関係を表現するデータクラス

@@ -1,7 +1,7 @@
 package com.github.kitakkun.foos.user.composable
 
 import com.github.kitakkun.foos.common.model.DatabaseUser
-import com.github.kitakkun.foos.common.model.FollowState
+import com.github.kitakkun.foos.common.model.follow.FollowState
 
 data class UserItemUiState(
     val id: String,

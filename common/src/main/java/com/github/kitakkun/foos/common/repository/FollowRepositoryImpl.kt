@@ -1,10 +1,12 @@
 package com.github.kitakkun.foos.common.repository
 
-import com.github.kitakkun.foos.common.model.FollowGraph
+import com.github.kitakkun.foos.common.model.follow.FollowGraph
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 
 /**
  * フォロー状態を管理するリポジトリ
@@ -13,7 +15,6 @@ class FollowRepositoryImpl(
     private val auth: FirebaseAuth,
     private val database: FirebaseFirestore,
 ) : FollowRepository {
-
     companion object {
         private const val COLLECTION = "follows"
     }
@@ -37,21 +38,7 @@ class FollowRepositoryImpl(
             }
     }
 
-    override suspend fun fetchFollowerUserIds(userId: String): List<String> =
-        database.collection(COLLECTION)
-            .whereEqualTo("to", userId)
-            .get().await()
-            .toObjects(FollowGraph::class.java)
-            .mapNotNull { it.from }
-
-    override suspend fun fetchFollowingUserIds(userId: String): List<String> =
-        database.collection(COLLECTION)
-            .whereEqualTo("from", userId)
-            .get().await()
-            .toObjects(FollowGraph::class.java)
-            .mapNotNull { it.from }
-
-    override suspend fun fetch(from: String, to: String): FollowGraph? =
+    override suspend fun fetchFollowGraph(from: String, to: String): FollowGraph? =
         database.collection(COLLECTION)
             .whereEqualTo("to", to)
             .whereEqualTo("from", from)
@@ -59,25 +46,43 @@ class FollowRepositoryImpl(
             .get().await().toObjects(FollowGraph::class.java)
             .firstOrNull()
 
-    override suspend fun fetchFollowerCount(userId: String): Int =
-        database.collection(COLLECTION)
+    override suspend fun fetchFollowerGraphs(
+        userId: String,
+        newerThan: Date?,
+        olderThan: Date?,
+    ): List<FollowGraph> =
+        database.collection(COLLECTION).apply {
+            if (newerThan != null) whereGreaterThan("createdAt", newerThan)
+            if (olderThan != null) whereLessThan("createdAt", olderThan)
+            whereEqualTo("to", userId)
+        }.get().await().toObjects(FollowGraph::class.java)
+
+    override suspend fun fetchFollowingGraphs(
+        userId: String,
+        newerThan: Date?,
+        olderThan: Date?,
+    ): List<FollowGraph> =
+        database.collection(COLLECTION).apply {
+            if (newerThan != null) whereGreaterThan("createdAt", newerThan)
+            if (olderThan != null) whereLessThan("createdAt", olderThan)
+            whereEqualTo("from", userId)
+        }.get().await().toObjects(FollowGraph::class.java)
+
+    override suspend fun fetchFollowerCount(userId: String): Long {
+        return database.collection(COLLECTION)
             .whereEqualTo("to", userId)
-            .get().await().size()
+            .count()
+            .get(AggregateSource.SERVER)
+            .await()
+            .count
+    }
 
-    override suspend fun fetchFollowingCount(userId: String): Int =
-        database.collection(COLLECTION)
+    override suspend fun fetchFollowingCount(userId: String): Long {
+        return database.collection(COLLECTION)
             .whereEqualTo("from", userId)
-            .get().await().size()
-
-    @Deprecated("Use fetchFollowerUserIds instead")
-    override suspend fun fetchByFolloweeId(followeeId: String): List<FollowGraph> =
-        database.collection(COLLECTION)
-            .whereEqualTo("to", followeeId)
-            .get().await().toObjects(FollowGraph::class.java)
-
-    @Deprecated("Use fetchFollowingUserIds instead")
-    override suspend fun fetchByFollowerId(followerId: String): List<FollowGraph> =
-        database.collection(COLLECTION)
-            .whereEqualTo("from", followerId)
-            .get().await().toObjects(FollowGraph::class.java)
+            .count()
+            .get(AggregateSource.SERVER)
+            .await()
+            .count
+    }
 }

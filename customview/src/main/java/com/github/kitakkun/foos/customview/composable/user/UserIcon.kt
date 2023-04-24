@@ -23,7 +23,7 @@ import com.github.kitakkun.foos.customview.preview.PreviewContainer
  */
 @Composable
 fun UserIcon(
-    url: String,
+    url: String?,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {

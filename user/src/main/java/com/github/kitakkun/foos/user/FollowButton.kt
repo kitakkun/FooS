@@ -2,6 +2,7 @@ package com.github.kitakkun.foos.user
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.kitakkun.foos.customview.composable.button.RoundButton
@@ -15,11 +16,15 @@ import com.github.kitakkun.foos.customview.preview.PreviewContainer
 @Composable
 fun FollowButton(
     isFollowing: Boolean,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     onClick: () -> Unit = {},
 ) {
     RoundButton(
+        enabled = enabled,
         onClick = onClick,
-        outlined = isFollowing
+        outlined = isFollowing,
+        modifier = modifier,
     ) {
         Text(
             text = when (isFollowing) {
