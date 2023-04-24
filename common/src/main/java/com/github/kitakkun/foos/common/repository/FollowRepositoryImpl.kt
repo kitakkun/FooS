@@ -17,6 +17,7 @@ class FollowRepositoryImpl(
 ) : FollowRepository {
     companion object {
         private const val COLLECTION = "follows"
+        private const val MAX_FETCH_COUNT = 20L
     }
 
     override suspend fun createFollowGraph(from: String, to: String) {
@@ -55,6 +56,7 @@ class FollowRepositoryImpl(
             if (newerThan != null) whereGreaterThan("createdAt", newerThan)
             if (olderThan != null) whereLessThan("createdAt", olderThan)
             whereEqualTo("to", userId)
+            limit(MAX_FETCH_COUNT)
         }.get().await().toObjects(FollowGraph::class.java)
 
     override suspend fun fetchFollowingGraphs(
@@ -66,6 +68,7 @@ class FollowRepositoryImpl(
             if (newerThan != null) whereGreaterThan("createdAt", newerThan)
             if (olderThan != null) whereLessThan("createdAt", olderThan)
             whereEqualTo("from", userId)
+            limit(MAX_FETCH_COUNT)
         }.get().await().toObjects(FollowGraph::class.java)
 
     override suspend fun fetchFollowerCount(userId: String): Long {
