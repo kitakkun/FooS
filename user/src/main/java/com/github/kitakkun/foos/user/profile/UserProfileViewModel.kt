@@ -118,8 +118,8 @@ class UserProfileViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val clientUserId = Firebase.auth.uid ?: return@launch
             val user = usersRepository.fetchByUserId(userId) ?: return@launch
-            val followerCount = followRepository.fetchFollowingCount(userId)
-            val followingCount = followRepository.fetchFollowerCount(userId)
+            val followerCount = followRepository.fetchFollowerCount(userId)
+            val followingCount = followRepository.fetchFollowingCount(userId)
             val isFollowedByClientUser = followRepository.fetchFollowGraph(
                 from = clientUserId,
                 to = userId
