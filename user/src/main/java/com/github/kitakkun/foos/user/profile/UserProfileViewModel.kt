@@ -24,7 +24,11 @@ class UserProfileViewModel(
     private val fetchPostsWithMediaByUserIdUseCase: FetchPostsWithMediaByUserIdUseCase,
 ) : ViewModel() {
 
-    private var mutableUiState = MutableStateFlow(UserProfileScreenUiState())
+    private var mutableUiState = MutableStateFlow(
+        UserProfileScreenUiState(
+            id = userId,
+        )
+    )
     val uiState = mutableUiState.asStateFlow()
 
     fun toggleFollowState() {
