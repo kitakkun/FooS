@@ -1,6 +1,7 @@
 apply plugin: 'kotlin-kapt'
 apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'kotlin-parcelize'
+apply plugin: 'com.google.devtools.ksp'
 
 android {
     compileSdk 33
@@ -127,4 +128,7 @@ dependencies {
 
     // kotlin-result
     implementation "com.michael-bull.kotlin-result:kotlin-result:1.1.17"
+
+    // compose destinations
+//    implementation "com.github.kirich1409:ComposeDestinations:1.0.0-alpha08"
 }
