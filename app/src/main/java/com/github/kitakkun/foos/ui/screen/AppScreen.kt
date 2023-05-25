@@ -1,6 +1,7 @@
 package com.github.kitakkun.foos.ui.screen
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,9 +13,11 @@ import com.github.kitakkun.foos.common.ext.navigateToSingleScreen
 import com.github.kitakkun.foos.common.navigation.ScreenRouter
 import com.github.kitakkun.foos.customview.composable.navigation.ScreenBottomNavBar
 import com.github.kitakkun.foos.customview.theme.FooSTheme
+import com.github.kitakkun.foos.user.setting.NavGraphs
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
+import com.ramcosta.composedestinations.DestinationsNavHost
 
 /**
  * アプリ画面のコンポーザブル（アプリ全体のエントリポイント）
@@ -55,10 +58,9 @@ fun AppScreen(
                     )
                 }
             ) { innerPadding ->
-                ScreenNavHost(
-                    navController = navController,
-                    startDestination = startDestination,
-                    innerPadding = innerPadding
+                DestinationsNavHost(
+                    navGraph = NavGraphs.root,
+                    modifier = Modifier.padding(innerPadding)
                 )
             }
         }

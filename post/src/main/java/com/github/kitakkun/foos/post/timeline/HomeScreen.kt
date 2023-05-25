@@ -28,13 +28,21 @@ import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndi
 import com.github.kitakkun.foos.customview.composable.post.PostItemList
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.google.gson.Gson
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import org.koin.androidx.compose.get
+import org.koin.androidx.compose.inject
 import org.koin.androidx.compose.koinViewModel
 
+@RootNavGraph(start = true)
+@Destination(start = true)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = koinViewModel(),
-    navController: NavController,
+    navigator: DestinationsNavigator,
 ) {
+    val viewModel: HomeViewModel = koinViewModel()
+    val navController: NavController = get()
     val uiState by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
 

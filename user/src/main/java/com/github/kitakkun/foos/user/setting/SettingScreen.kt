@@ -23,13 +23,20 @@ import com.github.kitakkun.foos.customview.composable.menu.MenuItemUiState
 import com.github.kitakkun.foos.customview.composable.user.UserIcon
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
 import com.github.kitakkun.foos.user.R
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.NavGraph
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
 
+@Destination(start = true)
 @Composable
 fun SettingScreen(
-    viewModel: SettingViewModel = koinViewModel(),
-    navController: NavController,
+    navigator: DestinationsNavigator,
 ) {
+    val viewModel: SettingViewModel = koinViewModel()
+    val navController: NavController = get()
     val uiState by viewModel.uiState.collectAsState()
 
     val cropImage = rememberLauncherForActivityResult(CropImageContract()) { result ->

@@ -2,6 +2,11 @@ apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.google.devtools.ksp'
 
+ksp {
+    arg("compose-destinations.mode", "[GENERATION_MODE_FOR_MODULE]")
+    arg("compose-destinations.moduleName", "[YOUR_MODULE_NAME")
+}
+
 android {
     compileSdk 33
 

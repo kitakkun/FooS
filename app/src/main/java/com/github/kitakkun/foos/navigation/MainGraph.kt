@@ -18,20 +18,12 @@ fun NavGraphBuilder.mainGraph(
         startDestination = ScreenRouter.Main.Home.route,
     ) {
         composable(ScreenRouter.Main.Home) {
-            HomeScreen(
-                navController = navController,
-            )
         }
         composable(ScreenRouter.Main.Map) {
-            MapScreen()
         }
         composable(ScreenRouter.Main.Reaction) {
-            ReactionScreen(navController = navController)
         }
         composable(ScreenRouter.Main.Setting) {
-            SettingScreen(
-                navController = navController,
-            )
         }
     }
 }

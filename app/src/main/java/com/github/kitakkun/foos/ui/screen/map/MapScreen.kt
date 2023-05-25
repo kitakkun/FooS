@@ -33,6 +33,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.*
 import com.google.maps.android.ui.IconGenerator
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -45,10 +47,12 @@ import org.koin.androidx.compose.koinViewModel
  */
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterialApi::class)
 @SuppressLint("MissingPermission")
+@Destination(start = true)
 @Composable
 fun MapScreen(
-    viewModel: MapViewModel = koinViewModel(),
+    navigator: DestinationsNavigator,
 ) {
+    val viewModel = koinViewModel<MapViewModel>()
     val uiState by viewModel.uiState.collectAsState()
 
     val locationPermissionState =

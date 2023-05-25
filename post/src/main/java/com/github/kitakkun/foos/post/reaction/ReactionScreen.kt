@@ -16,14 +16,18 @@ import androidx.navigation.NavController
 import com.github.kitakkun.foos.customview.R
 import com.github.kitakkun.foos.customview.composable.loading.MaxSizeLoadingIndicator
 import com.github.kitakkun.foos.customview.preview.PreviewContainer
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
 
+@Destination(start = true)
 @Composable
 fun ReactionScreen(
-    viewModel: ReactionViewModel = koinViewModel(),
-    navController: NavController
+    navigator: DestinationsNavigator,
 ) {
-
+    val viewModel: ReactionViewModel = koinViewModel()
+    val navController: NavController = get()
     val uiState = viewModel.uiState.value
 
     LaunchedEffect(Unit) {
@@ -38,7 +42,6 @@ fun ReactionScreen(
         onContentClick = { viewModel.onContentClick(it) },
         reactions = uiState.reactions
     )
-
 }
 
 @OptIn(ExperimentalMaterialApi::class)
