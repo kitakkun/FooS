@@ -1,8 +1,5 @@
 <resources>
-    <string name="title_activity_sign_in">SignInActivity</string>
-    <string name="post">POST</string>
     <string name="permission_request_message">Please give the permission.</string>
     <string name="request_permission">Request Permission</string>
-    <string name="message_successfully_signed_in">Successfully signed in.</string>
     <string name="edit_profile">Edit profile</string>
 </resources>
