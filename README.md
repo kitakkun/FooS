@@ -17,11 +17,9 @@ While some features are still in progress, FooS includes many standard social ne
 - View user profiles with tabs for posts, media, and reactions
 
 Screenshots:
-<img src="assets/signin.png" width="150" />
-<img src="assets/profile.png" width="150" />
-<img src="assets/timeline.png" width="150" />
-<img src="assets/reactions.png" width="150" />
-<img src="assets/post_edit.png" width="150" />
+
+<img src="assets/signin.png" width="200" />　<img src="assets/profile.png" width="200" />　<img src="assets/timeline.png" width="200" /><br>
+<img src="assets/reactions.png" width="200" />　<img src="assets/post_edit.png" width="200" />
 
 ## Try It Out Yourself
 
