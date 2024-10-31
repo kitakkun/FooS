@@ -6,6 +6,7 @@ import androidx.emoji2.bundled.BundledEmojiCompatConfig
 import androidx.emoji2.text.EmojiCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -25,6 +26,7 @@ class MyApplication : Application() {
 
         val firestore: FirebaseFirestore by inject()
         val firebaseAuth: FirebaseAuth by inject()
+        val firebaseStorage: FirebaseStorage by inject()
 
         // RUNS ONLY ON DEBUG MODE
         // Firebase Emulator Settings For Testing.
@@ -35,6 +37,7 @@ class MyApplication : Application() {
             Log.d("MainActivity", "Firebase Emulator Settings For Testing.")
             firestore.useEmulator("10.0.2.2", 8080)
             firebaseAuth.useEmulator("10.0.2.2", 9099)
+            firebaseStorage.useEmulator("10.0.2.2", 9199)
         }
     }
 }
